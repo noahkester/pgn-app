@@ -1,20 +1,21 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-
+import { StatusBar } from "expo-status-bar";
+import {
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+  Text,
+  Image,
+  View,
+} from "react-native";
+import {FirstPage} from "./Login_SignUp";
+import LoginPage from "./Login";
+import styles from "./Styles";
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>PGN App</Text>
+      <LoginPage />
+
       <StatusBar style="auto" />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
