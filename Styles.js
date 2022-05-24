@@ -7,7 +7,7 @@ export default StyleSheet.create({
 
     container: {
         flex: 1,
-
+        backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -27,8 +27,6 @@ export default StyleSheet.create({
     },
 
 
-
-
     //Login Page
     typein_box: {
         marginLeft: 6,
@@ -41,6 +39,21 @@ export default StyleSheet.create({
         flexDirection: 'row',
         paddingLeft: 5,
         justifyContent: 'space-between',
+    },
+
+    //navigation bar with the logos
+    navigation_bar : {
+        borderColor: 'red',
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+        height: '7.99%',
+        
+    },
+
+    navigation_item: {
+        width: "4%",
+        height: "4%",
+        borderColor: 'red',
     }
 })
 

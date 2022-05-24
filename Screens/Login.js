@@ -1,12 +1,12 @@
 import { StyleSheet, Button, TouchableOpacity, Image, TextInput, Text, View } from "react-native";
 import React from "react";
-import styles from "./Styles"
+import styles from "../Styles"
 import {LoginButton} from "./Login_SignUp"
-function LoginPage(){
+export function LoginPage(){
     return(
     <View style={styles.container}>
       <Image
-        source={require("./images/Login/image1.png")}
+        source={require("../images/Login/image1.png")}
         resizeMode="contain"
       />
       
@@ -32,8 +32,7 @@ function LoginPage(){
                 />
         </View>
 
-        <LoginButton title="Login"/>
+        <LoginButton title="Login" address="Home"/>
     </View>
     );
 }
-export default LoginPage;
