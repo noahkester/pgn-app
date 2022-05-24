@@ -32,8 +32,8 @@ export default StyleSheet.create({
         marginLeft: 6,
         //space between the other box
         marginBottom: 25,
-        width: 189,
-        height: 22,
+        width: '44%',
+        height: '75%',
         borderRadius: 6,
         //align them horizontally
         flexDirection: 'row',
@@ -50,10 +50,23 @@ export default StyleSheet.create({
         
     },
 
-    navigation_item: {
-        width: "4%",
-        height: "4%",
-        borderColor: 'red',
+    homeLogo : {
+        
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        width: "60%",
+        height: '60%',
+
+        
+    },
+
+    profileCircle: {
+        
+
+        borderRadius: '30%',
+        flex: 1,
+
+        
     }
 })
 

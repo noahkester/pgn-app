@@ -11,8 +11,12 @@ export function LoginPage(){
       />
       
         <View style = {{flexDirection: 'row'}}>
-
-            <Text> Username: </Text>
+            {/* //to align with the text box */}
+            <View style = {{
+                bottom : '-1%',
+            }}>
+                <Text> Username: </Text>
+            </View>
             <TextInput
             autoCapitalize= 'none'
             autoCorrect = {false}
@@ -21,8 +25,12 @@ export function LoginPage(){
             />
         </View>
             {/*each row  */}
-        <View style = {{flexDirection: 'row'}}>
-            <Text> Password: </Text>
+        <View style = {{flexDirection: 'row',}}>
+            <View style = {{
+                bottom : '-1%',
+            }}>
+                <Text> Password: </Text>
+            </View>
             <TextInput
                 style = {[styles.typein_box, styles.colors]}
                 autoCapitalize= 'none'
@@ -31,8 +39,12 @@ export function LoginPage(){
                 secureTextEntry = {true}
                 />
         </View>
-
-        <LoginButton title="Login" address="Home"/>
+        <View style = {{
+            bottom: '-15%'
+        }}
+        >
+        <LoginButton title="Login" address="Navigation"/>
+        </View>
     </View>
     );
 }
