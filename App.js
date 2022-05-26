@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   Text,
   Image,
-  View,
+  View, 
 } from "react-native";
 import { FirstPage } from "./Screens/Login_SignUp";
 import { LoginPage } from "./Screens/Login";

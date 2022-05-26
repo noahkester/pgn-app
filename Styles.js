@@ -11,6 +11,9 @@ export default StyleSheet.create({
   colors: {
     backgroundColor: "#D9D9D9",
   },
+  burntOrange:{
+    backgroundColor: '#C57035',
+  },
   professional: {
     backgroundColor: '#FFC107',
   },
@@ -64,12 +67,14 @@ export default StyleSheet.create({
   },
 
   profilePosition: {
-    left: "60%",
+    left: "30%",
     flexDirection: "column",
-    ustifyContent: "flex-start",
+    justifyContent: "flex-start",
+    alignItems: 'center',
   },
 
   profileCircle: {
+ 
     borderRadius: "26%",
     overflow: "hidden",
     //give free space
@@ -77,25 +82,31 @@ export default StyleSheet.create({
   },
 
   box: {
-    flexDirection: "row-reverse",
-    
-    alignItems: "center",
-    right: '17%',
-    top: '20%',
-    justifyContent: "flex-start",
+    flexDirection: "row",
+    justifyContent: 'center',
+    paddingVertical: '5%',
+    marginHorizontal: '7%',
+    borderRadius: '10%',
     marginBottom: '5%',
+    shadowColor: '#C57035',
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    backgroundColor: 'white',
+    alignItems: 'center'
+ 
   },
 
-  pointBoxes: {
+  pointBox: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+     flex: 1,
+     justifyContent: 'space-between',
+     marginHorizontal: '4%',  
   },
 
   submitBox: {
-    marginHorizontal: '20%',
     padding: '2%',
-    borderRadius: '50%',
+    borderRadius: '10%',
+    marginHorizontal: '10%',
     // width: '40%',
     flexDirection: 'row',
     alignItems: 'center',
@@ -103,6 +114,27 @@ export default StyleSheet.create({
 
     backgroundColor: '#0D6EFD',
     top: '30%',
+  },
+  
+  scrollList:{
+    marginHorizontal: '6%',
+   
+  },
+
+  scrollBox: {
+    flexDirection: "row",
+    justifyContent: 'flex-start',
+    paddingVertical: '5%',
+
+    marginHorizontal: '1%',
+    borderRadius: '10%',
+    marginVertical: '3%',
+
+    shadowColor: '#C57035',
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    backgroundColor: 'white',
+    alignItems: 'center'
   }
   
 });

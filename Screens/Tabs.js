@@ -11,6 +11,8 @@ import { Octicons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "../Styles";
 import { HomePage } from "./Home";
+import { EventsPage } from "./Events";
+
 function Texting() {
   return (
     <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -22,32 +24,33 @@ function Texting() {
 //put these two funcs here bc we'll be exporting it to each tab since they're stable
 export function ProfCircle(props) {
   return (
-    <View>
-      <View style={styles.profilePosition}>
+    <View style={styles.profilePosition}>
+      <View>
         <Ionicons
           name="md-person-outline"
-          size={"60%"}
-          style={[styles.colors, styles.profileCircle]}
+          size="60"
+          style={[styles.burntOrange, styles.profileCircle]}
         />
-        <Text
-          style={{
-            fontSize: 16,
-          }}
-        >
-          Hello, {props.name} !
-        </Text>
-
-        <Text
-          style={{
-            fontSize: 12,
-            alignSelf: "center",
-            right: "10%",
-          }}
-        >
-          {" "}
-          Pos: {props.pos}
-        </Text>
       </View>
+      <Text
+        style={{
+          maxWidth: 80,
+        }}
+      >
+        Hello, {props.name}!
+      </Text>
+
+      <Text
+        style={{
+          fontSize: 12,
+          alignSelf: "center",
+          fontWeight: "bold",
+          color: "#C57035",
+        }}
+      >
+       
+        {props.pos}
+      </Text>
     </View>
   );
 }
@@ -76,7 +79,7 @@ export function NavigationPage() {
         tabBarStyle: styles.colors,
 
         //color when the tab is pressed
-        tabBarActiveTintColor: "#e91e63",
+        tabBarActiveTintColor: "#C57035",
         headerShown: false,
         tabBarInactiveTintColor: "#5F5F5F",
       }}
@@ -94,7 +97,7 @@ export function NavigationPage() {
       />
       <Tab.Screen
         name="Events"
-        component={Texting}
+        component={EventsPage}
         options={{
           tabBarLabel: "Events",
 
