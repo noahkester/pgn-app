@@ -80,7 +80,7 @@ export default StyleSheet.create({
     flexDirection: "row-reverse",
     
     alignItems: "center",
-    right: '25%',
+    right: '17%',
     top: '20%',
     justifyContent: "flex-start",
     marginBottom: '5%',
