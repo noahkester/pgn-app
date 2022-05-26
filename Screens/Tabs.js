@@ -22,25 +22,31 @@ function Texting() {
 //put these two funcs here bc we'll be exporting it to each tab since they're stable
 export function ProfCircle(props) {
   return (
-    <View >
-      <View style ={{
-        flexDirection: 'row',
-        width: '60%',
-        height:  '60%',
+    <View>
+      <View style={styles.profilePosition}>
+        <Ionicons
+          name="md-person-outline"
+          size={"60%"}
+          style={[styles.colors, styles.profileCircle]}
+        />
+        <Text
+          style={{
+            fontSize: 16,
+          }}
+        >
+          Hello, {props.name} !
+        </Text>
 
-      }}>
-        {/* //do Circle */}
-        <View
-          style={[
-            styles.profileCircle, styles.colors,
-            
-          ]}
-        > 
-        </View>
-          <View style = {{  paddingLeft: '20%',}}>
-            <Ionicons name="md-person-outline" size={"60%"} />
-          
-        </View>
+        <Text
+          style={{
+            fontSize: 12,
+            alignSelf: "center",
+            right: "10%",
+          }}
+        >
+          {" "}
+          Pos: {props.pos}
+        </Text>
       </View>
     </View>
   );
