@@ -1,19 +1,64 @@
-import {
-  PixelRatio,
-  StyleSheet,
-  Button,
-  TouchableOpacity,
-  Text,
-  View,
-} from "react-native";
+import reactDom from "react-dom";
+import { StyleSheet } from "react-native";
+import colors from "./Colors";
 
 export default StyleSheet.create({
-  colors: {
-    backgroundColor: "#D9D9D9",
+  whiteFill: {
+    backgroundColor: colors.white
   },
-  burntOrange:{
-    backgroundColor: '#C57035',
+  lightGrayFill: {
+    backgroundColor: colors.lightGray
   },
+  grayFill: {
+    backgroundColor: colors.gray
+  },
+  darkGrayFill: {
+    backgroundColor: colors.darkGray
+  },
+  universityColorFill: {
+    backgroundColor: colors.universityColor
+  },
+  loginButton: {
+    borderWidth: 1,
+    borderColor: colors.gray,
+  },
+  button: {
+    borderRadius: 30,
+    width: "90%",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: 15,
+    paddingBottom: 15,
+  },
+  largeSemiBoldText: {
+    fontFamily: "Poppins_600SemiBold",
+    fontSize: 20
+  },
+  mediumBoldText: {
+    fontFamily: "Poppins_700Bold",
+    fontSize: 16
+  },
+  smallBoldText: {
+    fontFamily: "Poppins_700Bold",
+    fontSize: 12
+  },
+  whiteText: {
+    color: colors.white
+  },
+  cardContainer: {
+    backgroundColor: "#FFFFFF",
+    shadowColor: '#BBBBBB',
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    padding: 15,
+    borderRadius: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center"
+  },
+
+
+  //AKIN
   professional: {
     backgroundColor: '#FFC107',
   },
@@ -25,19 +70,6 @@ export default StyleSheet.create({
     justifyContent: "center",
 
   },
-
-  //Sign Up/Login Page
-  button_style: {
-    width: 147,
-    height: 53,
-    //rounded edges
-    borderRadius: 10,
-    //space between boxes
-    margin: 15,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
   //Login Page
   typein_box: {
     alignSelf: 'center',
@@ -74,7 +106,7 @@ export default StyleSheet.create({
   },
 
   profileCircle: {
- 
+
     borderRadius: "26%",
     overflow: "hidden",
     //give free space
@@ -93,14 +125,14 @@ export default StyleSheet.create({
     shadowRadius: 5,
     backgroundColor: 'white',
     alignItems: 'center'
- 
+
   },
 
   pointBox: {
     flexDirection: 'row',
-     flex: 1,
-     justifyContent: 'space-between',
-     marginHorizontal: '4%',  
+    flex: 1,
+    justifyContent: 'space-between',
+    marginHorizontal: '4%',
   },
 
   submitBox: {
@@ -115,10 +147,10 @@ export default StyleSheet.create({
     backgroundColor: '#0D6EFD',
     top: '30%',
   },
-  
-  scrollList:{
+
+  scrollList: {
     marginHorizontal: '6%',
-   
+
   },
 
   scrollBox: {
@@ -136,5 +168,5 @@ export default StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center'
   }
-  
+
 });
