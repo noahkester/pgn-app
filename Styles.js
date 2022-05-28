@@ -18,7 +18,10 @@ export default StyleSheet.create({
   universityColorFill: {
     backgroundColor: colors.universityColor
   },
-  loginButton: {
+  errorRedText: {
+    color: colors.errorRed
+  },
+  grayBorder: {
     borderWidth: 1,
     borderColor: colors.gray,
   },
@@ -34,9 +37,21 @@ export default StyleSheet.create({
     fontFamily: "Poppins_600SemiBold",
     fontSize: 20
   },
+  tinySemiBoldText: {
+    fontFamily: "Poppins_600SemiBold",
+    fontSize: 10
+  },
+  smallSemiBoldText: {
+    fontFamily: "Poppins_600SemiBold",
+    fontSize: 16
+  },
   mediumBoldText: {
     fontFamily: "Poppins_700Bold",
     fontSize: 16
+  },
+  largeBoldText: {
+    fontFamily: "Poppins_700Bold",
+    fontSize: 20
   },
   smallBoldText: {
     fontFamily: "Poppins_700Bold",
@@ -52,11 +67,20 @@ export default StyleSheet.create({
     shadowRadius: 10,
     padding: 15,
     borderRadius: 10,
+  },
+  cardAlign: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center"
   },
-
+  scroll: {
+    marginTop: 30,
+    width: "100%",
+  },
+  scrollView: {
+    justifyContent: "center",
+    alignItems: "center"
+  },
 
   //AKIN
   professional: {

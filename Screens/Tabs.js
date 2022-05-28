@@ -1,4 +1,4 @@
-import { StyleSheet, Text, Image, View } from "react-native";
+import { StyleSheet, Text, Image, View, TouchableOpacity } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Octicons } from "@expo/vector-icons";
 import globalStyles from "../Styles";
@@ -6,34 +6,37 @@ import { HomePage } from "./Home";
 import { EventsPage } from "./Events";
 import { PeoplePage } from "./People";
 import { WaitlistPage } from "./Waitlist";
+import { useNavigation } from '@react-navigation/native';
 
 import colors from "../Colors"
 
 
-function Texting() {
-  return (
-    <View style={{ justifyContent: "center", alignItems: "center" }}>
-      <Text>Hello</Text>
-    </View>
-  );
-}
 export function TopBar(props) {
+  var n = "Noah Kester";
+  var c = "Fall 2022"
+
+  var firstName = n.split(" ")[0];
+  var temp = c.split(" ");
+  var pclass = temp[0][0] + temp[1][2] + temp[1][3];
   return (
     <View style={styles.topBar}>
-      <Profile name = "Name" class = "S2022" profileSrc = {require("../images/profile.png")}/>
+      <Profile name={firstName} class={pclass} profileSrc={require("../images/profile.png")} />
       <PGNImage />
     </View>
   );
 }
 //put these two funcs here bc we'll be exporting it to each tab since they're stable
 export function Profile(props) {
+  const navigation = useNavigation();
   return (
     <View style={styles.topBarCon}>
-      <Image
-        source={props.profileSrc}
-        resizeMode="contain"
-        style={styles.profile}
-      />
+      <TouchableOpacity onPress={() => navigation.navigate("Account")}>
+        <Image
+          source={props.profileSrc}
+          resizeMode="contain"
+          style={styles.profile}
+        />
+      </TouchableOpacity>
       <Text style={globalStyles.smallBoldText}>Hello, {props.name}!</Text>
       <Text style={globalStyles.smallBoldText}>PC {props.class}</Text>
     </View>

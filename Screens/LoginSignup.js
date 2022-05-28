@@ -8,29 +8,14 @@ import colors from "../Colors";
 TODO: Figure out how to pass in style 'classes' through components
 Add functionality to the dropdown (only stylistic right now)
 */
-function CreateAccountButton({ title, address, onPress = null, ...props }) {
+export function LoginButton(props) {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
-      {...props}
-      title={title}
-      onPress={() => navigation.navigate(address)}
-      style={[globalStyles.lightGrayFill, globalStyles.loginButton, globalStyles.button,]}
+      onPress={() => navigation.navigate(props.address)}
+      style={[globalStyles.lightGrayFill, globalStyles.button, globalStyles.grayBorder]}
     >
-      <Text style={globalStyles.mediumBoldText}>{title}</Text>
-    </TouchableOpacity>
-  );
-}
-export function LoginButton({ title, address, onPress = null, ...props }) {
-  const navigation = useNavigation();
-  return (
-    <TouchableOpacity
-      {...props}
-      title={title}
-      onPress={() => navigation.navigate(address)}
-      style={[globalStyles.whiteFill, globalStyles.button, globalStyles.loginButton]}
-    >
-      <Text style={globalStyles.mediumBoldText}>{title}</Text>
+      <Text style={globalStyles.mediumBoldText}>{props.title}</Text>
     </TouchableOpacity>
   );
 }
@@ -43,13 +28,15 @@ function UniversityDropdown(props) {
         resizeMode="contain"
       />
       <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>University of Texas at Austin</Text>
+    </View>
+  )
+  /*
       <Image
         source={require("../images/ddarrow.png")}
         style={styles.dropArrow}
         resizeMode="contain"
       />
-    </View>
-  )
+  */
 }
 export function LoginSignupPage() {
   return (
@@ -62,7 +49,7 @@ export function LoginSignupPage() {
       />
       <UniversityDropdown />
       <View style={styles.loginSignupButtons}>
-        <CreateAccountButton title="Create Account" address="" />
+        <LoginButton title="Create Account" address="CreateAccount" />
         <LoginButton title="Log in" address="Login" />
       </View>
     </View>

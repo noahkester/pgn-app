@@ -9,7 +9,9 @@ import {
 } from "react-native";
 import { LoginSignupPage } from "./Screens/LoginSignup";
 import { LoginPage } from "./Screens/Login";
+import { CreateAccountPage } from "./Screens/CreateAccount";
 import { NavigationPage } from "./Screens/Tabs";
+import { AccountPage } from "./Screens/Account";
 // import styles from "./Styles";
 // In App.js in a new project
 
@@ -60,7 +62,9 @@ function App() {
         >
           <Stack.Screen name="LoginSignup" component={LoginSignupPage} />
           <Stack.Screen name="Login" component={LoginPage} />
+          <Stack.Screen name="CreateAccount" component={CreateAccountPage} />
           <Stack.Screen name="Navigation" component={NavigationPage} />
+          <Stack.Screen name="Account" component={AccountPage} />
         </Stack.Navigator>
       </NavigationContainer>
     );
