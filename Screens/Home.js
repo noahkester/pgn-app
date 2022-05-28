@@ -2,17 +2,20 @@ import { TopBar } from "./Tabs";
 import globalStyles from "../Styles";
 import { StyleSheet, TouchableOpacity, Text, Image, View, } from "react-native";
 import colors from "../Colors";
+import { useNavigation } from '@react-navigation/native';
 
 const points = [3, 3, 6]
 const totalPoints = [4, 6, 6]
 
-function SubmitPoints() {
+export function SubmitPoints(props) {
+  const navigation = useNavigation();
   return (
     <TouchableOpacity
-      title={"Submit Points"}
+      title={props.title}
       style={[globalStyles.universityColorFill, globalStyles.button, styles.submitButton]}
+      onPress={() => navigation.navigate(props.address)}
     >
-      <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>{"Submit Points"}</Text>
+      <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>{props.title}</Text>
     </TouchableOpacity>
   );
 }
@@ -94,9 +97,9 @@ const accountInfo = {
 export function HomePage() {
   return (
     <View style={styles.homeScreen}>
-      <TopBar/>
+      <TopBar />
       <PointDisplay />
-      <SubmitPoints />
+      <SubmitPoints address="Submit" title = "Submit Points"/>
     </View>
   );
 }

@@ -10,7 +10,7 @@ Popualate Fields with database pull
 Get inputs on "Save and Exit" and save to database
 
 */
-function AccountTop(props) {
+export function AccountTop(props) {
     const navigation = useNavigation();
     return (
         <View style={styles.accountTop}>
@@ -122,8 +122,14 @@ const styles = StyleSheet.create({
         height: "100%",
         width: "100%",
         alignItems: "center",
+        justifyContent: "center",
         backgroundColor: "white",
-        paddingTop: 70
+    },
+    createAccountSubScreen: {
+        height: "85%",
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "space-between"
     },
     inputContainer: {
         flexDirection: "row",

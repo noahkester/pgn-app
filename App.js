@@ -12,6 +12,7 @@ import { LoginPage } from "./Screens/Login";
 import { CreateAccountPage } from "./Screens/CreateAccount";
 import { NavigationPage } from "./Screens/Tabs";
 import { AccountPage } from "./Screens/Account";
+import { SubmitPage } from "./Screens/Submit";
 // import styles from "./Styles";
 // In App.js in a new project
 
@@ -65,6 +66,7 @@ function App() {
           <Stack.Screen name="CreateAccount" component={CreateAccountPage} />
           <Stack.Screen name="Navigation" component={NavigationPage} />
           <Stack.Screen name="Account" component={AccountPage} />
+          <Stack.Screen name="Submit" component={SubmitPage} />
         </Stack.Navigator>
       </NavigationContainer>
     );
