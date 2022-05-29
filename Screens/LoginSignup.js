@@ -14,9 +14,7 @@ export function LoginButton(props) {
     <TouchableOpacity
       onPress={async () => {
         if (props.customOnPress) {
-          var success = await props.customOnPress()
-          console.log("done: ", success);
-          if (success) {
+          if (await props.customOnPress()) {
             navigation.navigate(props.address)
           }
         }

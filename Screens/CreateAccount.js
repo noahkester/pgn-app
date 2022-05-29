@@ -4,6 +4,7 @@ import globalStyles from "../Styles"
 import { LoginButton } from "./LoginSignup"
 import { PasswordInput, CustomTextInput, ErrorMessage } from "./Login"
 import { auth } from "../firebase"
+import { AccountTop } from "./Account";
 /*
 Backend Stuff TODO:
 
@@ -27,13 +28,16 @@ export function CreateAccountPage() {
     const [email, setEmail] = useState("");
     const [password1, setPassword1] = useState("");
     const [password2, setPassword2] = useState("");
+    const [emailMessage, setEmailMessage] = useState("");
+    const [passwordMessage, setPasswordMessage] = useState("");
     const handleCreateAccount = async () => {
+        setEmailMessage("");
+        setPasswordMessage("");
         var success = false;
         if (password1 !== password2) {
-            console.log("Passwords do not match: ", password1, password2);
+            setPasswordMessage("Passwords do not match");
             return;
         }
-        console.log("Password: ", password1);
         await auth
             .createUserWithEmailAndPassword(email, password1)
             .then(userCredentials => {
@@ -41,10 +45,27 @@ export function CreateAccountPage() {
                 console.log("Created user as: ", user.email);
                 success = true;
             })
-            .catch(error => console.log(error.message))
+            .catch(error => {
+                switch (error.code) {
+                    case "auth/invalid-email":
+                        setEmailMessage("Invalid email format");
+                        break;
+                    case "auth/email-already-exists":
+                        setEmailMessage("Email already registered");
+                        break;
+                    case "auth/weak-password":
+                    case "auth/invalid-password":
+                        setPasswordMessage("Password must be > 6 characters");
+                        break;
+                }
+            })
         return success;
     }
     return (
+        <View style={styles.screen}>
+            <View style={styles.backNav}>
+            <AccountTop name={""} address="LoginSignup" />
+            </View>
         <KeyboardAvoidingView behaviors="padding" style={styles.createAccountScreen}>
             <Text style={globalStyles.mediumBoldText}>Create New Account</Text>
             <View style={styles.section} />
@@ -53,7 +74,7 @@ export function CreateAccountPage() {
                 value={email}
                 onCustomChange={setEmail}
                 placeholder="Enter Email" />
-            <ErrorMessage message="Email already registred" />
+            <ErrorMessage message={emailMessage} />
             <PasswordInput
                 label="Password:"
                 value={password1}
@@ -64,19 +85,25 @@ export function CreateAccountPage() {
                 value={password2}
                 onCustomChange={setPassword2}
                 placeholder="Re-type Password" />
-            <ErrorMessage message="Passwords do not match" />
-            <ErrorMessage message="Passwords must be > 6 characters" />
+            <ErrorMessage message={passwordMessage} />
             <LoginButton title="Create Account" address="LoginSignup" customOnPress={handleCreateAccount} />
         </KeyboardAvoidingView>
+        </View>
     )
 }
 const styles = StyleSheet.create({
-    createAccountScreen: {
-        height: "100%",
-        width: "100%",
-        justifyContent: "center",
-        alignItems: "center",
+    screen: {
         backgroundColor: "white"
+    },
+    backNav: {
+        height: "20%",
+        justifyContent: "center",
+    },
+    createAccountScreen: {
+        height: "80%",
+        width: "100%",
+        marginTop: "25%",
+        alignItems: "center",
     },
     inputContainer: {
         flexDirection: "row",

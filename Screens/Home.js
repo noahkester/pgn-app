@@ -20,19 +20,6 @@ export function SubmitPoints(props) {
   );
 }
 function PointImage(props) {
-  var imageSrc;
-  if (props.points === 6) {
-    //imageSrc = require("../images/good.png");
-  }
-  else if (props.points >= 3) {
-    //imageSrc = require("../images/fair.png");
-  }
-  else if (props.points >= 0) {
-    //imageSrc = require("../images/bad.png");
-  }
-  else {
-    // Uncaught error
-  }
   return (
     <View style={styles.pointImage}>
       <View style={styles.iconCon}>

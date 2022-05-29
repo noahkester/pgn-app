@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import globalStyles from "../Styles"
 import { LoginButton } from "./LoginSignup"
 import { auth } from "../firebase"
-
+import { AccountTop } from "./Account";
 export function ErrorMessage(props) {
     return (
         <View style={styles.errorMessage}>
@@ -51,9 +51,13 @@ export function CustomTextInput(props) {
 export function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [emailMessage, setEmailMessage] = useState("");
+    const [passwordMessage, setPasswordMessage] = useState("");
 
     const handleLogin = async () => {
         var success = false;
+        setEmailMessage("");
+        setPasswordMessage("");
         await auth
             .signInWithEmailAndPassword(email, password)
             .then(userCredentials => {
@@ -61,36 +65,59 @@ export function LoginPage() {
                 console.log("Logged in as: ", user.email);
                 success = true;
             })
-            .catch(error => console.log(error.message))
+            .catch(error => {
+                switch (error.code) {
+                    case "auth/invalid-email":
+                        setEmailMessage("Invalid email format");
+                        break;
+                    case "auth/wrong-password":
+                        setPasswordMessage("Incorrect password");
+                        break;
+                    case "auth/user-not-found":
+                        setEmailMessage("No user found");
+                        break;
+                }
+            })
         return success;
     };
 
     return (
-        <KeyboardAvoidingView behaviors="padding" style={styles.loginScreen}>
-            <CustomTextInput
-                label="Username:"
-                value={email}
-                onCustomChange={setEmail}
-                placeholder="Enter Email" />
-            <ErrorMessage message="Email not registered" />
-            <PasswordInput
-                label="Password:"
-                value={password}
-                onCustomChange={setPassword}
-                placeholder="Enter Password" />
-            <ErrorMessage message="Incorrect password" />
-            <View style={styles.space}></View>
-            <LoginButton title="Login" address="Navigation" customOnPress={handleLogin} />
-        </KeyboardAvoidingView>
+        <View style={styles.screen}>
+            <View style={styles.backNav}>
+                <AccountTop name={""} address="LoginSignup" />
+            </View>
+            <KeyboardAvoidingView behaviors="padding" style={styles.loginScreen}>
+                <CustomTextInput
+                    label="Username:"
+                    value={email}
+                    onCustomChange={setEmail}
+                    placeholder="Enter Email" />
+                <ErrorMessage message={emailMessage} />
+                <PasswordInput
+                    label="Password:"
+                    value={password}
+                    onCustomChange={setPassword}
+                    placeholder="Enter Password" />
+                <ErrorMessage message={passwordMessage} />
+                <View style={styles.space}></View>
+                <LoginButton title="Login" address="Navigation" customOnPress={handleLogin} />
+            </KeyboardAvoidingView>
+        </View>
     )
 }
 const styles = StyleSheet.create({
-    loginScreen: {
-        height: "100%",
-        width: "100%",
-        justifyContent: "center",
-        alignItems: "center",
+    screen: {
         backgroundColor: "white"
+    },
+    backNav: {
+        justifyContent: "center",
+        height: "20%"
+    },
+    loginScreen: {
+        height: "80%",
+        width: "100%",
+        marginTop: "30%",
+        alignItems: "center",
     },
     inputContainer: {
         flexDirection: "row",

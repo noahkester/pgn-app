@@ -65,7 +65,7 @@ export function SubmitPage(props) {
         <View style={styles.submitScreen}>
             <View style={styles.submitSubScreen}>
                 <View style={styles.submitElement}>
-                    <AccountTop name="Submit Points" />
+                    <AccountTop name="Submit Points" address = "Navigation"/>
                 </View>
                 <View style={styles.submitElement}>
                     <SubmitEvents />

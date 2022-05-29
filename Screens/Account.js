@@ -15,7 +15,7 @@ export function AccountTop(props) {
     return (
         <View style={styles.accountTop}>
             <TouchableOpacity
-                onPress={() => navigation.navigate("Navigation")}>
+                onPress={() => navigation.navigate(props.address)}>
                 <Image
                     source={require("../images/back.png")}
                     style={styles.accountLogo}
@@ -107,7 +107,7 @@ const accountInfo = {
 export function AccountPage() {
     return (
         <View style={styles.createAccountScreen}>
-            <AccountTop name={accountInfo.name} />
+            <AccountTop name={accountInfo.name} address = "Navigation"/>
             <PledgeClass pledgeClass={accountInfo.pledgeClass} status = {accountInfo.status}/>
             <Profile />
             <Description description={accountInfo.bio} />
