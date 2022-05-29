@@ -52,15 +52,17 @@ export function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleLogin = () => {
-        console.log("Hello")
-        auth
+    const handleLogin = async () => {
+        var success = false;
+        await auth
             .signInWithEmailAndPassword(email, password)
             .then(userCredentials => {
                 const user = userCredentials.user;
-                console.log("Logged in with", user.email);
+                console.log("Logged in as: ", user.email);
+                success = true;
             })
             .catch(error => console.log(error.message))
+        return success;
     };
 
     return (

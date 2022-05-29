@@ -12,11 +12,17 @@ export function LoginButton(props) {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
-      onPress={() => {
+      onPress={async () => {
         if (props.customOnPress) {
-          props.customOnPress()
+          var success = await props.customOnPress()
+          console.log("done: ", success);
+          if (success) {
+            navigation.navigate(props.address)
+          }
         }
-        navigation.navigate(props.address)
+        else {
+          navigation.navigate(props.address)
+        }
       }}
       style={[globalStyles.lightGrayFill, globalStyles.button, globalStyles.grayBorder]}
     >
@@ -49,6 +55,7 @@ function LoginButtons() {
       <LoginButton title="Create Account" address="CreateAccount" />
       <View style={styles.space}></View>
       <LoginButton title="Log in" address="Login" />
+      <LoginButton title="Guest Account" address="Navigation" />
     </View>
   );
 }

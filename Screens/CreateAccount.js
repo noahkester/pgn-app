@@ -1,8 +1,9 @@
 import { StyleSheet, KeyboardAvoidingView, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import globalStyles from "../Styles"
 import { LoginButton } from "./LoginSignup"
 import { PasswordInput, CustomTextInput, ErrorMessage } from "./Login"
+import { auth } from "../firebase"
 /*
 Backend Stuff TODO:
 
@@ -23,17 +24,49 @@ Check that password length is enough
 */
 
 export function CreateAccountPage() {
+    const [email, setEmail] = useState("");
+    const [password1, setPassword1] = useState("");
+    const [password2, setPassword2] = useState("");
+    const handleCreateAccount = async () => {
+        var success = false;
+        if (password1 !== password2) {
+            console.log("Passwords do not match: ", password1, password2);
+            return;
+        }
+        console.log("Password: ", password1);
+        await auth
+            .createUserWithEmailAndPassword(email, password1)
+            .then(userCredentials => {
+                const user = userCredentials.user;
+                console.log("Created user as: ", user.email);
+                success = true;
+            })
+            .catch(error => console.log(error.message))
+        return success;
+    }
     return (
         <KeyboardAvoidingView behaviors="padding" style={styles.createAccountScreen}>
             <Text style={globalStyles.mediumBoldText}>Create New Account</Text>
             <View style={styles.section} />
-            <CustomTextInput label="Email:" placeholder="Enter Email" />
+            <CustomTextInput
+                label="Email:"
+                value={email}
+                onCustomChange={setEmail}
+                placeholder="Enter Email" />
             <ErrorMessage message="Email already registred" />
-            <PasswordInput label="Password:" placeholder="Create Password" />
-            <PasswordInput label="" placeholder="Re-type Password" />
+            <PasswordInput
+                label="Password:"
+                value={password1}
+                onCustomChange={setPassword1}
+                placeholder="Create Password" />
+            <PasswordInput
+                label=""
+                value={password2}
+                onCustomChange={setPassword2}
+                placeholder="Re-type Password" />
             <ErrorMessage message="Passwords do not match" />
             <ErrorMessage message="Passwords must be > 6 characters" />
-            <LoginButton title="Create Account" address="LoginSignup" />
+            <LoginButton title="Create Account" address="LoginSignup" customOnPress={handleCreateAccount} />
         </KeyboardAvoidingView>
     )
 }
