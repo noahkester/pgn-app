@@ -54,6 +54,7 @@ function LoginButtons() {
       <View style={styles.space}></View>
       <LoginButton title="Log in" address="Login" />
       <LoginButton title="Guest Account" address="Navigation" />
+      <LoginButton title="Admin Account" address="Admin" />
     </View>
   );
 }
