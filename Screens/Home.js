@@ -87,7 +87,7 @@ export function HomePage() {
     <View style={styles.homeScreen}>
       <TopBar />
       <PointDisplay />
-      <SubmitPoints address="Submit" title = "Submit Points"/>
+      <SubmitPoints address="Submit" title="Submit Points" />
     </View>
   );
 }

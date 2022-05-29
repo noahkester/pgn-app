@@ -1,4 +1,4 @@
-import { StyleSheet, Button, TouchableOpacity, Image, TextInput, Text, View } from "react-native";
+import { StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Text, View } from "react-native";
 import React from "react";
 import globalStyles from "../Styles"
 import { useNavigation } from '@react-navigation/native';
@@ -99,7 +99,7 @@ function SignOutButton(props) {
                     .catch(error => console.log(error.message))
             }}
             title={"Signout"}
-            style={[globalStyles.universityColorFill, globalStyles.button, styles.saveButton]}
+            style={[globalStyles.universityColorFill, globalStyles.button, styles.signoutButton]}
 
         >
             <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>{"Sign out"}</Text>
@@ -128,24 +128,43 @@ const accountInfo = {
 export function AccountPage() {
     return (
         <View style={styles.createAccountScreen}>
-            <AccountTop name={accountInfo.name} address="Navigation" />
-            <PledgeClass pledgeClass={accountInfo.pledgeClass} status={accountInfo.status} />
-            <Profile />
-            <Description description={accountInfo.bio} />
-            <AcademicInfo major={accountInfo.major} />
-            <ContactInfo email={accountInfo.email} number={accountInfo.number} linkedin={accountInfo.linkedin} />
-            <SaveButton />
-            <SignOutButton />
+            <View style={styles.navBar}>
+                <View></View>
+                <AccountTop name={accountInfo.name} address="Navigation" />
+            </View>
+            <ScrollView style={styles.accountInfo}>
+                <View style={styles.innerScroll}>
+                    <Profile />
+                    <Description description={accountInfo.bio} />
+                    <PledgeClass pledgeClass={accountInfo.pledgeClass} status={accountInfo.status} />
+                    <AcademicInfo major={accountInfo.major} />
+                    <ContactInfo email={accountInfo.email} number={accountInfo.number} linkedin={accountInfo.linkedin} />
+                    <SaveButton />
+                    <SignOutButton />
+                </View>
+            </ScrollView>
         </View>
     )
 }
 const styles = StyleSheet.create({
+    navBar: {
+        height: "15%",
+        justifyContent: "space-between",
+        paddingBottom: 10,
+        width: "100%"
+    },
     createAccountScreen: {
         height: "100%",
         width: "100%",
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "white",
+    },
+    accountInfo: {
+        width: "100%"
+    },
+    innerScroll: {
+        alignItems: "center"
     },
     createAccountSubScreen: {
         height: "85%",
@@ -211,6 +230,11 @@ const styles = StyleSheet.create({
     pledgeClass: {
         flexDirection: "row",
         justifyContent: "space-between",
-        width: "70%"
+        width: "80%",
+        paddingTop: 40
+    },
+    signoutButton: {
+        marginTop: 10,
+        marginBottom: 50
     }
 })

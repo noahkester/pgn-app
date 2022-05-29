@@ -64,30 +64,31 @@ export function CreateAccountPage() {
     return (
         <View style={styles.screen}>
             <View style={styles.backNav}>
-            <AccountTop name={""} address="LoginSignup" />
+                <View></View>
+                <AccountTop name={""} address="LoginSignup" />
             </View>
-        <KeyboardAvoidingView behaviors="padding" style={styles.createAccountScreen}>
-            <Text style={globalStyles.mediumBoldText}>Create New Account</Text>
-            <View style={styles.section} />
-            <CustomTextInput
-                label="Email:"
-                value={email}
-                onCustomChange={setEmail}
-                placeholder="Enter Email" />
-            <ErrorMessage message={emailMessage} />
-            <PasswordInput
-                label="Password:"
-                value={password1}
-                onCustomChange={setPassword1}
-                placeholder="Create Password" />
-            <PasswordInput
-                label=""
-                value={password2}
-                onCustomChange={setPassword2}
-                placeholder="Re-type Password" />
-            <ErrorMessage message={passwordMessage} />
-            <LoginButton title="Create Account" address="LoginSignup" customOnPress={handleCreateAccount} />
-        </KeyboardAvoidingView>
+            <KeyboardAvoidingView behaviors="padding" style={styles.createAccountScreen}>
+                <Text style={globalStyles.mediumBoldText}>Create New Account</Text>
+                <View style={styles.section} />
+                <CustomTextInput
+                    label="Email:"
+                    value={email}
+                    onCustomChange={setEmail}
+                    placeholder="Enter Email" />
+                <ErrorMessage message={emailMessage} />
+                <PasswordInput
+                    label="Password:"
+                    value={password1}
+                    onCustomChange={setPassword1}
+                    placeholder="Create Password" />
+                <PasswordInput
+                    label=""
+                    value={password2}
+                    onCustomChange={setPassword2}
+                    placeholder="Re-type Password" />
+                <ErrorMessage message={passwordMessage} />
+                <LoginButton title="Create Account" address="LoginSignup" customOnPress={handleCreateAccount} />
+            </KeyboardAvoidingView>
         </View>
     )
 }
@@ -96,8 +97,9 @@ const styles = StyleSheet.create({
         backgroundColor: "white"
     },
     backNav: {
-        height: "20%",
-        justifyContent: "center",
+        height: "15%",
+        justifyContent: "space-between",
+        paddingBottom: 10
     },
     createAccountScreen: {
         height: "80%",

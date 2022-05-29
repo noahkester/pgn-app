@@ -182,15 +182,17 @@ const styles = StyleSheet.create({
     width: 28
   },
   topBar: {
-    marginTop: 50,
-    width: "90%",
-    height: 100,
+    width: "100%",
+    height: 160,
     flexDirection: "row",
     justifyContent: "space-between",
+    paddingTop: 40,
+    paddingRight: 15,
+    paddingLeft: 15,
   },
   topBarCon: {
     width: 100,
-    height: 130,
+    height: 120,
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",

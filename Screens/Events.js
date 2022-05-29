@@ -8,14 +8,14 @@ const allEvents = [
     title: "Cold Cookie",
     type: "Philanthropy",
     month: 5,
-    day: 27,
+    day: 30,
     time: "5:00"
   },
   {
     title: "Bowling Social",
     type: "Social",
     month: 5,
-    day: 28,
+    day: 30,
     time: "4:00"
   },
   {
@@ -105,14 +105,21 @@ function Event(props) {
 }
 function EventSection(props) {
   const events = props.events;
+  var noEvents = false;
   const eventsList = events.map((event) =>
     <Event key={event.title} title={event.title} month={event.month} day={event.day} time={event.time} type={event.type} />
   )
+  if (eventsList.length == 0) {
+    noEvents = true;
+  }
   return (
     <View style={styles.eventSection}>
       <Text style={[globalStyles.smallBoldText, styles.eventTime]}>{props.time}</Text>
       <View>
         {eventsList}
+        {noEvents &&
+          <Text style={[globalStyles.smallBoldText, styles.noEventsText]}>No Events</Text>
+        }
       </View>
     </View>
   )
@@ -198,5 +205,9 @@ const styles = StyleSheet.create({
   },
   eventText: {
     width: "60%"
+  },
+  noEventsText: {
+    textAlign: "center",
+    marginBottom: 10
   }
 })

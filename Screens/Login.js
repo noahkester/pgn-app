@@ -84,6 +84,7 @@ export function LoginPage() {
     return (
         <View style={styles.screen}>
             <View style={styles.backNav}>
+                <View></View>
                 <AccountTop name={""} address="LoginSignup" />
             </View>
             <KeyboardAvoidingView behaviors="padding" style={styles.loginScreen}>
@@ -110,8 +111,9 @@ const styles = StyleSheet.create({
         backgroundColor: "white"
     },
     backNav: {
-        justifyContent: "center",
-        height: "20%"
+        justifyContent: "space-between",
+        height: "15%",
+        paddingBottom: 10
     },
     loginScreen: {
         height: "80%",
