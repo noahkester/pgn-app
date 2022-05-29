@@ -1,7 +1,9 @@
-import { StyleSheet, Button, TouchableOpacity, Image, TextInput, Text, View } from "react-native";
-import React from "react";
+import { StyleSheet, TextInput, Text, View, KeyboardAvoidingView } from "react-native";
+import React, { useState } from "react";
 import globalStyles from "../Styles"
 import { LoginButton } from "./LoginSignup"
+import { auth } from "../firebase"
+
 export function ErrorMessage(props) {
     return (
         <View style={styles.errorMessage}>
@@ -20,7 +22,9 @@ export function PasswordInput(props) {
                     placeholder={props.placeholder}
                     style={globalStyles.mediumBoldText}
                     secureTextEntry={true}
+                    onChangeText={text => props.onCustomChange(text)}
                 >
+                    {props.value}
                 </TextInput>
             </View>
         </View>
@@ -36,22 +40,46 @@ export function CustomTextInput(props) {
                     autoCorrect={false}
                     style={globalStyles.mediumBoldText}
                     placeholder={props.placeholder}
+                    onChangeText={text => props.onCustomChange(text)}
                 >
+                    {props.value}
                 </TextInput>
             </View>
         </View>
     )
 }
 export function LoginPage() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleLogin = () => {
+        console.log("Hello")
+        auth
+            .signInWithEmailAndPassword(email, password)
+            .then(userCredentials => {
+                const user = userCredentials.user;
+                console.log("Logged in with", user.email);
+            })
+            .catch(error => console.log(error.message))
+    };
+
     return (
-        <View style={styles.loginScreen}>
-            <CustomTextInput label="Username:" placeholder="Enter Username" />
-            <ErrorMessage message="Username does not exist"/>
-            <PasswordInput label="Password:" placeholder="Enter Password" />
-            <ErrorMessage message="Incorrect password"/>
+        <KeyboardAvoidingView behaviors="padding" style={styles.loginScreen}>
+            <CustomTextInput
+                label="Username:"
+                value={email}
+                onCustomChange={setEmail}
+                placeholder="Enter Email" />
+            <ErrorMessage message="Email not registered" />
+            <PasswordInput
+                label="Password:"
+                value={password}
+                onCustomChange={setPassword}
+                placeholder="Enter Password" />
+            <ErrorMessage message="Incorrect password" />
             <View style={styles.space}></View>
-            <LoginButton title="Login" address="Navigation" />
-        </View>
+            <LoginButton title="Login" address="Navigation" customOnPress={handleLogin} />
+        </KeyboardAvoidingView>
     )
 }
 const styles = StyleSheet.create({

@@ -61,10 +61,10 @@ export function NavigationPage() {
       }}
       screenOptions={{
         tabBarShowLabel: false,
-        tabBarItemStyle: {
-          marginTop: 10,
+        tabBarStyle: {
+          backgroundColor: globalStyles.colors,
+          height: 100
         },
-        tabBarStyle: globalStyles.colors,
         //color when the tab is pressed
         tabBarActiveTintColor: colors.universityColor,
         headerShown: false,

@@ -12,7 +12,12 @@ export function LoginButton(props) {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate(props.address)}
+      onPress={() => {
+        if (props.customOnPress) {
+          props.customOnPress()
+        }
+        navigation.navigate(props.address)
+      }}
       style={[globalStyles.lightGrayFill, globalStyles.button, globalStyles.grayBorder]}
     >
       <Text style={globalStyles.mediumBoldText}>{props.title}</Text>
@@ -38,19 +43,30 @@ function UniversityDropdown(props) {
       />
   */
 }
+function LoginButtons() {
+  return (
+    <View style={styles.loginSignupButtons}>
+      <LoginButton title="Create Account" address="CreateAccount" />
+      <View style={styles.space}></View>
+      <LoginButton title="Log in" address="Login" />
+    </View>
+  );
+}
+
 export function LoginSignupPage() {
   return (
     //to centralize buttons
-    <View style={styles.loginSignupScreen}>
-      <Image
-        source={require("../images/pgn.png")}
-        style={styles.loginImage}
-        resizeMode="contain"
-      />
-      <UniversityDropdown />
-      <View style={styles.loginSignupButtons}>
-        <LoginButton title="Create Account" address="CreateAccount" />
-        <LoginButton title="Log in" address="Login" />
+    <View style={styles.loginSignup}>
+      <View style={styles.loginSignupScreen}>
+        <View style={styles.topSubElement}>
+          <Image
+            source={require("../images/pgn.png")}
+            style={styles.loginImage}
+            resizeMode="contain"
+          />
+          <UniversityDropdown />
+        </View>
+        <LoginButtons />
       </View>
     </View>
   );
@@ -58,12 +74,24 @@ export function LoginSignupPage() {
 
 // Styles
 const styles = StyleSheet.create({
+  topSubElement: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "75%"
+  },
+  loginSignup: {
+    height: "100%",
+    flexDirection: "column",
+    justifyContent: "center",
+    backgroundColor: "white"
+  },
   loginSignupScreen: {
     flexDirection: "column",
     backgroundColor: colors.white,
     alignItems: "center",
-    justifyContent: "flex-end",
-    height: "100%"
+    justifyContent: "space-between",
+    height: "90%"
   },
   universityDropdown: {
     width: "90%",
@@ -88,10 +116,11 @@ const styles = StyleSheet.create({
   loginSignupButtons: {
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "center",
     width: "100%",
-    height: 120,
-    marginBottom: 50,
-    marginTop: 200
+    height: "25%",
+  },
+  space: {
+    height: 10
   }
 });

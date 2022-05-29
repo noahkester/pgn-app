@@ -1,4 +1,4 @@
-import { StyleSheet, Button, TouchableOpacity, Image, TextInput, Text, View } from "react-native";
+import { StyleSheet, KeyboardAvoidingView, Text, View } from "react-native";
 import React from "react";
 import globalStyles from "../Styles"
 import { LoginButton } from "./LoginSignup"
@@ -24,20 +24,17 @@ Check that password length is enough
 
 export function CreateAccountPage() {
     return (
-        <View style={styles.createAccountScreen}>
+        <KeyboardAvoidingView behaviors="padding" style={styles.createAccountScreen}>
             <Text style={globalStyles.mediumBoldText}>Create New Account</Text>
             <View style={styles.section} />
             <CustomTextInput label="Email:" placeholder="Enter Email" />
             <ErrorMessage message="Email already registred" />
-            <CustomTextInput label="Username:" placeholder="Create Username" />
-            <ErrorMessage message="Username taken" />
-            <ErrorMessage message="Only letters and numbers allowed" />
             <PasswordInput label="Password:" placeholder="Create Password" />
             <PasswordInput label="" placeholder="Re-type Password" />
             <ErrorMessage message="Passwords do not match" />
             <ErrorMessage message="Passwords must be > 6 characters" />
             <LoginButton title="Create Account" address="LoginSignup" />
-        </View>
+        </KeyboardAvoidingView>
     )
 }
 const styles = StyleSheet.create({
