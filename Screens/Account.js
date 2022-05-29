@@ -3,6 +3,7 @@ import React from "react";
 import globalStyles from "../Styles"
 import { useNavigation } from '@react-navigation/native';
 import colors from "webpack-dev-server/lib/utils/colors";
+import { auth } from "../firebase";
 /*
 Backend Stuff TODO:
 
@@ -85,6 +86,26 @@ function SaveButton(props) {
         </TouchableOpacity>
     )
 }
+function SignOutButton(props) {
+    const navigation = useNavigation();
+    return (
+        <TouchableOpacity
+            onPress={() => {
+                auth
+                    .signOut()
+                    .then(() => {
+                        navigation.navigate("LoginSignup")
+                    })
+                    .catch(error => console.log(error.message))
+            }}
+            title={"Signout"}
+            style={[globalStyles.universityColorFill, globalStyles.button, styles.saveButton]}
+
+        >
+            <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>{"Sign out"}</Text>
+        </TouchableOpacity>
+    )
+}
 function PledgeClass(props) {
     return (
         <View style={styles.pledgeClass}>
@@ -107,13 +128,14 @@ const accountInfo = {
 export function AccountPage() {
     return (
         <View style={styles.createAccountScreen}>
-            <AccountTop name={accountInfo.name} address = "Navigation"/>
-            <PledgeClass pledgeClass={accountInfo.pledgeClass} status = {accountInfo.status}/>
+            <AccountTop name={accountInfo.name} address="Navigation" />
+            <PledgeClass pledgeClass={accountInfo.pledgeClass} status={accountInfo.status} />
             <Profile />
             <Description description={accountInfo.bio} />
-            <AcademicInfo major={accountInfo.major}/>
-            <ContactInfo email = {accountInfo.email} number = {accountInfo.number} linkedin = {accountInfo.linkedin}/>
+            <AcademicInfo major={accountInfo.major} />
+            <ContactInfo email={accountInfo.email} number={accountInfo.number} linkedin={accountInfo.linkedin} />
             <SaveButton />
+            <SignOutButton />
         </View>
     )
 }

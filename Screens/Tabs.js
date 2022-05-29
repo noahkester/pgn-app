@@ -7,12 +7,16 @@ import { EventsPage } from "./Events";
 import { PeoplePage } from "./People";
 import { WaitlistPage } from "./Waitlist";
 import { useNavigation } from '@react-navigation/native';
+import { auth } from "../firebase"
 
 import colors from "../Colors"
 
 
 export function TopBar(props) {
-  var n = "Noah Kester";
+  var n = "Guest"
+  if (auth.currentUser) {
+    n = auth.currentUser.email;
+  }
   var c = "Fall 2022"
 
   var firstName = n.split(" ")[0];
