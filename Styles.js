@@ -60,6 +60,9 @@ export default StyleSheet.create({
   whiteText: {
     color: colors.white
   },
+  grayText: {
+    color: colors.gray
+  },
 
   cardContainer: {
     backgroundColor: "#FFFFFF",

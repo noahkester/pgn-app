@@ -40,13 +40,11 @@ function LoginButtons() {
       <LoginButton title="Create Account" address="CreateAccount" />
       <View style={styles.space}></View>
       <LoginButton title="Log in" address="Login" />
+      <LoginButton title="Guest Account" address="Navigation" />
+      <LoginButton title="Admin Account" address="Admin" />
     </View>
   );
 }
-/*
-    <LoginButton title="Guest Account" address="Navigation" />
-    <LoginButton title="Admin Account" address="Admin" />
-*/
 
 export function LoginSignupPage() {
   return (
