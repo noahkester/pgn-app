@@ -49,7 +49,6 @@ function UniversityDropdown(props) {
     setValue={setValue}
     setItems={setItems}
     listMode = 'SCROLLVIEW'
-    style
     dropDownContainerStyle = {{
       backgroundColor: 'gray',
       borderWidth: 0,
