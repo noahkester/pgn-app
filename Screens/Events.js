@@ -3,19 +3,21 @@ import globalStyles from "../Styles";
 import { TopBar } from "./Tabs";
 
 // After pulling data, need to sort everything here based on the date and time
-const allEvents = [
+export const allEvents = [
   {
     title: "Cold Cookie",
     type: "Philanthropy",
     month: 5,
     day: 30,
-    time: "5:00"
+    time: "5:00",
+    completed: "T",
   },
   {
     title: "Bowling Social",
     type: "Social",
     month: 5,
     day: 30,
+    completed: "T",
     time: "4:00"
   },
   {
@@ -23,6 +25,7 @@ const allEvents = [
     type: "Professional",
     month: 6,
     day: 3,
+    completed: "T",
     time: "2:30"
   },
   {
@@ -30,6 +33,7 @@ const allEvents = [
     type: "Social",
     month: 6,
     day: 4,
+    completed: "F",
     time: "1:30"
   },
   {
@@ -37,6 +41,7 @@ const allEvents = [
     type: "Philanthropy",
     month: 6,
     day: 7,
+    completed: "W",
     time: "11:00"
   },
   {
@@ -44,6 +49,7 @@ const allEvents = [
     type: "Social",
     month: 6,
     day: 10,
+    completed: "W",
     time: "2:30"
   },
   {
@@ -51,6 +57,7 @@ const allEvents = [
     type: "Philanthropy",
     month: 6,
     day: 11,
+    completed: "T",
     time: ""
   }
 ];
@@ -103,11 +110,12 @@ function Event(props) {
     </View>
   );
 }
-function EventSection(props) {
+export function EventSection(props) {
   const events = props.events;
   var noEvents = false;
   const eventsList = events.map((event) =>
-    <Event key={event.title} title={event.title} month={event.month} day={event.day} time={event.time} type={event.type} />
+    <Event key={event.title} title={event.title} month={event.month} day={event.day} time={event.time} type={event.type}
+    completed = {event.completed} />
   )
   if (eventsList.length == 0) {
     noEvents = true;
@@ -124,6 +132,18 @@ function EventSection(props) {
     </View>
   )
 }
+export function completed(){
+  return(
+    allEvents.reduce((events, event) => {
+      if(event.completed == 'T'){
+        events.push(event);
+        
+      } return events;
+    }, [])
+  );
+}
+
+
 export function EventsPage() {
   // Does not work for overlapping years. Shouldn't be a problem because everything is semester based
   // When admin puts in dates it will not include the year
@@ -135,7 +155,6 @@ export function EventsPage() {
   tomorrowDate.setDate(todayDate.getDate() + 1);
   const tomorrowMonth = tomorrowDate.getMonth() + 1;
   const tomorrowDay = tomorrowDate.getDate();
-
   const today = allEvents.reduce((events, event) => {
     if (todayMonth === event.month && todayDay === event.day) {
       events.push(event);
@@ -152,9 +171,13 @@ export function EventsPage() {
 
     if (tomorrowMonth < event.month || (tomorrowMonth === event.month && tomorrowDay < event.day)) {
       events.push(event);
+      
     }
     return events;
   }, []);
+    
+    
+   
 
   return (
     <View style={styles.eventScreen}>

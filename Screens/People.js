@@ -2,6 +2,7 @@ import {
   StyleSheet,
   Button,
   TouchableOpacity,
+  TouchableHighlight,
   Text,
   Image,
   View,
@@ -149,15 +150,27 @@ function PeopleImage(props) {
   );
 }
 function People(props) {
+
+    const enlargeProfile = () => {
+      <View style = {styles.enlargedCard}>
+        <Text HERYYYY/>
+      </View>
+    }
+    
   // In the future, add animation to show contact info after a click
   return (
-    <View style={[globalStyles.cardContainer, styles.peopleCard, globalStyles.cardAlign]}>
-      <PeopleImage image={props.image} />
-      <View style={styles.peopleText}>
-        <Text style={globalStyles.smallSemiBoldText}>{props.name}</Text>
-        <Text style={globalStyles.tinySemiBoldText}>{"\"" + props.bio + "\""}</Text>
+    <TouchableHighlight
+    onPress={enlargeProfile}>
+      <View style={[globalStyles.cardContainer, styles.peopleCard, globalStyles.cardAlign]}>
+        
+          <PeopleImage image={props.image} />
+          <View style={styles.peopleText}>
+            <Text style={globalStyles.smallSemiBoldText}>{props.name}</Text>
+            <Text style={globalStyles.tinySemiBoldText}>{"\"" + props.bio + "\""}</Text>
+          </View>
+        
       </View>
-    </View>
+    </TouchableHighlight>
   )
 }
 function PeopleSection(props) {
@@ -210,6 +223,17 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 50,
     height: 50,
+  },
+  enlargedCard: {
+    backgroundColor: "#FFFFFF",
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    shadowColor: '#BBBBBB',
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    padding: 15,
+
+    borderRadius: 10,
   },
   people: {
     width: 50,

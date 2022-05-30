@@ -50,6 +50,7 @@ export function CustomTextInput(props) {
 }
 export function LoginPage() {
     const [email, setEmail] = useState("");
+
     const [password, setPassword] = useState("");
     const [emailMessage, setEmailMessage] = useState("");
     const [passwordMessage, setPasswordMessage] = useState("");

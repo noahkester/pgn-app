@@ -60,6 +60,7 @@ export default StyleSheet.create({
   whiteText: {
     color: colors.white
   },
+
   cardContainer: {
     backgroundColor: "#FFFFFF",
     shadowColor: '#BBBBBB',
@@ -68,6 +69,7 @@ export default StyleSheet.create({
     padding: 15,
     borderRadius: 10,
   },
+
   cardAlign: {
     flexDirection: "row",
     justifyContent: "space-between",

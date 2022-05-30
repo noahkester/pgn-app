@@ -1,9 +1,11 @@
 import { StyleSheet, TouchableOpacity, Image, Text, View, } from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
-import React, { Component } from "react";
+
+import React, { useState } from "react";
 import globalStyles from "../Styles";
 import colors from "../Colors";
+import DropDownPicker from "react-native-dropdown-picker";
 /*
 TODO: Figure out how to pass in style 'classes' through components
 Add functionality to the dropdown (only stylistic right now)
@@ -29,7 +31,40 @@ export function LoginButton(props) {
   );
 }
 function UniversityDropdown(props) {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    {label: 'UNC', value: 'apple'},
+    {label: 'UPitt', value: 'banana'},
+    {label: 'UT Austin', value: 'apple'},
+  ]);
   return (
+    <DropDownPicker
+    placeholder= "Select your Chapter"
+    placeholderStyle = {[globalStyles.whiteText, globalStyles.mediumBoldText]}
+    open={open}
+    value={value}
+    items={items}
+    setOpen={setOpen}
+    setValue={setValue}
+    setItems={setItems}
+    listMode = 'SCROLLVIEW'
+    style
+    dropDownContainerStyle = {{
+      backgroundColor: 'gray',
+      borderWidth: 0,
+      width: '89.5%',
+      marginLeft: '5%',
+    }}
+    textStyle = {[,globalStyles.whiteText, globalStyles.mediumBoldText]}
+    style = {{
+      marginLeft: '5%',
+      justifyContent: 'center',
+      flexDirection: 'row',
+      alignItems: 'center',
+      width: '90%',
+      borderWidth: 0,
+    backgroundColor: '#C57035' }}>
     <View style={styles.universityDropdown}>
       <Image
         source={require("../images/utlogo.png")}
@@ -46,6 +81,8 @@ function UniversityDropdown(props) {
         resizeMode="contain"
       />
   */
+ </DropDownPicker>
+  );
 }
 function LoginButtons() {
   return (

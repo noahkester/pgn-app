@@ -69,10 +69,12 @@ export function NavigationPage() {
           backgroundColor: globalStyles.colors,
           height: 100
         },
+
         //color when the tab is pressed
         tabBarActiveTintColor: colors.universityColor,
         headerShown: false,
         tabBarInactiveTintColor: colors.darkGray,
+
       }}>
       <Tab.Screen
         name="Home"
@@ -170,16 +172,20 @@ export function NavigationPage() {
 }
 const styles = StyleSheet.create({
   icons1: {
+    height: 50,
     width: 30
   },
   icons2: {
-    width: 30
+    height: 50,
+    width: 30,
   },
   icons3: {
-    width: 45
+    height: 50,
+    width: 45,
   },
   icons4: {
-    width: 28
+    height: 50,
+    width: 28,
   },
   topBar: {
     width: "100%",
