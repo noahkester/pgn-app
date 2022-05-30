@@ -7,22 +7,52 @@ import React, { useState } from "react";
 
 const pointsQueue = [
     {
-        text: "one"
+        text: "one",
+        name: "Noah Kester",
+        pledgeClass: "Spring 2022",
+        event: "Cold Cookie Profit Share",
+        image: "../images/pgn.png",
+        description: "This is a descriptiofs jkrf srjbfor bf"
     },
     {
-        text: "two"
+        text: "two",
+        name: "Michael Jordan",
+        pledgeClass: "Fall 2021",
+        event: "Cold Cookie Profit Share",
+        image: "../images/pgn.png",
+        description: "This is a description"
     },
     {
-        text: "three"
+        text: "three",
+        name: "Kyrie Irvin",
+        pledgeClass: "Spring 2020",
+        event: "Cold Cookie Profit Share",
+        image: "../images/pgn.png",
+        description: "This is a description"
     },
     {
-        text: "four"
+        text: "four",
+        name: "Jason Tatum",
+        pledgeClass: "Spring 2020",
+        event: "Cold Cookie Profit Share",
+        image: "../images/pgn.png",
+        description: "This is a description"
     },
     {
-        text: "five"
+        text: "five",
+        name: "Luka Doncic",
+        pledgeClass: "Fall 2022",
+        event: "Cold Cookie Profit Share",
+        image: "../images/pgn.png",
+        description: "This is a description"
     },
     {
-        text: "eof"
+        text: "eof",
+        name: "James Harden",
+        pledgeClass: "Spring 2022",
+        event: "Cold Cookie Profit Share",
+        image: "../images/pgn.png",
+        description: "This is a description"
     }
 ]
 
@@ -89,17 +119,46 @@ function AdminBottom(props) {
 }
 function PointSheet(props) {
     return (
-        <Text>{props.text}</Text>
+        <View style={styles.pointSheet}>
+            <View style={styles.space}></View>
+            <View style={styles.pointTextLine}>
+                <Text style={globalStyles.largeSemiBoldText}>Name: </Text>
+                <Text style={globalStyles.largeSemiBoldText}>{props.name}</Text>
+            </View>
+            <View style={styles.pointTextLine}>
+                <Text style={globalStyles.largeSemiBoldText}>PC: </Text>
+                <Text style={globalStyles.largeSemiBoldText}>{props.pledgeClass}</Text>
+            </View>
+            <View style={styles.space}></View>
+            <Text style={globalStyles.largeSemiBoldText}>{props.event}</Text>
+            <Image
+                source={require("../images/pgn.png")}
+                resizeMode="contain"
+                style={styles.pointImage}
+            />
+            <Text style={globalStyles.largeSemiBoldText}>{props.description}</Text>
+        </View>
     )
 }
 function PointsQueue(props) {
     const points = pointsQueue.map((point) =>
         <PointSheet
-            text={point.text}
+            name={point.name}
+            pledgeClass={point.pledgeClass}
+            event={point.event}
+            image={point.image}
+            description={point.description}
         />
     )
+    if (props.queueIndex >= pointsQueue.length) {
+        return (
+            <View style={styles.pointQueue}>
+                <DoneImage />
+            </View>
+        )
+    }
     return (
-        <View>
+        <View style={styles.pointQueue}>
             {points[props.queueIndex]}
         </View>
     )
@@ -164,5 +223,24 @@ const styles = StyleSheet.create({
     bottomButton: {
         width: 100,
         height: 100
+    },
+    pointSheet: {
+        width: "100%",
+        //borderWidth: 5
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    pointQueue: {
+        width: "80%",
+    },
+    pointImage: {
+        height: 200,
+        width: 200
+    },
+    pointTextLine: {
+        flexDirection: "row"
+    },
+    space: {
+        height: 20
     }
 })
