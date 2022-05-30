@@ -4,8 +4,11 @@ import { useNavigation } from '@react-navigation/native';
 
 import React, { useState } from "react";
 import globalStyles from "../Styles";
-import colors from "../Colors";
+import ucolors from "../UniversityColors";
 import DropDownPicker from "react-native-dropdown-picker";
+import colors from "../Colors";
+import { useEffect } from "react";
+import { setDisabled } from "react-native/Libraries/LogBox/Data/LogBoxData";
 /*
 TODO: Figure out how to pass in style 'classes' through components
 Add functionality to the dropdown (only stylistic right now)
@@ -30,70 +33,20 @@ export function LoginButton(props) {
     </TouchableOpacity>
   );
 }
-function UniversityDropdown(props) {
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    {label: 'UNC', value: 'apple'},
-    {label: 'UPitt', value: 'banana'},
-    {label: 'UT Austin', value: 'apple'},
-  ]);
-  return (
-    <DropDownPicker
-    placeholder= "Select your Chapter"
-    placeholderStyle = {[globalStyles.whiteText, globalStyles.mediumBoldText]}
-    open={open}
-    value={value}
-    items={items}
-    setOpen={setOpen}
-    setValue={setValue}
-    setItems={setItems}
-    listMode = 'SCROLLVIEW'
-    dropDownContainerStyle = {{
-      backgroundColor: 'gray',
-      borderWidth: 0,
-      width: '89.5%',
-      marginLeft: '5%',
-    }}
-    textStyle = {[,globalStyles.whiteText, globalStyles.mediumBoldText]}
-    style = {{
-      marginLeft: '5%',
-      justifyContent: 'center',
-      flexDirection: 'row',
-      alignItems: 'center',
-      width: '90%',
-      borderWidth: 0,
-    backgroundColor: '#C57035' }}>
-    <View style={styles.universityDropdown}>
-      <Image
-        source={require("../images/utlogo.png")}
-        style={styles.universityLogo}
-        resizeMode="contain"
-      />
-      <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>University of Texas at Austin</Text>
-    </View>
-  )
-  /*
-      <Image
-        source={require("../images/ddarrow.png")}
-        style={styles.dropArrow}
-        resizeMode="contain"
-      />
-  */
- </DropDownPicker>
-  );
-}
+
 function LoginButtons() {
   return (
     <View style={styles.loginSignupButtons}>
       <LoginButton title="Create Account" address="CreateAccount" />
       <View style={styles.space}></View>
       <LoginButton title="Log in" address="Login" />
-      <LoginButton title="Guest Account" address="Navigation" />
-      <LoginButton title="Admin Account" address="Admin" />
     </View>
   );
 }
+/*
+    <LoginButton title="Guest Account" address="Navigation" />
+    <LoginButton title="Admin Account" address="Admin" />
+*/
 
 export function LoginSignupPage() {
   return (
@@ -106,7 +59,6 @@ export function LoginSignupPage() {
             style={styles.loginImage}
             resizeMode="contain"
           />
-          <UniversityDropdown />
         </View>
         <LoginButtons />
       </View>
@@ -164,5 +116,9 @@ const styles = StyleSheet.create({
   },
   space: {
     height: 10
+  },
+  iconStyle: {
+    width: 30,
+    height: 30
   }
 });
