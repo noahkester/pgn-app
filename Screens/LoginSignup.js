@@ -1,5 +1,4 @@
 import { StyleSheet, TouchableOpacity, Image, Text, View, } from "react-native";
-import { NavigationContainer } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 
 import React, { useState } from "react";
@@ -8,7 +7,6 @@ import ucolors from "../UniversityColors";
 import DropDownPicker from "react-native-dropdown-picker";
 import colors from "../Colors";
 import { useEffect } from "react";
-import { setDisabled } from "react-native/Libraries/LogBox/Data/LogBoxData";
 /*
 TODO: Figure out how to pass in style 'classes' through components
 Add functionality to the dropdown (only stylistic right now)

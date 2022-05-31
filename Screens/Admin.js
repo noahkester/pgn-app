@@ -67,15 +67,18 @@ function DoneImage() {
     )
 }
 function SettingsButton() {
+    const navigation = useNavigation();
     return (
-        <View style={styles.settingsButton}>
-            <Image
-                source={require("../images/settings.png")}
-                style={styles.settingsIcon}
-                resizeMode="contain"
-            />
-            <Text style={globalStyles.smallBoldText}>Settings</Text>
-        </View>
+        <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
+            <View style={styles.settingsButton}>
+                <Image
+                    source={require("../images/settings.png")}
+                    style={styles.settingsIcon}
+                    resizeMode="contain"
+                />
+                <Text style={globalStyles.smallBoldText}>Settings</Text>
+            </View>
+        </TouchableOpacity>
     )
 }
 function AdminTop(props) {
