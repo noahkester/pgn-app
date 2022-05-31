@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import globalStyles from "../Styles"
 import { LoginButton } from "./LoginSignup"
 import { PasswordInput, CustomTextInput, ErrorMessage } from "./Login"
-import { auth } from "../firebase"
+import { auth, db } from "../firebase"
 import { AccountTop } from "./Account";
 import ucolors from "../UniversityColors";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -339,6 +339,15 @@ export function CreateAccountPage() {
             .then(userCredentials => {
                 const user = userCredentials.user;
                 console.log("Created user as: ", user.email);
+                db.collection("users").add({
+                    email: user.email,
+                })
+                    .then((docRef) => {
+                        console.log("Document written with ID: ", docRef.id);
+                    })
+                    .catch((error) => {
+                        console.error("Error adding document: ", error);
+                    });
                 success = true;
             })
             .catch(error => {

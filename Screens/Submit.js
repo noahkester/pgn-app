@@ -3,8 +3,9 @@ import { SubmitPoints } from "./Home"
 import { AccountTop } from "./Account";
 import globalStyles from "../Styles";
 import DropDownPicker from "react-native-dropdown-picker";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import colors from "../Colors";
+import * as ImagePicker from 'expo-image-picker';
 
 const testEvents = [
     "LinkedIn Workshop",
@@ -104,14 +105,53 @@ function SubmitEvents() {
         </View>
     )
 }
-function ImageUpload() {
+function CameraShot() {
     return (
-        <TouchableOpacity style={[styles.imageUpload, { zIndex: -1 }]}>
+        <TouchableOpacity
+            style={[styles.imageUpload, { zIndex: -1 }]}
+            onPress={async () => {
+                var result = await ImagePicker.launchCameraAsync();
+            }}
+        >
             <Image
-                source={require("../images/cloud.png")}
+                source={require("../images/camera.png")}
+                style={styles.cameraImage}
+                resizeMode="contain"
+            />
+            <Text style={globalStyles.smallSemiBoldText}>Take a photo</Text>
+        </TouchableOpacity>
+    );
+}
+function ImageUpload() {
+    const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
+    const [image, setImage] = useState(require("../images/cloud.png"));
+    useEffect(() => {
+        (async () => {
+            const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            setHasGalleryPermission(galleryStatus === "granted");
+            console.log("Requested")
+        });
+    }, [])
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images
+        });
+        console.log(result);
+        if (!result.cancelled) {
+            //do something
+        }
+    }
+    return (
+        <TouchableOpacity
+            style={[styles.imageUpload, { zIndex: -1 }]}
+            onPress={() => { pickImage() }}
+        >
+            <Image
+                source={image}
                 style={styles.cloudImage}
                 resizeMode="contain"
             />
+            <Text style={globalStyles.smallSemiBoldText}>Upload Image</Text>
         </TouchableOpacity>
     );
 }
@@ -138,7 +178,10 @@ export function SubmitPage(props) {
                 </View>
                 <View style={styles.submitElement}>
                     <SubmitEvents />
-                    <ImageUpload />
+                    <View style={[styles.imageOptions, { zIndex: -1 }]}>
+                        <CameraShot />
+                        <ImageUpload />
+                    </View>
                     <ProofDescription />
                 </View>
                 <View style={styles.submitElement}>
@@ -179,17 +222,30 @@ const styles = StyleSheet.create({
         visibility: "hidden"
     },
     cloudImage: {
-        width: "100%",
-        height: "100%",
+        width: 140,
+        height: 140,
+    },
+    cameraImage: {
+        width: 100,
+        height: 140,
     },
     imageUpload: {
-        width: "50%",
-        height: "50%"
+        width: 140,
+        height: 160,
+        justifyContent: "center",
+        alignItems: "center",
     },
     descriptionLabel: {
         width: "80%"
     },
     proofDescription: {
         marginTop: 20,
+    },
+    imageOptions: {
+        paddingTop: 30,
+        width: "100%",
+        flexDirection: "row",
+        justifyContent: "space-around",
+        paddingBottom: 100
     }
 })
