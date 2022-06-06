@@ -4,10 +4,13 @@ import {
   TouchableOpacity,
   TouchableHighlight,
   Text,
+  TextInput,
   Image,
   View,
   ScrollView,
 } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+// import { useEffect } from "react/cjs/react.production.min";
 import globalStyles from "../Styles";
 import { TopBar } from "./Tabs";
 var allPeople = [
@@ -17,7 +20,7 @@ var allPeople = [
     linkedin: "https://thisisalink",
     email: "noah@gmail.com",
     number: "123-456-7890",
-    image: ""
+    image: "",
   },
   {
     name: "Akin Bilen",
@@ -25,7 +28,7 @@ var allPeople = [
     linkedin: "https://thisisalink",
     email: "akin@gmail.com",
     number: "123-456-7890",
-    image: ""
+    image: "",
   },
   {
     name: "Aidan Weinrot",
@@ -33,7 +36,7 @@ var allPeople = [
     linkedin: "https://thisisalink",
     email: "akin@gmail.com",
     number: "123-456-7890",
-    image: ""
+    image: "",
   },
   {
     name: "Andrew Brooks",
@@ -41,7 +44,7 @@ var allPeople = [
     linkedin: "https://thisisalink",
     email: "akin@gmail.com",
     number: "123-456-7890",
-    image: ""
+    image: "",
   },
   {
     name: "Anne Daily",
@@ -49,7 +52,7 @@ var allPeople = [
     linkedin: "https://thisisalink",
     email: "akin@gmail.com",
     number: "123-456-7890",
-    image: ""
+    image: "",
   },
   {
     name: "Audrey Lundy",
@@ -57,7 +60,7 @@ var allPeople = [
     linkedin: "https://thisisalink",
     email: "akin@gmail.com",
     number: "123-456-7890",
-    image: ""
+    image: "",
   },
   {
     name: "Blake Brawner",
@@ -65,7 +68,7 @@ var allPeople = [
     linkedin: "https://thisisalink",
     email: "akin@gmail.com",
     number: "123-456-7890",
-    image: ""
+    image: "",
   },
   {
     name: "Brady Lamme",
@@ -73,7 +76,7 @@ var allPeople = [
     linkedin: "https://thisisalink",
     email: "akin@gmail.com",
     number: "123-456-7890",
-    image: ""
+    image: "",
   },
   {
     name: "Carolyn Watts",
@@ -81,14 +84,14 @@ var allPeople = [
     linkedin: "https://thisisalink",
     email: "akin@gmail.com",
     number: "123-456-7890",
-    image: ""
+    image: "",
   },
   {
     name: "Chole Barker",
     bio: "this is another bio",
     linkedin: "https://thisisalink",
     email: "akin@gmail.com",
-    image: "123-456-7890"
+    image: "123-456-7890",
   },
   {
     name: "David Wilson",
@@ -96,7 +99,7 @@ var allPeople = [
     linkedin: "https://thisisalink",
     email: "akin@gmail.com",
     number: "123-456-7890",
-    image: ""
+    image: "",
   },
   {
     name: "Ella Cole",
@@ -104,7 +107,7 @@ var allPeople = [
     linkedin: "https://thisisalink",
     email: "akin@gmail.com",
     number: "123-456-7890",
-    image: ""
+    image: "",
   },
   {
     name: "Ethan Hughes",
@@ -112,7 +115,7 @@ var allPeople = [
     linkedin: "https://thisisalink",
     email: "akin@gmail.com",
     number: "123-456-7890",
-    image: ""
+    image: "",
   },
   {
     name: "Ines Guevara",
@@ -120,7 +123,7 @@ var allPeople = [
     linkedin: "https://thisisalink",
     email: "akin@gmail.com",
     number: "123-456-7890",
-    image: ""
+    image: "",
   },
   {
     name: "Jackson Osteen",
@@ -128,8 +131,8 @@ var allPeople = [
     linkedin: "https://thisisalink",
     email: "akin@gmail.com",
     number: "123-456-7890",
-    image: ""
-  }
+    image: "",
+  },
 ];
 
 function PeopleImage(props) {
@@ -149,52 +152,106 @@ function PeopleImage(props) {
     </View>
   );
 }
-function People(props) {
 
-    const enlargeProfile = () => {
-      <View style = {styles.enlargedCard}>
-        <Text HERYYYY/>
-      </View>
-    }
-    
-  // In the future, add animation to show contact info after a click
-  return (
-    <TouchableHighlight
-    onPress={enlargeProfile}>
-      <View style={[globalStyles.cardContainer, styles.peopleCard, globalStyles.cardAlign]}>
-        
-          <PeopleImage image={props.image} />
-          <View style={styles.peopleText}>
-            <Text style={globalStyles.smallSemiBoldText}>{props.name}</Text>
-            <Text style={globalStyles.tinySemiBoldText}>{"\"" + props.bio + "\""}</Text>
-          </View>
-        
-      </View>
-    </TouchableHighlight>
-  )
-}
 function PeopleSection(props) {
-  var section = allPeople.map((people) => {
-    return <People key = {people.name} name={people.name} bio={people.bio} image={people.image} />;
-  })
-
   return (
     <View style={styles.peopleSection}>
-      <Text style={[globalStyles.smallBoldText, styles.peopleClass]}>{props.class}</Text>
-      <View>
-        {section}
-      </View>
+      <Text style={[globalStyles.smallBoldText, styles.peopleClass]}>
+        {props.class}
+      </Text>
+      <View>{props.section}</View>
     </View>
+  );
+}
+function People(props) {
+  return (
+    <TouchableOpacity>
+      <View
+        style={[
+          globalStyles.cardContainer,
+          styles.peopleCard,
+          globalStyles.cardAlign,
+        ]}
+      >
+        <PeopleImage image={props.image} />
+        <View style={styles.peopleText}>
+          <Text style={globalStyles.smallSemiBoldText}>{props.name}</Text>
+          <Text style={globalStyles.tinySemiBoldText}>
+            {'"' + props.bio + '"'}
+          </Text>
+        </View>
+      </View>
+    </TouchableOpacity>
   );
 }
 
 export function PeoplePage() {
+  var section = allPeople.map((people) => {
+    return (
+      <People
+        key={people.name}
+        name={people.name}
+        bio={people.bio}
+        image={people.image}
+      />
+    );
+  });
+
+  //search bar
+  const [search, setSearch] = useState("");
+  const [filteredDataSource, setFilteredDataSource] = useState([]);
+  const [masterDataSource, setMasterDataSource] = useState();
+  useEffect(() => {
+    //will be a fetch once the backend is complete
+    //https://snack.expo.dev/@aboutreact/react-native-search-bar-filter-on-listview
+
+    setFilteredDataSource(section);
+    setMasterDataSource(section);
+  }, []);
+
+  function searchFilter(text) {
+    if (text) {
+      const filteredPeople = masterDataSource.filter(function (item) {
+         //TODO item.name returns false and therefore just gets "", so nothing shows up
+         //structure works since list restores when you delete after typing
+        const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase();
+
+       
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilteredDataSource(filteredPeople);
+      setSearch(text);
+    } else {
+      setFilteredDataSource(section);
+      setSearch(text);
+    }
+  }
   return (
     <View style={styles.eventScreen}>
       <TopBar />
+      <TextInput
+        style={[
+          styles.search,
+          globalStyles.universityColorFill,
+          globalStyles.smallBoldText,
+          {shadowColor:'#BBBBBB',
+          shadowOpacity: 0.25,
+          shadowRadius: 10,}
+        ]}
+        autoCapitalize="none"
+        autoCorrect={false}
+        placeholder="Search Member"
+
+        onChangeText={(text) => searchFilter(text)}
+        value={search}
+      ></TextInput>
       <ScrollView style={globalStyles.scroll}>
         <View style={globalStyles.scrollView}>
-          <PeopleSection class={"PC Spring 2022"} />
+          <PeopleSection
+            section={filteredDataSource}
+            class={"PC Spring 2022"}
+          />
         </View>
       </ScrollView>
     </View>
@@ -205,19 +262,31 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     alignItems: "center",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+  },
+  search: {
+    width: "35%",
+    height: "5%",
+    paddingLeft: "2%",
+    alignSelf: "flex-end",
+    backgroundColor: "black",
+    textAlign: "left",
+    flexDirection: "row",
+    borderRadius: 10,
+
+    marginRight: "10%",
   },
   peopleSection: {
-    width: "80%"
+    width: "80%",
   },
   peopleCard: {
-    marginBottom: 10
+    marginBottom: 10,
   },
   peopleClass: {
-    marginBottom: 10
+    marginBottom: 10,
   },
   peopleText: {
-    width: "80%"
+    width: "80%",
   },
   peopleImageBackground: {
     position: "absolute",
@@ -226,9 +295,9 @@ const styles = StyleSheet.create({
   },
   enlargedCard: {
     backgroundColor: "#FFFFFF",
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    shadowColor: '#BBBBBB',
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    shadowColor: "#BBBBBB",
     shadowOpacity: 0.25,
     shadowRadius: 10,
     padding: 15,
@@ -243,6 +312,6 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: "red"
-  }
-})
+    backgroundColor: "red",
+  },
+});
