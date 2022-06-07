@@ -4,14 +4,16 @@ import {
   TouchableOpacity,
   TouchableHighlight,
   Text,
+  TouchableWithoutFeedback,
   TextInput,
   Image,
   View,
   ScrollView,
+  Keyboard,
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
-// import { useEffect } from "react/cjs/react.production.min";
 import globalStyles from "../Styles";
+import { SearchBar } from "@rneui/themed";
 import { TopBar } from "./Tabs";
 var allPeople = [
   {
@@ -212,11 +214,10 @@ export function PeoplePage() {
   function searchFilter(text) {
     if (text) {
       const filteredPeople = masterDataSource.filter(function (item) {
-         //TODO item.name returns false and therefore just gets "", so nothing shows up
-         //structure works since list restores when you delete after typing
+        //TODO item.name returns false and therefore just gets "", so nothing shows up
+        //structure works since list restores when you delete after typing
         const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase();
 
-       
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
@@ -228,9 +229,10 @@ export function PeoplePage() {
     }
   }
   return (
-    <View style={styles.eventScreen}>
-      <TopBar />
-      <TextInput
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.eventScreen}>
+        <TopBar />
+        {/* <TextInput
         style={[
           styles.search,
           globalStyles.universityColorFill,
@@ -245,16 +247,43 @@ export function PeoplePage() {
 
         onChangeText={(text) => searchFilter(text)}
         value={search}
-      ></TextInput>
-      <ScrollView style={globalStyles.scroll}>
-        <View style={globalStyles.scrollView}>
-          <PeopleSection
-            section={filteredDataSource}
-            class={"PC Spring 2022"}
-          />
-        </View>
-      </ScrollView>
-    </View>
+      ></TextInput> */}
+        {/* //https://reactnativeelements.com/docs/components/searchbar#calling */}
+        <SearchBar
+          cancelButtonProps={{
+            buttonTextStyle: {
+              fontSize: 13,
+            },
+          }}
+          inputContainerStyle = {{
+            //background Color neeeds to be put manually here
+          }}
+          containerStyle={{
+            backgroundColor: globalStyles.universityColorFill,
+            width: "50%",
+            right: "4%",
+            height: "5%",
+            alignSelf: "flex-end",
+            borderRadius: 10,
+            marginBottom: "2%",
+          }}
+          style={globalStyles.smallBoldText}
+          platform="ios"
+          placeholder="Type Here..."
+          onChangeText={(text) => searchFilter(text)}
+          value={search}
+        />
+
+        <ScrollView style={globalStyles.scroll}>
+          <View style={globalStyles.scrollView}>
+            <PeopleSection
+              section={filteredDataSource}
+              class={"PC Spring 2022"}
+            />
+          </View>
+        </ScrollView>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 const styles = StyleSheet.create({
@@ -264,18 +293,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  search: {
-    width: "35%",
-    height: "5%",
-    paddingLeft: "2%",
-    alignSelf: "flex-end",
-    backgroundColor: "black",
-    textAlign: "left",
-    flexDirection: "row",
-    borderRadius: 10,
-
-    marginRight: "10%",
-  },
+  search: {},
   peopleSection: {
     width: "80%",
   },

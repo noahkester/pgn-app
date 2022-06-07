@@ -131,11 +131,12 @@ const styles = StyleSheet.create({
 
     tabBarIndicatorStyle: {
       backgroundColor: "#C57035",
+      left: 20,
+      width: '23.5%',
       height: "60%",
       borderRadius: 30,
       marginBottom: 10,
-      marginLeft: 15,
-      width: "25%",
+      
     },
   },
 });
