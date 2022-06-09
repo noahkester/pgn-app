@@ -231,7 +231,7 @@ export function PeoplePage() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.eventScreen}>
-        <TopBar />
+
         {/* <TextInput
         style={[
           styles.search,

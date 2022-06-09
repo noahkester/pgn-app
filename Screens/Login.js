@@ -4,6 +4,7 @@ import globalStyles from "../Styles"
 import { LoginButton } from "./LoginSignup"
 import { auth } from "../firebase"
 import { AccountTop } from "./Account";
+// import firestore from '@react-native-firebase/firestore';
 export function ErrorMessage(props) {
     return (
         <View style={styles.errorMessage}>
@@ -98,6 +99,11 @@ export function LoginPage() {
             .signInWithEmailAndPassword(email, password)
             .then(userCredentials => {
                 const user = userCredentials.user;
+
+                const uid = user.uid;
+                
+                 const userInfo = firestore().collection('users').doc(uid);
+                
                 console.log("Logged in as: ", user.email);
                 success = true;
             })

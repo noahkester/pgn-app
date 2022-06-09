@@ -27,7 +27,7 @@ export function TopBar(props) {
       <Profile
         name={firstName}
         class={pclass}
-        profileSrc= {require("../images/profile.png")}
+        profileSrc={require("../images/profile.png")}
       />
       <PGNImage />
     </View>
@@ -36,8 +36,8 @@ export function TopBar(props) {
 //put these two funcs here bc we'll be exporting it to each tab since they're stable
 export function Profile(props) {
   const navigation = useNavigation();
-  var imageSrc = "../images/users/akin.png"
-  
+  var imageSrc = "../images/users/akin.png";
+
   // async function verifyFiles(filepath) {
   //   var RNFS = require("react-native-fs");
   //   let exists = await RNFS.exists(filepath);
@@ -50,7 +50,11 @@ export function Profile(props) {
   return (
     <View style={styles.topBarCon}>
       <TouchableOpacity onPress={() => navigation.navigate("Account")}>
-        <Image source={require(imageSrc)} resizeMode="cover" style={styles.profile} />
+        <Image
+          source={require(imageSrc)}
+          resizeMode="cover"
+          style={styles.profile}
+        />
       </TouchableOpacity>
       <Text style={globalStyles.smallBoldText}>Hello, Guest!</Text>
       <Text style={globalStyles.smallBoldText}>PC {props.class}</Text>
@@ -69,128 +73,134 @@ export function PGNImage() {
 export function NavigationPage() {
   const Tab = createBottomTabNavigator();
   return (
-    <Tab.Navigator
-      // Background of each screen
-      sceneContainerStyle={{
-        backgroundColor: colors.white,
-      }}
-      screenOptions={{
-        tabBarShowLabel: false,
-        tabBarStyle: {
-          backgroundColor: globalStyles.colors,
-          height: 100,
-        },
+    <View style = {{
+      flex : 1,
+    }}>
+      <TopBar />
+      <Tab.Navigator
+        // Background of each screen
+        sceneContainerStyle={{
+          
+          backgroundColor: colors.white,
+        }}
+        screenOptions={{
+          tabBarShowLabel: false,
+          tabBarStyle: {
+            backgroundColor: globalStyles.colors,
+            height: 100,
+          },
 
-        //color when the tab is pressed
-        tabBarActiveTintColor: colors.universityColor,
-        headerShown: false,
-        tabBarInactiveTintColor: colors.darkGray,
-      }}
-    >
-      <Tab.Screen
-        name="Home"
-        component={HomePage}
-        options={{
-          tabBarIcon: ({ color }) => {
-            if (color == colors.universityColor) {
-              return (
-                <Image
-                  source={require("../images/tabBar/home1.png")}
-                  style={styles.icons1}
-                  resizeMode="contain"
-                />
-              );
-            } else {
-              return (
-                <Image
-                  source={require("../images/tabBar/home2.png")}
-                  style={styles.icons1}
-                  resizeMode="contain"
-                />
-              );
-            }
-          },
+          //color when the tab is pressed
+          tabBarActiveTintColor: colors.universityColor,
+          headerShown: false,
+          tabBarInactiveTintColor: colors.darkGray,
         }}
-      />
-      <Tab.Screen
-        name="Events"
-        component={EventsPage}
-        options={{
-          tabBarLabel: "Events",
-          tabBarIcon: ({ color }) => {
-            if (color == colors.universityColor) {
-              return (
-                <Image
-                  source={require("../images/tabBar/calendar2.png")}
-                  style={styles.icons2}
-                  resizeMode="contain"
-                />
-              );
-            } else {
-              return (
-                <Image
-                  source={require("../images/tabBar/calendar1.png")}
-                  style={styles.icons2}
-                  resizeMode="contain"
-                />
-              );
-            }
-          },
-        }}
-      />
-      <Tab.Screen
-        name="People"
-        component={PeoplePage}
-        options={{
-          tabBarLabel: "People",
-          tabBarIcon: ({ color }) => {
-            if (color == colors.universityColor) {
-              return (
-                <Image
-                  source={require("../images/tabBar/group2.png")}
-                  style={styles.icons3}
-                  resizeMode="contain"
-                />
-              );
-            } else {
-              return (
-                <Image
-                  source={require("../images/tabBar/group1.png")}
-                  style={styles.icons3}
-                  resizeMode="contain"
-                />
-              );
-            }
-          },
-        }}
-      />
-      <Tab.Screen
-        name="Points"
-        component={WaitlistPage}
-        options={{
-          tabBarLabel: "Points",
-          tabBarIcon: ({ color }) => {
-            if (color == colors.universityColor) {
-              return (
-                <Image
-                  source={require("../images/tabBar/list2.png")}
-                  style={styles.icons4}
-                  resizeMode="contain"
-                />
-              );
-            } else {
-              return (
-                <Image
-                  source={require("../images/tabBar/list1.png")}
-                  style={styles.icons4}
-                  resizeMode="contain"
-                />
-              );
-            }
-          },
-        }}
-      />
-    </Tab.Navigator>
+      >
+        <Tab.Screen
+          name="Home"
+          component={HomePage}
+          options={{
+            tabBarIcon: ({ color }) => {
+              if (color == colors.universityColor) {
+                return (
+                  <Image
+                    source={require("../images/tabBar/home1.png")}
+                    style={styles.icons1}
+                    resizeMode="contain"
+                  />
+                );
+              } else {
+                return (
+                  <Image
+                    source={require("../images/tabBar/home2.png")}
+                    style={styles.icons1}
+                    resizeMode="contain"
+                  />
+                );
+              }
+            },
+          }}
+        />
+        <Tab.Screen
+          name="Events"
+          component={EventsPage}
+          options={{
+            tabBarLabel: "Events",
+            tabBarIcon: ({ color }) => {
+              if (color == colors.universityColor) {
+                return (
+                  <Image
+                    source={require("../images/tabBar/calendar2.png")}
+                    style={styles.icons2}
+                    resizeMode="contain"
+                  />
+                );
+              } else {
+                return (
+                  <Image
+                    source={require("../images/tabBar/calendar1.png")}
+                    style={styles.icons2}
+                    resizeMode="contain"
+                  />
+                );
+              }
+            },
+          }}
+        />
+        <Tab.Screen
+          name="People"
+          component={PeoplePage}
+          options={{
+            tabBarLabel: "People",
+            tabBarIcon: ({ color }) => {
+              if (color == colors.universityColor) {
+                return (
+                  <Image
+                    source={require("../images/tabBar/group2.png")}
+                    style={styles.icons3}
+                    resizeMode="contain"
+                  />
+                );
+              } else {
+                return (
+                  <Image
+                    source={require("../images/tabBar/group1.png")}
+                    style={styles.icons3}
+                    resizeMode="contain"
+                  />
+                );
+              }
+            },
+          }}
+        />
+        <Tab.Screen
+          name="Points"
+          component={WaitlistPage}
+          options={{
+            tabBarLabel: "Points",
+            tabBarIcon: ({ color }) => {
+              if (color == colors.universityColor) {
+                return (
+                  <Image
+                    source={require("../images/tabBar/list2.png")}
+                    style={styles.icons4}
+                    resizeMode="contain"
+                  />
+                );
+              } else {
+                return (
+                  <Image
+                    source={require("../images/tabBar/list1.png")}
+                    style={styles.icons4}
+                    resizeMode="contain"
+                  />
+                );
+              }
+            },
+          }}
+        />
+      </Tab.Navigator>
+    </View>
   );
 }
 const styles = StyleSheet.create({
@@ -216,7 +226,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingTop: 60,
-
+    backgroundColor: 'white',
     paddingHorizontal: 20,
   },
   topBarCon: {

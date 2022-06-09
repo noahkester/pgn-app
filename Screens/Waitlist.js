@@ -83,7 +83,6 @@ function DeclinedScreen() {
 function TopTabb() {
   return (
     <View style={styles.eventScreen}>
-      <TopBar />
       <View style={{ width: "100%", height: "100%" }}>
         <Tab.Navigator
           sceneContainerStyle={{

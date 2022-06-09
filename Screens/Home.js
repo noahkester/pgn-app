@@ -85,7 +85,9 @@ const accountInfo = {
 export function HomePage() {
   return (
     <View style={styles.homeScreen}>
-      <TopBar />
+      <View style = {{
+        justifyContent: "center"
+      }}></View>
       <PointDisplay />
       <SubmitPoints address="Submit" title="Submit Points" />
     </View>
@@ -93,6 +95,7 @@ export function HomePage() {
 }
 const styles = StyleSheet.create({
   homeScreen: {
+    
     width: "100%",
     height: "100%",
     alignItems: "center",
@@ -105,7 +108,8 @@ const styles = StyleSheet.create({
     width: "80%",
     height: 260,
     flexDirection: "column",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    alignContent: 'space-between',
   },
   pointImage: {
     height: 50,

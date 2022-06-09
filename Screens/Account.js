@@ -1,10 +1,15 @@
 import { StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import globalStyles from "../Styles"
 import { useNavigation } from '@react-navigation/native';
 import colors from "webpack-dev-server/lib/utils/colors";
 import { auth } from "../firebase";
 
+
+function setId(props){
+    const [accessId, getId] = useState('');
+    getId(props.id);
+}   
 /*
 Backend Stuff TODO:
 

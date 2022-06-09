@@ -181,7 +181,6 @@ export function EventsPage() {
 
   return (
     <View style={styles.eventScreen}>
-      <TopBar />
       <ScrollView style={globalStyles.scroll}>
         <View style={globalStyles.scrollView}>
           <EventSection time="Today" events={today} />
