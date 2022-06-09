@@ -30,6 +30,41 @@ export function PasswordInput(props) {
         </View>
     );
 }
+export function AboutTextInput(props) {
+    return (
+        <View style={styles.inputContainer}>
+            <View style={[styles.largeNewUsertextInputContainer, globalStyles.grayBorder]}>
+                <TextInput
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    style={globalStyles.mediumBoldText}
+                    placeholder={props.placeholder}
+                    onChangeText={text => props.onCustomChange(text)}
+                >
+                    {props.value}
+                </TextInput>
+            </View>
+        </View>
+    )
+}
+
+export function NewUserTextInput(props) {
+    return (
+        <View style={styles.inputContainer}>
+            <View style={[styles.newUsertextInputContainer, globalStyles.grayBorder]}>
+                <TextInput
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    style={globalStyles.mediumBoldText}
+                    placeholder={props.placeholder}
+                    onChangeText={text => props.onCustomChange(text)}
+                >
+                    {props.value}
+                </TextInput>
+            </View>
+        </View>
+    )
+}
 export function CustomTextInput(props) {
     return (
         <View style={styles.inputContainer}>
@@ -134,6 +169,21 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         marginTop: 10,
         width: "70%"
+    },
+    newUsertextInputContainer: {
+        borderWidth: 1,
+        padding: 10,
+        borderRadius: 30,
+        marginTop: 10,
+        width: "100%"
+    },
+    largeNewUsertextInputContainer: {
+        borderWidth: 1,
+        padding: 10,
+        borderRadius: 20,
+        marginTop: 10,
+        width: "100%",
+        height: 100
     },
     space: {
         height: 10

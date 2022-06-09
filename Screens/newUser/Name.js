@@ -1,17 +1,17 @@
 import { StyleSheet, Button, TouchableOpacity, Text, Image, View, } from "react-native";
 import { SubmitPoints } from "../Home";
-import { CustomTextInput } from "../Login";
+import { NewUserTextInput } from "../Login";
+import globalStyles from "../../Styles"
 
 export function NamePage() {
     return (
         <View style={styles.screen}>
-            <CustomTextInput
-                label="First name"
-                placeholder="Enter First name"
+             <Text style={globalStyles.largeSemiBoldText}>Name</Text>
+            <NewUserTextInput
+                placeholder="First name"
             />
-            <CustomTextInput
-                label="Last name"
-                placeholder="Enter Last name"
+            <NewUserTextInput
+                placeholder="Last name"
             />
             <View style={{ height: 10 }}></View>
             <SubmitPoints address="Education" title="Next" />

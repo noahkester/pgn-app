@@ -1,23 +1,23 @@
 import { StyleSheet, Button, TouchableOpacity, Text, Image, View, } from "react-native";
 import { SubmitPoints } from "../Home";
-import { CustomTextInput } from "../Login";
+import { NewUserTextInput } from "../Login";
+import globalStyles from "../../Styles"
+
 export function ContactPage() {
     return (
         <View style={styles.screen}>
-            <CustomTextInput
-                label="LinkedIn"
-                placeholder="Paste URL"
+            <Text style={globalStyles.largeSemiBoldText}>Contact</Text>
+            <NewUserTextInput
+                placeholder="LinkedIn URL"
             />
-            <CustomTextInput
-                label="Phone"
-                placeholder="123-456-7890"
+            <NewUserTextInput
+                placeholder="Phone: 123-456-7890"
             />
-            <CustomTextInput
-                label="Dorm/Apt"
-                placeholder="Standard, Jester, etc."
+            <NewUserTextInput
+                placeholder="Apt/Dorm"
             />
             <View style={{ height: 10 }}></View>
-            <SubmitPoints address="Navigation" title="Next" />
+            <SubmitPoints address="Navigation" title="Complete!" />
         </View>
     );
 }
