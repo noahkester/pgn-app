@@ -7,16 +7,16 @@ export const allEvents = [
   {
     title: "Cold Cookie",
     type: "Philanthropy",
-    month: 5,
-    day: 30,
+    month: 6,
+    day: 2,
     time: "5:00",
     completed: "T",
   },
   {
     title: "Bowling Social",
     type: "Social",
-    month: 5,
-    day: 30,
+    month: 6,
+    day: 2,
     completed: "T",
     time: "4:00"
   },

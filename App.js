@@ -1,12 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  Button,
-  TouchableOpacity,
-  Text,
-  Image,
-  View,
-} from "react-native";
+import { StyleSheet, Button, TouchableOpacity, Text, Image, View, } from "react-native";
 import { LoginSignupPage } from "./Screens/LoginSignup";
 import { LoginPage } from "./Screens/Login";
 import { CreateAccountPage } from "./Screens/CreateAccount";
@@ -15,6 +8,11 @@ import { AccountPage } from "./Screens/Account";
 import { SubmitPage } from "./Screens/Submit";
 import { AdminPage } from "./Screens/Admin";
 import { AdminSettingsPage } from "./Screens/AdminSettings";
+import { NamePage } from "./Screens/newUser/Name";
+import { EducationPage } from "./Screens/newUser/Education";
+import { ProfilePicturesPage } from "./Screens/newUser/ProfilePictures";
+import { AboutPage } from "./Screens/newUser/About";
+import { ContactPage } from "./Screens/newUser/Contact";
 // import styles from "./Styles";
 // In App.js in a new project
 
@@ -71,6 +69,12 @@ function App() {
           <Stack.Screen name="Submit" component={SubmitPage} />
           <Stack.Screen name="Admin" component={AdminPage} />
           <Stack.Screen name="Settings" component={AdminSettingsPage} />
+
+          <Stack.Screen name="Name" component={NamePage} />
+          <Stack.Screen name="Education" component={EducationPage} />
+          <Stack.Screen name="ProfilePictures" component={ProfilePicturesPage} />
+          <Stack.Screen name="About" component={AboutPage} />
+          <Stack.Screen name="Contact" component={ContactPage} />
         </Stack.Navigator>
       </NavigationContainer>
     );

@@ -33,7 +33,7 @@ export function PasswordInput(props) {
 export function CustomTextInput(props) {
     return (
         <View style={styles.inputContainer}>
-            <Text style={globalStyles.mediumBoldText}>{props.label}</Text>
+            <Text style={[globalStyles.mediumBoldText, styles.customLabel]}>{props.label}</Text>
             <View style={[styles.textInputContainer, globalStyles.grayBorder]}>
                 <TextInput
                     autoCapitalize='none'
@@ -145,5 +145,5 @@ const styles = StyleSheet.create({
     },
     errorMessageText: {
         paddingLeft: "35%",
-    }
+    },
 })
