@@ -1,5 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Button, TouchableOpacity, Text, Image, View, } from "react-native";
+
+import { StartPage } from "./Screens/Start";
 import { LoginSignupPage } from "./Screens/LoginSignup";
 import { LoginPage } from "./Screens/Login";
 import { CreateAccountPage } from "./Screens/CreateAccount";
@@ -13,6 +15,7 @@ import { EducationPage } from "./Screens/newUser/Education";
 import { ProfilePicturesPage } from "./Screens/newUser/ProfilePictures";
 import { AboutPage } from "./Screens/newUser/About";
 import { ContactPage } from "./Screens/newUser/Contact";
+import { EmailVerificationPage } from "./Screens/newUser/EmailVerification";
 // import styles from "./Styles";
 // In App.js in a new project
 
@@ -56,11 +59,12 @@ function App() {
   } else {
     return (
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="LoginSignup"
+        <Stack.Navigator initialRouteName="Start"
           screenOptions={{
             headerShown: false,
           }}
         >
+          <Stack.Screen name="Start" component={StartPage} />
           <Stack.Screen name="LoginSignup" component={LoginSignupPage} />
           <Stack.Screen name="Login" component={LoginPage} />
           <Stack.Screen name="CreateAccount" component={CreateAccountPage} />
@@ -75,6 +79,7 @@ function App() {
           <Stack.Screen name="ProfilePictures" component={ProfilePicturesPage} />
           <Stack.Screen name="About" component={AboutPage} />
           <Stack.Screen name="Contact" component={ContactPage} />
+          <Stack.Screen name="EmailVerification" component={EmailVerificationPage} />
         </Stack.Navigator>
       </NavigationContainer>
     );

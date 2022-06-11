@@ -1,31 +1,14 @@
-import { StyleSheet, KeyboardAvoidingView, Text, View, Image } from "react-native";
+import { StyleSheet, KeyboardAvoidingView, Text, View, Image, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import globalStyles from "../Styles"
-import { LoginButton } from "./LoginSignup"
 import { PasswordInput, CustomTextInput, ErrorMessage } from "./Login"
-import { auth, db } from "../firebase"
+import { auth, db } from "../Firebase"
 import { AccountTop } from "./Account";
 import ucolors from "../UniversityColors";
 import DropDownPicker from "react-native-dropdown-picker";
 import colors from "../Colors";
-/*
-Backend Stuff TODO:
+import { useNavigation } from '@react-navigation/native';
 
-Get inputs from boxes and create object to send to SQL.
-Add verified = false for email verification.
-Do not allow login until email is verified.
-Send email after "Create account" button pressed
-Update "create new account page" to say "resend email" or "create new account"
-Add expiration for email after 5 minutes. IF expired, delete object and do not add to database
-
-For text input:
-Check that email is not alredy registered
-Check that username is not taken
-Check username has only numbers and letters
-Check that passwords match
-Check that password length is enough
-
-*/
 function UniversityDropdown(props) {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
@@ -320,12 +303,36 @@ function UniversityDropdown(props) {
         </DropDownPicker>
     );
 }
+function CreateAccountButton(props) {
+    const navigation = useNavigation();
+    return (
+        <TouchableOpacity
+            onPress={async () => {
+                // Handle create account defined in CreateAccountPage
+                if (await props.handleCreateAccount()) {
+                    const user = auth.currentUser;
+                    if (!user) {
+                        // This should never happen but in case
+                        console.log("(ERROR): No current user after create account success");
+                    }
+                    navigation.navigate("Name");
+                }
+                // Do not need to catch user attempt failed, handled in the handleCreateAccount method
+            }}
+            style={[globalStyles.lightGrayFill, globalStyles.button, globalStyles.grayBorder]}
+        >
+            <Text style={globalStyles.mediumBoldText}>{props.title}</Text>
+        </TouchableOpacity>
+    );
+}
+
 export function CreateAccountPage() {
     const [email, setEmail] = useState("");
     const [password1, setPassword1] = useState("");
     const [password2, setPassword2] = useState("");
     const [emailMessage, setEmailMessage] = useState("");
     const [passwordMessage, setPasswordMessage] = useState("");
+
     const handleCreateAccount = async () => {
         setEmailMessage("");
         setPasswordMessage("");
@@ -338,16 +345,7 @@ export function CreateAccountPage() {
             .createUserWithEmailAndPassword(email, password1)
             .then(userCredentials => {
                 const user = userCredentials.user;
-                console.log("Created user as: ", user.email);
-                db.collection("users").add({
-                    email: user.email,
-                })
-                    .then((docRef) => {
-                        console.log("Document written with ID: ", docRef.id);
-                    })
-                    .catch((error) => {
-                        console.error("Error adding document: ", error);
-                    });
+                console.log("(Create Account) New user with email: ", user.email);
                 success = true;
             })
             .catch(error => {
@@ -393,7 +391,7 @@ export function CreateAccountPage() {
                     onCustomChange={setPassword2}
                     placeholder="Re-type Password" />
                 <ErrorMessage message={passwordMessage} />
-                <LoginButton title="Create Account" address="LoginSignup" customOnPress={handleCreateAccount} />
+                <CreateAccountButton title="Create Account" handleCreateAccount={handleCreateAccount} />
             </KeyboardAvoidingView>
         </View>
     )

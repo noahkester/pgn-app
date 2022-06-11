@@ -26,4 +26,35 @@ else {
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+auth.onAuthStateChanged(function (user) {
+    if (user) {
+        console.log("(firebase) Current User: " + user.email);
+        if (user.emailVerified) {
+            console.log("(firebase) Email (verified)");
+        }
+        else {
+            console.log("(firebase) Email (not verified)");
+        }
+    } else {
+        console.log("(firebase) No User Logged In");
+    }
+});
+
+export function sendEmail(user) {
+    user.sendEmailVerification()
+    .then(() => {
+        console.log("(firebase) Email send to: " + user.email);
+    });
+}
+/*
+db.collection("users").add({
+                    email: user.email,
+                })
+                    .then((docRef) => {
+                        console.log("User document written with ID: ", docRef.id);
+                    })
+                    .catch((error) => {
+                        console.error("Error adding document: ", error);
+                    });
+                    */
 export { auth, db };

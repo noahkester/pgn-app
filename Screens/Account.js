@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import globalStyles from "../Styles"
 import { useNavigation } from '@react-navigation/native';
 import colors from "webpack-dev-server/lib/utils/colors";
-import { auth } from "../firebase";
+import { auth } from "../Firebase";
 
 
 function setId(props){

@@ -17,7 +17,7 @@ export function ContactPage() {
                 placeholder="Apt/Dorm"
             />
             <View style={{ height: 10 }}></View>
-            <SubmitPoints address="Navigation" title="Complete!" />
+            <SubmitPoints address="EmailVerification" title="Complete!" />
         </View>
     );
 }

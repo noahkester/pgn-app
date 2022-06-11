@@ -7,7 +7,7 @@ import { EventsPage } from "./Events";
 import { PeoplePage } from "./People";
 import { WaitlistPage } from "./Waitlist";
 import { useNavigation } from "@react-navigation/native";
-import { auth } from "../firebase";
+import { auth } from "../Firebase";
 
 import colors from "../Colors";
 // import { exists } from "react-native-fs";

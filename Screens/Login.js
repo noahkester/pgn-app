@@ -1,10 +1,11 @@
-import { StyleSheet, TextInput, Text, View, KeyboardAvoidingView } from "react-native";
+import { TouchableOpacity, StyleSheet, TextInput, Text, View, KeyboardAvoidingView } from "react-native";
 import React, { useState } from "react";
 import globalStyles from "../Styles"
-import { LoginButton } from "./LoginSignup"
-import { auth } from "../firebase"
+import { auth } from "../Firebase"
 import { AccountTop } from "./Account";
-// import firestore from '@react-native-firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
+
+// Error Message Text under input fields
 export function ErrorMessage(props) {
     return (
         <View style={styles.errorMessage}>
@@ -12,6 +13,8 @@ export function ErrorMessage(props) {
         </View>
     )
 }
+
+// Text Input for Login Password
 export function PasswordInput(props) {
     return (
         <View style={styles.inputContainer}>
@@ -31,6 +34,7 @@ export function PasswordInput(props) {
         </View>
     );
 }
+// Text Input field for additional user information in new user flow
 export function AboutTextInput(props) {
     return (
         <View style={styles.inputContainer}>
@@ -66,6 +70,7 @@ export function NewUserTextInput(props) {
         </View>
     )
 }
+// Used for email / username
 export function CustomTextInput(props) {
     return (
         <View style={styles.inputContainer}>
@@ -84,6 +89,37 @@ export function CustomTextInput(props) {
         </View>
     )
 }
+function LoginButton(props) {
+    const navigation = useNavigation();
+    return (
+        <TouchableOpacity
+            onPress={async () => {
+                // Handle login defined in LoginPage, checks if user is in firebase
+                if (await props.handleLogin()) {
+                    // There is a user in firebase, now check if they can go to the Home Page
+                    // Or if we need additional information from them and email verification
+                    const user = auth.currentUser;
+                    if (!user) {
+                        // This should never happen but in case
+                        console.log("(ERROR): No current user after login success");
+                    }
+                    if (user.emailVerified) {
+                        // User has verified their email, continue to home screen
+                        navigation.navigate("Navigation");
+                    }
+                    else {
+                        // User has not verified their email, continue with newUser flow
+                        navigation.navigate("Name");
+                    }
+                }
+                // Do not need to catch user attempt failed, handled in the handleLogin method
+            }}
+            style={[globalStyles.lightGrayFill, globalStyles.button, globalStyles.grayBorder]}
+        >
+            <Text style={globalStyles.mediumBoldText}>{props.title}</Text>
+        </TouchableOpacity>
+    );
+}
 export function LoginPage() {
     const [email, setEmail] = useState("");
 
@@ -95,16 +131,8 @@ export function LoginPage() {
         var success = false;
         setEmailMessage("");
         setPasswordMessage("");
-        await auth
-            .signInWithEmailAndPassword(email, password)
-            .then(userCredentials => {
-                const user = userCredentials.user;
-
-                const uid = user.uid;
-                
-                 const userInfo = firestore().collection('users').doc(uid);
-                
-                console.log("Logged in as: ", user.email);
+        await auth.signInWithEmailAndPassword(email, password)
+            .then(() => {
                 success = true;
             })
             .catch(error => {
@@ -143,7 +171,7 @@ export function LoginPage() {
                     placeholder="Enter Password" />
                 <ErrorMessage message={passwordMessage} />
                 <View style={styles.space}></View>
-                <LoginButton title="Login" address="Navigation" customOnPress={handleLogin} />
+                <LoginButton title="Login" handleLogin={handleLogin} />
             </KeyboardAvoidingView>
         </View>
     )

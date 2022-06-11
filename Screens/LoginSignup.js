@@ -16,14 +16,7 @@ export function LoginButton(props) {
   return (
     <TouchableOpacity
       onPress={async () => {
-        if (props.customOnPress) {
-          if (await props.customOnPress()) {
-            navigation.navigate(props.address)
-          }
-        }
-        else {
           navigation.navigate(props.address)
-        }
       }}
       style={[globalStyles.lightGrayFill, globalStyles.button, globalStyles.grayBorder]}
     >
