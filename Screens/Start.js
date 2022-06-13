@@ -1,21 +1,35 @@
 import { StyleSheet, TouchableOpacity, Image, Text, View, } from "react-native";
 import { LoginSignupPage } from "./LoginSignup";
 import { NavigationPage } from "./Tabs";
-import { auth } from "../Firebase";
-import { useState } from "react";
+import { auth, getCurrentUser } from "../Firebase";
+import { useEffect, useState } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+const Stack = createNativeStackNavigator();
 
-export function StartPage() {
-    // Get the current user
-    const user = auth.currentUser;
-    
-    // Go to Home if there is a user logged in and they have email verification
-    if (user && user.emailVerified) {
-        return (
-            <NavigationPage />
-        )
-    }
-    // Go to Login Signup page to get a user logged in or complete their email verfication
+export function StartPage({ navigation }) {
+    const [validUser, setValidUser] = useState(false);
+    useEffect(() => {
+        async function wait() {
+            // https://stackoverflow.com/questions/39231344/how-to-wait-for-firebaseauth-to-finish-initializing
+            await getCurrentUser(auth).then(user => {
+                setValidUser(user.emailVerified);
+            }).catch(() => {
+                console.log("(Start page) No user: Render Login/Signup");
+            });
+        }
+        wait();
+    }, [])
     return (
-        <LoginSignupPage />
+        <Stack.Navigator
+            screenOptions={{ headerShown: false }}
+        >
+            {
+                (validUser) ?
+                    (<Stack.Screen name="Navigation" component={NavigationPage} />)
+                    :
+                    (<Stack.Screen name="LoginSignup" component={LoginSignupPage} />)
+            }
+        </Stack.Navigator>
     )
 }

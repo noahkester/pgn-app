@@ -26,6 +26,24 @@ else {
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+function readEvents() {
+    // Chenge to only read events that are in the future
+    /*db.collection("events")
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                // doc.data() is never undefined for query doc snapshots
+                var data = doc.data();
+                console.log("(firebase) READ EVENT " + doc.id);
+                // Update Events object
+                events.push(data);
+            });
+        })
+        .catch((error) => {
+            console.log("(firebase) Error getting events documents: ", error);
+        });*/
+}
+
 auth.onAuthStateChanged(function (user) {
     if (user) {
         console.log("(firebase) Current User: " + user.email);
@@ -37,14 +55,22 @@ auth.onAuthStateChanged(function (user) {
         }
     } else {
         console.log("(firebase) No User Logged In");
+        documentReadAllowed = false;
     }
 });
-
+export function getCurrentUser(auth) {
+    return new Promise((resolve, reject) => {
+       const unsubscribe = auth.onAuthStateChanged(user => {
+          unsubscribe();
+          resolve(user);
+       }, reject);
+    });
+}
 export function sendEmail(user) {
     user.sendEmailVerification()
-    .then(() => {
-        console.log("(firebase) Email send to: " + user.email);
-    });
+        .then(() => {
+            console.log("(firebase) Email send to: " + user.email);
+        });
 }
 /*
 db.collection("users").add({

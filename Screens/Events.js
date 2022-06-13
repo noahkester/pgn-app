@@ -1,67 +1,10 @@
+import { useState, useEffect } from "react";
 import { StyleSheet, TouchableOpacity, Text, Image, View, ScrollView, } from "react-native";
 import globalStyles from "../Styles";
 import { TopBar } from "./Tabs";
+import { db } from "../Firebase"
 
 // After pulling data, need to sort everything here based on the date and time
-export const allEvents = [
-  {
-    title: "Cold Cookie",
-    type: "Philanthropy",
-    month: 6,
-    day: 2,
-    time: "5:00",
-    completed: "T",
-  },
-  {
-    title: "Bowling Social",
-    type: "Social",
-    month: 6,
-    day: 2,
-    completed: "T",
-    time: "4:00"
-  },
-  {
-    title: "Trey and Ella Masterclass",
-    type: "Professional",
-    month: 6,
-    day: 3,
-    completed: "T",
-    time: "2:30"
-  },
-  {
-    title: "Cava Dinner After Chapter",
-    type: "Social",
-    month: 6,
-    day: 4,
-    completed: "F",
-    time: "1:30"
-  },
-  {
-    title: "DG Dodgeball Tournament",
-    type: "Philanthropy",
-    month: 6,
-    day: 7,
-    completed: "W",
-    time: "11:00"
-  },
-  {
-    title: "PGN March Madness",
-    type: "Social",
-    month: 6,
-    day: 10,
-    completed: "W",
-    time: "2:30"
-  },
-  {
-    title: "Chi O Bake Sale",
-    type: "Philanthropy",
-    month: 6,
-    day: 11,
-    completed: "T",
-    time: ""
-  }
-];
-
 
 function EventImage(props) {
   return (
@@ -115,7 +58,7 @@ export function EventSection(props) {
   var noEvents = false;
   const eventsList = events.map((event) =>
     <Event key={event.title} title={event.title} month={event.month} day={event.day} time={event.time} type={event.type}
-    completed = {event.completed} />
+      completed={event.completed} />
   )
   if (eventsList.length == 0) {
     noEvents = true;
@@ -132,65 +75,41 @@ export function EventSection(props) {
     </View>
   )
 }
-export function completed(){
-  return(
-    allEvents.reduce((events, event) => {
-      if(event.completed == 'T'){
-        events.push(event);
-        
-      } return events;
-    }, [])
-  );
-}
-
 
 export function EventsPage() {
-  // Does not work for overlapping years. Shouldn't be a problem because everything is semester based
-  // When admin puts in dates it will not include the year
-  const todayDate = new Date();
-  const todayMonth = todayDate.getMonth() + 1;
-  const todayDay = todayDate.getDate();
-
-  const tomorrowDate = new Date();
-  tomorrowDate.setDate(todayDate.getDate() + 1);
-  const tomorrowMonth = tomorrowDate.getMonth() + 1;
-  const tomorrowDay = tomorrowDate.getDate();
-  const today = allEvents.reduce((events, event) => {
-    if (todayMonth === event.month && todayDay === event.day) {
-      events.push(event);
-    }
-    return events;
-  }, []);
-  const tomorrow = allEvents.reduce((events, event) => {
-    if (tomorrowMonth === event.month && tomorrowDay === event.day) {
-      events.push(event);
-    }
-    return events;
-  }, []);
-  const future = allEvents.reduce((events, event) => {
-
-    if (tomorrowMonth < event.month || (tomorrowMonth === event.month && tomorrowDay < event.day)) {
-      events.push(event);
-      
-    }
-    return events;
-  }, []);
-    
-    
-   
-
+  const [allEvents, setAllEvents] = useState([]);
+  useEffect(() => {
+    console.log("(Events) Use Effect called for events read")
+    var tempEvents = [];
+    db.collection("events")
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          var data = doc.data();
+          console.log("(Events) Read event " + doc.id);
+          // Update Events object
+          tempEvents.push(data);
+        });
+        setAllEvents(tempEvents);
+      })
+      .catch((error) => {
+        console.log("(firebase) Error getting events documents: ", error);
+      });
+  }, [])
   return (
     <View style={styles.eventScreen}>
       <ScrollView style={globalStyles.scroll}>
         <View style={globalStyles.scrollView}>
-          <EventSection time="Today" events={today} />
-          <EventSection time="Tomorrow" events={tomorrow} />
-          <EventSection time="Future" events={future} />
+          <EventSection time="Today" events={allEvents} />
+          <EventSection time="Tomorrow" events={allEvents} />
+          <EventSection time="Future" events={allEvents} />
         </View>
       </ScrollView>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   eventScreen: {
     width: "100%",

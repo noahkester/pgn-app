@@ -22,7 +22,7 @@ import { EmailVerificationPage } from "./Screens/newUser/EmailVerification";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React, { useState, useEffect } from 'react';
-
+import { auth, getEvents } from './Firebase'
 import AppLoading from 'expo-app-loading';
 import {
   useFonts,
@@ -47,22 +47,25 @@ import {
 } from '@expo-google-fonts/poppins'
 
 const Stack = createNativeStackNavigator();
+console.disableYellowBox = true;
 
 function App() {
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
     Poppins_600SemiBold
   });
+  // Get Events here
+  //const events = getEvents();
+  //console.log("(App) Events: " + events);
 
   if (!fontsLoaded) {
     return <AppLoading />;
   } else {
     return (
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Start"
-          screenOptions={{
-            headerShown: false,
-          }}
+        <Stack.Navigator
+          initialRouteName="Start"
+          screenOptions={{ headerShown: false }}
         >
           <Stack.Screen name="Start" component={StartPage} />
           <Stack.Screen name="LoginSignup" component={LoginSignupPage} />
@@ -85,4 +88,5 @@ function App() {
     );
   }
 }
+
 export default App;

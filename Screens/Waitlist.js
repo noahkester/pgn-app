@@ -10,12 +10,11 @@ import {
 import { EventSection } from "./Events";
 import globalStyles from "../Styles";
 import { TopBar } from "./Tabs";
-import { allEvents } from "./Events";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 //import TabBarTop from "@react-navigation/material-top-tabs/lib/typescript/src/views/MaterialTopTabBar";
 
 const Tab = createMaterialTopTabNavigator();
-const completed = allEvents.reduce((events, event) => {
+/*const completed = allEvents.reduce((events, event) => {
   if (event.completed == "T") {
     events.push(event);
   }
@@ -35,6 +34,11 @@ const waiting = allEvents.reduce((events, event) => {
   }
   return events;
 }, []);
+*/
+
+const completed = [];
+const declined = [];
+const waiting = [];
 function WaitScreen() {
   return (
     <View style={styles.eventScreen}>
@@ -80,7 +84,7 @@ function DeclinedScreen() {
   );
 }
 
-function TopTabb() {
+function TopTab() {
   return (
     <View style={styles.eventScreen}>
       <View style={{ width: "100%", height: "100%" }}>
@@ -111,7 +115,7 @@ function TopTabb() {
   );
 }
 export function WaitlistPage() {
-  return <TopTabb />;
+  return <TopTab />;
 }
 const styles = StyleSheet.create({
   eventScreen: {
