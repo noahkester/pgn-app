@@ -7,7 +7,7 @@ import { EventsPage } from "./Events";
 import { PeoplePage } from "./People";
 import { WaitlistPage } from "./Waitlist";
 import { useNavigation } from "@react-navigation/native";
-import { auth, store, getProfilePicture } from "../Firebase";
+import { auth, db, store, getProfilePicture } from "../Firebase";
 
 import colors from "../Colors";
 import { useEffect, useState } from "react";
@@ -15,29 +15,38 @@ import { useEffect, useState } from "react";
 
 export function TopBar(props) {
   const [profileUrl, setProfileUrl] = useState(undefined);
+  const [firstname, setFirstname] = useState("Spring 1999");
+  const [pledgeClass, setPledgeClass] = useState("Spring 1999");
   useEffect(() => {
-    store
-      .ref('/profile-pictures/noahkester.png') //name in storage in firebase console
-      .getDownloadURL()
-      .then((url) => {
-        setProfileUrl(url);
+    db.collection("users")
+      .where("id", "==", auth.currentUser.uid)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          var data = doc.data();
+          console.log("(Tabs) Read event " + doc.id);
+          setFirstname(data.firstname);
+          var splitPledgeClass = data.pledgeClass.split(" ");
+          setPledgeClass(splitPledgeClass[0][0] + splitPledgeClass[1][2] + splitPledgeClass[1][3]);
+          store
+            .ref(`/profile-pictures/${data.id}.png`) //name in storage in firebase console
+            .getDownloadURL()
+            .then((url) => {
+              setProfileUrl(url);
+            })
+            .catch((e) => console.log('(Tabs) Errors while downloading => ', e));
+        });
       })
-      .catch((e) => console.log('Errors while downloading => ', e));
+      .catch((error) => {
+        console.log("(Tabs) Error getting events documents: ", error);
+      });
+    console.log("User ID: " + auth.currentUser.uid);
   }, [])
-  var n = "Guest";
-  if (auth.currentUser) {
-    n = auth.currentUser.email;
-  }
-  var c = "Fall 2022";
-
-  var firstName = n.split(" ")[0];
-  var temp = c.split(" ");
-  var pclass = temp[0][0] + temp[1][2] + temp[1][3];
   return (
     <View style={styles.topBar}>
       <Profile
-        name={firstName}
-        class={pclass}
+        name={firstname}
+        class={pledgeClass}
         profileUrl={profileUrl}
       />
       <PGNImage />
@@ -47,16 +56,6 @@ export function TopBar(props) {
 //put these two funcs here bc we'll be exporting it to each tab since they're stable
 export function Profile(props) {
   const navigation = useNavigation();
-
-  // async function verifyFiles(filepath) {
-  //   var RNFS = require("react-native-fs");
-  //   let exists = await RNFS.exists(filepath);
-  //   return exists;
-  // }
-
-  // if(  verifyFiles(props.profileSrc)){
-  //   imageSrc = props.profileSrc
-  // }
   return (
     <View style={styles.topBarCon}>
       <TouchableOpacity onPress={() => navigation.navigate("Account")}>
@@ -66,7 +65,7 @@ export function Profile(props) {
           style={styles.profile}
         />
       </TouchableOpacity>
-      <Text style={globalStyles.smallBoldText}>Hello, Guest!</Text>
+      <Text style={globalStyles.smallBoldText}>Hello {props.name}!</Text>
       <Text style={globalStyles.smallBoldText}>PC {props.class}</Text>
     </View>
   );

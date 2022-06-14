@@ -3,7 +3,8 @@ import globalStyles from "../Styles";
 import { StyleSheet, TouchableOpacity, Text, Image, View, } from "react-native";
 import colors from "../Colors";
 import { useNavigation } from '@react-navigation/native';
-import { auth } from "../Firebase";
+import { auth, db } from "../Firebase";
+import { useEffect, useState } from "react";
 
 const points = [3, 3, 6]
 const totalPoints = [4, 6, 6]
@@ -62,12 +63,12 @@ function PointCard(props) {
     </View>
   )
 }
-function PointDisplay() {
+function PointDisplay(props) {
   return (
     <View style={styles.points}>
-      <PointCard title="Philanthropy" points={points[0]} totalPoints={totalPoints[0]} icon={require("../images/philanthropy.png")} />
-      <PointCard title="Professional" points={points[1]} totalPoints={totalPoints[1]} icon={require("../images/professional.png")} />
-      <PointCard title="Social" points={points[2]} totalPoints={totalPoints[2]} icon={require("../images/social.png")} />
+      <PointCard title="Philanthropy" points={props.philanthropyPoints} totalPoints={totalPoints[0]} icon={require("../images/philanthropy.png")} />
+      <PointCard title="Professional" points={props.professionalPoints} totalPoints={totalPoints[1]} icon={require("../images/professional.png")} />
+      <PointCard title="Social" points={props.socialPoints} totalPoints={totalPoints[2]} icon={require("../images/social.png")} />
     </View>
   );
 }
@@ -83,19 +84,43 @@ const accountInfo = {
   major: "Computer Science"
 }
 export function HomePage() {
+  const [philanthropyPoints, setPhilanthropyPoints] = useState(0);
+  const [socialPoints, setSocialPoints] = useState(0);
+  const [professionalPoints, setProfessionalPoints] = useState(0);
+  useEffect(() => {
+    console.log("(Home) Use Effect");
+    db.collection("users")
+      .where("id", "==", auth.currentUser.uid)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          var data = doc.data();
+          setPhilanthropyPoints(data.philanthropyPoints);
+          setProfessionalPoints(data.professionalPoints);
+          setSocialPoints(data.socialPoints);
+        })
+      }).catch((error) => {
+          console.log("(Home) Error getting events documents: ", error);
+        });
+  }, [])
   return (
     <View style={styles.homeScreen}>
-      <View style = {{
+      <View style={{
         justifyContent: "center"
-      }}></View>
-      <PointDisplay />
+      }}
+      />
+      <PointDisplay
+        philanthropyPoints={philanthropyPoints}
+        socialPoints={socialPoints}
+        professionalPoints={professionalPoints}
+      />
       <SubmitPoints address="Submit" title="Submit Points" />
     </View>
   );
 }
 const styles = StyleSheet.create({
   homeScreen: {
-    
+
     width: "100%",
     height: "100%",
     alignItems: "center",
