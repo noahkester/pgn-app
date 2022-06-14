@@ -93,8 +93,9 @@ function App() {
           />
           <Stack.Screen name="Start" component={StartPage} />
           <Stack.Screen name="CreateAccount" component={CreateAccountPage} />
-          <Stack.Screen name="Navigation" component={NavigationPage} />
           <Stack.Screen name="Account" component={AccountPage} />
+          
+          
           <Stack.Screen name="Submit" component={SubmitPage} />
           <Stack.Screen name="Admin" component={AdminPage} />
           <Stack.Screen name="Settings" component={AdminSettingsPage} />

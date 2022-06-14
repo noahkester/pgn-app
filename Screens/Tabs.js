@@ -15,15 +15,15 @@ import { useEffect, useState } from "react";
 
 export function TopBar(props) {
   const [profileUrl, setProfileUrl] = useState(undefined);
-  useEffect(() => {
-    store
-      .ref('/profile-pictures/noahkester.png') //name in storage in firebase console
-      .getDownloadURL()
-      .then((url) => {
-        setProfileUrl(url);
-      })
-      .catch((e) => console.log('Errors while downloading => ', e));
-  }, [])
+  // useEffect(() => {
+  //   store
+  //     .ref('/profile-pictures/noahkester.png') //name in storage in firebase console
+  //     .getDownloadURL()
+  //     .then((url) => {
+  //       setProfileUrl(url);
+  //     })
+  //     .catch((e) => console.log('Errors while downloading => ', e));
+  // }, [])
   var n = "Guest";
   if (auth.currentUser) {
     n = auth.currentUser.email;
