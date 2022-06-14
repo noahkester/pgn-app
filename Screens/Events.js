@@ -1,10 +1,20 @@
 import { useState, useEffect } from "react";
 import { StyleSheet, TouchableOpacity, Text, Image, View, ScrollView, } from "react-native";
 import globalStyles from "../Styles";
-import { TopBar } from "./Tabs";
 import { db } from "../Firebase"
 
-// After pulling data, need to sort everything here based on the date and time
+/*
+Events Structure
+{
+  location: Insomnia cookies. Near Castilian
+  name: Cold Cookie Profit Share
+  time: 167394290
+  type: Philanthropy
+  weight: 1
+}
+*/
+
+
 
 function EventImage(props) {
   return (
@@ -20,7 +30,6 @@ function EventImage(props) {
   );
 }
 function Event(props) {
-  const date = props.month + "/" + props.day;
   var icon;
   if (props.type === "Philanthropy") {
     icon = require("../images/philanthropy.png");
@@ -34,21 +43,25 @@ function Event(props) {
   else {
     //Uncaught error
   }
-  var time;
-  if (!(props.time === "")) {
-    time = "@" + props.time;
-  } else {
-    time = "";
+  var points = "";
+  if (props.weight == 1) {
+    points = " pt";
   }
+  else {
+    points = " pts"
+  }
+
   return (
     <View style={[globalStyles.cardContainer, styles.eventCard, globalStyles.cardAlign]}>
       <EventImage icon={icon} />
       <View style={styles.eventText}>
-        <Text style={globalStyles.smallSemiBoldText}>{props.title}</Text>
+        <Text style={globalStyles.smallSemiBoldText}>{props.name}</Text>
+        <Text style={globalStyles.smallBoldText}>{props.location}</Text>
       </View>
       <View>
-        <Text style={[globalStyles.smallSemiBoldText, styles.date]}>{date}</Text>
-        <Text style={globalStyles.smallBoldText}>{time}</Text>
+        <Text style={[globalStyles.smallSemiBoldText, styles.date]}>{"3/7"}</Text>
+        <Text style={globalStyles.smallBoldText}>{"3:30"}</Text>
+        <Text style={globalStyles.smallBoldText}>{props.weight + points}</Text>
       </View>
     </View>
   );
@@ -57,8 +70,7 @@ export function EventSection(props) {
   const events = props.events;
   var noEvents = false;
   const eventsList = events.map((event) =>
-    <Event key={event.title} title={event.title} month={event.month} day={event.day} time={event.time} type={event.type}
-      completed={event.completed} />
+    <Event key={event.name} name={event.name} type={event.type} weight={event.weight} location={event.location} />
   )
   if (eventsList.length == 0) {
     noEvents = true;
@@ -75,35 +87,84 @@ export function EventSection(props) {
     </View>
   )
 }
+function unixEpochTimeToMonthDay(timestamp) {
+  var a = new Date(timestamp * 1000);
+  var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var month = months[a.getMonth()];
+  var date = a.getDate();
+  var time = month + " " + date;
+  return time;
+}
+
+// Will return -1 for past date, 0 for current, 1 for tomorrow, 2 for future
+// based on the current date
+function findTimeCategory(timestamp) {
+  // convert from seconds to miliseconds (js Date library uses ms)
+  timestamp *= 1000;
+  var currentTime = Date.now();
+  console.log("CT: " + currentTime + " " + "TS: " + timestamp);
+  if (timestamp < currentTime) {
+    return -1;
+  }
+  var a = new Date(timestamp);
+  var b = new Date(currentTime);
+  // It is the current day
+  if (a.getDate() == b.getDate() && a.getMonth() == b.getMonth() && a.getFullYear == b.getFullYear) {
+    return 0;
+  }
+  // It is tomorrow
+  b = new Date((currentTime + 86400) * 1000);
+  if (a.getDate() == b.getDate() && a.getMonth() == b.getMonth() && a.getFullYear == b.getFullYear) {
+    return 1;
+  }
+  // Day off in the future
+  return 2;
+}
 
 export function EventsPage() {
-  const [allEvents, setAllEvents] = useState([]);
+  const [todayEvents, setTodayEvents] = useState([]);
+  const [tomorrowEvents, setTomorrowEvents] = useState([]);
+  const [futureEvents, setFutureEvents] = useState([]);
   useEffect(() => {
     console.log("(Events) Use Effect called for events read")
-    var tempEvents = [];
+    var tempTodayEvents = [];
+    var tempTomorrowEvents = [];
+    var tempFutureEvents = [];
     db.collection("events")
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
           var data = doc.data();
           console.log("(Events) Read event " + doc.id);
-          // Update Events object
-          tempEvents.push(data);
+          var timeCategory = findTimeCategory(data.time);
+          switch (timeCategory) {
+            case -1: // TODO
+            case 0:
+              tempTodayEvents.push(data);
+              break;
+            case 1:
+              tempTomorrowEvents.push(data);
+              break;
+            case 2:
+              tempFutureEvents.push(data);
+              break;
+          }
         });
-        setAllEvents(tempEvents);
+        setTodayEvents(tempTodayEvents);
+        setTomorrowEvents(tempTomorrowEvents);
+        setFutureEvents(tempFutureEvents);
       })
       .catch((error) => {
-        console.log("(firebase) Error getting events documents: ", error);
+        console.log("(Events) Error getting events documents: ", error);
       });
   }, [])
   return (
     <View style={styles.eventScreen}>
       <ScrollView style={globalStyles.scroll}>
         <View style={globalStyles.scrollView}>
-          <EventSection time="Today" events={allEvents} />
-          <EventSection time="Tomorrow" events={allEvents} />
-          <EventSection time="Future" events={allEvents} />
+          <EventSection time="Today" events={todayEvents} />
+          <EventSection time="Tomorrow" events={tomorrowEvents} />
+          <EventSection time="Future" events={futureEvents} />
         </View>
       </ScrollView>
     </View>

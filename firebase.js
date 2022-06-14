@@ -25,24 +25,7 @@ else {
 }
 const auth = firebase.auth();
 const db = firebase.firestore();
-
-function readEvents() {
-    // Chenge to only read events that are in the future
-    /*db.collection("events")
-        .get()
-        .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                // doc.data() is never undefined for query doc snapshots
-                var data = doc.data();
-                console.log("(firebase) READ EVENT " + doc.id);
-                // Update Events object
-                events.push(data);
-            });
-        })
-        .catch((error) => {
-            console.log("(firebase) Error getting events documents: ", error);
-        });*/
-}
+const store = firebase.storage();
 
 auth.onAuthStateChanged(function (user) {
     if (user) {
@@ -60,10 +43,10 @@ auth.onAuthStateChanged(function (user) {
 });
 export function getCurrentUser(auth) {
     return new Promise((resolve, reject) => {
-       const unsubscribe = auth.onAuthStateChanged(user => {
-          unsubscribe();
-          resolve(user);
-       }, reject);
+        const unsubscribe = auth.onAuthStateChanged(user => {
+            unsubscribe();
+            resolve(user);
+        }, reject);
     });
 }
 export function sendEmail(user) {
@@ -71,6 +54,14 @@ export function sendEmail(user) {
         .then(() => {
             console.log("(firebase) Email send to: " + user.email);
         });
+}
+export async function getProfilePicture(name) {
+    var ref = firebase.storage().ref("/profile-pictures/" + name + ".png");
+    return new Promise((resolve, reject) => {
+        ref.getDownloadURL(url => {
+            resolve(url);
+        }, reject);
+    });
 }
 /*
 db.collection("users").add({
@@ -83,4 +74,4 @@ db.collection("users").add({
                         console.error("Error adding document: ", error);
                     });
                     */
-export { auth, db };
+export { auth, db, store };

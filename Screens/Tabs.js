@@ -7,12 +7,23 @@ import { EventsPage } from "./Events";
 import { PeoplePage } from "./People";
 import { WaitlistPage } from "./Waitlist";
 import { useNavigation } from "@react-navigation/native";
-import { auth } from "../Firebase";
+import { auth, store, getProfilePicture } from "../Firebase";
 
 import colors from "../Colors";
+import { useEffect, useState } from "react";
 // import { exists } from "react-native-fs";
 
 export function TopBar(props) {
+  const [profileUrl, setProfileUrl] = useState(undefined);
+  useEffect(() => {
+    store
+      .ref('/profile-pictures/noahkester.png') //name in storage in firebase console
+      .getDownloadURL()
+      .then((url) => {
+        setProfileUrl(url);
+      })
+      .catch((e) => console.log('Errors while downloading => ', e));
+  }, [])
   var n = "Guest";
   if (auth.currentUser) {
     n = auth.currentUser.email;
@@ -27,7 +38,7 @@ export function TopBar(props) {
       <Profile
         name={firstName}
         class={pclass}
-        profileSrc={require("../images/profile.png")}
+        profileUrl={profileUrl}
       />
       <PGNImage />
     </View>
@@ -36,7 +47,6 @@ export function TopBar(props) {
 //put these two funcs here bc we'll be exporting it to each tab since they're stable
 export function Profile(props) {
   const navigation = useNavigation();
-  var imageSrc = "../images/users/akin.png";
 
   // async function verifyFiles(filepath) {
   //   var RNFS = require("react-native-fs");
@@ -51,7 +61,7 @@ export function Profile(props) {
     <View style={styles.topBarCon}>
       <TouchableOpacity onPress={() => navigation.navigate("Account")}>
         <Image
-          source={require(imageSrc)}
+          source={{ uri: props.profileUrl }}
           resizeMode="cover"
           style={styles.profile}
         />
@@ -73,14 +83,14 @@ export function PGNImage() {
 export function NavigationPage() {
   const Tab = createBottomTabNavigator();
   return (
-    <View style = {{
-      flex : 1,
+    <View style={{
+      flex: 1,
     }}>
       <TopBar />
       <Tab.Navigator
         // Background of each screen
         sceneContainerStyle={{
-          
+
           backgroundColor: colors.white,
         }}
         screenOptions={{
