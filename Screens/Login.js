@@ -62,6 +62,7 @@ export function NewUserTextInput(props) {
                     autoCorrect={false}
                     style={globalStyles.mediumBoldText}
                     placeholder={props.placeholder}
+                    //need to pass in what field to edit for each component
                     onChangeText={text => props.onCustomChange(text)}
                 >
                     {props.value}
@@ -154,7 +155,7 @@ export function LoginPage() {
     return (
         <View style={styles.screen}>
             <View style={styles.backNav}>
-                <View></View>
+                
                 <AccountTop name={""} address="LoginSignup" />
             </View>
             <KeyboardAvoidingView behaviors="padding" style={styles.loginScreen}>
@@ -181,6 +182,7 @@ const styles = StyleSheet.create({
         backgroundColor: "white"
     },
     backNav: {
+        marginTop: '15%',
         justifyContent: "space-between",
         height: "15%",
         paddingBottom: 10

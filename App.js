@@ -1,5 +1,12 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Button, TouchableOpacity, Text, Image, View, } from "react-native";
+import {
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+  Text,
+  Image,
+  View,
+} from "react-native";
 
 import { StartPage } from "./Screens/Start";
 import { LoginSignupPage } from "./Screens/LoginSignup";
@@ -20,10 +27,14 @@ import { EmailVerificationPage } from "./Screens/newUser/EmailVerification";
 // In App.js in a new project
 
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React, { useState, useEffect } from 'react';
-import { auth, getEvents } from './Firebase'
-import AppLoading from 'expo-app-loading';
+import { CardStyleInterpolators } from "@react-navigation/stack";
+import {
+  createNativeStackNavigator,
+  Card,
+} from "@react-navigation/native-stack";
+import React, { useState, useEffect } from "react";
+import { auth, getEvents } from "./Firebase";
+import AppLoading from "expo-app-loading";
 import {
   useFonts,
   Poppins_100Thin,
@@ -43,8 +54,8 @@ import {
   Poppins_800ExtraBold,
   Poppins_800ExtraBold_Italic,
   Poppins_900Black,
-  Poppins_900Black_Italic
-} from '@expo-google-fonts/poppins'
+  Poppins_900Black_Italic,
+} from "@expo-google-fonts/poppins";
 
 const Stack = createNativeStackNavigator();
 console.disableYellowBox = true;
@@ -52,7 +63,7 @@ console.disableYellowBox = true;
 function App() {
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
-    Poppins_600SemiBold
+    Poppins_600SemiBold,
   });
   // Get Events here
   //const events = getEvents();
@@ -65,11 +76,22 @@ function App() {
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="Start"
-          screenOptions={{ headerShown: false }}
+          screenOptions={{
+            headerShown: false,
+            //TODO will have to set it false, when launching so the swiping to get to
+            //the previous screen is disabled
+            gestureEnabled: true,
+
+          }}
         >
+          <Stack.Screen
+            name="Login"
+            component={LoginPage}
+            options={{
+              headerBackButtonMenuEnabled: true,
+            }}
+          />
           <Stack.Screen name="Start" component={StartPage} />
-          <Stack.Screen name="LoginSignup" component={LoginSignupPage} />
-          <Stack.Screen name="Login" component={LoginPage} />
           <Stack.Screen name="CreateAccount" component={CreateAccountPage} />
           <Stack.Screen name="Navigation" component={NavigationPage} />
           <Stack.Screen name="Account" component={AccountPage} />
@@ -79,10 +101,16 @@ function App() {
 
           <Stack.Screen name="Name" component={NamePage} />
           <Stack.Screen name="Education" component={EducationPage} />
-          <Stack.Screen name="ProfilePictures" component={ProfilePicturesPage} />
+          <Stack.Screen
+            name="ProfilePictures"
+            component={ProfilePicturesPage}
+          />
           <Stack.Screen name="About" component={AboutPage} />
           <Stack.Screen name="Contact" component={ContactPage} />
-          <Stack.Screen name="EmailVerification" component={EmailVerificationPage} />
+          <Stack.Screen
+            name="EmailVerification"
+            component={EmailVerificationPage}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     );
