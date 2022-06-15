@@ -8,12 +8,9 @@ export function NamePage() {
     function setFirstName (text1){
         
         setField({key: 'firstname', value: text1})
+        console.log("first name is set")
     }
 
-    function setLastName (text1){
-        
-        setField({key: 'lastname', value: text1})
-    }
     return (
         <View style={styles.screen}>
              <Text style={globalStyles.largeSemiBoldText}>Name</Text>
@@ -21,7 +18,7 @@ export function NamePage() {
                 placeholder="First name" onCustomChange = {text => setFirstName(text)}
             />
             <NewUserTextInput
-                placeholder="Last name" onCustomChange = {text => setLastName(text)}
+                placeholder="Last name" onCustomChange = {text => setField({key: 'lastname', value: text})}
             />
             <View style={{ height: 10 }}></View>
             <SubmitPoints address="Education" title="Next" />

@@ -65,9 +65,7 @@ function App() {
     Poppins_700Bold,
     Poppins_600SemiBold,
   });
-  // Get Events here
-  //const events = getEvents();
-  //console.log("(App) Events: " + events);
+
 
   if (!fontsLoaded) {
     return <AppLoading />;
@@ -78,8 +76,7 @@ function App() {
           initialRouteName="Start"
           screenOptions={{
             headerShown: false,
-            //TODO will have to set it false, when launching so the swiping to get to
-            //the previous screen is disabled
+
             gestureEnabled: true,
 
           }}
