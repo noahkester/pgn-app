@@ -1,5 +1,12 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Button, TouchableOpacity, Text, Image, View, } from "react-native";
+import {
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+  Text,
+  Image,
+  View,
+} from "react-native";
 
 import { StartPage } from "./Screens/Start";
 import { LoginSignupPage } from "./Screens/LoginSignup";
@@ -20,10 +27,14 @@ import { EmailVerificationPage } from "./Screens/newUser/EmailVerification";
 // In App.js in a new project
 
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React, { useState, useEffect } from 'react';
-import { auth, getEvents } from './Firebase'
-import AppLoading from 'expo-app-loading';
+import { CardStyleInterpolators } from "@react-navigation/stack";
+import {
+  createNativeStackNavigator,
+  Card,
+} from "@react-navigation/native-stack";
+import React, { useState, useEffect } from "react";
+import { auth, getEvents } from "./Firebase";
+import AppLoading from "expo-app-loading";
 import {
   useFonts,
   Poppins_100Thin,
@@ -43,8 +54,8 @@ import {
   Poppins_800ExtraBold,
   Poppins_800ExtraBold_Italic,
   Poppins_900Black,
-  Poppins_900Black_Italic
-} from '@expo-google-fonts/poppins'
+  Poppins_900Black_Italic,
+} from "@expo-google-fonts/poppins";
 
 const Stack = createNativeStackNavigator();
 console.disableYellowBox = true;
@@ -52,11 +63,9 @@ console.disableYellowBox = true;
 function App() {
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
-    Poppins_600SemiBold
+    Poppins_600SemiBold,
   });
-  // Get Events here
-  //const events = getEvents();
-  //console.log("(App) Events: " + events);
+
 
   if (!fontsLoaded) {
     return <AppLoading />;
@@ -65,15 +74,27 @@ function App() {
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="Start"
-          screenOptions={{ headerShown: false }}
+          screenOptions={{
+            headerShown: false,
+
+            gestureEnabled: true,
+
+          }}
         >
+          <Stack.Screen
+            name="Login"
+            component={LoginPage}
+            options={{
+              headerBackButtonMenuEnabled: true,
+            }}
+          />
           <Stack.Screen name="Start" component={StartPage} />
           <Stack.Screen name="LoginSignup" component={LoginSignupPage} />
-          <Stack.Screen name="Login" component={LoginPage} />
           <Stack.Screen name="CreateAccount" component={CreateAccountPage} />
-          <Stack.Screen name="Navigation" component={NavigationPage} />
-          <Stack.Screen name="Account" component={AccountPage} />
+
+          <Stack.Screen name="Account" component={AccountPage} /> 
           <Stack.Screen name="Submit" component={SubmitPage} />
+
           <Stack.Screen name="Admin" component={AdminPage} />
           <Stack.Screen name="Settings" component={AdminSettingsPage} />
 

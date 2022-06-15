@@ -1,23 +1,36 @@
 import { TopBar } from "./Tabs";
 import globalStyles from "../Styles";
-import { StyleSheet, TouchableOpacity, Text, Image, View, } from "react-native";
+import { StyleSheet, TouchableOpacity, Text, Image, View } from "react-native";
 import colors from "../Colors";
 import { useNavigation } from '@react-navigation/native';
 import { auth, db } from "../Firebase";
 import { useEffect, useState } from "react";
 
-const points = [3, 3, 6]
-const totalPoints = [4, 6, 6]
+const points = [3, 3, 6];
+const totalPoints = [4, 6, 6];
 
 export function SubmitPoints(props) {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
       title={props.title}
-      style={[globalStyles.universityColorFill, globalStyles.button, styles.submitButton]}
-      onPress={() => navigation.navigate(props.address)}
+      style={[
+        globalStyles.universityColorFill,
+        globalStyles.button,
+        styles.submitButton,
+      ]}
+      onPress={() => {
+        navigation.navigate(props.address);
+        if (props.function2) {
+          console.log("inside if")
+          props.function2;
+        }
+        console.log("outside if")
+      }}
     >
-      <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>{props.title}</Text>
+      <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>
+        {props.title}
+      </Text>
     </TouchableOpacity>
   );
 }
@@ -32,24 +45,23 @@ function PointImage(props) {
         />
       </View>
     </View>
-  )
+  );
 }
 function PointBar(props) {
-  var percent = ((props.points / props.total) * 100) + "%";
+  var percent = (props.points / props.total) * 100 + "%";
   var color;
   if (props.title === "Philanthropy") {
     color = colors.maroon;
-  }
-  else if (props.title === "Professional") {
+  } else if (props.title === "Professional") {
     color = colors.red;
-  }
-  else if (props.title === "Social") {
+  } else if (props.title === "Social") {
     color = colors.gold;
   }
   return (
-    <View style={[styles.pointBar, { width: percent, borderColor: color }]}>
-    </View>
-  )
+    <View
+      style={[styles.pointBar, { width: percent, borderColor: color }]}
+    ></View>
+  );
 }
 function PointCard(props) {
   return (
@@ -57,11 +69,17 @@ function PointCard(props) {
       <View style={globalStyles.cardAlign}>
         <PointImage points={props.points} icon={props.icon} />
         <Text style={globalStyles.largeSemiBoldText}>{props.title}</Text>
-        <Text style={globalStyles.largeSemiBoldText}>{props.points + "/" + props.totalPoints}</Text>
+        <Text style={globalStyles.largeSemiBoldText}>
+          {props.points + "/" + props.totalPoints}
+        </Text>
       </View>
-      <PointBar points={props.points} total={props.totalPoints} title={props.title} />
+      <PointBar
+        points={props.points}
+        total={props.totalPoints}
+        title={props.title}
+      />
     </View>
-  )
+  );
 }
 function PointDisplay(props) {
   return (
@@ -81,8 +99,8 @@ const accountInfo = {
   image: "",
   pledgeClass: "Spring 2022",
   status: "Active",
-  major: "Computer Science"
-}
+  major: "Computer Science",
+};
 export function HomePage() {
   const [philanthropyPoints, setPhilanthropyPoints] = useState(0);
   const [socialPoints, setSocialPoints] = useState(0);
@@ -100,8 +118,8 @@ export function HomePage() {
           setSocialPoints(data.socialPoints);
         })
       }).catch((error) => {
-          console.log("(Home) Error getting events documents: ", error);
-        });
+        console.log("(Home) Error getting events documents: ", error);
+      });
   }, [])
   return (
     <View style={styles.homeScreen}>
@@ -120,42 +138,41 @@ export function HomePage() {
 }
 const styles = StyleSheet.create({
   homeScreen: {
-
     width: "100%",
     height: "100%",
     alignItems: "center",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   submitButton: {
-    marginBottom: 10
+    marginBottom: 10,
   },
   points: {
     width: "80%",
     height: 260,
     flexDirection: "column",
     justifyContent: "space-between",
-    alignContent: 'space-between',
+    alignContent: "space-between",
   },
   pointImage: {
     height: 50,
-    width: 50
+    width: 50,
   },
   pointImageBackground: {
     position: "absolute",
     width: 50,
-    height: 50
+    height: 50,
   },
   pointImageIcon: {
     width: 50,
-    height: 50
+    height: 50,
   },
   iconCon: {
     height: 50,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   pointBar: {
     marginTop: 10,
     borderBottomWidth: 3,
-  }
-})
+  },
+});

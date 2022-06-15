@@ -6,10 +6,10 @@ import colors from "webpack-dev-server/lib/utils/colors";
 import { auth } from "../Firebase";
 
 
-function setId(props){
+function setId(props) {
     const [accessId, getId] = useState('');
     getId(props.id);
-}   
+}
 /*
 Backend Stuff TODO:
 
@@ -100,7 +100,8 @@ function SignOutButton(props) {
                 auth
                     .signOut()
                     .then(() => {
-                        navigation.navigate("LoginSignup")
+                        navigation.navigate("LoginSignup");
+                        console.log("(Account) Signed out. Navigating to Start");
                     })
                     .catch(error => console.log(error.message))
             }}

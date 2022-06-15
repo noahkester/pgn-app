@@ -4,6 +4,7 @@ import globalStyles from "../Styles"
 import { auth } from "../Firebase"
 import { AccountTop } from "./Account";
 import { useNavigation } from '@react-navigation/native';
+import { setField } from "./newUser/About";
 
 // Error Message Text under input fields
 export function ErrorMessage(props) {
@@ -54,6 +55,8 @@ export function AboutTextInput(props) {
 }
 
 export function NewUserTextInput(props) {
+    
+
     return (
         <View style={styles.inputContainer}>
             <View style={[styles.newUsertextInputContainer, globalStyles.grayBorder]}>
@@ -62,8 +65,10 @@ export function NewUserTextInput(props) {
                     autoCorrect={false}
                     style={globalStyles.mediumBoldText}
                     placeholder={props.placeholder}
+                    //need to pass in what field to edit for each component
                     onChangeText={text => props.onCustomChange(text)}
                 >
+                    
                     {props.value}
                 </TextInput>
             </View>
@@ -154,7 +159,7 @@ export function LoginPage() {
     return (
         <View style={styles.screen}>
             <View style={styles.backNav}>
-                <View></View>
+                
                 <AccountTop name={""} address="LoginSignup" />
             </View>
             <KeyboardAvoidingView behaviors="padding" style={styles.loginScreen}>
@@ -181,6 +186,7 @@ const styles = StyleSheet.create({
         backgroundColor: "white"
     },
     backNav: {
+        marginTop: '15%',
         justifyContent: "space-between",
         height: "15%",
         paddingBottom: 10
