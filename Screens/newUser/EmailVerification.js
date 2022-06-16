@@ -5,7 +5,8 @@ import React, { useState, useEffect } from "react";
 import { auth, db, sendEmail } from "../../Firebase"
 import { NavigationPage } from "../Tabs";
 import { useNavigation } from '@react-navigation/native';
-
+// TODO, add protection for spamming button (time interval)
+// ADD check element that confirms email was sent
 export function EmailVerificationPage() {
     const user = auth.currentUser;
     if (user && user.emailVerified) {
@@ -20,39 +21,34 @@ export function EmailVerificationPage() {
 export function EmailContinueButton(props) {
     const navigation = useNavigation();
     return (
+        // For safety might want to add a limit on this
         <TouchableOpacity
-            title={"Continue"}
+            title={"Send Email"}
             style={[globalStyles.universityColorFill, globalStyles.button, styles.submitButton]}
             onPress={() => {
                 const user = auth.currentUser;
-                if (user && user.emailVerified) {
-                    navigation.navigate(props.address)
+                if (user) {
+                    sendEmail(user);
                 }
                 else {
-                    console.log("(Email Verification) Cannot continue without verifying email")
+                    console.log("(EmailVerification) Cannot send to email: no user logged in");
                 }
             }}
         >
-            <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>{"Continue"}</Text>
+            <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>{"Send Email"}</Text>
         </TouchableOpacity>
     );
 }
 
-function ResendEmail() {
+function LoginInText() {
+    const navigation = useNavigation();
     return (
         <TouchableOpacity
             onPress={() => {
-                const user = auth.currentUser;
-                if (user) {
-                    console.log("(Email Verification): Called send email function");
-                    sendEmail(user);
-                }
-                else {
-                    console.log("(Email Verification) Could not send email, null user");
-                }
+                navigation.navigate("Start", { screen: "LoginSignup" });
             }}
         >
-            <Text>Re-Send Email</Text>
+            <Text style={globalStyles.miniSemiBoldText}>Verified? Log in!</Text>
         </TouchableOpacity>
     )
 }
@@ -61,7 +57,7 @@ export function LoadingPage() {
     return (
         <View style={styles.screen}>
             <Text style={globalStyles.largeSemiBoldText}>Email Verification</Text>
-            <Text style={globalStyles.mediumBoldText}>Check your inbox! (and spam folder)</Text>
+            <Text style={globalStyles.miniSemiBoldText}>Check your spam folder</Text>
             <Image
                 source={require("../../images/paper-plane.png")}
                 style={styles.planeImage}
@@ -69,7 +65,7 @@ export function LoadingPage() {
             />
             <View style={{ height: 10 }}></View>
             <EmailContinueButton title="" address="Navigation" />
-            <ResendEmail />
+            <LoginInText />
         </View>
     );
 }

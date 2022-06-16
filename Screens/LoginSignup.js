@@ -16,7 +16,7 @@ export function LoginButton(props) {
   return (
     <TouchableOpacity
       onPress={async () => {
-          navigation.navigate(props.address)
+        navigation.navigate(props.address)
       }}
       style={[globalStyles.lightGrayFill, globalStyles.button, globalStyles.grayBorder]}
     >
@@ -31,9 +31,6 @@ function LoginButtons() {
       <LoginButton title="Create Account" address="CreateAccount" />
       <View style={styles.space}></View>
       <LoginButton title="Log in" address="Login" />
-      <LoginButton title="First time login" address="Name" />
-      <LoginButton title="Guest Account" address="Navigation" />
-      <LoginButton title="Admin Account" address="Admin" />
     </View>
   );
 }

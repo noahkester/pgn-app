@@ -1,7 +1,7 @@
 import { TouchableOpacity, StyleSheet, TextInput, Text, View, KeyboardAvoidingView } from "react-native";
 import React, { useState } from "react";
 import globalStyles from "../Styles"
-import { auth } from "../Firebase"
+import { auth, db } from "../Firebase"
 import { AccountTop } from "./Account";
 import { useNavigation } from '@react-navigation/native';
 import { setField } from "./newUser/About";
@@ -55,7 +55,7 @@ export function AboutTextInput(props) {
 }
 
 export function NewUserTextInput(props) {
-    
+
 
     return (
         <View style={styles.inputContainer}>
@@ -68,7 +68,7 @@ export function NewUserTextInput(props) {
                     //need to pass in what field to edit for each component
                     onChangeText={text => props.onCustomChange(text)}
                 >
-                    
+
                     {props.value}
                 </TextInput>
             </View>
@@ -107,14 +107,40 @@ function LoginButton(props) {
                     if (!user) {
                         // This should never happen but in case
                         console.log("(ERROR): No current user after login success");
+                        return;
                     }
                     if (user.emailVerified) {
                         // User has verified their email, continue to home screen
-                        navigation.navigate("Navigation");
+                        if (user.email == "pgn.utexas.sudo@gmail.com") {
+                            navigation.navigate("Admin")
+                        }
+                        else {
+                            navigation.navigate("Navigation");
+                        }
+                        return;
                     }
                     else {
-                        // User has not verified their email, continue with newUser flow
-                        navigation.navigate("Name");
+                        // Two cases
+                        // 1: User has not verified their email, but has added account information
+                        console.log("Checking: " + user.uid);
+                        db.collection("users")
+                            .where("id", "==", user.uid)
+                            .get()
+                            .then((querySnapshot) => {
+                                querySnapshot.forEach((user) => {
+                                    if (user.exists) {
+                                        console.log("(Login) User account has been created but missing email verification");
+                                        navigation.navigate("EmailVerification");
+                                    }
+                                    else {
+                                        console.log("(Login) User auth created but missing account information");
+                                        navigation.navigate("Name");
+                                    }
+                                })
+                            }).catch((error) => {
+                                console.log("(Login) ERROR: Could not get firebase account");
+
+                            });
                     }
                 }
                 // Do not need to catch user attempt failed, handled in the handleLogin method
@@ -159,7 +185,7 @@ export function LoginPage() {
     return (
         <View style={styles.screen}>
             <View style={styles.backNav}>
-                
+
                 <AccountTop name={""} address="LoginSignup" />
             </View>
             <KeyboardAvoidingView behaviors="padding" style={styles.loginScreen}>

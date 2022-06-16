@@ -45,6 +45,10 @@ export default StyleSheet.create({
     fontFamily: "Poppins_600SemiBold",
     fontSize: 16
   },
+  miniSemiBoldText: {
+    fontFamily: "Poppins_600SemiBold",
+    fontSize: 12
+  },
   mediumBoldText: {
     fontFamily: "Poppins_700Bold",
     fontSize: 16
@@ -138,7 +142,6 @@ export default StyleSheet.create({
 
     borderRadius: "26%",
     overflow: "hidden",
-    //give free space
     marginBottom: "15%",
   },
 
