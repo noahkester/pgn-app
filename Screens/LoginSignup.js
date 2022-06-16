@@ -31,6 +31,8 @@ function LoginButtons() {
       <LoginButton title="Create Account" address="CreateAccount" />
       <View style={styles.space}></View>
       <LoginButton title="Log in" address="Login" />
+      <View style={styles.space}></View>
+      <LoginButton title="Collect User Info" address="Name" />
     </View>
   );
 }
