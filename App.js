@@ -32,7 +32,7 @@ import {
   Card,
 } from "@react-navigation/native-stack";
 import React, { useState, useEffect } from "react";
-import { auth, getEvents } from "./Firebase";
+
 import AppLoading from "expo-app-loading";
 import {
   useFonts,

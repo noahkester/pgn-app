@@ -100,22 +100,22 @@ export function HomePage() {
   const [philanthropyPoints, setPhilanthropyPoints] = useState(0);
   const [socialPoints, setSocialPoints] = useState(0);
   const [professionalPoints, setProfessionalPoints] = useState(0);
-  useEffect(() => {
-    console.log("(Home) Use Effect");
-    db.collection("users")
-      .where("id", "==", auth.currentUser.uid)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          var data = doc.data();
-          setPhilanthropyPoints(data.philanthropyPoints);
-          setProfessionalPoints(data.professionalPoints);
-          setSocialPoints(data.socialPoints);
-        })
-      }).catch((error) => {
-        console.log("(Home) Error getting events documents: ", error);
-      });
-  }, [])
+  // useEffect(() => {
+  //   console.log("(Home) Use Effect");
+  //   // db.collection("users")
+  //   //   .where("id", "==", auth.currentUser.uid)
+  //   //   .get()
+  //   //   .then((querySnapshot) => {
+  //   //     querySnapshot.forEach((doc) => {
+  //   //       var data = doc.data();
+  //   //       setPhilanthropyPoints(data.philanthropyPoints);
+  //   //       setProfessionalPoints(data.professionalPoints);
+  //   //       setSocialPoints(data.socialPoints);
+  //   //     })
+  //   //   }).catch((error) => {
+  //   //     console.log("(Home) Error getting events documents: ", error);
+  //   //   });
+  // }, [])
   return (
     <View style={styles.homeScreen}>
       <View style={{

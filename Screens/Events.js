@@ -125,39 +125,39 @@ export function EventsPage() {
   const [todayEvents, setTodayEvents] = useState([]);
   const [tomorrowEvents, setTomorrowEvents] = useState([]);
   const [futureEvents, setFutureEvents] = useState([]);
-  useEffect(() => {
-    console.log("(Events) Use Effect called for events read")
-    var tempTodayEvents = [];
-    var tempTomorrowEvents = [];
-    var tempFutureEvents = [];
-    db.collection("events")
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          var data = doc.data();
-          console.log("(Events) Read event " + doc.id);
-          var timeCategory = findTimeCategory(data.time);
-          switch (timeCategory) {
-            case -1: // TODO
-            case 0:
-              tempTodayEvents.push(data);
-              break;
-            case 1:
-              tempTomorrowEvents.push(data);
-              break;
-            case 2:
-              tempFutureEvents.push(data);
-              break;
-          }
-        });
-        setTodayEvents(tempTodayEvents);
-        setTomorrowEvents(tempTomorrowEvents);
-        setFutureEvents(tempFutureEvents);
-      })
-      .catch((error) => {
-        console.log("(Events) Error getting events documents: ", error);
-      });
-  }, [])
+  // useEffect(() => {
+  //   console.log("(Events) Use Effect called for events read")
+  //   var tempTodayEvents = [];
+  //   var tempTomorrowEvents = [];
+  //   var tempFutureEvents = [];
+  //   // db.collection("events")
+  //   //   .get()
+  //   //   .then((querySnapshot) => {
+  //   //     querySnapshot.forEach((doc) => {
+  //   //       var data = doc.data();
+  //   //       console.log("(Events) Read event " + doc.id);
+  //   //       var timeCategory = findTimeCategory(data.time);
+  //   //       switch (timeCategory) {
+  //   //         case -1: // TODO
+  //   //         case 0:
+  //   //           tempTodayEvents.push(data);
+  //   //           break;
+  //   //         case 1:
+  //   //           tempTomorrowEvents.push(data);
+  //   //           break;
+  //   //         case 2:
+  //   //           tempFutureEvents.push(data);
+  //   //           break;
+  //   //       }
+  //   //     });
+  //   //     setTodayEvents(tempTodayEvents);
+  //   //     setTomorrowEvents(tempTomorrowEvents);
+  //   //     setFutureEvents(tempFutureEvents);
+  //     })
+  //     .catch((error) => {
+  //       console.log("(Events) Error getting events documents: ", error);
+  //     });
+  // }, [])
   return (
     <View style={styles.eventScreen}>
       <ScrollView style={globalStyles.scroll}>

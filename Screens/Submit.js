@@ -121,6 +121,7 @@ function CameraShot() {
       style={[styles.imageUpload, { zIndex: -1 }]}
       onPress={async () => {
         var result = await ImagePicker.launchCameraAsync();
+        //sort out 
       }}
     >
       <Image
@@ -148,6 +149,7 @@ function ImageUpload() {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
     });
     console.log(result);
+    setImage(result);
     if (!result.cancelled) {
       //do something
     }
@@ -160,7 +162,9 @@ function ImageUpload() {
       }}
     >
       <Image source={image} style={styles.cloudImage} resizeMode="contain" />
+      if(props.text){
       <Text style={globalStyles.smallSemiBoldText}>Upload Image</Text>
+      }
     </TouchableOpacity>
   );
 }
