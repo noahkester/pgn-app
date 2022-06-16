@@ -88,12 +88,12 @@ function App() {
               headerBackButtonMenuEnabled: true,
             }}
           />
-          <Stack.Screen name="Start" component={StartPage} />
-          <Stack.Screen name="LoginSignup" component={LoginSignupPage} />
           <Stack.Screen name="CreateAccount" component={CreateAccountPage} />
+          <Stack.Screen name="Start" component={StartPage} />
 
-          <Stack.Screen name="Account" component={AccountPage} /> 
+          <Stack.Screen name="Account" component={AccountPage} />
           <Stack.Screen name="Submit" component={SubmitPage} />
+          <Stack.Screen name="Navigation" component={NavigationPage} />
 
           <Stack.Screen name="Admin" component={AdminPage} />
           <Stack.Screen name="Settings" component={AdminSettingsPage} />

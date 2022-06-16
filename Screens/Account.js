@@ -100,7 +100,7 @@ function SignOutButton(props) {
                 auth
                     .signOut()
                     .then(() => {
-                        navigation.navigate("LoginSignup");
+                        navigation.navigate("Start", {screen: "LoginSignup"});
                         console.log("(Account) Signed out. Navigating to Start");
                     })
                     .catch(error => console.log(error.message))

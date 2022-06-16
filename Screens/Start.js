@@ -4,17 +4,18 @@ import { NavigationPage } from "./Tabs";
 import { auth, getCurrentUser } from "../Firebase";
 import { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
+import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 const Stack = createNativeStackNavigator();
 
-export function StartPage({ navigation }) {
-    const [validUser, setValidUser] = useState(false);
+export function StartPage() {
+    const navigation = useNavigation();
     useEffect(() => {
         async function wait() {
             // https://stackoverflow.com/questions/39231344/how-to-wait-for-firebaseauth-to-finish-initializing
             await getCurrentUser(auth).then(user => {
                 console.log("(Start page) User Signed in " + user.email);
-                setValidUser(user.emailVerified);
+                navigation.navigate("Navigation");
             }).catch(() => {
                 console.log("(Start page) No user: Render Login/Signup");
             });
@@ -23,14 +24,11 @@ export function StartPage({ navigation }) {
     }, [])
     return (
         <Stack.Navigator
+            initialRouteName={"LoginSignup"}
             screenOptions={{ headerShown: false }}
         >
-            {
-                (validUser) ?
-                    (<Stack.Screen name="Navigation" component={NavigationPage} />)
-                    :
-                    (<Stack.Screen name="LoginSignup" component={LoginSignupPage} />)
-            }
+            <Stack.Screen name="LoginSignup" component={LoginSignupPage} />
+            <Stack.Screen name="Navigation" component={NavigationPage} />
         </Stack.Navigator>
     )
 }
