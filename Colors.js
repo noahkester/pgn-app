@@ -7,6 +7,7 @@ export default colors = {
     darkGray: "#777777",
     universityColor: ucolors.uTexas,
     errorRed: "#ED4337",
+    messageGreen: "#4EA24E",
 
     maroon: "#75070A",
     red: "#DD222D",

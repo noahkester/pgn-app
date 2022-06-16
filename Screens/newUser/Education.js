@@ -1,21 +1,28 @@
 import { StyleSheet, Button, TouchableOpacity, Text, Image, View, } from "react-native";
 import { SubmitPoints } from "../Home";
-import { NewUserTextInput } from "../Login";
+import { NewUserTextInput } from "./NewUser";
 import globalStyles from "../../Styles"
 import { setField } from "./About";
+import { NextButton } from "./NewUser";
+import { useState } from "react";
 
 export function EducationPage() {
+    const [major, setMajor] = useState("");
+    const [minor, setMinor] = useState("");
     return (
         <View style={styles.screen}>
-            <Text style={globalStyles.largeSemiBoldText}>Education</Text>
-            <NewUserTextInput
-                placeholder="Major(s)" onCustomChange = {text => setField({key: 'major', value: text})}
-            />
-            <NewUserTextInput
-                placeholder="Minor(s) (optional)" onCustomChange = {text => setField({key: 'minor', value: text})}
-            />
-            <View style={{ height: 10 }}></View>
-            <SubmitPoints address="ProfilePictures" title="Next" />
+            <View></View>
+            <View style={{ width: "100%", alignItems: "center" }}>
+                <Text style={globalStyles.largeSemiBoldText}>Education</Text>
+                <NewUserTextInput
+                    placeholder="Major(s)" onCustomChange={text => setMajor(text)}
+                />
+                <NewUserTextInput
+                    placeholder="Minor(s) (optional)" onCustomChange={text => setMinor(text)}
+                />
+                <View style={{ height: 10 }}></View>
+            </View>
+            <NextButton address="ProfilePictures" title="Next" values={[major, minor]} inputPage="education"/>
         </View>
     );
 }
@@ -24,7 +31,8 @@ const styles = StyleSheet.create({
         height: "100%",
         width: "100%",
         flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center"
+        justifyContent: "space-between",
+        alignItems: "center",
+        backgroundColor: "white"
     }
 });

@@ -1,12 +1,10 @@
 import { StyleSheet, KeyboardAvoidingView, Text, View, Image, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import globalStyles from "../Styles"
-import { PasswordInput, CustomTextInput, ErrorMessage } from "./Login"
+import { PasswordInput, CustomTextInput } from "./Login"
+import { ErrorMessage } from "./ErrorMessage";
 import { auth, db } from "../Firebase"
 import { AccountTop } from "./Account";
-import ucolors from "../UniversityColors";
-import DropDownPicker from "react-native-dropdown-picker";
-import colors from "../Colors";
 import { useNavigation } from '@react-navigation/native';
 
 function CreateAccountButton(props) {
@@ -60,12 +58,16 @@ export function CreateAccountPage() {
                         setEmailMessage("Invalid email format");
                         break;
                     case "auth/email-already-exists":
+                    case "auth/email-already-in-use":
+                        console.log("here");
                         setEmailMessage("Email already registered");
                         break;
                     case "auth/weak-password":
                     case "auth/invalid-password":
                         setPasswordMessage("Password must be > 6 characters");
                         break;
+                    default:
+                        console.log(error.code);
                 }
             })
         return success;
@@ -82,18 +84,18 @@ export function CreateAccountPage() {
                 <CustomTextInput
                     label="Email:"
                     value={email}
-                    onCustomChange={setEmail}
+                    onCustomChange={text => setEmail(text)}
                     placeholder="Enter Email" />
                 <ErrorMessage message={emailMessage} />
                 <PasswordInput
                     label="Password:"
                     value={password1}
-                    onCustomChange={setPassword1}
+                    onCustomChange={text => setPassword1(text)}
                     placeholder="Create Password" />
                 <PasswordInput
                     label=""
                     value={password2}
-                    onCustomChange={setPassword2}
+                    onCustomChange={text => setPassword2(text)}
                     placeholder="Re-type Password" />
                 <ErrorMessage message={passwordMessage} />
                 <CreateAccountButton title="Create Account" handleCreateAccount={handleCreateAccount} />

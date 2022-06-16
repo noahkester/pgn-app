@@ -1,6 +1,7 @@
 import { StyleSheet, Button, TouchableOpacity, Text, Image, View, } from "react-native";
 import { SubmitPoints } from "../Home";
 import globalStyles from "../../Styles"
+import { NextButton } from "./NewUser";
 
 function ImageUploadCard(props) {
     return (
@@ -22,18 +23,17 @@ function ImageUploadCard(props) {
     )
 }
 
-
-
-
 export function ProfilePicturesPage() {
     return (
         <View style={styles.screen}>
-            <Text style={[globalStyles.largeSemiBoldText, styles.title]}>Profile Pictures</Text>
-            <ImageUploadCard title="Professional Pic" imageSrc={require("../../images/imageUpload1.png")} />
-            <ImageUploadCard title="Party/Fun Pic" imageSrc={require("../../images/imageUpload2.png")} />
-            <ImageUploadCard title="Childhood Pic" imageSrc={require("../../images/imageUpload3.png")} />
-            <View style={{ height: 10 }}></View>
-            <SubmitPoints address="About" title="Next" />
+            <View></View>
+            <View style={{ width: "100%", alignItems: "center" }}>
+                <Text style={[globalStyles.largeSemiBoldText, styles.title]}>Profile Pictures</Text>
+                <ImageUploadCard title="Professional Pic" imageSrc={require("../../images/imageUpload1.png")} />
+                <ImageUploadCard title="Party/Fun Pic" imageSrc={require("../../images/imageUpload2.png")} />
+                <ImageUploadCard title="Childhood Pic" imageSrc={require("../../images/imageUpload3.png")} />
+            </View>
+            <NextButton address="About" title="Next" />
         </View>
     );
 }
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
         height: "100%",
         width: "100%",
         flexDirection: "column",
-        justifyContent: "center",
+        justifyContent: "space-between",
         alignItems: "center",
         backgroundColor: "white"
     },

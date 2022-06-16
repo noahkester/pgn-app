@@ -5,15 +5,7 @@ import { auth, db } from "../Firebase"
 import { AccountTop } from "./Account";
 import { useNavigation } from '@react-navigation/native';
 import { setField } from "./newUser/About";
-
-// Error Message Text under input fields
-export function ErrorMessage(props) {
-    return (
-        <View style={styles.errorMessage}>
-            <Text style={[styles.errorMessageText, globalStyles.smallBoldText, globalStyles.errorRedText]}>{props.message}</Text>
-        </View>
-    )
-}
+import { ErrorMessage } from "./ErrorMessage";
 
 // Text Input for Login Password
 export function PasswordInput(props) {
@@ -35,46 +27,7 @@ export function PasswordInput(props) {
         </View>
     );
 }
-// Text Input field for additional user information in new user flow
-export function AboutTextInput(props) {
-    return (
-        <View style={styles.inputContainer}>
-            <View style={[styles.largeNewUsertextInputContainer, globalStyles.grayBorder]}>
-                <TextInput
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    style={globalStyles.mediumBoldText}
-                    placeholder={props.placeholder}
-                    onChangeText={text => props.onCustomChange(text)}
-                >
-                    {props.value}
-                </TextInput>
-            </View>
-        </View>
-    )
-}
 
-export function NewUserTextInput(props) {
-
-
-    return (
-        <View style={styles.inputContainer}>
-            <View style={[styles.newUsertextInputContainer, globalStyles.grayBorder]}>
-                <TextInput
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    style={globalStyles.mediumBoldText}
-                    placeholder={props.placeholder}
-                    //need to pass in what field to edit for each component
-                    onChangeText={text => props.onCustomChange(text)}
-                >
-
-                    {props.value}
-                </TextInput>
-            </View>
-        </View>
-    )
-}
 // Used for email / username
 export function CustomTextInput(props) {
     return (
@@ -132,14 +85,11 @@ function LoginButton(props) {
                                         console.log("(Login) User account has been created but missing email verification");
                                         navigation.navigate("EmailVerification");
                                     }
-                                    else {
-                                        console.log("(Login) User auth created but missing account information");
-                                        navigation.navigate("Name");
-                                    }
                                 })
-                            }).catch((error) => {
+                                console.log("(Login) User auth created but missing account information");
+                                navigation.navigate("Name");
+                            }).catch(() => {
                                 console.log("(Login) ERROR: Could not get firebase account");
-
                             });
                     }
                 }
@@ -236,30 +186,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         width: "70%"
     },
-    newUsertextInputContainer: {
-        borderWidth: 1,
-        padding: 10,
-        borderRadius: 30,
-        marginTop: 10,
-        width: "100%"
-    },
-    largeNewUsertextInputContainer: {
-        borderWidth: 1,
-        padding: 10,
-        borderRadius: 20,
-        marginTop: 10,
-        width: "100%",
-        height: 100
-    },
     space: {
         height: 10
-    },
-    errorMessage: {
-        flexDirection: "row",
-        justifyContent: "end",
-        width: "100%",
-    },
-    errorMessageText: {
-        paddingLeft: "35%",
-    },
+    }
 })

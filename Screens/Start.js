@@ -14,7 +14,6 @@ export function StartPage() {
         async function wait() {
             // https://stackoverflow.com/questions/39231344/how-to-wait-for-firebaseauth-to-finish-initializing
             await getCurrentUser(auth).then(user => {
-                console.log("(Start page) Go to home for user: " + user.email);
                 if (user.emailVerified) {
                     if (user.email == "pgn.utexas.sudo@gmail.com") {
                         navigation.navigate("Admin");

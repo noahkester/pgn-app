@@ -21,11 +21,6 @@ export function SubmitPoints(props) {
       ]}
       onPress={() => {
         navigation.navigate(props.address);
-        if (props.function2) {
-          console.log("inside if")
-          props.function2;
-        }
-        console.log("outside if")
       }}
     >
       <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>

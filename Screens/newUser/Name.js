@@ -1,13 +1,14 @@
 import { StyleSheet, Button, TouchableOpacity, Text, Image, View, } from "react-native";
 import { SubmitPoints } from "../Home";
-import { NewUserTextInput } from "../Login";
+import { NewUserTextInput } from "./NewUser";
 import globalStyles from "../../Styles"
 import { setField } from "./About";
 import ucolors from "../../UniversityColors";
 import DropDownPicker from "react-native-dropdown-picker";
 import colors from "../../Colors";
 import { useState } from "react";
-
+import { NextButton } from "./NewUser";
+import { auth } from "../../Firebase";
 function UniversityDropdown(props) {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
@@ -260,24 +261,78 @@ function UniversityDropdown(props) {
             setItems={setItems}
             onChangeValue={() => {
                 switch (value) {
-                    case "1": setDisplayedColor(ucolors.uTexas); break;
-                    case "2": setDisplayedColor(ucolors.illinois); break;
-                    case "3": setDisplayedColor(ucolors.illinoisState); break;
-                    case "4": setDisplayedColor(ucolors.iupHawks); break;
-                    case "5": setDisplayedColor(ucolors.washU); break;
-                    case "6": setDisplayedColor(ucolors.pennState); break;
-                    case "7": setDisplayedColor(ucolors.babson); break;
-                    case "8": setDisplayedColor(ucolors.cornell); break;
-                    case "9": setDisplayedColor(ucolors.indiana); break;
-                    case "10": setDisplayedColor(ucolors.michiganState); break;
-                    case "11": setDisplayedColor(ucolors.uMichigan); break;
-                    case "12": setDisplayedColor(ucolors.wisconsin); break;
-                    case "13": setDisplayedColor(ucolors.iowa); break;
-                    case "14": setDisplayedColor(ucolors.jmu); break;
-                    case "15": setDisplayedColor(ucolors.pitt); break;
-                    case "16": setDisplayedColor(ucolors.ohio); break;
-                    case "17": setDisplayedColor(ucolors.uPenn); break;
-                    case "18": setDisplayedColor(ucolors.miami); break;
+                    case "1":
+                        setDisplayedColor(ucolors.uTexas);
+                        props.setChapter("University of Texas");
+                        break;
+                    case "2":
+                        setDisplayedColor(ucolors.illinois);
+                        props.setChapter("University of Illinois");
+                        break;
+                    case "3":
+                        setDisplayedColor(ucolors.illinoisState);
+                        props.setChapter("Illinois State University");
+                        break;
+                    case "4":
+                        setDisplayedColor(ucolors.iupHawks);
+                        props.setChapter("IUP Crimson Hawks");
+                        break;
+                    case "5":
+                        setDisplayedColor(ucolors.washU);
+                        props.setChapter("Washington University");
+                        break;
+                    case "6":
+                        setDisplayedColor(ucolors.pennState);
+                        props.setChapter("Pennsylvania State University");
+                        break;
+                    case "7":
+                        setDisplayedColor(ucolors.babson);
+                        props.setChapter("Babson College");
+                        break;
+                    case "8":
+                        setDisplayedColor(ucolors.cornell);
+                        props.setChapter("Cornell University");
+                        break;
+                    case "9":
+                        setDisplayedColor(ucolors.indiana);
+                        props.setChapter("Indiana University");
+                        break;
+                    case "10":
+                        setDisplayedColor(ucolors.michiganState);
+                        props.setChapter("Michigan State University");
+                        break;
+                    case "11":
+                        setDisplayedColor(ucolors.uMichigan);
+                        props.setChapter("University of Michigan");
+                        break;
+                    case "12":
+                        setDisplayedColor(ucolors.wisconsin);
+                        props.setChapter("University of Wisconsin");
+                        break;
+                    case "13":
+                        setDisplayedColor(ucolors.iowa);
+                        props.setChapter("University of Iowa");
+                        break;
+                    case "14":
+                        setDisplayedColor(ucolors.jmu);
+                        props.setChapter("James Madison University");
+                        break;
+                    case "15":
+                        setDisplayedColor(ucolors.pitt);
+                        props.setChapter("University of Pittsburgh");
+                        break;
+                    case "16":
+                        setDisplayedColor(ucolors.ohio);
+                        props.setChapter("Ohio State University");
+                        break;
+                    case "17":
+                        setDisplayedColor(ucolors.uPenn);
+                        props.setChapter("University of Pennsylvania");
+                        break;
+                    case "18":
+                        setDisplayedColor(ucolors.miami);
+                        props.setChapter("Miami University");
+                        break;
                 }
             }}
             listMode='SCROLLVIEW'
@@ -286,7 +341,7 @@ function UniversityDropdown(props) {
                 borderWidth: 0,
                 width: '90%',
                 marginLeft: '5%',
-                height: 120,
+                height: 200,
             }}
             textStyle={[globalStyles.whiteText, globalStyles.mediumBoldText]}
             style={{
@@ -302,25 +357,27 @@ function UniversityDropdown(props) {
         </DropDownPicker>
     );
 }
+
 export function NamePage() {
-    function setFirstName(text1) {
-
-        setField({ key: 'firstname', value: text1 })
-        console.log("first name is set")
-    }
-
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [chapter, setChapter] = useState("");
     return (
         <View style={styles.screen}>
-            <Text style={globalStyles.largeSemiBoldText}>Name</Text>
-            <UniversityDropdown />
-            <NewUserTextInput
-                placeholder="First name" onCustomChange={text => setFirstName(text)}
-            />
-            <NewUserTextInput
-                placeholder="Last name" onCustomChange={text => setField({ key: 'lastname', value: text })}
-            />
-            <View style={{ height: 10 }}></View>
-            <SubmitPoints address="Education" title="Next" />
+            <View></View>
+            <View style={{ width: "100%", alignItems: "center" }}>
+                <Text style={globalStyles.largeSemiBoldText}>Name and School</Text>
+                <View style={{ height: 10 }}></View>
+                <UniversityDropdown setChapter={setChapter} />
+                <View style={{ height: 10 }}></View>
+                <NewUserTextInput
+                    placeholder="First name" onCustomChange={text => { setFirstName(text) }}
+                />
+                <NewUserTextInput
+                    placeholder="Last name" onCustomChange={text => setLastName(text)}
+                />
+            </View>
+            <NextButton address="Education" title="Next" values={[firstName, lastName, chapter, auth.currentUser.uid]} inputPage="name" />
         </View>
     );
 }
@@ -329,8 +386,9 @@ const styles = StyleSheet.create({
         height: "100%",
         width: "100%",
         flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center"
+        justifyContent: "space-between",
+        alignItems: "center",
+        backgroundColor: "white"
     },
     iconStyle: {
         width: 30,

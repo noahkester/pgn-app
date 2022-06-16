@@ -9,7 +9,6 @@ import {
 } from "react-native";
 
 import { StartPage } from "./Screens/Start";
-import { LoginSignupPage } from "./Screens/LoginSignup";
 import { LoginPage } from "./Screens/Login";
 import { CreateAccountPage } from "./Screens/CreateAccount";
 import { NavigationPage } from "./Screens/Tabs";
