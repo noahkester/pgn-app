@@ -11,17 +11,6 @@ import Carousel from 'react-native-anchor-carousel';
 import SimplePaginationDot from './components/SimplePaginationDot';
 
 const { width: windowWidth } = Dimensions.get('window');
-/*const data = [
-    {
-        uri: 'https://i.imgur.com/GImvG4q.jpg',
-    },
-    {
-        uri: 'https://i.imgur.com/Pz2WYAc.jpg',
-    },
-    {
-        uri: 'https://i.imgur.com/IGRuEAa.jpg',
-    }
-];*/
 
 const INITIAL_INDEX = 0;
 export default function ImageCarousel(props) {

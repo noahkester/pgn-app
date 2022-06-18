@@ -16,13 +16,21 @@ import globalStyles from "../Styles";
 import { SearchBar } from "@rneui/themed";
 import { TopBar } from "./Tabs";
 import { useNavigation } from '@react-navigation/native';
-import { db } from "../Firebase";
+import { db, store } from "../Firebase";
 
 function PeopleImage(props) {
   // TODO Add images
-  var profile;
-  if (!(props.image === "")) {
-    profile = <View style={styles.profileImage}></View>;
+  if (props.uri) {
+    console.log("gello")
+    return (
+      <View style={styles.people}>
+        <Image
+          source={{ uri: props.uri }}
+          resizeMode="contain"
+          style={styles.peopleImageBackground}
+        />
+      </View>
+    );
   }
   return (
     <View style={styles.people}>
@@ -31,7 +39,6 @@ function PeopleImage(props) {
         resizeMode="contain"
         style={styles.peopleImageBackground}
       />
-      {profile}
     </View>
   );
 }
@@ -48,6 +55,16 @@ function PeopleSection(props) {
 }
 function People(props) {
   const navigation = useNavigation();
+  const [profileUrl, setProfileUrl] = useState("");
+  useEffect(() => {
+    store
+      .ref(`/profile-pictures/${props.data.id}_professional.png`)
+      .getDownloadURL()
+      .then((url) => {
+        setProfileUrl(url);
+      })
+      .catch((e) => console.log('(Person) Error getting Professional Picture ', e));
+  })
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate("Person", { memberData: props.data })}
@@ -59,7 +76,7 @@ function People(props) {
           globalStyles.cardAlign,
         ]}
       >
-        <PeopleImage image={""} />
+        <PeopleImage uri={profileUrl} />
         <View style={styles.peopleText}>
           <Text style={globalStyles.smallSemiBoldText}>{props.data.firstname + " " + props.data.lastname}</Text>
           <Text style={globalStyles.tinySemiBoldText}>
@@ -70,7 +87,6 @@ function People(props) {
     </TouchableOpacity>
   );
 }
-
 export function PeoplePage() {
   // TODO pull to get users 'Spring 2022'
   // TODO pull all users and filer on pledge class
@@ -93,7 +109,7 @@ export function PeoplePage() {
           var section = allUsers.map((people) => {
             return (
               <People
-                data = {people}
+                data={people}
               />
             );
           });

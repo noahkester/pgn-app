@@ -4,6 +4,8 @@ import globalStyles from "../Styles"
 import { useNavigation } from '@react-navigation/native';
 import colors from "webpack-dev-server/lib/utils/colors";
 import { auth, db, store } from "../Firebase";
+import ImageCarousel from "./ImageCarousel";
+
 /*
 Backend Stuff TODO:
 
@@ -30,12 +32,13 @@ export function AccountTop(props) {
 }
 function Profile(props) {
     return (
-        <Image
-            source={{ uri: props.profileUrl }}
-            style={styles.largeProfile}
-            resizeMode="contain"
-        >
-        </Image>
+        <ImageCarousel
+            data={[
+                { uri: props.profileUrlProfessional },
+                { uri: props.profileUrlSocial },
+                { uri: props.profileUrlChild }
+            ]}
+        />
     );
 }
 function Description(props) {
@@ -97,7 +100,9 @@ function PledgeClass(props) {
 
 export function PersonPage({ route }) {
     const [name, setName] = useState("Firstname, Lastname");
-    const [profileUrl, setProfileUrl] = useState("");
+    const [profileUrlProfessional, setProfileUrlProfessional] = useState("");
+    const [profileUrlSocial, setProfileUrlSocial] = useState("");
+    const [profileUrlChild, setProfileUrlChild] = useState("");
     const [bio, setBio] = useState("");
     const [pledgeClass, setPledgeClass] = useState("");
     const [status, setStatus] = useState("");
@@ -123,9 +128,23 @@ export function PersonPage({ route }) {
             .ref(`/profile-pictures/${memberData.id}_professional.png`) //name in storage in firebase console
             .getDownloadURL()
             .then((url) => {
-                setProfileUrl(url);
+                setProfileUrlProfessional(url);
             })
-            .catch((e) => console.log('(Tabs) Errors while getting Profile Picture ', e));
+            .catch((e) => console.log('(Person) Error getting Professional Picture ', e));
+        store
+            .ref(`/profile-pictures/${memberData.id}_social.png`) //name in storage in firebase console
+            .getDownloadURL()
+            .then((url) => {
+                setProfileUrlSocial(url);
+            })
+            .catch((e) => console.log('(Person) Error getting Social Picture ', e));
+        store
+            .ref(`/profile-pictures/${memberData.id}_child.png`) //name in storage in firebase console
+            .getDownloadURL()
+            .then((url) => {
+                setProfileUrlChild(url);
+            })
+            .catch((e) => console.log('(Person) Error getting Childhood Picture ', e));
     }, [])
     return (
         <View style={styles.createAccountScreen}>
@@ -135,7 +154,11 @@ export function PersonPage({ route }) {
             </View>
             <ScrollView style={styles.accountInfo}>
                 <View style={styles.innerScroll}>
-                    <Profile profileUrl={profileUrl} />
+                    <Profile
+                        profileUrlProfessional={profileUrlProfessional}
+                        profileUrlSocial={profileUrlSocial}
+                        profileUrlChild={profileUrlChild}
+                    />
                     <Description description={bio} />
                     <Chapter chapter={chapter} />
                     <PledgeClass pledgeClass={pledgeClass} status={status} />
