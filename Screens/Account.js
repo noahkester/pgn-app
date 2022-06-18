@@ -1,16 +1,12 @@
-import { StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import { StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Text, View, Dimensions, ImageBackground } from "react-native";
+import React, { useRef, useEffect, useState } from "react";
 import globalStyles from "../Styles"
 import { useNavigation } from '@react-navigation/native';
 import colors from "webpack-dev-server/lib/utils/colors";
 import { auth, db, store } from "../Firebase";
-/*
-Backend Stuff TODO:
 
-Popualate Fields with database pull
-Get inputs on "Save and Exit" and save to database
+import ImageCarousel from "./ImageCarousel";
 
-*/
 export function AccountTop(props) {
     const navigation = useNavigation();
     return (
@@ -28,16 +24,26 @@ export function AccountTop(props) {
         </View>
     );
 }
+
 function Profile(props) {
     return (
-        <Image
+        <ImageCarousel
+            data = {[
+                { uri: props.profileUrl },
+                { uri: props.profileUrl },
+                { uri: 'https://i.imgur.com/Pz2WYAc.jpg' }
+            ]}
+        />
+    )
+    /*
+    <Image
             source={{ uri: props.profileUrl }}
             style={styles.largeProfile}
             resizeMode="contain"
-        >
-        </Image>
-    );
+        />
+    */
 }
+
 function Description(props) {
     var quote = props.description;
     if (quote != "") {
@@ -55,7 +61,7 @@ function Description(props) {
 }
 function Chapter(props) {
     return (
-        <View style = {{paddingTop: 60}}>
+        <View style={{ paddingTop: 60 }}>
             <Text style={[globalStyles.smallSemiBoldText]}>{props.chapter}</Text>
         </View>
     )
@@ -177,7 +183,7 @@ export function AccountPage() {
                     <Description description={bio} />
                     <Chapter chapter={chapter} />
                     <PledgeClass pledgeClass={pledgeClass} status={status} />
-                    <AcademicInfo major={major} minor = {minor}/>
+                    <AcademicInfo major={major} minor={minor} />
                     <ContactInfo email={email} number={phone} linkedin={linkedin} />
                     <SaveButton />
                     <SignOutButton />
@@ -276,5 +282,5 @@ const styles = StyleSheet.create({
     signoutButton: {
         marginTop: 10,
         marginBottom: 50
-    }
+    },
 })
