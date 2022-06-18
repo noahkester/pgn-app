@@ -202,7 +202,6 @@ const styles = StyleSheet.create({
         marginTop: 15,
         width: 200,
         height: 200,
-        borderRadius: 100,
     },
     accountDescription: {
         marginTop: 20,

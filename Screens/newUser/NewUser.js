@@ -28,6 +28,7 @@ var newUser = {
     philanthropyPoints: 0,
     professionalPoints: 0,
     socialPoints: 0,
+    submittedPoints: []
 };
 function updateName(firstname, lastname) {
     newUser.id = auth.currentUser.uid;
