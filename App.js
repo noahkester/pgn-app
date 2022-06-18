@@ -22,6 +22,8 @@ import { ProfilePicturesPage } from "./Screens/newUser/ProfilePictures";
 import { AboutPage } from "./Screens/newUser/About";
 import { ContactPage } from "./Screens/newUser/Contact";
 import { EmailVerificationPage } from "./Screens/newUser/EmailVerification";
+import { PersonPage } from "./Screens/Person"
+
 // import styles from "./Styles";
 // In App.js in a new project
 
@@ -92,6 +94,7 @@ function App() {
 
           <Stack.Screen name="Account" component={AccountPage} />
           <Stack.Screen name="Submit" component={SubmitPage} />
+          <Stack.Screen name="Person" component={PersonPage} />
           <Stack.Screen name="Navigation" component={NavigationPage} />
 
           <Stack.Screen name="Admin" component={AdminPage} />

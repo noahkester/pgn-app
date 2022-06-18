@@ -1,18 +1,20 @@
 import { StyleSheet, Button, TouchableOpacity, Text, Image, View, TextInput } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import globalStyles from "../../Styles";
-import { getCurrentUser, db } from "../../Firebase";
+import { getCurrentUser, db, auth } from "../../Firebase";
 var newUser = {
-    id: "",
     firstname: "",
     lastname: "",
-    chapter: "",
+    chapter: "University of Texas",
     pledgeClass: "",
 
     major: "",
     minor: "",
 
-    profilePicture: "",
+    profilePictureProfessional: "",
+    profilePictureSocial: "",
+    profilePictureChild: "",
+    
     status: "",
 
     activities: [],
@@ -26,15 +28,34 @@ var newUser = {
     professionalPoints: 0,
     socialPoints: 0,
 };
-function updateNameAndPC(firstname, lastname, chapter, id) {
+function updateName(firstname, lastname) {
     newUser.firstname = firstname;
     newUser.lastname = lastname;
-    newUser.chapter = chapter;
-    newUser.id = id
+
+    // get chapter and status
+    async function updateStatusAndPC() {
+        const name = (firstname + lastname).toLowerCase();
+        db.collection("admin-members")
+            .doc(name)
+            .get()
+            .then((doc) => {
+                const data = doc.data();
+                newUser.status = data.status;
+                newUser.pledgeClass = data.pledgeClass;
+                console.log("(NewUser) Found user and updated pledgeClass and status")
+            }).catch((error) => {
+                console.log("(New User) Could not find user in system: FATAL ERROR");
+                // TODO take user to screen that tells them their name is not in the system
+            })
+    }
+    updateStatusAndPC();
 }
 function updateEducation(major, minor) {
     newUser.major = major;
     newUser.minor = minor;
+}
+function updateProfilePictures(img1, img2, img3) {
+    // upload images
 }
 function updateAbout(activites, bio) {
     newUser.activities = activites.split(",");
@@ -43,10 +64,11 @@ function updateAbout(activites, bio) {
 function updateContact(linkedin, phone) {
     newUser.linkedin = linkedin;
     newUser.phone = phone;
+    newUser.email = auth.currentUser.email;
 }
 export function uploadToFirebase() {
     console.log(newUser);
-    db.collection("users").doc(newUser.id).set(newUser)
+    db.collection("users").doc(auth.currentUser.uid).set(newUser)
         .then(() => {
             console.log("(NewUser) User Information successfully written!");
         })
@@ -110,8 +132,8 @@ export function NextButton(props) {
                 //  instead of returning, set a callback error message
                 switch (props.inputPage) {
                     case "name":
-                        if (!props.values[0] || !props.values[1] || !props.values[2] || !props.values[3]) return;
-                        updateNameAndPC(props.values[0], props.values[1], props.values[2], props.values[3]);
+                        if (!props.values[0] || !props.values[1]) return;
+                        updateName(props.values[0], props.values[1]);
                         break;
                     case "education":
                         if (!props.values[0]) return;

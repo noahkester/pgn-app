@@ -79,9 +79,24 @@ function PointCard(props) {
 function PointDisplay(props) {
   return (
     <View style={styles.points}>
-      <PointCard title="Philanthropy" points={props.philanthropyPoints} totalPoints={totalPoints[0]} icon={require("../images/philanthropy.png")} />
-      <PointCard title="Professional" points={props.professionalPoints} totalPoints={totalPoints[1]} icon={require("../images/professional.png")} />
-      <PointCard title="Social" points={props.socialPoints} totalPoints={totalPoints[2]} icon={require("../images/social.png")} />
+      <PointCard
+        title="Philanthropy"
+        points={props.philanthropyPoints}
+        totalPoints={props.totalPhilanthropyPoints}
+        icon={require("../images/philanthropy.png")}
+      />
+      <PointCard
+        title="Professional"
+        points={props.professionalPoints}
+        totalPoints={props.totalProfessionalPoints}
+        icon={require("../images/professional.png")}
+      />
+      <PointCard
+        title="Social"
+        points={props.socialPoints}
+        totalPoints={props.totalSocialPoints}
+        icon={require("../images/social.png")}
+      />
     </View>
   );
 }
@@ -100,22 +115,55 @@ export function HomePage() {
   const [philanthropyPoints, setPhilanthropyPoints] = useState(0);
   const [socialPoints, setSocialPoints] = useState(0);
   const [professionalPoints, setProfessionalPoints] = useState(0);
-  // useEffect(() => {
-  //   console.log("(Home) Use Effect");
-  //   // db.collection("users")
-  //   //   .where("id", "==", auth.currentUser.uid)
-  //   //   .get()
-  //   //   .then((querySnapshot) => {
-  //   //     querySnapshot.forEach((doc) => {
-  //   //       var data = doc.data();
-  //   //       setPhilanthropyPoints(data.philanthropyPoints);
-  //   //       setProfessionalPoints(data.professionalPoints);
-  //   //       setSocialPoints(data.socialPoints);
-  //   //     })
-  //   //   }).catch((error) => {
-  //   //     console.log("(Home) Error getting events documents: ", error);
-  //   //   });
-  // }, [])
+  //error
+  const [totalPhilanthropyPoints, setTotalPhilanthropyPoints] = useState(3);
+  const [totalSocialPoints, setTotalSocialPoints] = useState(3);
+  const [totalProfessionalPoints, setTotalProfessionalPoints] = useState(3);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    db.collection("users")
+      .doc(auth.currentUser.uid)
+      .get()
+      .then((doc) => {
+        const data = doc.data();
+        setPhilanthropyPoints(data.philanthropyPoints);
+        setProfessionalPoints(data.professionalPoints);
+        setSocialPoints(data.socialPoints);
+        const status = data.status;
+        db.collection("admin-settings")
+          .doc("points")
+          .get()
+          .then((doc1) => {
+            const data1 = doc1.data();
+            switch (status) {
+              case "pledge":
+                setTotalPhilanthropyPoints(data1.pledgePhilanthropyPoints);
+                setTotalProfessionalPoints(data1.pledgeProfessionalPoints);
+                setTotalSocialPoints(data1.pledgeSocialPoints);
+                break;
+              case "active":
+                setTotalPhilanthropyPoints(data1.activePhilanthropyPoints);
+                setTotalProfessionalPoints(data1.activeProfessionalPoints);
+                setTotalSocialPoints(data1.activeSocialPoints);
+                break;
+              case "inactive":
+                setTotalPhilanthropyPoints(0);
+                setTotalProfessionalPoints(0);
+                setTotalSocialPoints(0);
+                break;
+              case "suspended":
+                //navigation.navigate("Suspeneded"); Screen for people who are suspended error message
+                // and locks them from the app TODO
+                break;
+            }
+          }).catch((error) => {
+            console.log("(Home) Error: Could not get admin points document");
+          })
+      }).catch((error) => {
+        console.log("(Home) Error: getting events documents: ", error);
+      });
+  }, [])
   return (
     <View style={styles.homeScreen}>
       <View style={{
@@ -126,6 +174,10 @@ export function HomePage() {
         philanthropyPoints={philanthropyPoints}
         socialPoints={socialPoints}
         professionalPoints={professionalPoints}
+
+        totalPhilanthropyPoints={totalPhilanthropyPoints}
+        totalSocialPoints={totalSocialPoints}
+        totalProfessionalPoints={totalProfessionalPoints}
       />
       <SubmitPoints address="Submit" title="Submit Points" />
     </View>

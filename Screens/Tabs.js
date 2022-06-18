@@ -19,23 +19,27 @@ export function TopBar(props) {
   const [pledgeClass, setPledgeClass] = useState("Spring 1999");
   useEffect(() => {
     db.collection("users")
-      .where("id", "==", auth.currentUser.uid)
+      .doc(auth.currentUser.uid)
       .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          var data = doc.data();
-          console.log("(Tabs) Read event " + doc.id);
-          setFirstname(data.firstname);
-          var splitPledgeClass = data.pledgeClass.split(" ");
-          setPledgeClass(splitPledgeClass[0][0] + splitPledgeClass[1][2] + splitPledgeClass[1][3]);
-          store
-            .ref(`/profile-pictures/${data.id}.png`) //name in storage in firebase console
-            .getDownloadURL()
-            .then((url) => {
-              setProfileUrl(url);
-            })
-            .catch((e) => console.log('(Tabs) Errors while downloading => ', e));
-        });
+      .then((doc) => {
+        var data = doc.data();
+        setFirstname(data.firstname);
+        const name = (data.firstname + data.lastname).toLowerCase();
+        db.collection("admin-members")
+          .doc(name)
+          .get()
+          .then((doc0) => {
+            const data0 = doc0.data();
+            const splitPledgeClass = data0.pledgeClass.split(" ");
+            setPledgeClass(splitPledgeClass[0][0] + splitPledgeClass[1][2] + splitPledgeClass[1][3]);
+          })
+        store
+          .ref(`/profile-pictures/${auth.currentUser.uid}_professional.png`) //name in storage in firebase console
+          .getDownloadURL()
+          .then((url) => {
+            setProfileUrl(url);
+          })
+          .catch((e) => console.log('(Tabs) Errors while getting Profile Picture ', e));
       })
       .catch((error) => {
         console.log("(Tabs) Error getting events documents: ", error);
@@ -89,7 +93,6 @@ export function NavigationPage() {
       <Tab.Navigator
         // Background of each screen
         sceneContainerStyle={{
-
           backgroundColor: colors.white,
         }}
         screenOptions={{

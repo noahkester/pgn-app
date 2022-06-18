@@ -15,6 +15,8 @@ import React, { useState, useEffect, useRef } from "react";
 import globalStyles from "../Styles";
 import { SearchBar } from "@rneui/themed";
 import { TopBar } from "./Tabs";
+import { useNavigation } from '@react-navigation/native';
+
 var allPeople = [
   {
     name: "Noah Kester",
@@ -166,8 +168,11 @@ function PeopleSection(props) {
   );
 }
 function People(props) {
+  const navigation = useNavigation();
   return (
-    <TouchableOpacity>
+    <TouchableOpacity
+      onPress={() => navigation.navigate("Person")}
+    >
       <View
         style={[
           globalStyles.cardContainer,

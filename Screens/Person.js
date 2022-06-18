@@ -45,17 +45,17 @@ function Description(props) {
     }
     return (
         <View style={[globalStyles.cardContainer, styles.accountDescription]}>
-            <TextInput
+            <Text
                 style={globalStyles.smallSemiBoldText}
                 multiline={true}
                 placeholder="Quote"
-            >{quote}</TextInput>
+            >{quote}</Text>
         </View>
     )
 }
 function Chapter(props) {
     return (
-        <View style = {{paddingTop: 60}}>
+        <View style={{ paddingTop: 60 }}>
             <Text style={[globalStyles.smallSemiBoldText]}>{props.chapter}</Text>
         </View>
     )
@@ -64,7 +64,7 @@ function AccountInput(props) {
     return (
         <View style={styles.accountInput}>
             <Text style={globalStyles.smallSemiBoldText}>{props.label}</Text>
-            <TextInput style={[styles.accountTextInput, globalStyles.cardContainer, globalStyles.smallSemiBoldText]}>{props.input}</TextInput>
+            <Text style={[styles.accountTextInput, globalStyles.cardContainer, globalStyles.smallSemiBoldText]}>{props.input}</Text>
         </View>
     )
 }
@@ -78,47 +78,14 @@ function AcademicInfo(props) {
 }
 function ContactInfo(props) {
     return (
-        <View style={styles.academicSection}>
+        <View style={[styles.academicSection, {paddingBottom: 80}]}>
             <AccountInput label="Email:" input={props.email} />
             <AccountInput label="Phone:" input={props.number} />
             <AccountInput label="LinkedIn:" input={props.linkedin} />
         </View>
     )
 }
-function SaveButton(props) {
-    const navigation = useNavigation();
-    return (
-        <TouchableOpacity
-            onPress={() => navigation.navigate("Navigation")}
-            title={"Save and Exit"}
-            style={[globalStyles.universityColorFill, globalStyles.button, styles.saveButton]}
 
-        >
-            <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>{"Save and Exit"}</Text>
-        </TouchableOpacity>
-    )
-}
-function SignOutButton(props) {
-    const navigation = useNavigation();
-    return (
-        <TouchableOpacity
-            onPress={() => {
-                auth
-                    .signOut()
-                    .then(() => {
-                        navigation.navigate("Start", { screen: "LoginSignup" });
-                        console.log("(Account) Signed out. Navigating to Start");
-                    })
-                    .catch(error => console.log(error.message))
-            }}
-            title={"Signout"}
-            style={[globalStyles.universityColorFill, globalStyles.button, styles.signoutButton]}
-
-        >
-            <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>{"Sign out"}</Text>
-        </TouchableOpacity>
-    )
-}
 function PledgeClass(props) {
     return (
         <View style={styles.pledgeClass}>
@@ -128,7 +95,7 @@ function PledgeClass(props) {
     )
 }
 
-export function AccountPage() {
+export function PersonPage() {
     const [name, setName] = useState("Firstname, Lastname");
     const [profileUrl, setProfileUrl] = useState("");
     const [bio, setBio] = useState("");
@@ -169,7 +136,7 @@ export function AccountPage() {
         <View style={styles.createAccountScreen}>
             <View style={styles.navBar}>
                 <View></View>
-                <AccountTop name={name} address="Navigation" />
+                <AccountTop name={name} address="People" />
             </View>
             <ScrollView style={styles.accountInfo}>
                 <View style={styles.innerScroll}>
@@ -177,10 +144,8 @@ export function AccountPage() {
                     <Description description={bio} />
                     <Chapter chapter={chapter} />
                     <PledgeClass pledgeClass={pledgeClass} status={status} />
-                    <AcademicInfo major={major} minor = {minor}/>
+                    <AcademicInfo major={major} minor={minor} />
                     <ContactInfo email={email} number={phone} linkedin={linkedin} />
-                    <SaveButton />
-                    <SignOutButton />
                 </View>
             </ScrollView>
         </View>

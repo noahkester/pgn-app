@@ -377,7 +377,7 @@ export function NamePage() {
                     placeholder="Last name" onCustomChange={text => setLastName(text)}
                 />
             </View>
-            <NextButton address="Education" title="Next" values={[firstName, lastName, chapter, auth.currentUser.uid]} inputPage="name" />
+            <NextButton address="Education" title="Next" values={[firstName, lastName]} inputPage="name" />
         </View>
     );
 }

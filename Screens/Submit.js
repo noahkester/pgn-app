@@ -162,9 +162,6 @@ function ImageUpload() {
       }}
     >
       <Image source={image} style={styles.cloudImage} resizeMode="contain" />
-      if(props.text){
-      <Text style={globalStyles.smallSemiBoldText}>Upload Image</Text>
-      }
     </TouchableOpacity>
   );
 }
