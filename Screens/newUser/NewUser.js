@@ -3,6 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import globalStyles from "../../Styles";
 import { getCurrentUser, db, auth } from "../../Firebase";
 var newUser = {
+    id: "",
     firstname: "",
     lastname: "",
     chapter: "University of Texas",
@@ -14,7 +15,7 @@ var newUser = {
     profilePictureProfessional: "",
     profilePictureSocial: "",
     profilePictureChild: "",
-    
+
     status: "",
 
     activities: [],
@@ -29,6 +30,7 @@ var newUser = {
     socialPoints: 0,
 };
 function updateName(firstname, lastname) {
+    newUser.id = auth.currentUser.uid;
     newUser.firstname = firstname;
     newUser.lastname = lastname;
 

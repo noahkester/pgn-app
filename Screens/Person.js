@@ -78,7 +78,7 @@ function AcademicInfo(props) {
 }
 function ContactInfo(props) {
     return (
-        <View style={[styles.academicSection, {paddingBottom: 80}]}>
+        <View style={[styles.academicSection, { paddingBottom: 80 }]}>
             <AccountInput label="Email:" input={props.email} />
             <AccountInput label="Phone:" input={props.number} />
             <AccountInput label="LinkedIn:" input={props.linkedin} />
@@ -95,7 +95,7 @@ function PledgeClass(props) {
     )
 }
 
-export function PersonPage() {
+export function PersonPage({ route }) {
     const [name, setName] = useState("Firstname, Lastname");
     const [profileUrl, setProfileUrl] = useState("");
     const [bio, setBio] = useState("");
@@ -107,25 +107,20 @@ export function PersonPage() {
     const [linkedin, setLinkedin] = useState("");
     const [phone, setPhone] = useState("");
     const [chapter, setChapter] = useState("");
+    const { memberData } = route.params;
     useEffect(() => {
-        db.collection("users")
-            .doc(auth.currentUser.uid)
-            .get()
-            .then((doc) => {
-                const data = doc.data();
-                setName(data.firstname + " " + data.lastname);
-                setBio(data.bio);
-                setPledgeClass(data.pledgeClass);
-                setStatus(data.status);
-                setMajor(data.major);
-                setMinor(data.minor);
-                setEmail(data.email);
-                setLinkedin(data.linkedin);
-                setPhone(data.phone);
-                setChapter(data.chapter);
-            }).catch("(Account) Error could not read document")
+        setName(memberData.firstname + " " + memberData.lastname);
+        setBio(memberData.bio);
+        setPledgeClass(memberData.pledgeClass);
+        setStatus(memberData.status);
+        setMajor(memberData.major);
+        setMinor(memberData.minor);
+        setEmail(memberData.email);
+        setLinkedin(memberData.linkedin);
+        setPhone(memberData.phone);
+        setChapter(memberData.chapter);
         store
-            .ref(`/profile-pictures/${auth.currentUser.uid}_professional.png`) //name in storage in firebase console
+            .ref(`/profile-pictures/${memberData.id}_professional.png`) //name in storage in firebase console
             .getDownloadURL()
             .then((url) => {
                 setProfileUrl(url);

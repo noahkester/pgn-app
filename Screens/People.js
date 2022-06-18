@@ -16,128 +16,7 @@ import globalStyles from "../Styles";
 import { SearchBar } from "@rneui/themed";
 import { TopBar } from "./Tabs";
 import { useNavigation } from '@react-navigation/native';
-
-var allPeople = [
-  {
-    name: "Noah Kester",
-    bio: "this is a test",
-    linkedin: "https://thisisalink",
-    email: "noah@gmail.com",
-    number: "123-456-7890",
-    image: "",
-  },
-  {
-    name: "Akin Bilen",
-    bio: "this is another bio",
-    linkedin: "https://thisisalink",
-    email: "akin@gmail.com",
-    number: "123-456-7890",
-    image: "",
-  },
-  {
-    name: "Aidan Weinrot",
-    bio: "this is another bio",
-    linkedin: "https://thisisalink",
-    email: "akin@gmail.com",
-    number: "123-456-7890",
-    image: "",
-  },
-  {
-    name: "Andrew Brooks",
-    bio: "this is another bio",
-    linkedin: "https://thisisalink",
-    email: "akin@gmail.com",
-    number: "123-456-7890",
-    image: "",
-  },
-  {
-    name: "Anne Daily",
-    bio: "this is another bio",
-    linkedin: "https://thisisalink",
-    email: "akin@gmail.com",
-    number: "123-456-7890",
-    image: "",
-  },
-  {
-    name: "Audrey Lundy",
-    bio: "this is another bio",
-    linkedin: "https://thisisalink",
-    email: "akin@gmail.com",
-    number: "123-456-7890",
-    image: "",
-  },
-  {
-    name: "Blake Brawner",
-    bio: "this is another bio",
-    linkedin: "https://thisisalink",
-    email: "akin@gmail.com",
-    number: "123-456-7890",
-    image: "",
-  },
-  {
-    name: "Brady Lamme",
-    bio: "this is another bio",
-    linkedin: "https://thisisalink",
-    email: "akin@gmail.com",
-    number: "123-456-7890",
-    image: "",
-  },
-  {
-    name: "Carolyn Watts",
-    bio: "this is another bio",
-    linkedin: "https://thisisalink",
-    email: "akin@gmail.com",
-    number: "123-456-7890",
-    image: "",
-  },
-  {
-    name: "Chole Barker",
-    bio: "this is another bio",
-    linkedin: "https://thisisalink",
-    email: "akin@gmail.com",
-    image: "123-456-7890",
-  },
-  {
-    name: "David Wilson",
-    bio: "this is another bio",
-    linkedin: "https://thisisalink",
-    email: "akin@gmail.com",
-    number: "123-456-7890",
-    image: "",
-  },
-  {
-    name: "Ella Cole",
-    bio: "this is another bio",
-    linkedin: "https://thisisalink",
-    email: "akin@gmail.com",
-    number: "123-456-7890",
-    image: "",
-  },
-  {
-    name: "Ethan Hughes",
-    bio: "this is another bio",
-    linkedin: "https://thisisalink",
-    email: "akin@gmail.com",
-    number: "123-456-7890",
-    image: "",
-  },
-  {
-    name: "Ines Guevara",
-    bio: "this is another bio",
-    linkedin: "https://thisisalink",
-    email: "akin@gmail.com",
-    number: "123-456-7890",
-    image: "",
-  },
-  {
-    name: "Jackson Osteen",
-    bio: "this is another bio",
-    linkedin: "https://thisisalink",
-    email: "akin@gmail.com",
-    number: "123-456-7890",
-    image: "",
-  },
-];
+import { db } from "../Firebase";
 
 function PeopleImage(props) {
   // TODO Add images
@@ -171,7 +50,7 @@ function People(props) {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate("Person")}
+      onPress={() => navigation.navigate("Person", { memberData: props.data })}
     >
       <View
         style={[
@@ -180,11 +59,11 @@ function People(props) {
           globalStyles.cardAlign,
         ]}
       >
-        <PeopleImage image={props.image} />
+        <PeopleImage image={""} />
         <View style={styles.peopleText}>
-          <Text style={globalStyles.smallSemiBoldText}>{props.name}</Text>
+          <Text style={globalStyles.smallSemiBoldText}>{props.data.firstname + " " + props.data.lastname}</Text>
           <Text style={globalStyles.tinySemiBoldText}>
-            {'"' + props.bio + '"'}
+            {'"' + props.data.bio + '"'}
           </Text>
         </View>
       </View>
@@ -193,16 +72,8 @@ function People(props) {
 }
 
 export function PeoplePage() {
-  var section = allPeople.map((people) => {
-    return (
-      <People
-        key={people.name}
-        name={people.name}
-        bio={people.bio}
-        image={people.image}
-      />
-    );
-  });
+  // TODO pull to get users 'Spring 2022'
+  // TODO pull all users and filer on pledge class
 
   //search bar
   const [search, setSearch] = useState("");
@@ -211,9 +82,25 @@ export function PeoplePage() {
   useEffect(() => {
     //will be a fetch once the backend is complete
     //https://snack.expo.dev/@aboutreact/react-native-search-bar-filter-on-listview
-
-    setFilteredDataSource(section);
-    setMasterDataSource(section);
+    var allUsers = [];
+    db.collection("users")
+      .where("pledgeClass", "==", "Spring 2022")
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          var data = doc.data();
+          allUsers.push(data);
+          var section = allUsers.map((people) => {
+            return (
+              <People
+                data = {people}
+              />
+            );
+          });
+          setFilteredDataSource(section);
+          setMasterDataSource(section);
+        })
+      })
   }, []);
 
   function searchFilter(text) {
@@ -260,7 +147,7 @@ export function PeoplePage() {
               fontSize: 13,
             },
           }}
-          inputContainerStyle = {{
+          inputContainerStyle={{
             //background Color neeeds to be put manually here
           }}
           containerStyle={{
