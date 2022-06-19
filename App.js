@@ -23,6 +23,7 @@ import { AboutPage } from "./Screens/newUser/About";
 import { ContactPage } from "./Screens/newUser/Contact";
 import { EmailVerificationPage } from "./Screens/newUser/EmailVerification";
 import { PersonPage } from "./Screens/Person"
+import { AccountImageUploadPage } from "./Screens/AccountImageUpload";
 
 // import styles from "./Styles";
 // In App.js in a new project
@@ -93,6 +94,7 @@ function App() {
           <Stack.Screen name="Start" component={StartPage} />
 
           <Stack.Screen name="Account" component={AccountPage} />
+          <Stack.Screen name="AccountImageUpload" component={AccountImageUploadPage} />
           <Stack.Screen name="Submit" component={SubmitPage} />
           <Stack.Screen name="Person" component={PersonPage} />
           <Stack.Screen name="Navigation" component={NavigationPage} />

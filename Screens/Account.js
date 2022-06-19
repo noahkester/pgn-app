@@ -9,6 +9,23 @@ import ImageCarousel from "./ImageCarousel";
 
 export function AccountTop(props) {
     const navigation = useNavigation();
+    const rightElement =
+        (props.rightElement) ?
+            (
+                <TouchableOpacity
+                    onPress={() => navigation.navigate("AccountImageUpload")}>
+                    <Image
+                        source={require("../images/imageUpload.png")}
+                        style={styles.imageLogo}
+                        resizeMode="contain"
+                    />
+                </TouchableOpacity>
+            )
+            :
+            (
+                <View style={styles.invisiableElement}></View>
+            )
+
     return (
         <View style={styles.accountTop}>
             <TouchableOpacity
@@ -20,7 +37,7 @@ export function AccountTop(props) {
                 />
             </TouchableOpacity>
             <Text style={globalStyles.largeBoldText}>{props.name}</Text>
-            <View style={styles.invisiableElement}></View>
+            {rightElement}
         </View>
     );
 }
@@ -28,20 +45,13 @@ export function AccountTop(props) {
 function Profile(props) {
     return (
         <ImageCarousel
-            data = {[
-                { uri: props.profileUrl },
-                { uri: props.profileUrl },
-                { uri: 'https://i.imgur.com/Pz2WYAc.jpg' }
+            data={[
+                { uri: props.profileUrlProfessional },
+                { uri: props.profileUrlSocial },
+                { uri: props.profileUrlChild }
             ]}
         />
     )
-    /*
-    <Image
-            source={{ uri: props.profileUrl }}
-            style={styles.largeProfile}
-            resizeMode="contain"
-        />
-    */
 }
 
 function Description(props) {
@@ -136,7 +146,9 @@ function PledgeClass(props) {
 
 export function AccountPage() {
     const [name, setName] = useState("Firstname, Lastname");
-    const [profileUrl, setProfileUrl] = useState("");
+    const [profileUrlProfessional, setProfileUrlProfessional] = useState("");
+    const [profileUrlSocial, setProfileUrlSocial] = useState("");
+    const [profileUrlChild, setProfileUrlChild] = useState("");
     const [bio, setBio] = useState("");
     const [pledgeClass, setPledgeClass] = useState("");
     const [status, setStatus] = useState("");
@@ -164,10 +176,24 @@ export function AccountPage() {
                 setChapter(data.chapter);
             }).catch("(Account) Error could not read document")
         store
-            .ref(`/profile-pictures/${auth.currentUser.uid}_professional.png`) //name in storage in firebase console
+            .ref(`/profile-pictures/${auth.currentUser.uid}_professional`) //name in storage in firebase console
             .getDownloadURL()
             .then((url) => {
-                setProfileUrl(url);
+                setProfileUrlProfessional(url);
+            })
+            .catch((e) => console.log('(Tabs) Errors while getting Profile Picture ', e));
+        store
+            .ref(`/profile-pictures/${auth.currentUser.uid}_social`) //name in storage in firebase console
+            .getDownloadURL()
+            .then((url) => {
+                setProfileUrlSocial(url);
+            })
+            .catch((e) => console.log('(Tabs) Errors while getting Profile Picture ', e));
+        store
+            .ref(`/profile-pictures/${auth.currentUser.uid}_child`) //name in storage in firebase console
+            .getDownloadURL()
+            .then((url) => {
+                setProfileUrlChild(url);
             })
             .catch((e) => console.log('(Tabs) Errors while getting Profile Picture ', e));
     }, [])
@@ -175,11 +201,15 @@ export function AccountPage() {
         <View style={styles.createAccountScreen}>
             <View style={styles.navBar}>
                 <View></View>
-                <AccountTop name={name} address="Navigation" />
+                <AccountTop name={name} address="Navigation" rightElement={true} />
             </View>
             <ScrollView style={styles.accountInfo}>
                 <View style={styles.innerScroll}>
-                    <Profile profileUrl={profileUrl} />
+                    <Profile
+                        profileUrlProfessional={profileUrlProfessional}
+                        profileUrlSocial={profileUrlSocial}
+                        profileUrlChild={profileUrlChild}
+                    />
                     <Description description={bio} />
                     <Chapter chapter={chapter} />
                     <PledgeClass pledgeClass={pledgeClass} status={status} />
@@ -236,6 +266,11 @@ const styles = StyleSheet.create({
     accountLogo: {
         width: 60,
         height: 60
+    },
+    imageLogo: {
+        width: 60,
+        height: 60,
+        marginRight: 10
     },
     accountTop: {
         flexDirection: "row",

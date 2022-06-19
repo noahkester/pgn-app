@@ -12,10 +12,6 @@ var newUser = {
     major: "",
     minor: "",
 
-    profilePictureProfessional: "",
-    profilePictureSocial: "",
-    profilePictureChild: "",
-
     status: "",
 
     activities: [],

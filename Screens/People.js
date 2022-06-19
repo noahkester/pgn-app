@@ -21,12 +21,11 @@ import { db, store } from "../Firebase";
 function PeopleImage(props) {
   // TODO Add images
   if (props.uri) {
-    console.log("gello")
     return (
       <View style={styles.people}>
         <Image
           source={{ uri: props.uri }}
-          resizeMode="contain"
+          resizeMode="cover"
           style={styles.peopleImageBackground}
         />
       </View>
@@ -58,7 +57,7 @@ function People(props) {
   const [profileUrl, setProfileUrl] = useState("");
   useEffect(() => {
     store
-      .ref(`/profile-pictures/${props.data.id}_professional.png`)
+      .ref(`/profile-pictures/${props.data.id}_professional`)
       .getDownloadURL()
       .then((url) => {
         setProfileUrl(url);
@@ -218,6 +217,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 50,
     height: 50,
+    borderRadius: 25
   },
   enlargedCard: {
     backgroundColor: "#FFFFFF",

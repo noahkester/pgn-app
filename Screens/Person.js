@@ -125,21 +125,21 @@ export function PersonPage({ route }) {
         setPhone(memberData.phone);
         setChapter(memberData.chapter);
         store
-            .ref(`/profile-pictures/${memberData.id}_professional.png`) //name in storage in firebase console
+            .ref(`/profile-pictures/${memberData.id}_professional`) //name in storage in firebase console
             .getDownloadURL()
             .then((url) => {
                 setProfileUrlProfessional(url);
             })
             .catch((e) => console.log('(Person) Error getting Professional Picture ', e));
         store
-            .ref(`/profile-pictures/${memberData.id}_social.png`) //name in storage in firebase console
+            .ref(`/profile-pictures/${memberData.id}_social`) //name in storage in firebase console
             .getDownloadURL()
             .then((url) => {
                 setProfileUrlSocial(url);
             })
             .catch((e) => console.log('(Person) Error getting Social Picture ', e));
         store
-            .ref(`/profile-pictures/${memberData.id}_child.png`) //name in storage in firebase console
+            .ref(`/profile-pictures/${memberData.id}_child`) //name in storage in firebase console
             .getDownloadURL()
             .then((url) => {
                 setProfileUrlChild(url);

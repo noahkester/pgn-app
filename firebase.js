@@ -56,7 +56,7 @@ export function sendEmail(user) {
         });
 }
 export async function getProfilePicture(name) {
-    var ref = firebase.storage().ref("/profile-pictures/" + name + ".png");
+    var ref = firebase.storage().ref("/profile-pictures/" + name);
     return new Promise((resolve, reject) => {
         ref.getDownloadURL(url => {
             resolve(url);

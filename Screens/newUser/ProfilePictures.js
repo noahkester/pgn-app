@@ -1,17 +1,13 @@
-import {
-  StyleSheet,
-  Button,
-  TouchableOpacity,
-  Text,
-  Image,
-  View,
-} from "react-native";
+import { StyleSheet, Button, TouchableOpacity, Text, Image, View, Alert } from "react-native";
 import { SubmitPoints } from "../Home";
 import globalStyles from "../../Styles";
 import { NextButton } from "./NewUser";
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { store, auth } from "../../Firebase"
+
 import * as ImagePicker from "expo-image-picker";
-function ImageUpload1() {
+
+function ImageUpload(props) {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [image, setImage] = useState(require("../../images/cloud.png"));
   useEffect(() => {
@@ -19,9 +15,16 @@ function ImageUpload1() {
       const galleryStatus =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
       setHasGalleryPermission(galleryStatus === "granted");
-      console.log("Requested");
+      console.log("(Account Image Upload) Gallery Requested");
     };
   }, []);
+  const uploadImage = async (uri, imageName) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+
+    var ref = store.ref().child("profile-pictures/" + imageName);
+    return ref.put(blob);
+  }
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -29,7 +32,13 @@ function ImageUpload1() {
     console.log(result);
     setImage(result);
     if (!result.cancelled) {
-      //do something
+      uploadImage(result.uri, auth.currentUser.uid + "_" + props.type)
+        .then(() => {
+          Alert.alert("Success!")
+        })
+        .catch((e) => {
+          console.log("(AccountImageUpload) Error uploading image" + e);
+        })
     }
   };
   return (
@@ -39,7 +48,11 @@ function ImageUpload1() {
         pickImage();
       }}
     >
-      <Image source={image} style={styles.cloudImage} resizeMode="contain" />
+      <Image
+        source={image}
+        style={styles.cloudImage}
+        resizeMode="contain"
+      />
     </TouchableOpacity>
   );
 }
@@ -48,17 +61,7 @@ function ImageUploadCard(props) {
     <View style={styles.imageUploadCard}>
       <Text style={globalStyles.mediumBoldText}>{props.title}</Text>
       <View style={[globalStyles.cardContainer, styles.uploadContainer]}>
-        {/* <Image
-                    source={props.imageSrc}
-                    style={styles.uploadImage}
-                    resizeMode="contain"
-                /> */}
-        <ImageUpload1 />
-        <Image
-          source={require("../../images/accept.png")}
-          style={styles.checkImage}
-          resizeMode="contain"
-        />
+        <ImageUpload type={props.type} />
       </View>
     </View>
   );
@@ -74,14 +77,17 @@ export function ProfilePicturesPage() {
         </Text>
         <ImageUploadCard
           title="Professional Pic"
+          type="professional"
           imageSrc={require("../../images/imageUpload1.png")}
         />
         <ImageUploadCard
           title="Party/Fun Pic"
+          type="social"
           imageSrc={require("../../images/imageUpload2.png")}
         />
         <ImageUploadCard
           title="Childhood Pic"
+          type="child"
           imageSrc={require("../../images/imageUpload3.png")}
         />
       </View>
@@ -90,16 +96,16 @@ export function ProfilePicturesPage() {
   );
 }
 const styles = StyleSheet.create({
-    imageUpload: {
-        width: 140,
-        height: 160,
-        justifyContent: "center",
-        alignItems: "center",
-      },
-      cloudImage: {
-        width: 140,
-        height: 120,
-      },
+  imageUpload: {
+    width: 140,
+    height: 160,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cloudImage: {
+    width: 140,
+    height: 120,
+  },
   screen: {
     height: "100%",
     width: "100%",

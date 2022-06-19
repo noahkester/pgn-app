@@ -34,7 +34,7 @@ export function TopBar(props) {
             setPledgeClass(splitPledgeClass[0][0] + splitPledgeClass[1][2] + splitPledgeClass[1][3]);
           })
         store
-          .ref(`/profile-pictures/${auth.currentUser.uid}_professional.png`) //name in storage in firebase console
+          .ref(`/profile-pictures/${auth.currentUser.uid}_professional`) //name in storage in firebase console
           .getDownloadURL()
           .then((url) => {
             setProfileUrl(url);
@@ -60,14 +60,22 @@ export function TopBar(props) {
 //put these two funcs here bc we'll be exporting it to each tab since they're stable
 export function Profile(props) {
   const navigation = useNavigation();
+  const image = (props.profileUrl) ? (<Image
+    source={{ uri: props.profileUrl }}
+    resizeMode="cover"
+    style={styles.profile}
+  />
+  ) : (
+  <Image
+    source={require("../images/profile.png")}
+    resizeMode="cover"
+    style={styles.profile}
+  />)
+
   return (
     <View style={styles.topBarCon}>
       <TouchableOpacity onPress={() => navigation.navigate("Account")}>
-        <Image
-          source={{ uri: props.profileUrl }}
-          resizeMode="cover"
-          style={styles.profile}
-        />
+        {image}
       </TouchableOpacity>
       <Text style={globalStyles.smallBoldText}>Hello {props.name}!</Text>
       <Text style={globalStyles.smallBoldText}>PC {props.class}</Text>
