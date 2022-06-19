@@ -137,13 +137,13 @@ export function EventsPage() {
           //console.log("(Events) Read event " + doc.id);
           var timeCategory = findTimeCategory(data.time);
           switch (timeCategory) {
-            case -1: // TODO
             case 0:
               tempTodayEvents.push(data);
               break;
             case 1:
               tempTomorrowEvents.push(data);
               break;
+            case -1: // TODO
             case 2:
               tempFutureEvents.push(data);
               break;

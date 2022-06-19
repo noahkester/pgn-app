@@ -135,7 +135,7 @@ function CameraShot() {
 }
 function ImageUpload() {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
-  const [image, setImage] = useState(require("../images/cloud.png"));
+  const [image, setImage] = useState(require("../images/imageUpload.png"));
   useEffect(() => {
     async () => {
       const galleryStatus =
@@ -162,6 +162,7 @@ function ImageUpload() {
       }}
     >
       <Image source={image} style={styles.cloudImage} resizeMode="contain" />
+      <Text style={globalStyles.smallSemiBoldText}>Select image</Text>
     </TouchableOpacity>
   );
 }
@@ -177,7 +178,7 @@ function ProofDescription() {
           //onContentSizeChange
           returnKeyType = 'done'
           placeholder="Optional"
-        ></TextInput>
+        />
       </View>
     </View>
   );
@@ -244,7 +245,7 @@ const styles = StyleSheet.create({
     visibility: "hidden",
   },
   cloudImage: {
-    width: 140,
+    width: 100,
     height: 140,
   },
   cameraImage: {

@@ -23,17 +23,13 @@ export function AboutPage() {
       <View style={{ width: "100%", alignItems: "center" }}>
         <Text style={globalStyles.largeSemiBoldText}>About</Text>
         <AboutTextInput
-          placeholder="Activities"
+          placeholder="Activities/Orgs: Bowling, Piano, TX Momentum..."
           onCustomChange={text => setActivities(text)}
         />
-        <Text style={[globalStyles.miniSemiBoldText, styles.note]}>
-          (Separate With Commas)
-        </Text>
         <AboutTextInput
-          placeholder="Quote"
+          placeholder="Funny Quote/Bio"
           onCustomChange={text => setQuote(text)}
         />
-        <Text style={[globalStyles.miniSemiBoldText, styles.note]}>(Be Funny)</Text>
       </View>
       <NextButton address="Contact" title="Next" values={[activities, quote]} inputPage="about" />
     </View>

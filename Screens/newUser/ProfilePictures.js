@@ -9,7 +9,7 @@ import * as ImagePicker from "expo-image-picker";
 
 function ImageUpload(props) {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
-  const [image, setImage] = useState(require("../../images/cloud.png"));
+  const [image, setImage] = useState(require("../../images/imageUpload.png"));
   useEffect(() => {
     async () => {
       const galleryStatus =
@@ -103,8 +103,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   cloudImage: {
-    width: 140,
-    height: 120,
+    width: 80,
   },
   screen: {
     height: "100%",

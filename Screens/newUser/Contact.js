@@ -19,7 +19,7 @@ export function ContactPage() {
             <View style={{ width: "100%", alignItems: "center" }}>
                 <Text style={globalStyles.largeSemiBoldText}>Contact</Text>
                 <NewUserTextInput
-                    placeholder="LinkedIn URL" onCustomChange={text => setLinkedin(text)}
+                    placeholder="LinkedIn URL (optional)" onCustomChange={text => setLinkedin(text)}
                 />
                 <NewUserTextInput
                     placeholder="Phone: 123-456-7890" onCustomChange={text => setPhone(text)}

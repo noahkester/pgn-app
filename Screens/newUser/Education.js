@@ -15,10 +15,10 @@ export function EducationPage() {
             <View style={{ width: "100%", alignItems: "center" }}>
                 <Text style={globalStyles.largeSemiBoldText}>Education</Text>
                 <NewUserTextInput
-                    placeholder="Major(s)" onCustomChange={text => setMajor(text)}
+                    placeholder="Major(s):" onCustomChange={text => setMajor(text)}
                 />
                 <NewUserTextInput
-                    placeholder="Minor(s) (optional)" onCustomChange={text => setMinor(text)}
+                    placeholder="Minor(s): (optional)" onCustomChange={text => setMinor(text)}
                 />
                 <View style={{ height: 10 }}></View>
             </View>
