@@ -371,10 +371,10 @@ export function NamePage() {
                 <UniversityDropdown setChapter={setChapter} />
                 <View style={{ height: 10 }}></View>
                 <NewUserTextInput
-                    placeholder="First name" onCustomChange={text => { setFirstName(text) }}
+                    placeholder="First name" onCustomChange={text => { setFirstName(text.charAt(0).toUpperCase()) }}
                 />
                 <NewUserTextInput
-                    placeholder="Last name" onCustomChange={text => setLastName(text)}
+                    placeholder="Last name" onCustomChange={text => setLastName(text.charAt(0).toUpperCase())}
                 />
             </View>
             <NextButton address="Education" title="Next" values={[firstName, lastName]} inputPage="name" />

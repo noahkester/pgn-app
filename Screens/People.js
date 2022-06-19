@@ -105,6 +105,16 @@ export function PeoplePage() {
         querySnapshot.forEach((doc) => {
           var data = doc.data();
           allUsers.push(data);
+          //NOTICED BUGS
+          //WHILE pressing the first IMAGEUPLOAD when creating a new user, the second one's coverage area overlaps I think
+          //NEED TO CAPITALIZE THE FIRST AND LAST NAME ENTRIES
+          //CANNOT CANCEL DURING TEXT INPUTS FOR NEW USER
+          //1. IMAGEUPLOAD WHEN CANCELLED PLACEHOLDER DISAPPEARS
+          //2. 3RD IMAGE UPLOAD DOESN'T FIT THE PAGE WHEN FIT.
+          //3. SEARCH BAR STILL NOT FUNCTIONAL
+          //4. SORTING> CAN BE EXPANDED TO SEE ALL PEOPLE, OR FILTER TO SEE ONLY PLEDGECLASS AND SUCH. 
+          allUsers = [...allUsers].sort((a,b) =>    a.firstname > b.firstname? 1 : -1,
+          );
           var section = allUsers.map((people) => {
             return (
               <People
