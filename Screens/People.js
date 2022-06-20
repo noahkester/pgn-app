@@ -15,7 +15,7 @@ import React, { useState, useEffect, useRef } from "react";
 import globalStyles from "../Styles";
 import { SearchBar } from "@rneui/themed";
 import { TopBar } from "./Tabs";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 import { db, store } from "../Firebase";
 
 function PeopleImage(props) {
@@ -54,16 +54,7 @@ function PeopleSection(props) {
 }
 function People(props) {
   const navigation = useNavigation();
-  const [profileUrl, setProfileUrl] = useState("");
-  useEffect(() => {
-    store
-      .ref(`/profile-pictures/${props.data.id}_professional`)
-      .getDownloadURL()
-      .then((url) => {
-        setProfileUrl(url);
-      })
-      .catch((e) => console.log('(Person) Error getting Professional Picture ', e));
-  })
+  
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate("Person", { memberData: props.data })}
@@ -75,9 +66,11 @@ function People(props) {
           globalStyles.cardAlign,
         ]}
       >
-        <PeopleImage uri={profileUrl} />
+        <PeopleImage uri={props.profMap[props.data.id]} />
         <View style={styles.peopleText}>
-          <Text style={globalStyles.smallSemiBoldText}>{props.data.firstname + " " + props.data.lastname}</Text>
+          <Text style={globalStyles.smallSemiBoldText}>
+            {props.data.firstname + " " + props.data.lastname}
+          </Text>
           <Text style={globalStyles.tinySemiBoldText}>
             {'"' + props.data.bio + '"'}
           </Text>
@@ -93,7 +86,13 @@ export function PeoplePage() {
   //search bar
   const [search, setSearch] = useState("");
   const [filteredDataSource, setFilteredDataSource] = useState([]);
-  const [masterDataSource, setMasterDataSource] = useState();
+  const [masterDataSource, setMasterDataSource] = useState([]);
+  const [section, setSection] = useState();
+
+
+  //profile pictures
+  const [profileMap, setProfileMap] = useState([]);
+
   useEffect(() => {
     //will be a fetch once the backend is complete
     //https://snack.expo.dev/@aboutreact/react-native-search-bar-filter-on-listview
@@ -102,6 +101,7 @@ export function PeoplePage() {
       .where("pledgeClass", "==", "Spring 2022")
       .get()
       .then((querySnapshot) => {
+        var profPicMap = {};
         querySnapshot.forEach((doc) => {
           var data = doc.data();
           allUsers.push(data);
@@ -109,62 +109,68 @@ export function PeoplePage() {
           //WHILE pressing the first IMAGEUPLOAD when creating a new user, the second one's coverage area overlaps I think
           //NEED TO CAPITALIZE THE FIRST AND LAST NAME ENTRIES
           //CANNOT CANCEL DURING TEXT INPUTS FOR NEW USER
-          //1. IMAGEUPLOAD WHEN CANCELLED PLACEHOLDER DISAPPEARS
+          //1. IMAGEUPLOAD WHEN CANCELLED PLACEHOLDER DISAPPEARS --> success message is really late
           //2. 3RD IMAGE UPLOAD DOESN'T FIT THE PAGE WHEN FIT.
           //3. SEARCH BAR STILL NOT FUNCTIONAL
-          //4. SORTING> CAN BE EXPANDED TO SEE ALL PEOPLE, OR FILTER TO SEE ONLY PLEDGECLASS AND SUCH. 
-          allUsers = [...allUsers].sort((a,b) =>    a.firstname > b.firstname? 1 : -1,
+          //4. SORTING> CAN BE EXPANDED TO SEE ALL PEOPLE, OR FILTER TO SEE ONLY PLEDGECLASS AND SUCH.
+          allUsers = [...allUsers].sort((a, b) =>
+            a.firstname > b.firstname ? 1 : -1
           );
-          var section = allUsers.map((people) => {
-            return (
-              <People
-                data={people}
-              />
-            );
-          });
-          setFilteredDataSource(section);
-          setMasterDataSource(section);
-        })
-      })
+          setFilteredDataSource(allUsers);
+          setMasterDataSource(allUsers);
+
+
+          //store each url in a hashmap
+          store
+          .ref(`/profile-pictures/${data.id}_professional`)
+          .getDownloadURL()
+          .then((url) => {
+            profPicMap[data.id] = url;
+          })
+          .catch((e) =>
+            console.log("(Person) Error getting Professional Picture ", e)
+          );
+        });
+        setProfileMap(profPicMap);
+      });
+
   }, []);
+
+  useEffect(() => {
+    setSection(
+      filteredDataSource.map((people) => {
+        return <People data={people} profMap = {profileMap} />;
+      })
+    );
+  },[filteredDataSource] )
 
   function searchFilter(text) {
     if (text) {
-      const filteredPeople = masterDataSource.filter(function (item) {
-        //TODO item.name returns false and therefore just gets "", so nothing shows up
-        //structure works since list restores when you delete after typing
-        const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase();
+      const filteredPeople = masterDataSource.filter((item) => {
+      //WHEN SET TO UPPERCASE ->> SUCCESSFULLY FINDS ALL THE NAMES WITH THE
+      //TYPED LETTER, HOWEVER DOESN'T FIND THE NAME WHEN SUCCESSFULLY TYPED OUT
 
-        const textData = text.toUpperCase();
-        return itemData.indexOf(textData) > -1;
+      //WHEN SET TO LOWERCASE ->> doesn't find the name when starts typing
+      //with a uppercase, finds everything successfully if typed in lowercase!!
+
+      //RN FINDS NAMES CASE SENSITIVE "A" SHOWS Akin "a" shows Noah and Raaga, and such.!!!!
+      const itemData = item.firstname;
+      const textData = text.charAt(0).toUpperCase();
+      const result = itemData.includes(text);
+        
+        return result;
       });
+
+      setSearch(text);
       setFilteredDataSource(filteredPeople);
-      setSearch(text);
     } else {
-      setFilteredDataSource(section);
       setSearch(text);
+      setFilteredDataSource(masterDataSource);
     }
   }
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.eventScreen}>
-
-        {/* <TextInput
-        style={[
-          styles.search,
-          globalStyles.universityColorFill,
-          globalStyles.smallBoldText,
-          {shadowColor:'#BBBBBB',
-          shadowOpacity: 0.25,
-          shadowRadius: 10,}
-        ]}
-        autoCapitalize="none"
-        autoCorrect={false}
-        placeholder="Search Member"
-
-        onChangeText={(text) => searchFilter(text)}
-        value={search}
-      ></TextInput> */}
         {/* //https://reactnativeelements.com/docs/components/searchbar#calling */}
         <SearchBar
           cancelButtonProps={{
@@ -172,9 +178,11 @@ export function PeoplePage() {
               fontSize: 13,
             },
           }}
-          inputContainerStyle={{
-            //background Color neeeds to be put manually here
-          }}
+          inputContainerStyle={
+            {
+              //background Color neeeds to be put manually here
+            }
+          }
           containerStyle={{
             backgroundColor: globalStyles.universityColorFill,
             width: "50%",
@@ -193,10 +201,7 @@ export function PeoplePage() {
 
         <ScrollView style={globalStyles.scroll}>
           <View style={globalStyles.scrollView}>
-            <PeopleSection
-              section={filteredDataSource}
-              class={"PC Spring 2022"}
-            />
+            <PeopleSection section={section} class={"PC Spring 2022"} />
           </View>
         </ScrollView>
       </View>
@@ -227,7 +232,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 50,
     height: 50,
-    borderRadius: 25
+    borderRadius: 25,
   },
   enlargedCard: {
     backgroundColor: "#FFFFFF",
