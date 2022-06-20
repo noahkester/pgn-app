@@ -29,9 +29,10 @@ function ImageUpload(props) {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
     });
-    console.log(result);
-    setImage(result);
+ 
+
     if (!result.cancelled) {
+      setImage(result);
       uploadImage(result.uri, auth.currentUser.uid + "_" + props.type)
         .then(() => {
           Alert.alert("Success!")
@@ -51,7 +52,7 @@ function ImageUpload(props) {
       <Image
         source={image}
         style={styles.cloudImage}
-        resizeMode="contain"
+        resizeMode= "contain"
       />
     </TouchableOpacity>
   );
@@ -103,7 +104,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   cloudImage: {
-    width: 80,
+    width: "60%",
+    maxHeight: 110
   },
   screen: {
     height: "100%",
