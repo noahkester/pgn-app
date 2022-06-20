@@ -97,12 +97,12 @@ function TopTab() {
           <Tab.Screen
             name="Waitlist"
             component={WaitScreen}
-            options={{ tabBarLabel: "Accepted" }}
+            options={{ tabBarLabel: "Waiting" }}
           ></Tab.Screen>
           <Tab.Screen
             name="Accepted"
             component={AcceptedScreen}
-            options={{ tabBarLabel: "Waiting" }}
+            options={{ tabBarLabel: "Accepted" }}
           ></Tab.Screen>
           <Tab.Screen
             name="Denied"

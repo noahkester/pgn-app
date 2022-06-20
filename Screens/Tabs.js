@@ -17,35 +17,35 @@ export function TopBar(props) {
   const [profileUrl, setProfileUrl] = useState(undefined);
   const [firstname, setFirstname] = useState("Spring 1999");
   const [pledgeClass, setPledgeClass] = useState("Spring 1999");
-  useEffect(() => {
-    db.collection("users")
-      .doc(auth.currentUser.uid)
-      .get()
-      .then((doc) => {
-        var data = doc.data();
-        setFirstname(data.firstname);
-        const name = (data.firstname + data.lastname).toLowerCase();
-        db.collection("admin-members")
-          .doc(name)
-          .get()
-          .then((doc0) => {
-            const data0 = doc0.data();
-            const splitPledgeClass = data0.pledgeClass.split(" ");
-            setPledgeClass(splitPledgeClass[0][0] + splitPledgeClass[1][2] + splitPledgeClass[1][3]);
-          })
-        store
-          .ref(`/profile-pictures/${auth.currentUser.uid}_professional`) //name in storage in firebase console
-          .getDownloadURL()
-          .then((url) => {
-            setProfileUrl(url);
-          })
-          .catch((e) => console.log('(Tabs) Errors while getting Profile Picture ', e));
-      })
-      .catch((error) => {
-        console.log("(Tabs) Error getting events documents: ", error);
-      });
-    console.log("User ID: " + auth.currentUser.uid);
-  }, [])
+  // useEffect(() => {
+  //   db.collection("users")
+  //     .doc(auth.currentUser.uid)
+  //     .get()
+  //     .then((doc) => {
+  //       var data = doc.data();
+  //       setFirstname(data.firstname);
+  //       const name = (data.firstname + data.lastname).toLowerCase();
+  //       db.collection("admin-members")
+  //         .doc(name)
+  //         .get()
+  //         .then((doc0) => {
+  //           const data0 = doc0.data();
+  //           const splitPledgeClass = data0.pledgeClass.split(" ");
+  //           setPledgeClass(splitPledgeClass[0][0] + splitPledgeClass[1][2] + splitPledgeClass[1][3]);
+  //         })
+  //       store
+  //         .ref(`/profile-pictures/${auth.currentUser.uid}_professional`) //name in storage in firebase console
+  //         .getDownloadURL()
+  //         .then((url) => {
+  //           setProfileUrl(url);
+  //         })
+  //         .catch((e) => console.log('(Tabs) Errors while getting Profile Picture ', e));
+  //     })
+  //     .catch((error) => {
+  //       console.log("(Tabs) Error getting events documents: ", error);
+  //     });
+  //   console.log("User ID: " + auth.currentUser.uid);
+  // }, [])
   return (
     <View style={styles.topBar}>
       <Profile
@@ -242,12 +242,13 @@ const styles = StyleSheet.create({
   },
   topBar: {
     width: "100%",
-    height: 180,
+    height: 200,
     flexDirection: "row",
     justifyContent: "space-between",
     paddingTop: 60,
     backgroundColor: 'white',
     paddingHorizontal: 20,
+    
   },
   topBarCon: {
     width: 100,

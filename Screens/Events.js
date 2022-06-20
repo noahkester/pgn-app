@@ -1,8 +1,15 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, TouchableOpacity, Text, Image, View, ScrollView, } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  Image,
+  View,
+  ScrollView,
+} from "react-native";
 import globalStyles from "../Styles";
-import { db } from "../Firebase"
-
+import { db } from "../Firebase";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 /*
 Events Structure
 {
@@ -13,8 +20,6 @@ Events Structure
   weight: 1
 }
 */
-
-
 
 function EventImage(props) {
   return (
@@ -33,33 +38,37 @@ function Event(props) {
   var icon;
   if (props.type === "Philanthropy") {
     icon = require("../images/philanthropy.png");
-  }
-  else if (props.type === "Professional") {
+  } else if (props.type === "Professional") {
     icon = require("../images/professional.png");
-  }
-  else if (props.type === "Social") {
+  } else if (props.type === "Social") {
     icon = require("../images/social.png");
-  }
-  else {
+  } else {
     //Uncaught error
   }
   var points = "";
   if (props.weight == 1) {
     points = " pt";
-  }
-  else {
-    points = " pts"
+  } else {
+    points = " pts";
   }
 
   return (
-    <View style={[globalStyles.cardContainer, styles.eventCard, globalStyles.cardAlign]}>
+    <View
+      style={[
+        globalStyles.cardContainer,
+        styles.eventCard,
+        globalStyles.cardAlign,
+      ]}
+    >
       <EventImage icon={icon} />
       <View style={styles.eventText}>
         <Text style={globalStyles.smallSemiBoldText}>{props.name}</Text>
         <Text style={globalStyles.smallBoldText}>{props.location}</Text>
       </View>
       <View>
-        <Text style={[globalStyles.smallSemiBoldText, styles.date]}>{"3/7"}</Text>
+        <Text style={[globalStyles.smallSemiBoldText, styles.date]}>
+          {"3/7"}
+        </Text>
         <Text style={globalStyles.smallBoldText}>{"3:30"}</Text>
         <Text style={globalStyles.smallBoldText}>{props.weight + points}</Text>
       </View>
@@ -69,27 +78,50 @@ function Event(props) {
 export function EventSection(props) {
   const events = props.events;
   var noEvents = false;
-  const eventsList = events.map((event) =>
-    <Event key={event.name} name={event.name} type={event.type} weight={event.weight} location={event.location} />
-  )
+  const eventsList = events.map((event) => (
+    <Event
+      key={event.name}
+      name={event.name}
+      type={event.type}
+      weight={event.weight}
+      location={event.location}
+    />
+  ));
   if (eventsList.length == 0) {
     noEvents = true;
   }
   return (
     <View style={styles.eventSection}>
-      <Text style={[globalStyles.smallBoldText, styles.eventTime]}>{props.time}</Text>
+      <Text style={[globalStyles.smallBoldText, styles.eventTime]}>
+        {props.time}
+      </Text>
       <View>
         {eventsList}
-        {noEvents &&
-          <Text style={[globalStyles.smallBoldText, styles.noEventsText]}>No Events</Text>
-        }
+        {noEvents && (
+          <Text style={[globalStyles.smallBoldText, styles.noEventsText]}>
+            No Events
+          </Text>
+        )}
       </View>
     </View>
-  )
+  );
 }
 function unixEpochTimeToMonthDay(timestamp) {
   var a = new Date(timestamp * 1000);
-  var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
   var month = months[a.getMonth()];
   var date = a.getDate();
   var time = month + " " + date;
@@ -102,18 +134,29 @@ function findTimeCategory(timestamp) {
   // convert from seconds to miliseconds (js Date library uses ms)
   timestamp *= 1000;
   var currentTime = Date.now();
-  if (timestamp < currentTime) {
+
+  if (timestamp == 0) {
     return -1;
+  } else if (timestamp > currentTime) {
+    return -2;
   }
   var a = new Date(timestamp);
   var b = new Date(currentTime);
   // It is the current day
-  if (a.getDate() == b.getDate() && a.getMonth() == b.getMonth() && a.getFullYear == b.getFullYear) {
+  if (
+    a.getDate() == b.getDate() &&
+    a.getMonth() == b.getMonth() &&
+    a.getFullYear == b.getFullYear
+  ) {
     return 0;
   }
   // It is tomorrow
   b = new Date((currentTime + 86400) * 1000);
-  if (a.getDate() == b.getDate() && a.getMonth() == b.getMonth() && a.getFullYear == b.getFullYear) {
+  if (
+    a.getDate() == b.getDate() &&
+    a.getMonth() == b.getMonth() &&
+    a.getFullYear == b.getFullYear
+  ) {
     return 1;
   }
   // Day off in the future
@@ -121,44 +164,50 @@ function findTimeCategory(timestamp) {
 }
 
 export function EventsPage() {
+  const [extraEvents, setExtraEvents] = useState([]);
   const [todayEvents, setTodayEvents] = useState([]);
   const [tomorrowEvents, setTomorrowEvents] = useState([]);
   const [futureEvents, setFutureEvents] = useState([]);
   useEffect(() => {
-    console.log("(Events) Events Read")
+    console.log("(Events) Events Read");
     var tempTodayEvents = [];
     var tempTomorrowEvents = [];
     var tempFutureEvents = [];
-    db.collection("events")
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          var data = doc.data();
-          //console.log("(Events) Read event " + doc.id);
-          var timeCategory = findTimeCategory(data.time);
-          switch (timeCategory) {
-            case 0:
-              tempTodayEvents.push(data);
-              break;
-            case 1:
-              tempTomorrowEvents.push(data);
-              break;
-            case -1: // TODO
-            case 2:
-              tempFutureEvents.push(data);
-              break;
-          }
-        });
-        setTodayEvents(tempTodayEvents);
-        setTomorrowEvents(tempTomorrowEvents);
-        setFutureEvents(tempFutureEvents);
-      })
-      .catch((error) => {
-        console.log("(Events) Error getting events documents: ", error);
-      });
-  }, [])
-  return (
-    <View style={styles.eventScreen}>
+    var tempExtraEvents = [];
+    // db.collection("events")
+    //   .get()
+    //   .then((querySnapshot) => {
+    //     querySnapshot.forEach((doc) => {
+    //       var data = doc.data();
+    //       //console.log("(Events) Read event " + doc.id);
+    //       var timeCategory = findTimeCategory(data.time);
+    //       switch (timeCategory) {
+    //         case 0:
+    //           tempTodayEvents.push(data);
+    //           break;
+    //         case 1:
+    //           tempTomorrowEvents.push(data);
+    //           break;
+    //         case -1: // TODO
+    //         tempExtraEvents.push(data);
+    //         break;
+    //         case 2:
+    //           tempFutureEvents.push(data);
+    //           break;
+    //       }
+    //     });
+    //     setTodayEvents(tempTodayEvents);
+    //     setTomorrowEvents(tempTomorrowEvents);
+    //     setFutureEvents(tempFutureEvents);
+    //     setExtraEvents(tempExtraEvents);
+    //   })
+    //   .catch((error) => {
+    //     console.log("(Events) Error getting events documents: ", error);
+    //   });
+  }, []);
+
+  function UpcomingEvents() {
+    return (
       <ScrollView style={globalStyles.scroll}>
         <View style={globalStyles.scrollView}>
           <EventSection time="Today" events={todayEvents} />
@@ -166,6 +215,41 @@ export function EventsPage() {
           <EventSection time="Future" events={futureEvents} />
         </View>
       </ScrollView>
+    );
+  }
+
+  function ExtraEvents() {
+    return (
+      <ScrollView style={globalStyles.scroll}>
+        <View style={globalStyles.scrollView}>
+          <EventSection time="Extra" events={extraEvents} />
+        </View>
+      </ScrollView>
+    );
+  }
+  const Tab = createMaterialTopTabNavigator();
+  return (
+    <View style={styles.eventScreen}>
+      <View style={{ width: "100%", height: "100%" }}>
+        <Tab.Navigator
+          initialRouteName="Upcoming"
+          sceneContainerStyle={{
+            backgroundColor: colors.white,
+          }}
+          screenOptions={styles.screenOps}
+        >
+          <Tab.Screen
+            name="Upcoming"
+            component={UpcomingEvents}
+            options={{ tabBarLabel: "Upcoming" }}
+          />
+          <Tab.Screen
+            name="Extra"
+            component={ExtraEvents}
+            options={{ tabBarLabel: "Extra" }}
+          />
+        </Tab.Navigator>
+      </View>
     </View>
   );
 }
@@ -175,25 +259,42 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     alignItems: "center",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   eventSection: {
-    width: "80%"
+    width: "80%",
   },
   eventCard: {
-    marginBottom: 10
+    marginBottom: 10,
   },
   eventTime: {
-    marginBottom: 10
+    marginBottom: 10,
   },
   eventImageBackground: {
     position: "absolute",
     width: 50,
-    height: 50
+    height: 50,
+  },
+  screenOps: {
+    tabBarStyle: {
+      shadowOffset: { width: 0, height: 0 },
+    },
+    tabBarActiveTintColor: "white",
+    tabBarInactiveTintColor: "black",
+    tabBarLabelStyle: globalStyles.smallBoldText,
+
+    tabBarIndicatorStyle: {
+      backgroundColor: "#C57035",
+      left: 40,
+      width: "30.5%",
+      height: "60%",
+      borderRadius: 30,
+      marginBottom: 10,
+    },
   },
   eventImageIcon: {
     width: 50,
-    height: 50
+    height: 50,
   },
   iconCon: {
     height: 50,
@@ -202,13 +303,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   date: {
-    textAlign: "right"
+    textAlign: "right",
   },
   eventText: {
-    width: "60%"
+    width: "60%",
+    justifyContent: "center",
+    alignSelf: "center",
   },
   noEventsText: {
     textAlign: "center",
-    marginBottom: 10
-  }
-})
+    marginBottom: 10,
+  },
+});
