@@ -4,7 +4,7 @@ import { NewUserTextInput } from "./NewUser";
 import globalStyles from "../../Styles"
 import { newUser } from "./About";
 import { setField } from "./About";
-import firebase from "firebase";
+
 import React from "react";
 import { NextButton } from "./NewUser";
 import { useState } from "react";

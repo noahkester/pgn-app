@@ -1,9 +1,17 @@
-import { StyleSheet, Button, TouchableOpacity, Text, Image, View, Alert } from "react-native";
+import {
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+  Text,
+  Image,
+  View,
+  Alert,
+} from "react-native";
 import { SubmitPoints } from "../Home";
 import globalStyles from "../../Styles";
 import { NextButton } from "./NewUser";
 import React, { useState, useEffect } from "react";
-import { store, auth } from "../../Firebase"
+import { store, auth } from "../../firebase";
 
 import * as ImagePicker from "expo-image-picker";
 
@@ -24,22 +32,21 @@ function ImageUpload(props) {
 
     var ref = store.ref().child("profile-pictures/" + imageName);
     return ref.put(blob);
-  }
+  };
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
     });
- 
 
     if (!result.cancelled) {
       setImage(result);
       uploadImage(result.uri, auth.currentUser.uid + "_" + props.type)
         .then(() => {
-          Alert.alert("Success!")
+          Alert.alert("Success!");
         })
         .catch((e) => {
           console.log("(AccountImageUpload) Error uploading image" + e);
-        })
+        });
     }
   };
   return (
@@ -49,11 +56,7 @@ function ImageUpload(props) {
         pickImage();
       }}
     >
-      <Image
-        source={image}
-        style={styles.cloudImage}
-        resizeMode= "contain"
-      />
+      <Image source={image} style={styles.cloudImage} resizeMode="contain" />
     </TouchableOpacity>
   );
 }
@@ -105,7 +108,7 @@ const styles = StyleSheet.create({
   },
   cloudImage: {
     width: "60%",
-    maxHeight: 110
+    maxHeight: 110,
   },
   screen: {
     height: "100%",

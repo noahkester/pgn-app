@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import globalStyles from "../Styles";
-import { db } from "../Firebase";
+import { db } from "../firebase";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 /*
 Events Structure

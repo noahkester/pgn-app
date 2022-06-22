@@ -3,7 +3,7 @@ import globalStyles from "../Styles";
 import { StyleSheet, TouchableOpacity, Text, Image, View } from "react-native";
 import colors from "../Colors";
 import { useNavigation } from '@react-navigation/native';
-import { auth, db } from "../Firebase";
+import { auth, db } from "../firebase";
 import { useEffect, useState } from "react";
 
 const points = [3, 3, 6];

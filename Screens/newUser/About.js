@@ -10,7 +10,7 @@ import { SubmitPoints } from "../Home";
 import globalStyles from "../../Styles";
 import { AboutTextInput } from "./NewUser";
 import { useState } from "react";
-import { getCurrentUser } from "../../Firebase";
+import { getCurrentUser } from "../../firebase";
 import { NextButton } from "./NewUser";
 
 export function AboutPage() {

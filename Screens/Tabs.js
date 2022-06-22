@@ -7,7 +7,7 @@ import { EventsPage } from "./Events";
 import { PeoplePage } from "./People";
 import { WaitlistPage } from "./Waitlist";
 import { useNavigation } from "@react-navigation/native";
-import { auth, db, store, getProfilePicture } from "../Firebase";
+import { auth, db, store, getProfilePicture } from "../firebase";
 
 import colors from "../Colors";
 import { useEffect, useState } from "react";
