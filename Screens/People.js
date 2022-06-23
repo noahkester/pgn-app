@@ -109,10 +109,10 @@ export function PeoplePage() {
           var data = doc.data();
           allUsers.push(data);
           allUsers = [...allUsers].sort((a, b) =>
-          a.firstname > b.firstname ? 1 : -1
-        );
-        setFilteredDataSource(allUsers);
-        setMasterDataSource(allUsers);
+            a.firstname > b.firstname ? 1 : -1
+          );
+          setFilteredDataSource(allUsers);
+          
           //store each url in a hashmap
           store
             .ref(`/profile-pictures/${data.id}_professional`)
@@ -124,19 +124,22 @@ export function PeoplePage() {
               console.log("(Person) Error getting Professional Picture ", e)
             );
         });
+        setMasterDataSource(allUsers);
+
         setProfileMap(profPicMap);
       });
 
+  }, []);
 
- 
-  
+
+  useEffect(() => {
     const currentUser = masterDataSource.find(
       (t) => t.id === auth.currentUser.uid
     );
-    console.log(currentUser == null);
-    setCurUser(currentUser);
-  }, []);
 
+    setCurUser(currentUser);
+    console.log("Cur User : \n" + JSON.stringify(curUser));
+  }, [masterDataSource]);
   //triggered when checkbox is pressed
   useEffect(() => {
     displayPledgeClass(isChecked);
@@ -150,13 +153,10 @@ export function PeoplePage() {
     );
   }, [filteredDataSource]);
 
-
   //function for pledge class checkbox, filters allPeople
   function displayPledgeClass() {
     if (isChecked) {
-
       var pledgePeople = masterDataSource.filter((item) => {
-        
         return item.pledgeClass == curUser.pledgeClass;
       });
       setFilteredDataSource(pledgePeople);
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     marginLeft: "8%",
     marginTop: "2.5%",
-    paddingBottom: '1%',
+    paddingBottom: "1%",
   },
   eventScreen: {
     width: "100%",

@@ -195,7 +195,7 @@ export function EventsPage() {
     //           tempFutureEvents.push(data);
     //           break;
     //       }
-    //     });
+    //     );
     //     setTodayEvents(tempTodayEvents);
     //     setTomorrowEvents(tempTomorrowEvents);
     //     setFutureEvents(tempFutureEvents);

@@ -16,7 +16,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import React, { useState, useEffect } from "react";
 import colors from "../Colors";
 import * as ImagePicker from "expo-image-picker";
-
+import { db } from "../firebase";
 const testEvents = [
   "LinkedIn Workshop",
   "Roundup Philanthropy Support",
@@ -25,11 +25,24 @@ const testEvents = [
   "Canes Dinner after Chapter",
 ];
 function EventsDropDown() {
+  const [events, setEvents] = useState([]);
+  useEffect(() => {
+    var tempEvents = [];
+    db.collection("events")
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          var data = doc.data();
+          tempEvents.push(data);
+        });
+      });
+      setEvents(tempEvents);
+  }, []);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
     {
-      label: "LinkedIn Workship",
+      label: "LinkedIn Workshop",
       value: "1",
     },
     {
@@ -121,7 +134,7 @@ function CameraShot() {
       style={[styles.imageUpload, { zIndex: -1 }]}
       onPress={async () => {
         var result = await ImagePicker.launchCameraAsync();
-        //sort out 
+        //sort out
       }}
     >
       <Image
@@ -176,7 +189,7 @@ function ProofDescription() {
           //USE THIS if we want to implement textbox getting bigger, using multiline disables the return key
           // from exiting the keyboard
           //onContentSizeChange
-          returnKeyType = 'done'
+          returnKeyType="done"
           placeholder="Optional"
         />
       </View>
@@ -185,31 +198,26 @@ function ProofDescription() {
 }
 export function SubmitPage(props) {
   return (
-    <KeyboardAvoidingView
-      
-      enabled={true}
-      behavior={"padding"}
-
-    >
-        <View style={styles.submitScreen}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.submitSubScreen}>
-          <View style={styles.submitElement}>
-            <AccountTop name="Submit Points" address="Navigation" />
-          </View>
-          <View style={styles.submitElement}>
-            <SubmitEvents />
-            <View style={[styles.imageOptions, { zIndex: -1 }]}>
-              <CameraShot />
-              <ImageUpload />
+    <KeyboardAvoidingView enabled={true} behavior={"padding"}>
+      <View style={styles.submitScreen}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.submitSubScreen}>
+            <View style={styles.submitElement}>
+              <AccountTop name="Submit Points" address="Navigation" />
             </View>
-            <ProofDescription />
+            <View style={styles.submitElement}>
+              <SubmitEvents />
+              <View style={[styles.imageOptions, { zIndex: -1 }]}>
+                <CameraShot />
+                <ImageUpload />
+              </View>
+              <ProofDescription />
+            </View>
+            <View style={styles.submitElement}>
+              <SubmitPoints address="Navigation" title="Submit" />
+            </View>
           </View>
-          <View style={styles.submitElement}>
-            <SubmitPoints address="Navigation" title="Submit" />
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
       </View>
     </KeyboardAvoidingView>
   );
