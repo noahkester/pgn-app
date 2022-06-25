@@ -7,7 +7,7 @@ import {
   Image,
   View,
 } from "react-native";
-
+import { LoginSignupPage } from "./Screens/LoginSignup";
 import { StartPage } from "./Screens/Start";
 import { LoginPage } from "./Screens/Login";
 import { CreateAccountPage } from "./Screens/CreateAccount";
@@ -22,13 +22,13 @@ import { ProfilePicturesPage } from "./Screens/newUser/ProfilePictures";
 import { AboutPage } from "./Screens/newUser/About";
 import { ContactPage } from "./Screens/newUser/Contact";
 import { EmailVerificationPage } from "./Screens/newUser/EmailVerification";
-import { PersonPage } from "./Screens/Person"
+import { PersonPage } from "./Screens/Person";
 import { AccountImageUploadPage } from "./Screens/AccountImageUpload";
-
+import { useNavigation, NavigationContainer } from "@react-navigation/native";
+import { auth, getCurrentUser } from "./firebase";
 // import styles from "./Styles";
 // In App.js in a new project
 
-import { NavigationContainer } from "@react-navigation/native";
 import { CardStyleInterpolators } from "@react-navigation/stack";
 import {
   createNativeStackNavigator,
@@ -62,27 +62,69 @@ import {
 const Stack = createNativeStackNavigator();
 console.disableYellowBox = true;
 
+// db.collection("users")
+//       .get()
 function App() {
-  let [fontsLoaded] = useFonts({
-    Poppins_700Bold,
-    Poppins_600SemiBold,
+  const [isSignedIn, setSignIn] = useState(false);
+  const [isAdmin, setisAdmin] = useState(false);
+  // const navigation = useNavigation();
+  useEffect(() => {
+    async function wait() {
+      // https://stackoverflow.com/questions/39231344/how-to-wait-for-firebaseauth-to-finish-initializing
+      await getCurrentUser(auth)
+        .then((user) => {
+          if (user.emailVerified) {
+            setSignIn(true);
+            if (user.email == "pgn.utexas.sudo@gmail.com") {
+              setisAdmin(true);
+            } else {
+            }
+          }
+        })
+        .catch(() => {
+          console.log("(Start page) No user: Render Login/Signup");
+        });
+    }
+    wait();
   });
 
-
-  if (!fontsLoaded) {
-    return <AppLoading />;
-  } else {
-    return (
-      <NavigationContainer>
+  function LoadPage() {
+    if (isSignedIn) {
+      return isAdmin ? (
         <Stack.Navigator
-          initialRouteName="Start"
+          screenOptions={{
+            headerShown: false,
+            gestureEnabled: true,
+          }}
+        >
+          <Stack.Screen name="Admin" component={AdminPage} />
+          <Stack.Screen name="Settings" component={AdminSettingsPage} />
+        </Stack.Navigator>
+      ) : (
+        <Stack.Navigator
+          initialRouteName="Navigation"
           screenOptions={{
             headerShown: false,
 
             gestureEnabled: true,
-
           }}
         >
+          <Stack.Screen name="Navigation" component={NavigationPage} />
+          <Stack.Screen name="Account" component={AccountPage} />
+          <Stack.Screen name="Submit" component={SubmitPage} />
+          <Stack.Screen name="Person" component={PersonPage} />
+        </Stack.Navigator>
+      );
+    } else {
+      return (
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+
+            gestureEnabled: true,
+          }}
+        >
+          <Stack.Screen name="CreateAccount" component={CreateAccountPage} />
           <Stack.Screen
             name="Login"
             component={LoginPage}
@@ -90,24 +132,46 @@ function App() {
               headerBackButtonMenuEnabled: true,
             }}
           />
-          <Stack.Screen name="CreateAccount" component={CreateAccountPage} />
-          <Stack.Screen name="Start" component={StartPage} />
-
-          <Stack.Screen name="Account" component={AccountPage} />
-          <Stack.Screen name="AccountImageUpload" component={AccountImageUploadPage} />
-          <Stack.Screen name="Submit" component={SubmitPage} />
-          <Stack.Screen name="Person" component={PersonPage} />
-          <Stack.Screen name="Navigation" component={NavigationPage} />
-
-          <Stack.Screen name="Admin" component={AdminPage} />
-          <Stack.Screen name="Settings" component={AdminSettingsPage} />
-
           <Stack.Screen name="Name" component={NamePage} />
           <Stack.Screen name="Education" component={EducationPage} />
-          <Stack.Screen name="ProfilePictures" component={ProfilePicturesPage} />
+          <Stack.Screen
+            name="ProfilePictures"
+            component={ProfilePicturesPage}
+          />
           <Stack.Screen name="About" component={AboutPage} />
           <Stack.Screen name="Contact" component={ContactPage} />
-          <Stack.Screen name="EmailVerification" component={EmailVerificationPage} />
+          <Stack.Screen
+            name="EmailVerification"
+            component={EmailVerificationPage}
+          />
+        </Stack.Navigator>
+      );
+    }
+  }
+  let [fontsLoaded] = useFonts({
+    Poppins_700Bold,
+    Poppins_600SemiBold,
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  } else {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+
+            gestureEnabled: true,
+          }}
+        >
+          <Stack.Screen name="Router" component={LoadPage} />
+          <Stack.Screen name="Start" component={StartPage} />
+          <Stack.Screen name="LoginSignup" component={LoginSignupPage} />
+          <Stack.Screen
+            name="AccountImageUpload"
+            component={AccountImageUploadPage}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     );
