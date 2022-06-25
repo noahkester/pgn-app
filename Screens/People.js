@@ -137,10 +137,6 @@ export function PeoplePage() {
       });
   }, []);
 
-  useEffect(() => {
-
-    console.log("Cur User : \n" + JSON.stringify(curUser));
-  }, [masterDataSource]);
 
   //triggered when checkbox is pressed
   useEffect(() => {
