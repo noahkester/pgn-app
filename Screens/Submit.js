@@ -26,8 +26,9 @@ const testEvents = [
 ];
 function EventsDropDown() {
   const [events, setEvents] = useState([]);
+ const [subEvents, setSubEvents] = useState([]);
   useEffect(() => {
-    var tempEvents = [];
+    var tempAllEvents = [];
     db.collection("events")
       .get()
       .then((querySnapshot) => {
@@ -36,7 +37,7 @@ function EventsDropDown() {
           tempEvents.push(data);
         });
       });
-      setEvents(tempEvents);
+      setEvents(tempAllEvents);
   }, []);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);

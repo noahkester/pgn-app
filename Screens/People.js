@@ -96,23 +96,23 @@ export function PeoplePage() {
   //checkbox
   const [isChecked, setChecked] = useState(false);
   const [curUser, setCurUser] = useState(null);
-
+  const [allUsers, setAllUsers] = useState([]);
   useEffect(() => {
     //will be a fetch once the backend is complete
     //https://snack.expo.dev/@aboutreact/react-native-search-bar-filter-on-listview
-    var allUsers = [];
+    var tempAllUsers = [];
     var profPicMap = {};
     db.collection("users")
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           var data = doc.data();
-          allUsers.push(data);
-          allUsers = [...allUsers].sort((a, b) =>
+          tempAllUsers.push(data);
+          tempAllUsers = [...tempAllUsers].sort((a, b) =>
             a.firstname > b.firstname ? 1 : -1
           );
-          setFilteredDataSource(allUsers);
           
+
           //store each url in a hashmap
           store
             .ref(`/profile-pictures/${data.id}_professional`)
@@ -124,22 +124,24 @@ export function PeoplePage() {
               console.log("(Person) Error getting Professional Picture ", e)
             );
         });
-        setMasterDataSource(allUsers);
+        setAllUsers(tempAllUsers);
+        var allUsersExceptCurrent = tempAllUsers.filter(
+          (item) => item.id != auth.currentUser.uid
+        );
+        setFilteredDataSource(allUsersExceptCurrent);
+        setMasterDataSource(allUsersExceptCurrent);
 
         setProfileMap(profPicMap);
       });
-
   }, []);
 
-
   useEffect(() => {
-    const currentUser = masterDataSource.find(
-      (t) => t.id === auth.currentUser.uid
-    );
+    const currentUser = allUsers.find((t) => t.id === auth.currentUser.uid);
 
     setCurUser(currentUser);
     console.log("Cur User : \n" + JSON.stringify(curUser));
   }, [masterDataSource]);
+
   //triggered when checkbox is pressed
   useEffect(() => {
     displayPledgeClass(isChecked);
