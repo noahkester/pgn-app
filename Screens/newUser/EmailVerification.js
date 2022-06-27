@@ -12,6 +12,8 @@ import React, { useState, useEffect } from "react";
 import { auth, db, sendEmail } from "../../firebase";
 import { NavigationPage } from "../Tabs";
 import { useNavigation } from "@react-navigation/native";
+// import { LoginContext } from "../../App";
+// import { useContext } from "react";
 import { NewUserErrorMessage } from "../ErrorMessage";
 // TODO, add protection for spamming button (time interval)
 // ADD check element that confirms email was sent
@@ -55,7 +57,7 @@ function LoginInText() {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("Start", { screen: "LoginSignup" });
+        navigation.navigate("Router", { screen: "Login" });
       }}
     >
       <Text style={[globalStyles.miniSemiBoldText, { marginBottom: 50 }]}>
