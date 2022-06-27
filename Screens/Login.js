@@ -10,7 +10,9 @@ import React, { useState } from "react";
 import globalStyles from "../Styles";
 import { auth, db } from "../firebase";
 import { AccountTop } from "./Account";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation,  } from "@react-navigation/native";
+import { useContext } from "react";
+import { LoginContext } from "../App";
 import { setField } from "./newUser/About";
 import { ErrorMessage } from "./ErrorMessage";
 
@@ -57,6 +59,7 @@ export function CustomTextInput(props) {
   );
 }
 function LoginButton(props) {
+  const [,setSignIn] = useContext(LoginContext);
   const navigation = useNavigation();
   return (
     <TouchableOpacity
@@ -76,7 +79,8 @@ function LoginButton(props) {
             if (user.email == "pgn.utexas.sudo@gmail.com") {
               navigation.navigate("Admin");
             } else {
-              navigation.navigate("Navigation");
+              setSignIn(true);
+              navigation.navigate("Router", {screen: 'Navigation'});
             }
             return;
           } else {

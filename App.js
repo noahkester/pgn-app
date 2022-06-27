@@ -25,7 +25,7 @@ import { EmailVerificationPage } from "./Screens/newUser/EmailVerification";
 import { PersonPage } from "./Screens/Person";
 import { AccountImageUploadPage } from "./Screens/AccountImageUpload";
 import { useNavigation, NavigationContainer } from "@react-navigation/native";
-import { auth, getCurrentUser } from "./firebase";
+import { auth, getCurrentUser, db } from "./firebase";
 // import styles from "./Styles";
 // In App.js in a new project
 
@@ -34,7 +34,7 @@ import {
   createNativeStackNavigator,
   Card,
 } from "@react-navigation/native-stack";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext } from "react";
 
 import AppLoading from "expo-app-loading";
 import {
@@ -64,10 +64,14 @@ console.disableYellowBox = true;
 
 // db.collection("users")
 //       .get()
+export const LoginContext = createContext();
 function App() {
   const [isSignedIn, setSignIn] = useState(false);
   const [isAdmin, setisAdmin] = useState(false);
-  // const navigation = useNavigation();
+
+  //for login
+
+
   useEffect(() => {
     async function wait() {
       // https://stackoverflow.com/questions/39231344/how-to-wait-for-firebaseauth-to-finish-initializing
@@ -86,7 +90,15 @@ function App() {
         });
     }
     wait();
-  });
+
+    // //store current user
+    // db.collection("users")
+    //   .doc(auth.currentUser.uid)
+    //   .get()
+    //   .then((doc) => {
+    //     var data = doc.data();
+    //   });
+  }, [isSignedIn]);
 
   function LoadPage() {
     if (isSignedIn) {
@@ -111,6 +123,10 @@ function App() {
         >
           <Stack.Screen name="Navigation" component={NavigationPage} />
           <Stack.Screen name="Account" component={AccountPage} />
+          <Stack.Screen
+            name="AccountImageUpload"
+            component={AccountImageUploadPage}
+          />
           <Stack.Screen name="Submit" component={SubmitPage} />
           <Stack.Screen name="Person" component={PersonPage} />
         </Stack.Navigator>
@@ -124,6 +140,7 @@ function App() {
             gestureEnabled: true,
           }}
         >
+          <Stack.Screen name="LoginSignup" component={LoginSignupPage} />
           <Stack.Screen name="CreateAccount" component={CreateAccountPage} />
           <Stack.Screen
             name="Login"
@@ -158,21 +175,18 @@ function App() {
   } else {
     return (
       <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
+        <LoginContext.Provider value = {[isSignedIn,setSignIn]}>
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
 
-            gestureEnabled: true,
-          }}
-        >
-          <Stack.Screen name="Router" component={LoadPage} />
-          <Stack.Screen name="Start" component={StartPage} />
-          <Stack.Screen name="LoginSignup" component={LoginSignupPage} />
-          <Stack.Screen
-            name="AccountImageUpload"
-            component={AccountImageUploadPage}
-          />
-        </Stack.Navigator>
+              gestureEnabled: true,
+            }}
+          >
+            <Stack.Screen name="Router" component={LoadPage} />
+            {/* <Stack.Screen name="Start" component={StartPage} /> */}
+          </Stack.Navigator>
+        </LoginContext.Provider>
       </NavigationContainer>
     );
   }

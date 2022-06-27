@@ -14,7 +14,8 @@ import globalStyles from "../Styles";
 import { useNavigation } from "@react-navigation/native";
 import colors from "webpack-dev-server/lib/utils/colors";
 import { auth, db, store } from "../firebase";
-
+import { LoginContext } from "../App";
+import { useContext } from "react";
 import ImageCarousel from "./ImageCarousel";
 
 export function AccountTop(props) {
@@ -134,6 +135,7 @@ function SaveButton(props) {
   );
 }
 function SignOutButton(props) {
+  const [,setSignIn] = useContext(LoginContext);
   const navigation = useNavigation();
   return (
     <TouchableOpacity
@@ -141,7 +143,8 @@ function SignOutButton(props) {
         auth
           .signOut()
           .then(() => {
-            navigation.navigate("Start", { screen: "LoginSignup" });
+            setSignIn(false);
+            navigation.navigate("Router", {screen: "LoginSignup"});
             console.log("(Account) Signed out. Navigating to Start");
           })
           .catch((error) => console.log(error.message));
