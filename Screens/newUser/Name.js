@@ -397,12 +397,12 @@ export function NamePage() {
         <NewUserTextInput
           placeholder="First name"
           onCustomChange={(text) => {
-            setFirstName(text.charAt(0).toUpperCase());
+            setFirstName(text.charAt(0).toUpperCase() + text.slice(1));
           }}
         />
         <NewUserTextInput
           placeholder="Last name"
-          onCustomChange={(text) => setLastName(text.charAt(0).toUpperCase())}
+          onCustomChange={(text) => setLastName(text.charAt(0).toUpperCase() + text.slice(1))}
         />
       </View>
       <NextButton

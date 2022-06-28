@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { EventSection } from "./Events";
 import globalStyles from "../Styles";
-import { TopBar } from "./Tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 //import TabBarTop from "@react-navigation/material-top-tabs/lib/typescript/src/views/MaterialTopTabBar";
 
@@ -42,12 +41,10 @@ const waiting = [];
 function WaitScreen() {
   return (
     <View style={styles.eventScreen}>
-      {/* <TopBar /> */}
+      
       <ScrollView style={globalStyles.scroll}>
         <View style={globalStyles.scrollView}>
           <EventSection events={waiting} />
-          {/* <EventSection time="Tomorrow" events={allEvents} />
-          <EventSection time="Future" events={allEvents} /> */}
         </View>
       </ScrollView>
     </View>
@@ -57,12 +54,10 @@ function WaitScreen() {
 function AcceptedScreen() {
   return (
     <View style={styles.eventScreen}>
-      {/* <TopBar /> */}
+     
       <ScrollView style={globalStyles.scroll}>
         <View style={globalStyles.scrollView}>
           <EventSection events={completed} />
-          {/* <EventSection time="Tomorrow" events={allEvents} />
-            <EventSection time="Future" events={allEvents} /> */}
         </View>
       </ScrollView>
     </View>
@@ -72,12 +67,9 @@ function AcceptedScreen() {
 function DeclinedScreen() {
   return (
     <View style={styles.eventScreen}>
-      {/* <TopBar /> */}
       <ScrollView style={globalStyles.scroll}>
         <View style={globalStyles.scrollView}>
           <EventSection events={declined} />
-          {/* <EventSection time="Tomorrow" events={allEvents} />
-            <EventSection time="Future" events={allEvents} /> */}
         </View>
       </ScrollView>
     </View>

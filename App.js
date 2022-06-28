@@ -8,7 +8,6 @@ import {
   View,
 } from "react-native";
 import { LoginSignupPage } from "./Screens/LoginSignup";
-import { StartPage } from "./Screens/Start";
 import { LoginPage } from "./Screens/Login";
 import { CreateAccountPage } from "./Screens/CreateAccount";
 import { NavigationPage } from "./Screens/Tabs";
@@ -26,6 +25,7 @@ import { PersonPage } from "./Screens/Person";
 import { AccountImageUploadPage } from "./Screens/AccountImageUpload";
 import { useNavigation, NavigationContainer } from "@react-navigation/native";
 import { auth, getCurrentUser, db } from "./firebase";
+import { findTimeCategory } from "./Screens/Events";
 // import styles from "./Styles";
 // In App.js in a new project
 
@@ -34,7 +34,13 @@ import {
   createNativeStackNavigator,
   Card,
 } from "@react-navigation/native-stack";
-import React, { useState, useEffect, createContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  createContext,
+  useMemo,
+  useRef,
+} from "react";
 
 import AppLoading from "expo-app-loading";
 import {
@@ -62,16 +68,21 @@ import {
 const Stack = createNativeStackNavigator();
 console.disableYellowBox = true;
 
-// db.collection("users")
-//       .get()
 export const LoginContext = createContext();
+
 function App() {
+  const todayEvents = useRef([]);
+  const tomorrowEvents = useRef([]);
+  const futureEvents = useRef([]);
+  const extraEvents = useRef([]);
   const [isSignedIn, setSignIn] = useState(false);
   const [isAdmin, setisAdmin] = useState(false);
+  //no need to rerender
+  const [currentUser, setCurrentUser] = useState("");
 
-  //for login
+  //for events
 
-
+  console.log("App inside function\n");
   useEffect(() => {
     async function wait() {
       // https://stackoverflow.com/questions/39231344/how-to-wait-for-firebaseauth-to-finish-initializing
@@ -79,6 +90,7 @@ function App() {
         .then((user) => {
           if (user.emailVerified) {
             setSignIn(true);
+
             if (user.email == "pgn.utexas.sudo@gmail.com") {
               setisAdmin(true);
             } else {
@@ -90,15 +102,54 @@ function App() {
         });
     }
     wait();
+  }, []);
 
-    // //store current user
-    // db.collection("users")
-    //   .doc(auth.currentUser.uid)
-    //   .get()
-    //   .then((doc) => {
-    //     var data = doc.data();
-    //   });
+  useEffect(() => {
+    var temptodayEvents = [];
+    var temptomorrowEvents = [];
+    var tempfutureEvents = [];
+    var tempextraEvents = [];
+    if (isSignedIn) {
+      db.collection("users")
+        .doc(auth.currentUser.uid)
+        .get()
+        .then((doc) => {
+          var data = doc.data();
+          db.collection("events")
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                var data1 = doc.data();
+                var timeCategory = findTimeCategory(data1.time);
+                switch (timeCategory) {
+                  case 0:
+                    temptodayEvents.push(data1);
+                    break;
+                  case 1:
+                    temptomorrowEvents.push(data1);
+                    break;
+                  case -1: // TODO
+                    tempextraEvents.push(data1);
+                    break;
+                  case 2:
+                    tempfutureEvents.push(data1);
+                    break;
+                }
+              });
+              todayEvents.current = temptodayEvents;
+              tomorrowEvents.current = temptomorrowEvents;
+              futureEvents.current = tempfutureEvents;
+              extraEvents.current = tempextraEvents;
+
+              console.log("(APP) Events and User Read in App.js");
+              setCurrentUser(data);
+            });
+        });
+    }
   }, [isSignedIn]);
+
+  if (isSignedIn) {
+  }
 
   function LoadPage() {
     if (isSignedIn) {
@@ -109,8 +160,8 @@ function App() {
             gestureEnabled: true,
           }}
         >
-          <Stack.Screen name="Admin" component={AdminPage} />
-          <Stack.Screen name="Settings" component={AdminSettingsPage} />
+          <Stack.Screen name="Admin" children={AdminPage} />
+          <Stack.Screen name="Settings" children={AdminSettingsPage} />
         </Stack.Navigator>
       ) : (
         <Stack.Navigator
@@ -121,14 +172,14 @@ function App() {
             gestureEnabled: true,
           }}
         >
-          <Stack.Screen name="Navigation" component={NavigationPage} />
-          <Stack.Screen name="Account" component={AccountPage} />
+          <Stack.Screen name="Navigation" children={NavigationPage} />
+          <Stack.Screen name="Account" children={AccountPage} />
           <Stack.Screen
             name="AccountImageUpload"
             component={AccountImageUploadPage}
           />
-          <Stack.Screen name="Submit" component={SubmitPage} />
-          <Stack.Screen name="Person" component={PersonPage} />
+          <Stack.Screen name="Submit" children={SubmitPage} />
+          <Stack.Screen name="Person" children={PersonPage} />
         </Stack.Navigator>
       );
     } else {
@@ -140,31 +191,32 @@ function App() {
             gestureEnabled: true,
           }}
         >
-          <Stack.Screen name="LoginSignup" component={LoginSignupPage} />
-          <Stack.Screen name="CreateAccount" component={CreateAccountPage} />
+          <Stack.Screen name="LoginSignup" children={LoginSignupPage} />
+          <Stack.Screen name="CreateAccount" children={CreateAccountPage} />
           <Stack.Screen
             name="Login"
-            component={LoginPage}
+            children={LoginPage}
             options={{
               headerBackButtonMenuEnabled: true,
             }}
           />
-          <Stack.Screen name="Name" component={NamePage} />
-          <Stack.Screen name="Education" component={EducationPage} />
+          <Stack.Screen name="Name" children={NamePage} />
+          <Stack.Screen name="Education" children={EducationPage} />
           <Stack.Screen
             name="ProfilePictures"
-            component={ProfilePicturesPage}
+            children={ProfilePicturesPage}
           />
-          <Stack.Screen name="About" component={AboutPage} />
-          <Stack.Screen name="Contact" component={ContactPage} />
+          <Stack.Screen name="About" children={AboutPage} />
+          <Stack.Screen name="Contact" children={ContactPage} />
           <Stack.Screen
             name="EmailVerification"
-            component={EmailVerificationPage}
+            children={EmailVerificationPage}
           />
         </Stack.Navigator>
       );
     }
   }
+
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
     Poppins_600SemiBold,
@@ -175,7 +227,17 @@ function App() {
   } else {
     return (
       <NavigationContainer>
-        <LoginContext.Provider value = {[isSignedIn,setSignIn]}>
+        <LoginContext.Provider
+          value={[
+            isSignedIn,
+            setSignIn,
+            currentUser,
+            todayEvents,
+            tomorrowEvents,
+            futureEvents,
+            extraEvents,
+          ]}
+        >
           <Stack.Navigator
             screenOptions={{
               headerShown: false,

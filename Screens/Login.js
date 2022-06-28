@@ -59,7 +59,7 @@ export function CustomTextInput(props) {
   );
 }
 function LoginButton(props) {
-  const [,setSignIn] = useContext(LoginContext);
+  const setSignIn = useContext(LoginContext)[1];
   const navigation = useNavigation();
   return (
     <TouchableOpacity

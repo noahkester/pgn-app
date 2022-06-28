@@ -8,6 +8,8 @@ import {
   ScrollView,
 } from "react-native";
 import globalStyles from "../Styles";
+import { useContext } from "react";
+import { LoginContext } from "../App";
 import { db } from "../firebase";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 /*
@@ -130,7 +132,7 @@ function unixEpochTimeToMonthDay(timestamp) {
 
 // Will return -1 for past date, 0 for current, 1 for tomorrow, 2 for future
 // based on the current date
-function findTimeCategory(timestamp) {
+export function findTimeCategory(timestamp) {
   // convert from seconds to miliseconds (js Date library uses ms)
   timestamp *= 1000;
   var currentTime = Date.now();
@@ -164,65 +166,29 @@ function findTimeCategory(timestamp) {
 }
 
 export function EventsPage() {
-  const [extraEvents, setExtraEvents] = useState([]);
-  const [todayEvents, setTodayEvents] = useState([]);
-  const [tomorrowEvents, setTomorrowEvents] = useState([]);
-  const [futureEvents, setFutureEvents] = useState([]);
-  useEffect(() => {
-    console.log("(Events) Events Read");
-    var tempTodayEvents = [];
-    var tempTomorrowEvents = [];
-    var tempFutureEvents = [];
-    var tempExtraEvents = [];
-    // db.collection("events")
-    //   .get()
-    //   .then((querySnapshot) => {
-    //     querySnapshot.forEach((doc) => {
-    //       var data = doc.data();
-    //       //console.log("(Events) Read event " + doc.id);
-    //       var timeCategory = findTimeCategory(data.time);
-    //       switch (timeCategory) {
-    //         case 0:
-    //           tempTodayEvents.push(data);
-    //           break;
-    //         case 1:
-    //           tempTomorrowEvents.push(data);
-    //           break;
-    //         case -1: // TODO
-    //         tempExtraEvents.push(data);
-    //         break;
-    //         case 2:
-    //           tempFutureEvents.push(data);
-    //           break;
-    //       }
-    //     );
-    //     setTodayEvents(tempTodayEvents);
-    //     setTomorrowEvents(tempTomorrowEvents);
-    //     setFutureEvents(tempFutureEvents);
-    //     setExtraEvents(tempExtraEvents);
-    //   })
-    //   .catch((error) => {
-    //     console.log("(Events) Error getting events documents: ", error);
-    //   });
-  }, []);
+
 
   function UpcomingEvents() {
+    const todayEvents = useContext(LoginContext)[3];
+    const tomorrowEvents = useContext(LoginContext)[4];
+    const futureEvents = useContext(LoginContext)[5];
     return (
       <ScrollView style={globalStyles.scroll}>
         <View style={globalStyles.scrollView}>
-          <EventSection time="Today" events={todayEvents} />
-          <EventSection time="Tomorrow" events={tomorrowEvents} />
-          <EventSection time="Future" events={futureEvents} />
+          <EventSection time="Today" events={todayEvents.current} />
+          <EventSection time="Tomorrow" events={tomorrowEvents.current} />
+          <EventSection time="Future" events={futureEvents.current} />
         </View>
       </ScrollView>
     );
   }
 
   function ExtraEvents() {
+    const extraEvents = useContext(LoginContext)[6];
     return (
       <ScrollView style={globalStyles.scroll}>
         <View style={globalStyles.scrollView}>
-          <EventSection time="Extra" events={extraEvents} />
+          <EventSection time="Extra" events={extraEvents.current} />
         </View>
       </ScrollView>
     );
@@ -240,12 +206,12 @@ export function EventsPage() {
         >
           <Tab.Screen
             name="Upcoming"
-            component={UpcomingEvents}
+            children={UpcomingEvents}
             options={{ tabBarLabel: "Upcoming" }}
           />
           <Tab.Screen
             name="Extra"
-            component={ExtraEvents}
+            children={ExtraEvents}
             options={{ tabBarLabel: "Extra" }}
           />
         </Tab.Navigator>

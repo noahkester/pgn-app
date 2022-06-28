@@ -1,4 +1,4 @@
-import { TopBar } from "./Tabs";
+
 import globalStyles from "../Styles";
 import { StyleSheet, TouchableOpacity, Text, Image, View } from "react-native";
 import colors from "../Colors";

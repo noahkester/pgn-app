@@ -7,6 +7,8 @@ import { EventsPage } from "./Events";
 import { PeoplePage } from "./People";
 import { WaitlistPage } from "./Waitlist";
 import { useNavigation } from "@react-navigation/native";
+import { useContext } from "react";
+import { LoginContext } from "../App";
 import { auth, db, store, getProfilePicture } from "../firebase";
 
 import colors from "../Colors";
@@ -14,43 +16,32 @@ import { useEffect, useState } from "react";
 // import { exists } from "react-native-fs";
 
 export function TopBar(props) {
+  const currentUser = useContext(LoginContext)[2];
   const [profileUrl, setProfileUrl] = useState(undefined);
-  const [firstname, setFirstname] = useState("Spring 1999");
-  const [pledgeClass, setPledgeClass] = useState("Spring 1999");
-  useEffect(() => {
-    db.collection("users")
-      .doc(auth.currentUser.uid)
-      .get()
-      .then((doc) => {
-        var data = doc.data();
-        setFirstname(data.firstname);
-        const name = (data.firstname + data.lastname).toLowerCase();
-        db.collection("admin-members")
-          .doc(name)
-          .get()
-          .then((doc0) => {
-            const data0 = doc0.data();
-            const splitPledgeClass = data0.pledgeClass.split(" ");
-            setPledgeClass(splitPledgeClass[0][0] + splitPledgeClass[1][2] + splitPledgeClass[1][3]);
-          })
-        store
-          .ref(`/profile-pictures/${auth.currentUser.uid}_professional`) //name in storage in firebase console
-          .getDownloadURL()
-          .then((url) => {
-            setProfileUrl(url);
-          })
-          .catch((e) => console.log('(Tabs) Errors while getting Profile Picture ', e));
-      })
-      .catch((error) => {
-        console.log("(Tabs) Error getting events documents: ", error);
-      });
-    console.log("User ID: " + auth.currentUser.uid);
-  }, [])
+
+  useEffect(()=>{
+    store
+    .ref(`/profile-pictures/${auth.currentUser.uid}_professional`) //name in storage in firebase console
+    .getDownloadURL()
+    .then((url) => {
+      setProfileUrl(url);
+      //happens after every move
+      //TODO FIXXX
+      console.log("set profile url")
+    })
+    .catch((e) =>
+      console.log("(Tabs) Errors while getting Profile Picture ", e)
+    );
+  },[]);
+
+   
+    //console.log("Current Data inside topBar= \n" + JSON.stringify(currentUser));
+
   return (
     <View style={styles.topBar}>
       <Profile
-        name={firstname}
-        class={pledgeClass}
+        name={currentUser.firstname}
+        class={currentUser.pledgeClass}
         profileUrl={profileUrl}
       />
       <PGNImage />
@@ -60,17 +51,19 @@ export function TopBar(props) {
 //put these two funcs here bc we'll be exporting it to each tab since they're stable
 export function Profile(props) {
   const navigation = useNavigation();
-  const image = (props.profileUrl) ? (<Image
-    source={{ uri: props.profileUrl }}
-    resizeMode="cover"
-    style={styles.profile}
-  />
+  const image = props.profileUrl ? (
+    <Image
+      source={{ uri: props.profileUrl }}
+      resizeMode="cover"
+      style={styles.profile}
+    />
   ) : (
-  <Image
-    source={require("../images/profile.png")}
-    resizeMode="cover"
-    style={styles.profile}
-  />)
+    <Image
+      source={require("../images/profile.png")}
+      resizeMode="cover"
+      style={styles.profile}
+    />
+  );
 
   return (
     <View style={styles.topBarCon}>
@@ -94,9 +87,11 @@ export function PGNImage() {
 export function NavigationPage() {
   const Tab = createBottomTabNavigator();
   return (
-    <View style={{
-      flex: 1,
-    }}>
+    <View
+      style={{
+        flex: 1,
+      }}
+    >
       <TopBar />
       <Tab.Navigator
         // Background of each screen
@@ -246,9 +241,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingTop: 60,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     paddingHorizontal: 20,
-    
   },
   topBarCon: {
     width: 100,

@@ -14,7 +14,6 @@ import {
 import React, { useState, useEffect, useRef } from "react";
 import globalStyles from "../Styles";
 import { SearchBar } from "@rneui/themed";
-import { TopBar } from "./Tabs";
 import { useNavigation } from "@react-navigation/native";
 import { db, auth, store } from "../firebase";
 import Checkbox from "expo-checkbox";
