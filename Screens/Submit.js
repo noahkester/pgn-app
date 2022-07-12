@@ -13,7 +13,8 @@ import { SubmitPoints } from "./Home";
 import { AccountTop } from "./Account";
 import globalStyles from "../Styles";
 import DropDownPicker from "react-native-dropdown-picker";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { LoginContext } from "../App";
 import colors from "../Colors";
 import * as ImagePicker from "expo-image-picker";
 import { db } from "../firebase";
@@ -25,57 +26,63 @@ const testEvents = [
   "Canes Dinner after Chapter",
 ];
 function EventsDropDown() {
-  const [events, setEvents] = useState([]);
- const [subEvents, setSubEvents] = useState([]);
-  useEffect(() => {
-    var tempAllEvents = [];
-    db.collection("events")
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          var data = doc.data();
-          tempEvents.push(data);
-        });
-      });
-      setEvents(tempAllEvents);
-  }, []);
+//   const [events, setEvents] = useState([]);
+//  const [subEvents, setSubEvents] = useState([]);
+//   useEffect(() => {
+//     var tempAllEvents = [];
+//     db.collection("events")
+//       .get()
+//       .then((querySnapshot) => {
+//         querySnapshot.forEach((doc) => {
+//           var data = doc.data();
+//           tempEvents.push(data);
+//         });
+//       });
+//       setEvents(tempAllEvents);
+//   }, []);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    {
-      label: "LinkedIn Workshop",
-      value: "1",
-    },
-    {
-      label: "Roundup Philanthropy Support",
-      value: "2",
-    },
-    {
-      label: "Kappa x BYX Ticket",
-      value: "3",
-    },
-    {
-      label: "Cold Cookie",
-      value: "4",
-    },
-    {
-      label: "Bowling Social",
-      value: "5",
-    },
-    {
-      label: "Trey and Ella Masterclass",
-      value: "6",
-    },
-    {
-      label: "Cava Dinner After Chapter",
-      value: "7",
-    },
-    {
-      label: "DG Dodgeball Tournament",
-      value: "8",
-    },
-  ]);
+  // const [items,setItems] = useState(useContext(LoginContext)[7]);
+  const tempItems = useContext(LoginContext)[7]
+  //TODO: filter out events after implementing submittedEvents array
+  const [items, setItems] = useState( tempItems.current
+  //   [
+  //   {
+  //     label: "LinkedIn Workshop",
+  //     value: "1",
+  //   },
+  //   {
+  //     label: "Roundup Philanthropy Support",
+  //     value: "2",
+  //   },
+  //   {
+  //     label: "Kappa x BYX Ticket",
+  //     value: "3",
+  //   },
+  //   {
+  //     label: "Cold Cookie",
+  //     value: "4",
+  //   },
+  //   {
+  //     label: "Bowling Social",
+  //     value: "5",
+  //   },
+  //   {
+  //     label: "Trey and Ella Masterclass",
+  //     value: "6",
+  //   },
+  //   {
+  //     label: "Cava Dinner After Chapter",
+  //     value: "7",
+  //   },
+  //   {
+  //     label: "DG Dodgeball Tournament",
+  //     value: "8",
+  //   },
+  // ]
+  );
   return (
+    //integrate tickIconStyle to each event in items
     <DropDownPicker
       placeholder="Select Event"
       placeholderStyle={[globalStyles.mediumBoldText, globalStyles.grayText]}

@@ -3,7 +3,8 @@ import { AccountTop } from "./Account";
 import { useNavigation } from '@react-navigation/native';
 import globalStyles from "../Styles"
 import { PGNImage } from "./Tabs"
-import React, { useState } from "react";
+import { auth, db } from "../firebase";
+import React, { useEffect, useState } from "react";
 
 const pointsQueue = [
     {
@@ -82,7 +83,6 @@ function SettingsButton() {
     )
 }
 function AdminTop(props) {
-    const navigation = useNavigation();
     return (
         <View style={styles.adminTop}>
             <SettingsButton />
@@ -144,7 +144,20 @@ function PointSheet(props) {
     )
 }
 function PointsQueue(props) {
-    const points = pointsQueue.map((point) =>
+    const [pointsQue, setPointsQue] = useState([]);
+    //fetch data
+    useEffect(()=> {
+        var tempQue = [];
+        db.collection("points-queue")
+        .get()
+        .then((submittedEvents) => {
+            submittedEvents.forEach((doc) => {
+                tempQue.push(doc);
+            })
+        setPointsQue(tempQue);
+        })
+    });
+    const points = pointsQue.map((point) =>
         <PointSheet
             name={point.name}
             pledgeClass={point.pledgeClass}

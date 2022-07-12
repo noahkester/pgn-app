@@ -26,19 +26,17 @@ import { AccountImageUploadPage } from "./Screens/AccountImageUpload";
 import { useNavigation, NavigationContainer } from "@react-navigation/native";
 import { auth, getCurrentUser, db } from "./firebase";
 import { findTimeCategory } from "./Screens/Events";
+import * as SplashScreen from "expo-splash-screen";
 // import styles from "./Styles";
 // In App.js in a new project
 
-import { CardStyleInterpolators } from "@react-navigation/stack";
-import {
-  createNativeStackNavigator,
-  Card,
-} from "@react-navigation/native-stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React, {
   useState,
   useEffect,
   createContext,
   useMemo,
+  useCallback,
   useRef,
 } from "react";
 
@@ -75,6 +73,8 @@ function App() {
   const tomorrowEvents = useRef([]);
   const futureEvents = useRef([]);
   const extraEvents = useRef([]);
+  const allEvents = useRef([]);
+  const [appIsReady, setAppIsReady] = useState(false);
   const [isSignedIn, setSignIn] = useState(false);
   const [isAdmin, setisAdmin] = useState(false);
   //no need to rerender
@@ -84,6 +84,19 @@ function App() {
 
   console.log("App inside function\n");
   useEffect(() => {
+    async function prepare() {
+      try {
+        // Keep the splash screen visible while we fetch resources
+        await SplashScreen.preventAutoHideAsync();
+        // make any API calls you need to do here
+        await loadInfo();
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        // Tell the application to render
+        setAppIsReady(true);
+      }
+    }
     async function wait() {
       // https://stackoverflow.com/questions/39231344/how-to-wait-for-firebaseauth-to-finish-initializing
       await getCurrentUser(auth)
@@ -102,14 +115,16 @@ function App() {
         });
     }
     wait();
+    prepare();
   }, []);
 
-  useEffect(() => {
-    var temptodayEvents = [];
-    var temptomorrowEvents = [];
-    var tempfutureEvents = [];
-    var tempextraEvents = [];
+  async function loadInfo() {
     if (isSignedIn) {
+      var temptodayEvents = [];
+      var temptomorrowEvents = [];
+      var tempfutureEvents = [];
+      var tempextraEvents = [];
+      var tempAllEvents = [];
       db.collection("users")
         .doc(auth.currentUser.uid)
         .get()
@@ -120,6 +135,7 @@ function App() {
             .then((querySnapshot) => {
               querySnapshot.forEach((doc) => {
                 var data1 = doc.data();
+                tempAllEvents.push(data1);
                 var timeCategory = findTimeCategory(data1.time);
                 switch (timeCategory) {
                   case 0:
@@ -140,16 +156,18 @@ function App() {
               tomorrowEvents.current = temptomorrowEvents;
               futureEvents.current = tempfutureEvents;
               extraEvents.current = tempextraEvents;
-
+              allEvents.current = tempAllEvents;
+              console.log("All Events: " + JSON.stringify(tempAllEvents));
               console.log("(APP) Events and User Read in App.js");
               setCurrentUser(data);
             });
         });
     }
-  }, [isSignedIn]);
-
-  if (isSignedIn) {
   }
+
+  useEffect(() => {
+    loadInfo();
+  }, [isSignedIn]);
 
   function LoadPage() {
     if (isSignedIn) {
@@ -172,7 +190,7 @@ function App() {
             gestureEnabled: true,
           }}
         >
-          <Stack.Screen name="Navigation" children={NavigationPage} />
+          <Stack.Screen name="Navigation" component={NavigationPage} />
           <Stack.Screen name="Account" children={AccountPage} />
           <Stack.Screen
             name="AccountImageUpload"
@@ -192,64 +210,79 @@ function App() {
           }}
         >
           <Stack.Screen name="LoginSignup" children={LoginSignupPage} />
-          <Stack.Screen name="CreateAccount" children={CreateAccountPage} />
+          <Stack.Screen name="CreateAccount" component={CreateAccountPage} />
           <Stack.Screen
             name="Login"
-            children={LoginPage}
+            component={LoginPage}
             options={{
               headerBackButtonMenuEnabled: true,
             }}
           />
-          <Stack.Screen name="Name" children={NamePage} />
-          <Stack.Screen name="Education" children={EducationPage} />
-          <Stack.Screen
-            name="ProfilePictures"
-            children={ProfilePicturesPage}
-          />
-          <Stack.Screen name="About" children={AboutPage} />
-          <Stack.Screen name="Contact" children={ContactPage} />
+          <Stack.Screen name="Name" component={NamePage} />
+          <Stack.Screen name="Education" component={EducationPage} />
+          <Stack.Screen name="ProfilePictures" component={ProfilePicturesPage} />
+          <Stack.Screen name="About" component={AboutPage} />
+          <Stack.Screen name="Contact" component={ContactPage} />
           <Stack.Screen
             name="EmailVerification"
-            children={EmailVerificationPage}
+            component={EmailVerificationPage}
           />
         </Stack.Navigator>
       );
     }
   }
 
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      // This tells the splash screen to hide immediately! If we call this after
+      // `setAppIsReady`, then we may see a blank screen while the app is
+      // loading its initial state and rendering its first pixels. So instead,
+      // we hide the splash screen once we know the root view has already
+      // performed layout.
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+
+
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
     Poppins_600SemiBold,
   });
-
+  if (!appIsReady) {
+    return null;
+  }
   if (!fontsLoaded) {
     return <AppLoading />;
   } else {
     return (
-      <NavigationContainer>
-        <LoginContext.Provider
-          value={[
-            isSignedIn,
-            setSignIn,
-            currentUser,
-            todayEvents,
-            tomorrowEvents,
-            futureEvents,
-            extraEvents,
-          ]}
-        >
-          <Stack.Navigator
-            screenOptions={{
-              headerShown: false,
-
-              gestureEnabled: true,
-            }}
+      <View style = {{flex : 1}} onLayout = {onLayoutRootView}>
+        <NavigationContainer>
+          <LoginContext.Provider
+            value={[
+              isSignedIn,
+              setSignIn,
+              currentUser,
+              todayEvents,
+              tomorrowEvents,
+              futureEvents,
+              extraEvents,
+              allEvents,
+            ]}
           >
-            <Stack.Screen name="Router" component={LoadPage} />
-            {/* <Stack.Screen name="Start" component={StartPage} /> */}
-          </Stack.Navigator>
-        </LoginContext.Provider>
-      </NavigationContainer>
+            <Stack.Navigator
+              screenOptions={{
+                headerShown: false,
+
+                gestureEnabled: true,
+              }}
+            >
+              <Stack.Screen name="Router" component={LoadPage} />
+              {/* <Stack.Screen name="Start" component={StartPage} /> */}
+            </Stack.Navigator>
+          </LoginContext.Provider>
+        </NavigationContainer>
+      </View>
     );
   }
 }

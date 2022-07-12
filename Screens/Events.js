@@ -82,8 +82,8 @@ export function EventSection(props) {
   var noEvents = false;
   const eventsList = events.map((event) => (
     <Event
-      key={event.name}
-      name={event.name}
+      key={event.label}
+      name={event.label}
       type={event.type}
       weight={event.weight}
       location={event.location}

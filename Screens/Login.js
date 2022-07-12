@@ -60,12 +60,15 @@ export function CustomTextInput(props) {
 }
 function LoginButton(props) {
   const setSignIn = useContext(LoginContext)[1];
+  console.log("in Login Button: " + LoginContext[0]);
   const navigation = useNavigation();
   return (
     <TouchableOpacity
       onPress={async () => {
+        console.log("In onPress");
         // Handle login defined in LoginPage, checks if user is in firebase
         if (await props.handleLogin()) {
+          console.log("In onPress2");
           // There is a user in firebase, now check if they can go to the Home Page
           // Or if we need additional information from them and email verification
           const user = auth.currentUser;
@@ -109,6 +112,7 @@ function LoginButton(props) {
               });
           }
         }
+        console.log("In onPress3");
         // Do not need to catch user attempt failed, handled in the handleLogin method
       }}
       style={[
@@ -135,17 +139,22 @@ export function LoginPage() {
     await auth
       .signInWithEmailAndPassword(email, password)
       .then(() => {
+        console.log("sign in successfull");
         success = true;
       })
       .catch((error) => {
         switch (error.code) {
+
           case "auth/invalid-email":
+            console.log("sign in bad1");
             setEmailMessage("Invalid email format");
             break;
           case "auth/wrong-password":
+            console.log("sign in bad2");
             setPasswordMessage("Incorrect password");
             break;
           case "auth/user-not-found":
+            console.log("sign in bad3");
             setEmailMessage("No user found");
             break;
         }
