@@ -9,81 +9,33 @@ import {
   View,
   TextInput,
 } from "react-native";
-import { SubmitPoints } from "./Home";
 import { AccountTop } from "./Account";
 import globalStyles from "../Styles";
 import DropDownPicker from "react-native-dropdown-picker";
-import React, { useState, useEffect, useContext } from "react";
 import { LoginContext } from "../App";
+import { useState, useEffect, createContext, useRef, useContext } from "react";
 import colors from "../Colors";
 import * as ImagePicker from "expo-image-picker";
-import { db } from "../firebase";
-const testEvents = [
-  "LinkedIn Workshop",
-  "Roundup Philanthropy Support",
-  "Kappa x BYX Ticket",
-  "Trey and Ella Masterclass",
-  "Canes Dinner after Chapter",
-];
+import * as firebase from "firebase";
+import { db, auth, store } from "../firebase";
+import { useNavigation } from "@react-navigation/native";
 function EventsDropDown() {
-//   const [events, setEvents] = useState([]);
-//  const [subEvents, setSubEvents] = useState([]);
-//   useEffect(() => {
-//     var tempAllEvents = [];
-//     db.collection("events")
-//       .get()
-//       .then((querySnapshot) => {
-//         querySnapshot.forEach((doc) => {
-//           var data = doc.data();
-//           tempEvents.push(data);
-//         });
-//       });
-//       setEvents(tempAllEvents);
-//   }, []);
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  // const [items,setItems] = useState(useContext(LoginContext)[7]);
-  const tempItems = useContext(LoginContext)[7]
+  const [value, setValue] = useState("");
+  const tempItems = useContext(LoginContext)[7];
   //TODO: filter out events after implementing submittedEvents array
-  const [items, setItems] = useState( tempItems.current
-  //   [
-  //   {
-  //     label: "LinkedIn Workshop",
-  //     value: "1",
-  //   },
-  //   {
-  //     label: "Roundup Philanthropy Support",
-  //     value: "2",
-  //   },
-  //   {
-  //     label: "Kappa x BYX Ticket",
-  //     value: "3",
-  //   },
-  //   {
-  //     label: "Cold Cookie",
-  //     value: "4",
-  //   },
-  //   {
-  //     label: "Bowling Social",
-  //     value: "5",
-  //   },
-  //   {
-  //     label: "Trey and Ella Masterclass",
-  //     value: "6",
-  //   },
-  //   {
-  //     label: "Cava Dinner After Chapter",
-  //     value: "7",
-  //   },
-  //   {
-  //     label: "DG Dodgeball Tournament",
-  //     value: "8",
-  //   },
-  // ]
-  );
+  const [items, setItems] = useState(tempItems.current);
+  const typeOfEvent = useContext(NewSubmission)[1];
+  const eventName = useContext(NewSubmission)[2];
+  const eventWeight = useContext(NewSubmission)[5];
   return (
     //integrate tickIconStyle to each event in items
     <DropDownPicker
+      onSelectItem={(item) => {
+        eventName.current = item.name;
+        eventWeight.current = item.weight;
+        typeOfEvent.current = item.type;
+      }}
       placeholder="Select Event"
       placeholderStyle={[globalStyles.mediumBoldText, globalStyles.grayText]}
       open={open}
@@ -129,24 +81,23 @@ function EventsDropDown() {
     />
   );
 }
-function SubmitEvents() {
-  return (
-    <View style={styles.submitEvents}>
-      <EventsDropDown />
-    </View>
-  );
-}
+
 function CameraShot() {
+  const [image, setImage] = useState(require("../images/camera.png"));
   return (
     <TouchableOpacity
       style={[styles.imageUpload, { zIndex: -1 }]}
       onPress={async () => {
         var result = await ImagePicker.launchCameraAsync();
         //sort out
+        if (!result.cancelled) {
+          setImage(result);
+          imageSrc.current = result.uri;
+        }
       }}
     >
       <Image
-        source={require("../images/camera.png")}
+        source={image}
         style={styles.cameraImage}
         resizeMode="contain"
       />
@@ -157,6 +108,7 @@ function CameraShot() {
 function ImageUpload() {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [image, setImage] = useState(require("../images/imageUpload.png"));
+  const imageSrc = useContext(NewSubmission)[4];
   useEffect(() => {
     async () => {
       const galleryStatus =
@@ -169,10 +121,10 @@ function ImageUpload() {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
     });
-    console.log(result);
-    setImage(result);
+
     if (!result.cancelled) {
-      //do something
+      setImage(result);
+      imageSrc.current = result.uri;
     }
   };
   return (
@@ -188,6 +140,7 @@ function ImageUpload() {
   );
 }
 function ProofDescription() {
+  const proofDesc = useContext(NewSubmission)[3];
   return (
     <View style={styles.descriptionLabel}>
       <Text style={globalStyles.smallSemiBoldText}>Proof Description:</Text>
@@ -198,13 +151,87 @@ function ProofDescription() {
           // from exiting the keyboard
           //onContentSizeChange
           returnKeyType="done"
+          onChangeText={(text) => {
+            proofDesc.current = text;
+          }}
           placeholder="Optional"
         />
       </View>
     </View>
   );
 }
+
+export function SubmitPoints(props) {
+  const name = useContext(NewSubmission)[0];
+  const typeOfEvent = useContext(NewSubmission)[1];
+  const eventName = useContext(NewSubmission)[2];
+  const proofDesc = useContext(NewSubmission)[3];
+  const imageSrc = useContext(NewSubmission)[4];
+  const eventWeight = useContext(NewSubmission)[5];
+
+  const navigation = useNavigation();
+
+  const uploadSubmissionImage = async (uri, imageName) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+
+    var ref = store.ref().child("points/" + imageName);
+    return ref.put(blob);
+  };
+
+
+  return (
+    <TouchableOpacity
+      title={props.title}
+      style={[
+        globalStyles.universityColorFill,
+        globalStyles.button,
+        styles.submitButton,
+      ]}
+      onPress={() => {
+        //console.log(user);
+        db.collection("users")
+          .doc(auth.currentUser.uid)
+          .update({
+            submittedPoints: firebase.firestore.FieldValue.arrayUnion({
+              label: eventName.current,
+              type: typeOfEvent.current,
+              status: "waiting",
+              weight: eventWeight.current,
+            }),
+          })
+          .then(() => {
+            console.log("SubmittedEvents should be updated");
+            uploadSubmissionImage(imageSrc.current, auth.currentUser.uid + "/" + eventName.current);
+          });
+
+        console.log(name);
+        console.log(typeOfEvent);
+        console.log(eventName);
+        console.log(proofDesc);
+        console.log(imageSrc);
+        navigation.navigate("Navigation");
+      }}
+    >
+      <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>
+        Submit
+      </Text>
+    </TouchableOpacity>
+  );
+}
+const NewSubmission = createContext();
+
 export function SubmitPage(props) {
+  const name =
+    useContext(LoginContext)[2].firstname +
+    " " +
+    useContext(LoginContext)[2].lastname;
+  const typeOfEvent = useRef("");
+  const eventName = useRef("");
+  const proofDesc = useRef("");
+  const imageSrc = useRef("");
+  const eventWeight = useRef(0);
+
   return (
     <KeyboardAvoidingView enabled={true} behavior={"padding"}>
       <View style={styles.submitScreen}>
@@ -213,17 +240,31 @@ export function SubmitPage(props) {
             <View style={styles.submitElement}>
               <AccountTop name="Submit Points" address="Navigation" />
             </View>
-            <View style={styles.submitElement}>
-              <SubmitEvents />
-              <View style={[styles.imageOptions, { zIndex: -1 }]}>
-                <CameraShot />
-                <ImageUpload />
+            <NewSubmission.Provider
+              value={[
+                name,
+                typeOfEvent,
+                eventName,
+                proofDesc,
+                imageSrc,
+                eventWeight,
+                ,
+              ]}
+            >
+              <View style={styles.submitElement}>
+                <View style={styles.submitEvents}>
+                  <EventsDropDown />
+                </View>
+                <View style={[styles.imageOptions, { zIndex: -1 }]}>
+                  <CameraShot />
+                  <ImageUpload  type = "points/"/>
+                </View>
+                <ProofDescription />
               </View>
-              <ProofDescription />
-            </View>
-            <View style={styles.submitElement}>
-              <SubmitPoints address="Navigation" title="Submit" />
-            </View>
+              <View style={styles.submitElement}>
+                <SubmitPoints />
+              </View>
+            </NewSubmission.Provider>
           </View>
         </TouchableWithoutFeedback>
       </View>

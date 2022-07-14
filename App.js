@@ -24,7 +24,7 @@ import { EmailVerificationPage } from "./Screens/newUser/EmailVerification";
 import { PersonPage } from "./Screens/Person";
 import { AccountImageUploadPage } from "./Screens/AccountImageUpload";
 import { useNavigation, NavigationContainer } from "@react-navigation/native";
-import { auth, getCurrentUser, db } from "./firebase";
+import { auth, getCurrentUser, db, store } from "./firebase";
 import { findTimeCategory } from "./Screens/Events";
 import * as SplashScreen from "expo-splash-screen";
 // import styles from "./Styles";
@@ -80,7 +80,8 @@ function App() {
   //no need to rerender
   const [currentUser, setCurrentUser] = useState("");
 
-  //for events
+  //for profileURL
+  const [profileUrl, setProfileUrl] = useState(undefined);
 
   console.log("App inside function\n");
   useEffect(() => {
@@ -89,12 +90,12 @@ function App() {
         // Keep the splash screen visible while we fetch resources
         await SplashScreen.preventAutoHideAsync();
         // make any API calls you need to do here
-        await loadInfo();
+
       } catch (e) {
         console.warn(e);
       } finally {
         // Tell the application to render
-        setAppIsReady(true);
+ 
       }
     }
     async function wait() {
@@ -157,9 +158,22 @@ function App() {
               futureEvents.current = tempfutureEvents;
               extraEvents.current = tempextraEvents;
               allEvents.current = tempAllEvents;
-              console.log("All Events: " + JSON.stringify(tempAllEvents));
+              //console.log("All Events: " + JSON.stringify(tempAllEvents));
               console.log("(APP) Events and User Read in App.js");
               setCurrentUser(data);
+              
+              store
+              .ref(`/profile-pictures/${auth.currentUser.uid}_professional`) //name in storage in firebase console
+              .getDownloadURL()
+              .then((url) => {
+          
+                setProfileUrl(url);
+                console.log("set profile url")
+                setAppIsReady(true);
+              })
+              .catch((e) =>
+                console.log("(Tabs) Errors while getting Profile Picture ", e)
+              );
             });
         });
     }
@@ -178,8 +192,8 @@ function App() {
             gestureEnabled: true,
           }}
         >
-          <Stack.Screen name="Admin" children={AdminPage} />
-          <Stack.Screen name="Settings" children={AdminSettingsPage} />
+          <Stack.Screen name="Admin" component={AdminPage} />
+          <Stack.Screen name="Settings" component ={AdminSettingsPage} />
         </Stack.Navigator>
       ) : (
         <Stack.Navigator
@@ -268,6 +282,8 @@ function App() {
               futureEvents,
               extraEvents,
               allEvents,
+              setisAdmin,
+              profileUrl,
             ]}
           >
             <Stack.Navigator

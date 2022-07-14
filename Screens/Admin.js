@@ -3,59 +3,59 @@ import { AccountTop } from "./Account";
 import { useNavigation } from '@react-navigation/native';
 import globalStyles from "../Styles"
 import { PGNImage } from "./Tabs"
-import { auth, db } from "../firebase";
+import { db } from "../firebase";
 import React, { useEffect, useState } from "react";
 
-const pointsQueue = [
-    {
-        text: "one",
-        name: "Noah Kester",
-        pledgeClass: "Spring 2022",
-        event: "Cold Cookie Profit Share",
-        image: "../images/pgn.png",
-        description: "This is a descriptiofs jkrf srjbfor bf"
-    },
-    {
-        text: "two",
-        name: "Michael Jordan",
-        pledgeClass: "Fall 2021",
-        event: "Cold Cookie Profit Share",
-        image: "../images/pgn.png",
-        description: "This is a description"
-    },
-    {
-        text: "three",
-        name: "Kyrie Irvin",
-        pledgeClass: "Spring 2020",
-        event: "Cold Cookie Profit Share",
-        image: "../images/pgn.png",
-        description: "This is a description"
-    },
-    {
-        text: "four",
-        name: "Jason Tatum",
-        pledgeClass: "Spring 2020",
-        event: "Cold Cookie Profit Share",
-        image: "../images/pgn.png",
-        description: "This is a description"
-    },
-    {
-        text: "five",
-        name: "Luka Doncic",
-        pledgeClass: "Fall 2022",
-        event: "Cold Cookie Profit Share",
-        image: "../images/pgn.png",
-        description: "This is a description"
-    },
-    {
-        text: "eof",
-        name: "James Harden",
-        pledgeClass: "Spring 2022",
-        event: "Cold Cookie Profit Share",
-        image: "../images/pgn.png",
-        description: "This is a description"
-    }
-]
+// const pointsQueue = [
+//     {
+//         text: "one",
+//         name: "Noah Kester",
+//         pledgeClass: "Spring 2022",
+//         event: "Cold Cookie Profit Share",
+//         image: "../images/pgn.png",
+//         description: "This is a descriptiofs jkrf srjbfor bf"
+//     },
+//     {
+//         text: "two",
+//         name: "Michael Jordan",
+//         pledgeClass: "Fall 2021",
+//         event: "Cold Cookie Profit Share",
+//         image: "../images/pgn.png",
+//         description: "This is a description"
+//     },
+//     {
+//         text: "three",
+//         name: "Kyrie Irvin",
+//         pledgeClass: "Spring 2020",
+//         event: "Cold Cookie Profit Share",
+//         image: "../images/pgn.png",
+//         description: "This is a description"
+//     },
+//     {
+//         text: "four",
+//         name: "Jason Tatum",
+//         pledgeClass: "Spring 2020",
+//         event: "Cold Cookie Profit Share",
+//         image: "../images/pgn.png",
+//         description: "This is a description"
+//     },
+//     {
+//         text: "five",
+//         name: "Luka Doncic",
+//         pledgeClass: "Fall 2022",
+//         event: "Cold Cookie Profit Share",
+//         image: "../images/pgn.png",
+//         description: "This is a description"
+//     },
+//     {
+//         text: "eof",
+//         name: "James Harden",
+//         pledgeClass: "Spring 2022",
+//         event: "Cold Cookie Profit Share",
+//         image: "../images/pgn.png",
+//         description: "This is a description"
+//     }
+// ]
 
 
 function DoneImage() {
@@ -144,20 +144,8 @@ function PointSheet(props) {
     )
 }
 function PointsQueue(props) {
-    const [pointsQue, setPointsQue] = useState([]);
-    //fetch data
-    useEffect(()=> {
-        var tempQue = [];
-        db.collection("points-queue")
-        .get()
-        .then((submittedEvents) => {
-            submittedEvents.forEach((doc) => {
-                tempQue.push(doc);
-            })
-        setPointsQue(tempQue);
-        })
-    });
-    const points = pointsQue.map((point) =>
+
+    const points = props.pointsQue.map((point) =>
         <PointSheet
             name={point.name}
             pledgeClass={point.pledgeClass}
@@ -166,7 +154,7 @@ function PointsQueue(props) {
             description={point.description}
         />
     )
-    if (props.queueIndex >= pointsQueue.length) {
+    if (props.queueIndex >= props.pointsQue.length) {
         return (
             <View style={styles.pointQueue}>
                 <DoneImage />
@@ -180,12 +168,26 @@ function PointsQueue(props) {
     )
 }
 export function AdminPage(props) {
+    const [pointsQue, setPointsQue] = useState([]);
+    //fetch data
+    useEffect(()=> {
+        var tempQue = [];
+        db.collection("points-queue")
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                tempQue.push(doc);
+            })
+        setPointsQue(tempQue);
+        })
+    });
+    //console.log(JSON.stringify(pointsQue));
     const [queueIndex, setQueueIndex] = useState(0);
     return (
         <View style={styles.adminScreen}>
             <AdminTop />
-            <Text style={globalStyles.largeSemiBoldText}>Remaining Points: {pointsQueue.length - queueIndex}</Text>
-            <PointsQueue queueIndex={queueIndex} />
+            <Text style={globalStyles.largeSemiBoldText}>Remaining Points: {pointsQue.length - queueIndex}</Text>
+            <PointsQueue queueIndex={queueIndex} pointsQue = {pointsQue}/>
             <AdminBottom index={queueIndex} customOnPress={setQueueIndex} />
         </View>
     )

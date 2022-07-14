@@ -7,7 +7,6 @@ import {
   View,
   Alert,
 } from "react-native";
-import { SubmitPoints } from "./Home";
 import globalStyles from "./../Styles";
 import { NextButton } from "./newUser/NewUser";
 import React, { useState, useEffect } from "react";
@@ -26,7 +25,7 @@ function ImageUpload(props) {
       console.log("(Account Image Upload) Gallery Requested");
     };
   }, []);
-  const uploadImage = async (uri, imageName) => {
+  const Image = async (uri, imageName) => {
     const response = await fetch(uri);
     const blob = await response.blob();
 
@@ -38,8 +37,9 @@ function ImageUpload(props) {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
     });
     console.log(result);
-    setImage(result);
+ 
     if (!result.cancelled) {
+      setImage(result);
       uploadImage(result.uri, auth.currentUser.uid + "_" + props.type)
         .then(() => {
           Alert.alert("Success!");

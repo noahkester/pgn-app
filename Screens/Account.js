@@ -134,8 +134,9 @@ function SaveButton(props) {
     </TouchableOpacity>
   );
 }
-function SignOutButton(props) {
-  const [,setSignIn] = useContext(LoginContext);
+export function SignOutButton(props) {
+  const [, setSignIn] = useContext(LoginContext);
+  const [, setisAdmin] = useContext(LoginContext);
   const navigation = useNavigation();
   return (
     <TouchableOpacity
@@ -143,8 +144,10 @@ function SignOutButton(props) {
         auth
           .signOut()
           .then(() => {
+            setisAdmin(false);
             setSignIn(false);
-            navigation.navigate("Router", {screen: "LoginSignup"});
+
+            navigation.navigate("Router", { screen: "LoginSignup" });
             console.log("(Account) Signed out. Navigating to Start");
           })
           .catch((error) => console.log(error.message));
@@ -176,37 +179,22 @@ function PledgeClass(props) {
 }
 
 export function AccountPage() {
-  const [name, setName] = useState("Firstname, Lastname");
+  // const [name, setName] = useState("Firstname, Lastname");
   const [profileUrlProfessional, setProfileUrlProfessional] = useState("");
   const [profileUrlSocial, setProfileUrlSocial] = useState("");
   const [profileUrlChild, setProfileUrlChild] = useState("");
-  const [bio, setBio] = useState("");
-  const [pledgeClass, setPledgeClass] = useState("");
-  const [status, setStatus] = useState("");
-  const [major, setMajor] = useState("");
-  const [minor, setMinor] = useState("");
-  const [email, setEmail] = useState("");
-  const [linkedin, setLinkedin] = useState("");
-  const [phone, setPhone] = useState("");
-  const [chapter, setChapter] = useState("");
+  // const [bio, setBio] = useState("");
+  // const [pledgeClass, setPledgeClass] = useState("");
+  // const [status, setStatus] = useState("");
+  // const [major, setMajor] = useState("");
+  // const [minor, setMinor] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [linkedin, setLinkedin] = useState("");
+  // const [phone, setPhone] = useState("");
+  // const [chapter, setChapter] = useState("");
+  const curUser = useContext(LoginContext)[2]
   useEffect(() => {
-    db.collection("users")
-      .doc(auth.currentUser.uid)
-      .get()
-      .then((doc) => {
-        const data = doc.data();
-        setName(data.firstname + " " + data.lastname);
-        setBio(data.bio);
-        setPledgeClass(data.pledgeClass);
-        setStatus(data.status);
-        setMajor(data.major);
-        setMinor(data.minor);
-        setEmail(data.email);
-        setLinkedin(data.linkedin);
-        setPhone(data.phone);
-        setChapter(data.chapter);
-      })
-      .catch("(Account) Error could not read document");
+
     store
       .ref(`/profile-pictures/${auth.currentUser.uid}_professional`) //name in storage in firebase console
       .getDownloadURL()
@@ -239,7 +227,7 @@ export function AccountPage() {
     <View style={styles.createAccountScreen}>
       <View style={styles.navBar}>
         <View></View>
-        <AccountTop name={name} address="Navigation" rightElement={true} />
+        <AccountTop name={curUser.firstname + " " + curUser.lastname} address="Navigation" rightElement={true} />
       </View>
       <ScrollView style={styles.accountInfo}>
         <View style={styles.innerScroll}>
@@ -248,11 +236,11 @@ export function AccountPage() {
             profileUrlSocial={profileUrlSocial}
             profileUrlChild={profileUrlChild}
           />
-          <Description description={bio} />
-          <Chapter chapter={chapter} />
-          <PledgeClass pledgeClass={pledgeClass} status={status} />
-          <AcademicInfo major={major} minor={minor} />
-          <ContactInfo email={email} number={phone} linkedin={linkedin} />
+          <Description description={curUser.bio} />
+          <Chapter chapter={curUser.chapter} />
+          <PledgeClass pledgeClass={curUser.pledgeClass} status={curUser.status} />
+          <AcademicInfo major={curUser.major} minor={curUser.minor} />
+          <ContactInfo email={curUser.email} number={curUser.phone} linkedin={curUser.linkedin} />
           <SaveButton />
           <SignOutButton />
         </View>

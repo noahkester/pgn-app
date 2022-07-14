@@ -272,6 +272,8 @@ const styles = StyleSheet.create({
     textAlign: "right",
   },
   eventText: {
+    flexDirection: 'column',
+    flex: 1,
     width: "60%",
     justifyContent: "center",
     alignSelf: "center",

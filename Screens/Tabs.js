@@ -8,34 +8,15 @@ import { PeoplePage } from "./People";
 import { WaitlistPage } from "./Waitlist";
 import { useNavigation } from "@react-navigation/native";
 import { useContext } from "react";
-import { LoginContext } from "../App";
 import { auth, db, store, getProfilePicture } from "../firebase";
-
+import { LoginContext } from "../App";
 import colors from "../Colors";
 import { useEffect, useState } from "react";
 // import { exists } from "react-native-fs";
 
 export function TopBar(props) {
   const currentUser = useContext(LoginContext)[2];
-  const [profileUrl, setProfileUrl] = useState(undefined);
-
-  useEffect(()=>{
-    store
-    .ref(`/profile-pictures/${auth.currentUser.uid}_professional`) //name in storage in firebase console
-    .getDownloadURL()
-    .then((url) => {
-      setProfileUrl(url);
-      //happens after every move
-      //TODO FIXXX
-      console.log("set profile url")
-    })
-    .catch((e) =>
-      console.log("(Tabs) Errors while getting Profile Picture ", e)
-    );
-  },[]);
-
-   
-    //console.log("Current Data inside topBar= \n" + JSON.stringify(currentUser));
+  const profileUrl = useContext(LoginContext)[9];
 
   return (
     <View style={styles.topBar}>
@@ -70,8 +51,9 @@ export function Profile(props) {
       <TouchableOpacity onPress={() => navigation.navigate("Account")}>
         {image}
       </TouchableOpacity>
-      <Text style={globalStyles.smallBoldText}>Hello {props.name}!</Text>
-      <Text style={globalStyles.smallBoldText}>PC {props.class}</Text>
+
+        <Text style={globalStyles.smallBoldText}>Hello {props.name}!</Text>
+        <Text style={globalStyles.smallBoldText}>PC {props.class}</Text>
     </View>
   );
 }
@@ -250,6 +232,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
+    textAlignVertical: 'top'
   },
   topBarPGN: {
     width: 120,

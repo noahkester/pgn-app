@@ -10,38 +10,25 @@ import {
 import { EventSection } from "./Events";
 import globalStyles from "../Styles";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-//import TabBarTop from "@react-navigation/material-top-tabs/lib/typescript/src/views/MaterialTopTabBar";
+import { useEffect, useRef, useContext } from "react";
+import { db, auth } from "../firebase";
+import { LoginContext } from "../App";
 
 const Tab = createMaterialTopTabNavigator();
-/*const completed = allEvents.reduce((events, event) => {
-  if (event.completed == "T") {
-    events.push(event);
-  }
-  return events;
-}, []);
 
-const declined = allEvents.reduce((events, event) => {
-  if (event.completed == "F") {
-    events.push(event);
-  }
-  return events;
-}, []);
-
-const waiting = allEvents.reduce((events, event) => {
-  if (event.completed == "W") {
-    events.push(event);
-  }
-  return events;
-}, []);
-*/
-
-const completed = [];
-const declined = [];
-const waiting = [];
+//TODO: Add SnapShot Listener so it can get updates.
 function WaitScreen() {
+  const curUser = useContext(LoginContext)[2];
+  const allSubmittedEvents = curUser.submittedPoints;
+
+  const waiting = allSubmittedEvents.reduce((events, event) => {
+    if (event.status == "waiting") {
+      events.push(event);
+    }
+    return events;
+  }, []);
   return (
     <View style={styles.eventScreen}>
-      
       <ScrollView style={globalStyles.scroll}>
         <View style={globalStyles.scrollView}>
           <EventSection events={waiting} />
@@ -52,9 +39,17 @@ function WaitScreen() {
 }
 
 function AcceptedScreen() {
+  const curUser = useContext(LoginContext)[2];
+  const allSubmittedEvents = curUser.submittedPoints;
+
+  const completed = allSubmittedEvents.reduce((events, event) => {
+    if (event.status == "completed") {
+      events.push(event);
+    }
+    return events;
+  }, []);
   return (
     <View style={styles.eventScreen}>
-     
       <ScrollView style={globalStyles.scroll}>
         <View style={globalStyles.scrollView}>
           <EventSection events={completed} />
@@ -65,6 +60,15 @@ function AcceptedScreen() {
 }
 
 function DeclinedScreen() {
+  const curUser = useContext(LoginContext)[2];
+  const allSubmittedEvents = curUser.submittedPoints;
+
+  const declined = allSubmittedEvents.reduce((events, event) => {
+    if (event.status == "declined") {
+      events.push(event);
+    }
+    return events;
+  }, []);
   return (
     <View style={styles.eventScreen}>
       <ScrollView style={globalStyles.scroll}>
@@ -77,6 +81,8 @@ function DeclinedScreen() {
 }
 
 function TopTab() {
+
+
   return (
     <View style={styles.eventScreen}>
       <View style={{ width: "100%", height: "100%" }}>
@@ -116,7 +122,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  screenOps : {
+  screenOps: {
     tabBarStyle: {
       shadowOffset: { width: 0, height: 0 },
     },
@@ -127,11 +133,10 @@ const styles = StyleSheet.create({
     tabBarIndicatorStyle: {
       backgroundColor: "#C57035",
       left: 20,
-      width: '23.5%',
+      width: "23.5%",
       height: "60%",
       borderRadius: 30,
       marginBottom: 10,
-      
     },
   },
 });
