@@ -60,6 +60,7 @@ export function CustomTextInput(props) {
 }
 function LoginButton(props) {
   const setSignIn = useContext(LoginContext)[1];
+  const isAdmin = useContext(LoginContext)[8];
   console.log("in Login Button: " + LoginContext[0]);
   const navigation = useNavigation();
   return (
@@ -79,9 +80,13 @@ function LoginButton(props) {
           }
           if (user.emailVerified) {
             // User has verified their email, continue to home screen
+
             if (user.email == "pgn.utexas.sudo@gmail.com") {
+              isAdmin.current = true;
+              setSignIn(true);
               navigation.navigate("Admin");
             } else {
+              isAdmin.current = false;
               setSignIn(true);
               navigation.navigate("Router", {screen: 'Navigation'});
             }

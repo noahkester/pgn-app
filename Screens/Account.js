@@ -136,7 +136,7 @@ function SaveButton(props) {
 }
 export function SignOutButton(props) {
   const [, setSignIn] = useContext(LoginContext);
-  const [, setisAdmin] = useContext(LoginContext);
+  const isAdmin = useContext(LoginContext)[8];
   const navigation = useNavigation();
   return (
     <TouchableOpacity
@@ -144,9 +144,9 @@ export function SignOutButton(props) {
         auth
           .signOut()
           .then(() => {
-            setisAdmin(false);
+            isAdmin.current = false;
             setSignIn(false);
-
+            
             navigation.navigate("Router", { screen: "LoginSignup" });
             console.log("(Account) Signed out. Navigating to Start");
           })

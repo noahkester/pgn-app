@@ -76,7 +76,7 @@ function App() {
   const allEvents = useRef([]);
   const [appIsReady, setAppIsReady] = useState(false);
   const [isSignedIn, setSignIn] = useState(false);
-  const [isAdmin, setisAdmin] = useState(false);
+  const isAdmin = useRef(false);
   //no need to rerender
   const [currentUser, setCurrentUser] = useState("");
 
@@ -90,12 +90,10 @@ function App() {
         // Keep the splash screen visible while we fetch resources
         await SplashScreen.preventAutoHideAsync();
         // make any API calls you need to do here
-
       } catch (e) {
         console.warn(e);
       } finally {
         // Tell the application to render
- 
       }
     }
     async function wait() {
@@ -103,12 +101,13 @@ function App() {
       await getCurrentUser(auth)
         .then((user) => {
           if (user.emailVerified) {
-            setSignIn(true);
-
             if (user.email == "pgn.utexas.sudo@gmail.com") {
-              setisAdmin(true);
+              isAdmin.current = true;
+              console.log("is Admin set to true");
             } else {
             }
+            setSignIn(true);
+            console.log("Sign In set to true");
           }
         })
         .catch(() => {
@@ -121,86 +120,104 @@ function App() {
 
   async function loadInfo() {
     if (isSignedIn) {
-      var temptodayEvents = [];
-      var temptomorrowEvents = [];
-      var tempfutureEvents = [];
-      var tempextraEvents = [];
-      var tempAllEvents = [];
-      db.collection("users")
-        .doc(auth.currentUser.uid)
-        .get()
-        .then((doc) => {
-          var data = doc.data();
-          db.collection("events")
-            .get()
-            .then((querySnapshot) => {
-              querySnapshot.forEach((doc) => {
-                var data1 = doc.data();
-                tempAllEvents.push(data1);
-                var timeCategory = findTimeCategory(data1.time);
-                switch (timeCategory) {
-                  case 0:
-                    temptodayEvents.push(data1);
-                    break;
-                  case 1:
-                    temptomorrowEvents.push(data1);
-                    break;
-                  case -1: // TODO
-                    tempextraEvents.push(data1);
-                    break;
-                  case 2:
-                    tempfutureEvents.push(data1);
-                    break;
-                }
+      if (!isAdmin.current) {
+        var temptodayEvents = [];
+        var temptomorrowEvents = [];
+        var tempfutureEvents = [];
+        var tempextraEvents = [];
+        var tempAllEvents = [];
+        db.collection("users")
+          .doc(auth.currentUser.uid)
+          .get()
+          .then((doc) => {
+            var data = doc.data();
+            db.collection("events")
+              .get()
+              .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                  var data1 = doc.data();
+                  tempAllEvents.push(data1);
+                  var timeCategory = findTimeCategory(data1.time);
+                  switch (timeCategory) {
+                    case 0:
+                      temptodayEvents.push(data1);
+                      break;
+                    case 1:
+                      temptomorrowEvents.push(data1);
+                      break;
+                    case -1: // TODO
+                      tempextraEvents.push(data1);
+                      break;
+                    case 2:
+                      tempfutureEvents.push(data1);
+                      break;
+                  }
+                });
+                todayEvents.current = temptodayEvents;
+                tomorrowEvents.current = temptomorrowEvents;
+                futureEvents.current = tempfutureEvents;
+                extraEvents.current = tempextraEvents;
+                allEvents.current = tempAllEvents;
+                //console.log("All Events: " + JSON.stringify(tempAllEvents));
+                console.log("(APP) Events and User Read in App.js");
+                setCurrentUser(data);
+
+                store
+                  .ref(`/profile-pictures/${auth.currentUser.uid}_professional`) //name in storage in firebase console
+                  .getDownloadURL()
+                  .then((url) => {
+                    setProfileUrl(url);
+                    console.log("set profile url");
+                    setAppIsReady(true);
+                  })
+                  .catch((e) =>
+                    console.log(
+                      "(Tabs) Errors while getting Profile Picture ",
+                      e
+                    )
+                  );
               });
-              todayEvents.current = temptodayEvents;
-              tomorrowEvents.current = temptomorrowEvents;
-              futureEvents.current = tempfutureEvents;
-              extraEvents.current = tempextraEvents;
-              allEvents.current = tempAllEvents;
-              //console.log("All Events: " + JSON.stringify(tempAllEvents));
-              console.log("(APP) Events and User Read in App.js");
-              setCurrentUser(data);
-              
-              store
-              .ref(`/profile-pictures/${auth.currentUser.uid}_professional`) //name in storage in firebase console
-              .getDownloadURL()
-              .then((url) => {
-          
-                setProfileUrl(url);
-                console.log("set profile url")
-                setAppIsReady(true);
-              })
-              .catch((e) =>
-                console.log("(Tabs) Errors while getting Profile Picture ", e)
-              );
-            });
-        });
-    }
+          });
+      } else {
+        setAppIsReady(true);
+      }
+    } 
+    //else {
+    //   setAppIsReady(true);
+    // }
   }
 
   useEffect(() => {
+    console.log(
+      "\n\n\ninside UseEffect: isAdmin: " +
+        isAdmin.current +
+        ", isSignedIn: " +
+        isSignedIn +
+        "\n\n\n"
+    );
     loadInfo();
   }, [isSignedIn]);
 
   function LoadPage() {
+    // var test = isAdmin ? "Admin" : "Navigation";
+
     if (isSignedIn) {
-      return isAdmin ? (
+      return isAdmin.current ? (
         <Stack.Navigator
+          initialRouteName="Admin"
           screenOptions={{
             headerShown: false,
             gestureEnabled: true,
           }}
         >
           <Stack.Screen name="Admin" component={AdminPage} />
-          <Stack.Screen name="Settings" component ={AdminSettingsPage} />
+          <Stack.Screen name="Settings" component={AdminSettingsPage} />
         </Stack.Navigator>
       ) : (
         <Stack.Navigator
           initialRouteName="Navigation"
           screenOptions={{
             headerShown: false,
-
             gestureEnabled: true,
           }}
         >
@@ -224,17 +241,17 @@ function App() {
           }}
         >
           <Stack.Screen name="LoginSignup" children={LoginSignupPage} />
+          <Stack.Screen name="Login" component={LoginPage} />
+          {/* <Stack.Screen name="Admin" component={AdminPage} />
+          <Stack.Screen name="Settings" component={AdminSettingsPage} /> */}
           <Stack.Screen name="CreateAccount" component={CreateAccountPage} />
-          <Stack.Screen
-            name="Login"
-            component={LoginPage}
-            options={{
-              headerBackButtonMenuEnabled: true,
-            }}
-          />
+
           <Stack.Screen name="Name" component={NamePage} />
           <Stack.Screen name="Education" component={EducationPage} />
-          <Stack.Screen name="ProfilePictures" component={ProfilePicturesPage} />
+          <Stack.Screen
+            name="ProfilePictures"
+            component={ProfilePicturesPage}
+          />
           <Stack.Screen name="About" component={AboutPage} />
           <Stack.Screen name="Contact" component={ContactPage} />
           <Stack.Screen
@@ -257,20 +274,19 @@ function App() {
     }
   }, [appIsReady]);
 
-
-
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
     Poppins_600SemiBold,
   });
-  if (!appIsReady) {
-    return null;
+
+  if(!appIsReady){
+    setAppIsReady(true);
   }
   if (!fontsLoaded) {
     return <AppLoading />;
   } else {
     return (
-      <View style = {{flex : 1}} onLayout = {onLayoutRootView}>
+      <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
         <NavigationContainer>
           <LoginContext.Provider
             value={[
@@ -282,7 +298,7 @@ function App() {
               futureEvents,
               extraEvents,
               allEvents,
-              setisAdmin,
+              isAdmin,
               profileUrl,
             ]}
           >
