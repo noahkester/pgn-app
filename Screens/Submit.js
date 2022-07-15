@@ -202,14 +202,28 @@ export function SubmitPoints(props) {
           })
           .then(() => {
             console.log("SubmittedEvents should be updated");
-            uploadSubmissionImage(imageSrc.current, auth.currentUser.uid + "/" + eventName.current);
+            uploadSubmissionImage(imageSrc.current, auth.currentUser.uid + "_" + eventName.current);
+
+            db.collection("points-queue")
+            .doc(auth.currentUser.uid + "_" + eventName.current)
+            .set({
+              label: eventName.current,
+              id: auth.currentUser.uid,
+              name: name,
+              type: typeOfEvent.current,
+              proof: proofDesc.current,
+              status: "waiting",
+              weight: eventWeight.current,
+              
+            }).then(console.log("Event submission added to events"));
+            ;
           });
 
-        console.log(name);
-        console.log(typeOfEvent);
-        console.log(eventName);
-        console.log(proofDesc);
-        console.log(imageSrc);
+        // console.log(name);
+        // console.log(typeOfEvent);
+        // console.log(eventName);
+        // console.log(proofDesc);
+        // console.log(imageSrc);
         navigation.navigate("Navigation");
       }}
     >

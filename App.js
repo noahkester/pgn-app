@@ -78,7 +78,7 @@ function App() {
   const [isSignedIn, setSignIn] = useState(false);
   const isAdmin = useRef(false);
   //no need to rerender
-  const [currentUser, setCurrentUser] = useState("");
+  const currentUser= useRef("");
 
   //for profileURL
   const [profileUrl, setProfileUrl] = useState(undefined);
@@ -112,13 +112,16 @@ function App() {
         })
         .catch(() => {
           console.log("(Start page) No user: Render Login/Signup");
+          setAppIsReady(true);
         });
     }
+ 
     wait();
     prepare();
   }, []);
 
   async function loadInfo() {
+    console.log("inside LoadInfo");
     if (isSignedIn) {
       if (!isAdmin.current) {
         var temptodayEvents = [];
@@ -160,31 +163,27 @@ function App() {
                 allEvents.current = tempAllEvents;
                 //console.log("All Events: " + JSON.stringify(tempAllEvents));
                 console.log("(APP) Events and User Read in App.js");
-                setCurrentUser(data);
-
-                store
-                  .ref(`/profile-pictures/${auth.currentUser.uid}_professional`) //name in storage in firebase console
-                  .getDownloadURL()
-                  .then((url) => {
-                    setProfileUrl(url);
-                    console.log("set profile url");
-                    setAppIsReady(true);
-                  })
-                  .catch((e) =>
-                    console.log(
-                      "(Tabs) Errors while getting Profile Picture ",
-                      e
-                    )
-                  );
+                currentUser.current = data;
+              
               });
+            store
+              .ref(`/profile-pictures/${auth.currentUser.uid}_professional`) //name in storage in firebase console
+              .getDownloadURL()
+              .then((url) => {
+                setProfileUrl(url);
+                setAppIsReady(true);
+                console.log("App is ready1");
+              })
+              .catch((e) =>
+                console.log("(Tabs) Errors while getting Profile Picture ", e)
+              );
           });
-      } else {
+      }else{
+        //TODO Do fetch calls for admin.js
         setAppIsReady(true);
       }
-    } 
-    //else {
-    //   setAppIsReady(true);
-    // }
+    }
+
   }
 
   useEffect(() => {
@@ -278,13 +277,11 @@ function App() {
     Poppins_700Bold,
     Poppins_600SemiBold,
   });
+  console.log("About To Returnn in App.js");
+ if(!appIsReady || !fontsLoaded ){
+    return null;
+  }else {
 
-  if(!appIsReady){
-    setAppIsReady(true);
-  }
-  if (!fontsLoaded) {
-    return <AppLoading />;
-  } else {
     return (
       <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
         <NavigationContainer>
@@ -292,7 +289,7 @@ function App() {
             value={[
               isSignedIn,
               setSignIn,
-              currentUser,
+              currentUser.current,
               todayEvents,
               tomorrowEvents,
               futureEvents,
