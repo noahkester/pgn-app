@@ -29,7 +29,8 @@ import { auth, getCurrentUser, db, store } from "./utils/firebase";
 import { findTimeCategory } from "./Screens/Events";
 
 // Context import
-import { LoginProvider } from "./utils/LoginContext";
+import { LoginProvider } from './utils/LoginContext';
+import { UrlContext, UrlProvider } from './utils/UrlContext';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,16 +42,20 @@ function App() {
   const extraEvents = useRef([]);
   const allEvents = useRef([]);
 
+  // User Context
+
   // States used for rendering app and checking for user sign-in status
   const [appIsReady, setAppIsReady] = useState(false);
   const [isSignedIn, setSignIn] = useState(false);
   const isAdmin = useRef(false);
 
-  //no need to rerender
-  const currentUser = useRef("");
+  const currentUser = useRef({});
+
+  const professionalUrl = useRef('');
+  const socialUrl = useRef('');
+  const funnyUrl = useRef('');
 
   //for profileURL
-  const [profileUrl, setProfileUrl] = useState(undefined);
 
   useEffect(() => {
     async function prepare() {
@@ -99,6 +104,7 @@ function App() {
           .get()
           .then((doc) => {
             var data = doc.data();
+            currentUser.current = data;
             db.collection("events")
               .get()
               .then((querySnapshot) => {
@@ -128,18 +134,38 @@ function App() {
                 allEvents.current = tempAllEvents;
 
                 console.log("(app.js) Events and User Read in App.js");
-                currentUser.current = data;
               });
             store
               .ref(`/profile-pictures/${auth.currentUser.uid}_professional`) //name in storage in firebase console
               .getDownloadURL()
               .then((url) => {
-                setProfileUrl(url);
+                professionalUrl.current = url;
+                // Only the professional url is required
                 setAppIsReady(true);
-                console.log("(app.js) Successfully got profile picture");
+                console.log("(app.js) Successfully got professional picture");
               })
               .catch((e) =>
-                console.log("(app.js) Errors while getting Profile Picture ", e)
+                console.log("(app.js) Errors while getting professional picture ")
+              );
+            store
+              .ref(`/profile-pictures/${auth.currentUser.uid}_social`) //name in storage in firebase console
+              .getDownloadURL()
+              .then((url) => {
+                socialUrl.current = url;
+                console.log("(app.js) Successfully got social picture");
+              })
+              .catch((e) =>
+                console.log("(app.js) Errors while getting social picture ")
+              );
+            store
+              .ref(`/profile-pictures/${auth.currentUser.uid}_funny`) //name in storage in firebase console
+              .getDownloadURL()
+              .then((url) => {
+                funnyUrl.current = url;
+                console.log("(app.js) Successfully got funny picture");
+              })
+              .catch((e) =>
+                console.log("(app.js) Errors while getting funny picture ")
               );
           });
       } else {
@@ -237,34 +263,40 @@ function App() {
   if (!appIsReady || !fontsLoaded) {
     return null;
   } else {
-
     return (
       <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
         <NavigationContainer>
-          <LoginProvider
+          <UrlProvider
             value={{
-              'isSignedIn': isSignedIn,
-              'setSignIn': setSignIn,
-              'currentUser': currentUser.current,
-              'todayEvents': todayEvents,
-              'tomorrowEvents': tomorrowEvents,
-              'futureEvents': futureEvents,
-              'extraEvents': extraEvents,
-              'allEvents': allEvents,
-              'isAdmin': isAdmin,
-              'profileUrl': profileUrl,
+              'professionalUrl': professionalUrl.current,
+              'socialUrl': socialUrl.current,
+              'funnyUrl': funnyUrl.current,
             }}
           >
-            <Stack.Navigator
-              screenOptions={{
-                headerShown: false,
-
-                gestureEnabled: true,
+            <LoginProvider
+              value={{
+                'isSignedIn': isSignedIn,
+                'setSignIn': setSignIn,
+                'currentUser': currentUser.current,
+                'todayEvents': todayEvents,
+                'tomorrowEvents': tomorrowEvents,
+                'futureEvents': futureEvents,
+                'extraEvents': extraEvents,
+                'allEvents': allEvents,
+                'isAdmin': isAdmin
               }}
             >
-              <Stack.Screen name="Router" component={LoadPage} />
-            </Stack.Navigator>
-          </LoginProvider>
+              <Stack.Navigator
+                screenOptions={{
+                  headerShown: false,
+
+                  gestureEnabled: true,
+                }}
+              >
+                <Stack.Screen name="Router" component={LoadPage} />
+              </Stack.Navigator>
+            </LoginProvider>
+          </UrlProvider>
         </NavigationContainer>
       </View>
     );

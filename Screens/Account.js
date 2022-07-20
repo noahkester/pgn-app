@@ -1,14 +1,4 @@
-import {
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Image,
-  TextInput,
-  Text,
-  View,
-  Dimensions,
-  ImageBackground,
-} from "react-native";
+import { StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Text, View, Dimensions, ImageBackground, } from "react-native";
 import React, { useRef, useEffect, useState } from "react";
 import globalStyles from "../styles/Styles";
 import { useNavigation } from "@react-navigation/native";
@@ -19,6 +9,7 @@ import LoginContext from '../utils/LoginContext';
 
 import { useContext } from "react";
 import ImageCarousel from "./components/ImageCarousel";
+import UrlContext from "../utils/UrlContext";
 
 export function AccountTop(props) {
   const navigation = useNavigation();
@@ -50,12 +41,13 @@ export function AccountTop(props) {
 }
 
 function Profile(props) {
+  const urlContext = useContext(UrlContext);
   return (
     <ImageCarousel
       data={[
-        { uri: props.profileUrlProfessional },
-        { uri: props.profileUrlSocial },
-        { uri: props.profileUrlChild },
+        { uri: urlContext.professionalUrl },
+        { uri: urlContext.socialUrl },
+        { uri: urlContext.funnyUrl },
       ]}
     />
   );
@@ -138,7 +130,7 @@ function SaveButton(props) {
 }
 export function SignOutButton(props) {
   const navigation = useNavigation();
-  
+
   const loginContext = useContext(LoginContext);
   const isAdmin = loginContext.isAdmin;
 
@@ -150,7 +142,7 @@ export function SignOutButton(props) {
           .then(() => {
             isAdmin.current = false;
             loginContext.setSignIn(false);
-            
+
             navigation.navigate("Router", { screen: "LoginSignup" });
             console.log("(Account) Signed out. Navigating to Start");
           })
@@ -183,42 +175,9 @@ function PledgeClass(props) {
 }
 
 export function AccountPage() {
-  const [profileUrlProfessional, setProfileUrlProfessional] = useState("");
-  const [profileUrlSocial, setProfileUrlSocial] = useState("");
-  const [profileUrlChild, setProfileUrlChild] = useState("");
-  
   const loginContext = useContext(LoginContext);
   const curUser = loginContext.currentUser;
 
-  useEffect(() => {
-    store
-      .ref(`/profile-pictures/${auth.currentUser.uid}_professional`) //name in storage in firebase console
-      .getDownloadURL()
-      .then((url) => {
-        setProfileUrlProfessional(url);
-      })
-      .catch((e) =>
-        console.log("(Tabs) Errors while getting Profile Picture ", e)
-      );
-    store
-      .ref(`/profile-pictures/${auth.currentUser.uid}_social`) //name in storage in firebase console
-      .getDownloadURL()
-      .then((url) => {
-        setProfileUrlSocial(url);
-      })
-      .catch((e) =>
-        console.log("(Tabs) Errors while getting Profile Picture ", e)
-      );
-    store
-      .ref(`/profile-pictures/${auth.currentUser.uid}_child`) //name in storage in firebase console
-      .getDownloadURL()
-      .then((url) => {
-        setProfileUrlChild(url);
-      })
-      .catch((e) =>
-        console.log("(Tabs) Errors while getting Profile Picture ", e)
-      );
-  }, []);
   return (
     <View style={styles.createAccountScreen}>
       <View style={styles.navBar}>
@@ -227,11 +186,7 @@ export function AccountPage() {
       </View>
       <ScrollView style={styles.accountInfo}>
         <View style={styles.innerScroll}>
-          <Profile
-            profileUrlProfessional={profileUrlProfessional}
-            profileUrlSocial={profileUrlSocial}
-            profileUrlChild={profileUrlChild}
-          />
+          <Profile />
           <Description description={curUser.bio} />
           <Chapter chapter={curUser.chapter} />
           <PledgeClass pledgeClass={curUser.pledgeClass} status={curUser.status} />

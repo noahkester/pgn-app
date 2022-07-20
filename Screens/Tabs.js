@@ -10,6 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useContext } from "react";
 import { auth, db, store, getProfilePicture } from "../utils/firebase";
 import LoginContext from "../utils/LoginContext";
+import UrlContext from "../utils/UrlContext";
 import colors from "../styles/Colors";
 import { useEffect, useState } from "react";
 import FoundationIcon from 'react-native-vector-icons/Foundation';
@@ -19,9 +20,9 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialIcons';
 
 export function TopBar(props) {
   const loginContext = useContext(LoginContext);
-
+  const urlContext = useContext(UrlContext);
   const currentUser = loginContext.currentUser;
-  const profileUrl = loginContext.profileUrl;
+  const profileUrl = urlContext.professionalUrl;
 
   return (
     <View style={styles.topBar}>
