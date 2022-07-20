@@ -45,9 +45,9 @@ function Profile(props) {
   return (
     <ImageCarousel
       data={[
-        { uri: urlContext.professionalUrl },
-        { uri: urlContext.socialUrl },
-        { uri: urlContext.funnyUrl },
+        { uri: urlContext.professionalUrl != '' ? urlContext.professionalUrl : 'https://www.iowagcsa.org/resources/Pictures/Member-Login-Icon.png' },
+        { uri: urlContext.socialUrl != '' ? urlContext.socialUrl : 'https://www.iowagcsa.org/resources/Pictures/Member-Login-Icon.png' },
+        { uri: urlContext.funnyUrl != '' ? urlContext.funnyUrl : 'https://www.iowagcsa.org/resources/Pictures/Member-Login-Icon.png' },
       ]}
     />
   );
@@ -73,7 +73,7 @@ function Description(props) {
 function Chapter(props) {
   return (
     <View style={{ paddingTop: 60 }}>
-      <Text style={[globalStyles.smallSemiBoldText]}>{props.chapter}</Text>
+      <Text style={[globalStyles.mediumSemiBoldText]}>{props.chapter}</Text>
     </View>
   );
 }

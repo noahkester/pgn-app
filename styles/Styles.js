@@ -48,6 +48,10 @@ export default StyleSheet.create({
     fontFamily: "Poppins_600SemiBold",
     fontSize: 16
   },
+  mediumSemiBoldText: {
+    fontFamily: "Poppins_600SemiBold",
+    fontSize: 22
+  },
   miniSemiBoldText: {
     fontFamily: "Poppins_600SemiBold",
     fontSize: 12

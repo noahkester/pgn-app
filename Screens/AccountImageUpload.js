@@ -1,12 +1,4 @@
-import {
-  StyleSheet,
-  Button,
-  TouchableOpacity,
-  Text,
-  Image,
-  View,
-  Alert,
-} from "react-native";
+import { StyleSheet, Button, TouchableOpacity, Text, Image, View, Alert, } from "react-native";
 import globalStyles from "../styles/Styles";
 import { NextButton } from "./newUser/NewUser";
 import React, { useState, useEffect } from "react";
@@ -25,7 +17,7 @@ function ImageUpload(props) {
       console.log("(Account Image Upload) Gallery Requested");
     };
   }, []);
-  const Image = async (uri, imageName) => {
+  const uploadImage = async (uri, imageName) => {
     const response = await fetch(uri);
     const blob = await response.blob();
 
@@ -36,13 +28,12 @@ function ImageUpload(props) {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
     });
-    console.log(result);
- 
+
     if (!result.cancelled) {
       setImage(result);
       uploadImage(result.uri, auth.currentUser.uid + "_" + props.type)
         .then(() => {
-          Alert.alert("Success!");
+          Alert.alert("(AccountImageUpload) Success!");
         })
         .catch(() => {
           console.log("(AccountImageUpload) Error uploading image");
@@ -73,7 +64,7 @@ function ImageUploadCard(props) {
 export function AccountImageUploadPage() {
   return (
     <View style={styles.screen}>
-      <View style={{ marginTop: 50, width: "100%" }}>
+      <View style={{ marginTop: 55, width: "100%" }}>
         <AccountTop address="Account" name="Profile Pictures" />
       </View>
       <View style={{ width: "100%", alignItems: "center" }}>
@@ -88,8 +79,8 @@ export function AccountImageUploadPage() {
           imageSrc={require("../images/imageUpload2.png")}
         />
         <ImageUploadCard
-          title="Childhood"
-          type="child"
+          title="Funny"
+          type="funny"
           imageSrc={require("../images/imageUpload3.png")}
         />
       </View>

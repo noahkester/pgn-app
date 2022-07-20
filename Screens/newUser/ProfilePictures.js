@@ -90,8 +90,8 @@ export function ProfilePicturesPage() {
           imageSrc={require("../../images/imageUpload2.png")}
         />
         <ImageUploadCard
-          title="Childhood Pic"
-          type="child"
+          title="Funny Pic"
+          type="funny"
           imageSrc={require("../../images/imageUpload3.png")}
         />
       </View>
