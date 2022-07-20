@@ -12,7 +12,7 @@ import globalStyles from "../styles/Styles";
 import { useNavigation } from "@react-navigation/native";
 import colors from "webpack-dev-server/lib/utils/colors";
 import { auth, db, store } from "../utils/firebase";
-import ImageCarousel from "./ImageCarousel";
+import ImageCarousel from "./components/ImageCarousel";
 
 /*
 Backend Stuff TODO:

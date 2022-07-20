@@ -1,13 +1,13 @@
 import { TouchableOpacity, StyleSheet, TextInput, Text, View, KeyboardAvoidingView, } from "react-native";
 import React, { useState } from "react";
-import globalStyles from "../styles/Styles";
-import { auth, db } from "../utils/firebase";
-import { AccountTop } from "./Account";
+import globalStyles from "../../styles/Styles";
+import { auth, db } from "../../utils/firebase";
+import { AccountTop } from "../Account";
 import { useNavigation, } from "@react-navigation/native";
 import { useContext } from "react";
-import { setField } from "./newUser/About";
-import { ErrorMessage } from "./ErrorMessage";
-import LoginContext from "../utils/LoginContext";
+import { setField } from "../newUser/About";
+import { ErrorMessage } from "../components/ErrorMessage";
+import LoginContext from "../../utils/LoginContext";
 
 // Text Input for Login Password
 export function PasswordInput(props) {

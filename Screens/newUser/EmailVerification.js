@@ -6,13 +6,13 @@ import {
   Image,
   View,
 } from "react-native";
-import { NewUserTextInput } from "../Login";
+import { NewUserTextInput } from "../loginSignup/Login";
 import globalStyles from "../../styles/Styles";
 import React, { useState, useEffect } from "react";
 import { auth, db, sendEmail } from "../../utils/firebase";
 import { NavigationPage } from "../Tabs";
 import { useNavigation } from "@react-navigation/native";
-import { NewUserErrorMessage } from "../ErrorMessage";
+import { NewUserErrorMessage } from "../components/ErrorMessage";
 // TODO, add protection for spamming button (time interval)
 // ADD check element that confirms email was sent
 export function EmailVerificationPage() {

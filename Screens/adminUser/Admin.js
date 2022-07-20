@@ -1,9 +1,9 @@
 import { StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Text, View } from "react-native";
-import { AccountTop } from "./Account";
+import { AccountTop } from "../Account";
 import { useNavigation } from '@react-navigation/native';
-import globalStyles from "../styles/Styles"
-import { PGNImage } from "./Tabs"
-import { db } from "../utils/firebase";
+import globalStyles from "../../styles/Styles"
+import { PGNImage } from "../Tabs"
+import { db } from "../../utils/firebase";
 import React, { useEffect, useState } from "react";
 
 // const pointsQueue = [
@@ -61,7 +61,7 @@ import React, { useEffect, useState } from "react";
 function DoneImage() {
     return (
         <Image
-            source={require("../images/adminparty.png")}
+            source={require("../../images/adminparty.png")}
             style={styles.adminParty}
             resizeMode="contain"
         />
@@ -73,7 +73,7 @@ function SettingsButton() {
         <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
             <View style={styles.settingsButton}>
                 <Image
-                    source={require("../images/settings.png")}
+                    source={require("../../images/settings.png")}
                     style={styles.settingsIcon}
                     resizeMode="contain"
                 />
@@ -94,7 +94,7 @@ function AcceptButton(props) {
     return (
         <TouchableOpacity onPress={() => props.customOnPress(props.index + 1)}>
             <Image
-                source={require("../images/accept.png")}
+                source={require("../../images/accept.png")}
                 style={styles.bottomButton}
                 resizeMode="contain"
             />
@@ -105,7 +105,7 @@ function RejectButton(props) {
     return (
         <TouchableOpacity onPress={() => props.customOnPress(props.index + 1)}>
             <Image
-                source={require("../images/reject.png")}
+                source={require("../../images/reject.png")}
                 style={styles.bottomButton}
                 resizeMode="contain"
             />
@@ -135,7 +135,7 @@ function PointSheet(props) {
             <View style={styles.space}></View>
             <Text style={globalStyles.largeSemiBoldText}>{props.event}</Text>
             <Image
-                source={require("../images/pgn.png")}
+                source={require("../../images/pgn.png")}
                 resizeMode="contain"
                 style={styles.pointImage}
             />
@@ -170,16 +170,16 @@ function PointsQueue(props) {
 export function AdminPage(props) {
     const [pointsQue, setPointsQue] = useState([]);
     //fetch data
-    useEffect(()=> {
+    useEffect(() => {
         var tempQue = [];
         db.collection("points-queue")
-        .get()
-        .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                tempQue.push(doc);
+            .get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    tempQue.push(doc);
+                })
+                setPointsQue(tempQue);
             })
-        setPointsQue(tempQue);
-        })
     });
     //console.log(JSON.stringify(pointsQue));
     const [queueIndex, setQueueIndex] = useState(0);
@@ -187,7 +187,7 @@ export function AdminPage(props) {
         <View style={styles.adminScreen}>
             <AdminTop />
             <Text style={globalStyles.largeSemiBoldText}>Remaining Points: {pointsQue.length - queueIndex}</Text>
-            <PointsQueue queueIndex={queueIndex} pointsQue = {pointsQue}/>
+            <PointsQueue queueIndex={queueIndex} pointsQue={pointsQue} />
             <AdminBottom index={queueIndex} customOnPress={setQueueIndex} />
         </View>
     )

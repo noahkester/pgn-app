@@ -7,11 +7,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
-import globalStyles from "../styles/Styles";
+import globalStyles from "../../styles/Styles";
 import { PasswordInput, CustomTextInput } from "./Login";
-import { ErrorMessage } from "./ErrorMessage";
-import { auth, db } from "../utils/firebase";
-import { AccountTop } from "./Account";
+import { ErrorMessage } from "../components/ErrorMessage";
+import { auth, db } from "../../utils/firebase";
+import { AccountTop } from "../Account";
 import { useNavigation } from "@react-navigation/native";
 
 function CreateAccountButton(props) {

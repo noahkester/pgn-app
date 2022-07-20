@@ -7,11 +7,11 @@ import {
   View,
   ScrollView,
 } from "react-native";
-import globalStyles from "../styles/Styles";
-import colors from "../styles/Colors";
-import { AccountTop, SignOutButton } from "./Account";
-import { SubmitPoints } from "./Home";
-import LoginContext from "../utils/LoginContext";
+import globalStyles from "../../styles/Styles";
+import colors from "../../styles/Colors";
+import { AccountTop, SignOutButton } from "../Account";
+import { SubmitPoints } from "../Home";
+import LoginContext from "../../utils/LoginContext";
 import { useNavigation } from "@react-navigation/native";
 
 export function AdminSettingsPage() {

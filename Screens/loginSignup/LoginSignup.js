@@ -2,10 +2,10 @@ import { StyleSheet, TouchableOpacity, Image, Text, View, } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
 import React, { useState } from "react";
-import globalStyles from "../styles/Styles";
-import ucolors from "../styles/UniversityColors";
+import globalStyles from "../../styles/Styles";
+import ucolors from "../../styles/UniversityColors";
 import DropDownPicker from "react-native-dropdown-picker";
-import colors from "../styles/Colors";
+import colors from "../../styles/Colors";
 import { useEffect } from "react";
 /*
 TODO: Figure out how to pass in style 'classes' through components
@@ -45,7 +45,7 @@ export function LoginSignupPage() {
       <View style={styles.loginSignupScreen}>
         <View style={styles.topSubElement}>
           <Image
-            source={require("../images/pgn.png")}
+            source={require("../../images/pgn.png")}
             style={styles.loginImage}
             resizeMode="contain"
           />

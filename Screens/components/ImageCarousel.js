@@ -8,7 +8,7 @@ import {
     ImageBackground,
 } from 'react-native';
 import Carousel from 'react-native-anchor-carousel';
-import SimplePaginationDot from './components/SimplePaginationDot';
+import SimplePaginationDot from './SimplePaginationDot';
 
 const { width: windowWidth } = Dimensions.get('window');
 

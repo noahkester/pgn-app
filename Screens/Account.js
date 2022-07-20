@@ -18,7 +18,7 @@ import { auth, db, store } from "../utils/firebase";
 import LoginContext from '../utils/LoginContext';
 
 import { useContext } from "react";
-import ImageCarousel from "./ImageCarousel";
+import ImageCarousel from "./components/ImageCarousel";
 
 export function AccountTop(props) {
   const navigation = useNavigation();

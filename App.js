@@ -7,14 +7,14 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
 
 // Screens and Page imports
-import { LoginSignupPage } from "./Screens/LoginSignup";
-import { LoginPage } from "./Screens/Login";
-import { CreateAccountPage } from "./Screens/CreateAccount";
+import { LoginSignupPage } from "./Screens/loginSignup/LoginSignup";
+import { LoginPage } from "./Screens/loginSignup/Login";
+import { CreateAccountPage } from "./Screens/loginSignup/CreateAccount";
 import { NavigationPage } from "./Screens/Tabs";
 import { AccountPage } from "./Screens/Account";
 import { SubmitPage } from "./Screens/Submit";
-import { AdminPage } from "./Screens/Admin";
-import { AdminSettingsPage } from "./Screens/AdminSettings";
+import { AdminPage } from "./Screens/adminUser/Admin";
+import { AdminSettingsPage } from "./Screens/adminUser/AdminSettings";
 import { NamePage } from "./Screens/newUser/Name";
 import { EducationPage } from "./Screens/newUser/Education";
 import { ProfilePicturesPage } from "./Screens/newUser/ProfilePictures";
