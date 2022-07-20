@@ -12,6 +12,9 @@ import { auth, db, store, getProfilePicture } from "../utils/firebase";
 import LoginContext from "../utils/LoginContext";
 import colors from "../styles/Colors";
 import { useEffect, useState } from "react";
+import FoundationIcon from 'react-native-vector-icons/Foundation';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialIcons';
 // import { exists } from "react-native-fs";
 
 export function TopBar(props) {
@@ -100,23 +103,13 @@ export function NavigationPage() {
           component={HomePage}
           options={{
             tabBarIcon: ({ color }) => {
-              if (color == colors.universityColor) {
-                return (
-                  <Image
-                    source={require("../images/tabBar/home1.png")}
-                    style={styles.icons1}
-                    resizeMode="contain"
-                  />
-                );
-              } else {
-                return (
-                  <Image
-                    source={require("../images/tabBar/home2.png")}
-                    style={styles.icons1}
-                    resizeMode="contain"
-                  />
-                );
-              }
+              return (
+                <FoundationIcon
+                  name="home"
+                  color={color}
+                  size={44}
+                />
+              );
             },
           }}
         />
@@ -126,23 +119,13 @@ export function NavigationPage() {
           options={{
             tabBarLabel: "Events",
             tabBarIcon: ({ color }) => {
-              if (color == colors.universityColor) {
-                return (
-                  <Image
-                    source={require("../images/tabBar/calendar2.png")}
-                    style={styles.icons2}
-                    resizeMode="contain"
-                  />
-                );
-              } else {
-                return (
-                  <Image
-                    source={require("../images/tabBar/calendar1.png")}
-                    style={styles.icons2}
-                    resizeMode="contain"
-                  />
-                );
-              }
+              return (
+                <FontAwesome5Icon
+                  name="calendar-day"
+                  color={color}
+                  size={36}
+                />
+              );
             },
           }}
         />
@@ -152,23 +135,13 @@ export function NavigationPage() {
           options={{
             tabBarLabel: "People",
             tabBarIcon: ({ color }) => {
-              if (color == colors.universityColor) {
-                return (
-                  <Image
-                    source={require("../images/tabBar/group2.png")}
-                    style={styles.icons3}
-                    resizeMode="contain"
-                  />
-                );
-              } else {
-                return (
-                  <Image
-                    source={require("../images/tabBar/group1.png")}
-                    style={styles.icons3}
-                    resizeMode="contain"
-                  />
-                );
-              }
+              return (
+                <MaterialCommunityIcons
+                  name="people-alt"
+                  color={color}
+                  size={44}
+                />
+              );
             },
           }}
         />
@@ -178,24 +151,14 @@ export function NavigationPage() {
           options={{
             tabBarLabel: "Points",
             tabBarIcon: ({ color }) => {
-              if (color == colors.universityColor) {
-                return (
-                  <Image
-                    source={require("../images/tabBar/list2.png")}
-                    style={styles.icons4}
-                    resizeMode="contain"
-                  />
-                );
-              } else {
-                return (
-                  <Image
-                    source={require("../images/tabBar/list1.png")}
-                    style={styles.icons4}
-                    resizeMode="contain"
-                  />
-                );
-              }
-            },
+              return (
+                <FontAwesome5Icon
+                  name='clipboard-list'
+                  color={color}
+                  size={38}
+                />
+              );
+            }
           }}
         />
       </Tab.Navigator>
