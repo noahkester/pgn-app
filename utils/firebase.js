@@ -16,12 +16,7 @@ const firebaseConfig = {
 };
 
 // Initialize firebase
-let app;
-if (firebase.apps.length === 0) {
-  app = firebase.initializeApp(firebaseConfig);
-} else {
-  app = firebase.app();
-}
+let app = (firebase.apps.length === 0) ? firebase.initializeApp(firebaseConfig) : firebase.app();
 
 const auth = firebase.auth();
 const db = firebase.firestore();
@@ -61,15 +56,5 @@ export async function getProfilePicture(name) {
     }, reject);
   });
 }
-/*
-db.collection("users").add({
-                    email: user.email,
-                })
-                    .then((docRef) => {
-                        console.log("User document written with ID: ", docRef.id);
-                    })
-                    .catch((error) => {
-                        console.error("Error adding document: ", error);
-                    });
-                    */
+
 export { auth, db, store };

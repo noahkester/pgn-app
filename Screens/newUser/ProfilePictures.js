@@ -8,10 +8,10 @@ import {
   Alert,
 } from "react-native";
 import { SubmitPoints } from "../Home";
-import globalStyles from "../../Styles";
+import globalStyles from "../../styles/Styles";
 import { NextButton } from "./NewUser";
 import React, { useState, useEffect } from "react";
-import { store, auth } from "../../firebase";
+import { store, auth } from "../../utils/firebase";
 
 import * as ImagePicker from "expo-image-picker";
 

@@ -12,10 +12,10 @@ import {
   Keyboard,
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
-import globalStyles from "../Styles";
+import globalStyles from "../styles/Styles";
 import { SearchBar } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
-import { db, auth, store } from "../firebase";
+import { db, auth, store } from "../utils/firebase";
 import Checkbox from "expo-checkbox";
 
 function PeopleImage(props) {

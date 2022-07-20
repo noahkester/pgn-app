@@ -7,10 +7,10 @@ import {
   View,
   ScrollView,
 } from "react-native";
-import globalStyles from "../Styles";
+import globalStyles from "../styles/Styles";
 import { useContext } from "react";
-import { LoginContext } from "../App";
-import { db } from "../firebase";
+import LoginContext from "../utils/LoginContext";
+import { db } from "../utils/firebase";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 /*
 Events Structure
@@ -169,9 +169,11 @@ export function EventsPage() {
 
 
   function UpcomingEvents() {
-    const todayEvents = useContext(LoginContext)[3];
-    const tomorrowEvents = useContext(LoginContext)[4];
-    const futureEvents = useContext(LoginContext)[5];
+    const loginContext = useContext(LoginContext);
+    const todayEvents = loginContext.todayEvents;
+    const tomorrowEvents = loginContext.tomorrowEvents;
+    const futureEvents = loginContext.futureEvents;
+
     return (
       <ScrollView style={globalStyles.scroll}>
         <View style={globalStyles.scrollView}>
@@ -184,7 +186,8 @@ export function EventsPage() {
   }
 
   function ExtraEvents() {
-    const extraEvents = useContext(LoginContext)[6];
+    const loginContext = useContext(LoginContext);
+    const extraEvents = loginContext.extraEvents;
     return (
       <ScrollView style={globalStyles.scroll}>
         <View style={globalStyles.scrollView}>

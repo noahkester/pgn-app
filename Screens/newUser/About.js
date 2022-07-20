@@ -7,10 +7,10 @@ import {
   View,
 } from "react-native";
 import { SubmitPoints } from "../Home";
-import globalStyles from "../../Styles";
+import globalStyles from "../../styles/Styles";
 import { AboutTextInput } from "./NewUser";
 import { useState } from "react";
-import { getCurrentUser } from "../../firebase";
+import { getCurrentUser } from "../../utils/firebase";
 import { NextButton } from "./NewUser";
 
 export function AboutPage() {

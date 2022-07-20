@@ -2,10 +2,10 @@ import { StyleSheet, TouchableOpacity, Image, Text, View, } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
 import React, { useState } from "react";
-import globalStyles from "../Styles";
-import ucolors from "../UniversityColors";
+import globalStyles from "../styles/Styles";
+import ucolors from "../styles/UniversityColors";
 import DropDownPicker from "react-native-dropdown-picker";
-import colors from "../Colors";
+import colors from "../styles/Colors";
 import { useEffect } from "react";
 /*
 TODO: Figure out how to pass in style 'classes' through components

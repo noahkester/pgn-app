@@ -1,9 +1,9 @@
 import { StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Text, View } from "react-native";
 import { AccountTop } from "./Account";
 import { useNavigation } from '@react-navigation/native';
-import globalStyles from "../Styles"
+import globalStyles from "../styles/Styles"
 import { PGNImage } from "./Tabs"
-import { db } from "../firebase";
+import { db } from "../utils/firebase";
 import React, { useEffect, useState } from "react";
 
 // const pointsQueue = [

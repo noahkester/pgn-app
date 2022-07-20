@@ -1,22 +1,24 @@
 import { StyleSheet, Text, Image, View, TouchableOpacity } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Octicons } from "@expo/vector-icons";
-import globalStyles from "../Styles";
+import globalStyles from "../styles/Styles";
 import { HomePage } from "./Home";
 import { EventsPage } from "./Events";
 import { PeoplePage } from "./People";
 import { WaitlistPage } from "./Waitlist";
 import { useNavigation } from "@react-navigation/native";
 import { useContext } from "react";
-import { auth, db, store, getProfilePicture } from "../firebase";
-import { LoginContext } from "../App";
-import colors from "../Colors";
+import { auth, db, store, getProfilePicture } from "../utils/firebase";
+import LoginContext from "../utils/LoginContext";
+import colors from "../styles/Colors";
 import { useEffect, useState } from "react";
 // import { exists } from "react-native-fs";
 
 export function TopBar(props) {
-  const currentUser = useContext(LoginContext)[2];
-  const profileUrl = useContext(LoginContext)[9];
+  const loginContext = useContext(LoginContext);
+
+  const currentUser = loginContext.currentUser;
+  const profileUrl = loginContext.profileUrl;
 
   return (
     <View style={styles.topBar}>
@@ -52,8 +54,8 @@ export function Profile(props) {
         {image}
       </TouchableOpacity>
 
-        <Text style={globalStyles.smallBoldText}>Hello {props.name}!</Text>
-        <Text style={globalStyles.smallBoldText}>PC {props.class}</Text>
+      <Text style={globalStyles.smallBoldText}>Hello {props.name}!</Text>
+      <Text style={globalStyles.smallBoldText}>PC {props.class}</Text>
     </View>
   );
 }

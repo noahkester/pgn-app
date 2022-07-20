@@ -1,5 +1,5 @@
 import { TouchableOpacity, StyleSheet, TextInput, Text, View, KeyboardAvoidingView } from "react-native";
-import globalStyles from "../Styles"
+import globalStyles from "../styles/Styles"
 
 export function ErrorMessage(props) {
     return (

@@ -7,13 +7,11 @@ import {
   View,
 } from "react-native";
 import { NewUserTextInput } from "../Login";
-import globalStyles from "../../Styles";
+import globalStyles from "../../styles/Styles";
 import React, { useState, useEffect } from "react";
-import { auth, db, sendEmail } from "../../firebase";
+import { auth, db, sendEmail } from "../../utils/firebase";
 import { NavigationPage } from "../Tabs";
 import { useNavigation } from "@react-navigation/native";
-// import { LoginContext } from "../../App";
-// import { useContext } from "react";
 import { NewUserErrorMessage } from "../ErrorMessage";
 // TODO, add protection for spamming button (time interval)
 // ADD check element that confirms email was sent

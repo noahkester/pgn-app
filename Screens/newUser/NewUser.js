@@ -8,8 +8,8 @@ import {
   TextInput,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import globalStyles from "../../Styles";
-import { getCurrentUser, db, auth } from "../../firebase";
+import globalStyles from "../../styles/Styles";
+import { getCurrentUser, db, auth } from "../../utils/firebase";
 var newUser = {
   id: "",
   firstname: "",

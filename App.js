@@ -1,12 +1,12 @@
+import React, { useState, useEffect, createContext, useMemo, useCallback, useRef } from "react";
 import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  Button,
-  TouchableOpacity,
-  Text,
-  Image,
-  View,
-} from "react-native";
+import { StyleSheet, Button, TouchableOpacity, Text, Image, View } from "react-native";
+import { useFonts, Poppins_600SemiBold, Poppins_700Bold } from "@expo-google-fonts/poppins";
+import { useNavigation, NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import * as SplashScreen from "expo-splash-screen";
+
+// Screens and Page imports
 import { LoginSignupPage } from "./Screens/LoginSignup";
 import { LoginPage } from "./Screens/Login";
 import { CreateAccountPage } from "./Screens/CreateAccount";
@@ -23,67 +23,35 @@ import { ContactPage } from "./Screens/newUser/Contact";
 import { EmailVerificationPage } from "./Screens/newUser/EmailVerification";
 import { PersonPage } from "./Screens/Person";
 import { AccountImageUploadPage } from "./Screens/AccountImageUpload";
-import { useNavigation, NavigationContainer } from "@react-navigation/native";
-import { auth, getCurrentUser, db, store } from "./firebase";
+
+// Firebase and misc imports
+import { auth, getCurrentUser, db, store } from "./utils/firebase";
 import { findTimeCategory } from "./Screens/Events";
-import * as SplashScreen from "expo-splash-screen";
-// import styles from "./Styles";
-// In App.js in a new project
 
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React, {
-  useState,
-  useEffect,
-  createContext,
-  useMemo,
-  useCallback,
-  useRef,
-} from "react";
-
-import AppLoading from "expo-app-loading";
-import {
-  useFonts,
-  Poppins_100Thin,
-  Poppins_100Thin_Italic,
-  Poppins_200ExtraLight,
-  Poppins_200ExtraLight_Italic,
-  Poppins_300Light,
-  Poppins_300Light_Italic,
-  Poppins_400Regular,
-  Poppins_400Regular_Italic,
-  Poppins_500Medium,
-  Poppins_500Medium_Italic,
-  Poppins_600SemiBold,
-  Poppins_600SemiBold_Italic,
-  Poppins_700Bold,
-  Poppins_700Bold_Italic,
-  Poppins_800ExtraBold,
-  Poppins_800ExtraBold_Italic,
-  Poppins_900Black,
-  Poppins_900Black_Italic,
-} from "@expo-google-fonts/poppins";
+// Context import
+import { LoginProvider } from "./utils/LoginContext";
 
 const Stack = createNativeStackNavigator();
-console.disableYellowBox = true;
-
-export const LoginContext = createContext();
 
 function App() {
+  // Persistant references used throughout the app
   const todayEvents = useRef([]);
   const tomorrowEvents = useRef([]);
   const futureEvents = useRef([]);
   const extraEvents = useRef([]);
   const allEvents = useRef([]);
+
+  // States used for rendering app and checking for user sign-in status
   const [appIsReady, setAppIsReady] = useState(false);
   const [isSignedIn, setSignIn] = useState(false);
   const isAdmin = useRef(false);
+
   //no need to rerender
-  const currentUser= useRef("");
+  const currentUser = useRef("");
 
   //for profileURL
   const [profileUrl, setProfileUrl] = useState(undefined);
 
-  console.log("App inside function\n");
   useEffect(() => {
     async function prepare() {
       try {
@@ -103,25 +71,22 @@ function App() {
           if (user.emailVerified) {
             if (user.email == "pgn.utexas.sudo@gmail.com") {
               isAdmin.current = true;
-              console.log("is Admin set to true");
-            } else {
+              console.log("(app.js) isAdmin set to true");
             }
             setSignIn(true);
-            console.log("Sign In set to true");
+            console.log("(app.js) SignIn set to true");
           }
         })
         .catch(() => {
-          console.log("(Start page) No user: Render Login/Signup");
+          console.log("(app.js) No user: Render Login/Signup");
           setAppIsReady(true);
         });
     }
- 
     wait();
     prepare();
   }, []);
 
   async function loadInfo() {
-    console.log("inside LoadInfo");
     if (isSignedIn) {
       if (!isAdmin.current) {
         var temptodayEvents = [];
@@ -161,10 +126,9 @@ function App() {
                 futureEvents.current = tempfutureEvents;
                 extraEvents.current = tempextraEvents;
                 allEvents.current = tempAllEvents;
-                //console.log("All Events: " + JSON.stringify(tempAllEvents));
-                console.log("(APP) Events and User Read in App.js");
+
+                console.log("(app.js) Events and User Read in App.js");
                 currentUser.current = data;
-              
               });
             store
               .ref(`/profile-pictures/${auth.currentUser.uid}_professional`) //name in storage in firebase console
@@ -172,13 +136,13 @@ function App() {
               .then((url) => {
                 setProfileUrl(url);
                 setAppIsReady(true);
-                console.log("App is ready1");
+                console.log("(app.js) Successfully got profile picture");
               })
               .catch((e) =>
-                console.log("(Tabs) Errors while getting Profile Picture ", e)
+                console.log("(app.js) Errors while getting Profile Picture ", e)
               );
           });
-      }else{
+      } else {
         //TODO Do fetch calls for admin.js
         setAppIsReady(true);
       }
@@ -188,11 +152,11 @@ function App() {
 
   useEffect(() => {
     console.log(
-      "\n\n\ninside UseEffect: isAdmin: " +
-        isAdmin.current +
-        ", isSignedIn: " +
-        isSignedIn +
-        "\n\n\n"
+      "\n(app.js) isSignedIn UseEffect: isAdmin: " +
+      isAdmin.current +
+      ", isSignedIn: " +
+      isSignedIn +
+      "\n"
     );
     loadInfo();
   }, [isSignedIn]);
@@ -201,18 +165,22 @@ function App() {
     // var test = isAdmin ? "Admin" : "Navigation";
 
     if (isSignedIn) {
-      return isAdmin.current ? (
-        <Stack.Navigator
-          initialRouteName="Admin"
-          screenOptions={{
-            headerShown: false,
-            gestureEnabled: true,
-          }}
-        >
-          <Stack.Screen name="Admin" component={AdminPage} />
-          <Stack.Screen name="Settings" component={AdminSettingsPage} />
-        </Stack.Navigator>
-      ) : (
+      if (isAdmin.current) {
+        return (
+          <Stack.Navigator
+            initialRouteName="Admin"
+            screenOptions={{
+              headerShown: false,
+              gestureEnabled: true,
+            }}
+          >
+            <Stack.Screen name="Admin" component={AdminPage} />
+            <Stack.Screen name="Settings" component={AdminSettingsPage} />
+          </Stack.Navigator>
+        )
+      }
+      // Not Admin
+      return (
         <Stack.Navigator
           initialRouteName="Navigation"
           screenOptions={{
@@ -222,44 +190,33 @@ function App() {
         >
           <Stack.Screen name="Navigation" component={NavigationPage} />
           <Stack.Screen name="Account" children={AccountPage} />
-          <Stack.Screen
-            name="AccountImageUpload"
-            component={AccountImageUploadPage}
-          />
+          <Stack.Screen name="AccountImageUpload" component={AccountImageUploadPage} />
           <Stack.Screen name="Submit" children={SubmitPage} />
           <Stack.Screen name="Person" children={PersonPage} />
         </Stack.Navigator>
-      );
-    } else {
-      return (
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-
-            gestureEnabled: true,
-          }}
-        >
-          <Stack.Screen name="LoginSignup" children={LoginSignupPage} />
-          <Stack.Screen name="Login" component={LoginPage} />
-          {/* <Stack.Screen name="Admin" component={AdminPage} />
-          <Stack.Screen name="Settings" component={AdminSettingsPage} /> */}
-          <Stack.Screen name="CreateAccount" component={CreateAccountPage} />
-
-          <Stack.Screen name="Name" component={NamePage} />
-          <Stack.Screen name="Education" component={EducationPage} />
-          <Stack.Screen
-            name="ProfilePictures"
-            component={ProfilePicturesPage}
-          />
-          <Stack.Screen name="About" component={AboutPage} />
-          <Stack.Screen name="Contact" component={ContactPage} />
-          <Stack.Screen
-            name="EmailVerification"
-            component={EmailVerificationPage}
-          />
-        </Stack.Navigator>
-      );
+      )
     }
+    // User is not signed in
+    return (
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+
+          gestureEnabled: true,
+        }}
+      >
+        <Stack.Screen name="LoginSignup" children={LoginSignupPage} />
+        <Stack.Screen name="Login" component={LoginPage} />
+        <Stack.Screen name="CreateAccount" component={CreateAccountPage} />
+
+        <Stack.Screen name="Name" component={NamePage} />
+        <Stack.Screen name="Education" component={EducationPage} />
+        <Stack.Screen name="ProfilePictures" component={ProfilePicturesPage} />
+        <Stack.Screen name="About" component={AboutPage} />
+        <Stack.Screen name="Contact" component={ContactPage} />
+        <Stack.Screen name="EmailVerification" component={EmailVerificationPage} />
+      </Stack.Navigator>
+    );
   }
 
   const onLayoutRootView = useCallback(async () => {
@@ -277,27 +234,26 @@ function App() {
     Poppins_700Bold,
     Poppins_600SemiBold,
   });
-  console.log("About To Returnn in App.js");
- if(!appIsReady || !fontsLoaded ){
+  if (!appIsReady || !fontsLoaded) {
     return null;
-  }else {
+  } else {
 
     return (
       <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
         <NavigationContainer>
-          <LoginContext.Provider
-            value={[
-              isSignedIn,
-              setSignIn,
-              currentUser.current,
-              todayEvents,
-              tomorrowEvents,
-              futureEvents,
-              extraEvents,
-              allEvents,
-              isAdmin,
-              profileUrl,
-            ]}
+          <LoginProvider
+            value={{
+              'isSignedIn': isSignedIn,
+              'setSignIn': setSignIn,
+              'currentUser': currentUser.current,
+              'todayEvents': todayEvents,
+              'tomorrowEvents': tomorrowEvents,
+              'futureEvents': futureEvents,
+              'extraEvents': extraEvents,
+              'allEvents': allEvents,
+              'isAdmin': isAdmin,
+              'profileUrl': profileUrl,
+            }}
           >
             <Stack.Navigator
               screenOptions={{
@@ -307,9 +263,8 @@ function App() {
               }}
             >
               <Stack.Screen name="Router" component={LoadPage} />
-              {/* <Stack.Screen name="Start" component={StartPage} /> */}
             </Stack.Navigator>
-          </LoginContext.Provider>
+          </LoginProvider>
         </NavigationContainer>
       </View>
     );

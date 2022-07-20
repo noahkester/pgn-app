@@ -1,27 +1,24 @@
-import {
-  TouchableOpacity,
-  StyleSheet,
-  TextInput,
-  Text,
-  View,
-  KeyboardAvoidingView,
-} from "react-native";
+import { TouchableOpacity, StyleSheet, TextInput, Text, View, KeyboardAvoidingView, } from "react-native";
 import React, { useState } from "react";
-import globalStyles from "../Styles";
-import { auth, db } from "../firebase";
+import globalStyles from "../styles/Styles";
+import { auth, db } from "../utils/firebase";
 import { AccountTop } from "./Account";
-import { useNavigation,  } from "@react-navigation/native";
+import { useNavigation, } from "@react-navigation/native";
 import { useContext } from "react";
-import { LoginContext } from "../App";
 import { setField } from "./newUser/About";
 import { ErrorMessage } from "./ErrorMessage";
+import LoginContext from "../utils/LoginContext";
 
 // Text Input for Login Password
 export function PasswordInput(props) {
   return (
-    <View style={styles.inputContainer}>
+    <View style={{
+      flexDirection: "row", width: "90%", justifyContent: "space-between", alignItems: "center",
+    }}>
       <Text style={globalStyles.mediumBoldText}>{props.label}</Text>
-      <View style={[styles.textInputContainer, globalStyles.grayBorder]}>
+      <View style={[{
+        borderWidth: 1, padding: 10, borderRadius: 30, marginTop: 10, width: "70%"
+      }, globalStyles.grayBorder]}>
         <TextInput
           autoCapitalize="none"
           autoCorrect={false}
@@ -40,11 +37,19 @@ export function PasswordInput(props) {
 // Used for email / username
 export function CustomTextInput(props) {
   return (
-    <View style={styles.inputContainer}>
-      <Text style={[globalStyles.mediumBoldText, styles.customLabel]}>
+    <View style={{
+      flexDirection: "row", width: "90%", justifyContent: "space-between", alignItems: "center",
+    }}>
+      <Text style={globalStyles.mediumBoldText}>
         {props.label}
       </Text>
-      <View style={[styles.textInputContainer, globalStyles.grayBorder]}>
+      <View style={[{
+        borderWidth: 1,
+        padding: 10,
+        borderRadius: 30,
+        marginTop: 10,
+        width: "70%"
+      }, globalStyles.grayBorder]}>
         <TextInput
           autoCapitalize="none"
           autoCorrect={false}
@@ -58,24 +63,24 @@ export function CustomTextInput(props) {
     </View>
   );
 }
+
 function LoginButton(props) {
-  const setSignIn = useContext(LoginContext)[1];
-  const isAdmin = useContext(LoginContext)[8];
-  console.log("in Login Button: " + LoginContext[0]);
   const navigation = useNavigation();
+
+  const loginContext = useContext(LoginContext);
+  const setSignIn = loginContext.setSignIn;
+  const isAdmin = loginContext.isAdmin;
   return (
     <TouchableOpacity
       onPress={async () => {
-        console.log("In onPress");
         // Handle login defined in LoginPage, checks if user is in firebase
         if (await props.handleLogin()) {
-          console.log("In onPress2");
           // There is a user in firebase, now check if they can go to the Home Page
           // Or if we need additional information from them and email verification
           const user = auth.currentUser;
           if (!user) {
             // This should never happen but in case
-            console.log("(ERROR): No current user after login success");
+            console.log("(login.js) ERROR: No current user after login success");
             return;
           }
           if (user.emailVerified) {
@@ -88,7 +93,7 @@ function LoginButton(props) {
             } else {
               isAdmin.current = false;
               setSignIn(true);
-              navigation.navigate("Router", {screen: 'Navigation'});
+              navigation.navigate("Router", { screen: 'Navigation' });
             }
             return;
           } else {
@@ -168,11 +173,13 @@ export function LoginPage() {
   };
 
   return (
-    <View style={styles.screen}>
-      <View style={styles.backNav}>
+    <View style={{ backgroundColor: "#ffffff" }}>
+      <View style={{ marginTop: "15%", justifyContent: "space-between", height: "15%", paddingBottom: 10 }}>
         <AccountTop name={""} address="LoginSignup" />
       </View>
-      <KeyboardAvoidingView behaviors="padding" style={styles.loginScreen}>
+      <KeyboardAvoidingView behaviors="padding" style={{
+        height: "80%", width: "100%", marginTop: "30%", alignItems: "center",
+      }}>
         <CustomTextInput
           label="Username:"
           value={email}
@@ -187,42 +194,9 @@ export function LoginPage() {
           placeholder="Enter Password"
         />
         <ErrorMessage message={passwordMessage} />
-        <View style={styles.space}></View>
+        <View style={{ height: 10 }}></View>
         <LoginButton title="Login" handleLogin={handleLogin} />
       </KeyboardAvoidingView>
     </View>
   );
 }
-const styles = StyleSheet.create({
-  screen: {
-    backgroundColor: "white",
-  },
-  backNav: {
-    marginTop: "15%",
-    justifyContent: "space-between",
-    height: "15%",
-    paddingBottom: 10,
-  },
-  loginScreen: {
-    height: "80%",
-    width: "100%",
-    marginTop: "30%",
-    alignItems: "center",
-  },
-  inputContainer: {
-    flexDirection: "row",
-    width: "90%",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  textInputContainer: {
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 30,
-    marginTop: 10,
-    width: "70%",
-  },
-  space: {
-    height: 10,
-  },
-});

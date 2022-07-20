@@ -8,14 +8,14 @@ import {
 } from "react-native";
 import { SubmitPoints } from "../Home";
 import { NewUserTextInput } from "./NewUser";
-import globalStyles from "../../Styles";
+import globalStyles from "../../styles/Styles";
 import { setField } from "./About";
-import ucolors from "../../UniversityColors";
+import ucolors from "../../styles/UniversityColors";
 import DropDownPicker from "react-native-dropdown-picker";
-import colors from "../../Colors";
+import colors from "../../styles/Colors";
 import { useState } from "react";
 import { NextButton } from "./NewUser";
-import { auth } from "../../firebase";
+import { auth } from "../../utils/firebase";
 function UniversityDropdown(props) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);

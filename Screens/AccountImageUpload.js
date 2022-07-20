@@ -7,12 +7,12 @@ import {
   View,
   Alert,
 } from "react-native";
-import globalStyles from "./../Styles";
+import globalStyles from "../styles/Styles";
 import { NextButton } from "./newUser/NewUser";
 import React, { useState, useEffect } from "react";
 import { AccountTop } from "./Account";
 import * as ImagePicker from "expo-image-picker";
-import { store, auth } from "../firebase";
+import { store, auth } from "../utils/firebase";
 
 function ImageUpload(props) {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);

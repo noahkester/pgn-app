@@ -1,9 +1,9 @@
 
-import globalStyles from "../Styles";
+import globalStyles from "../styles/Styles";
 import { StyleSheet, TouchableOpacity, Text, Image, View } from "react-native";
-import colors from "../Colors";
+import colors from "../styles/Colors";
 import { useNavigation } from '@react-navigation/native';
-import { auth, db } from "../firebase";
+import { auth, db } from "../utils/firebase";
 import { useEffect, useState } from "react";
 
 const points = [3, 3, 6];

@@ -10,11 +10,13 @@ import {
   ImageBackground,
 } from "react-native";
 import React, { useRef, useEffect, useState } from "react";
-import globalStyles from "../Styles";
+import globalStyles from "../styles/Styles";
 import { useNavigation } from "@react-navigation/native";
 import colors from "webpack-dev-server/lib/utils/colors";
-import { auth, db, store } from "../firebase";
-import { LoginContext } from "../App";
+import { auth, db, store } from "../utils/firebase";
+
+import LoginContext from '../utils/LoginContext';
+
 import { useContext } from "react";
 import ImageCarousel from "./ImageCarousel";
 
@@ -135,9 +137,11 @@ function SaveButton(props) {
   );
 }
 export function SignOutButton(props) {
-  const [, setSignIn] = useContext(LoginContext);
-  const isAdmin = useContext(LoginContext)[8];
   const navigation = useNavigation();
+  
+  const loginContext = useContext(LoginContext);
+  const isAdmin = loginContext.isAdmin;
+
   return (
     <TouchableOpacity
       onPress={() => {
@@ -145,7 +149,7 @@ export function SignOutButton(props) {
           .signOut()
           .then(() => {
             isAdmin.current = false;
-            setSignIn(false);
+            loginContext.setSignIn(false);
             
             navigation.navigate("Router", { screen: "LoginSignup" });
             console.log("(Account) Signed out. Navigating to Start");
@@ -179,22 +183,14 @@ function PledgeClass(props) {
 }
 
 export function AccountPage() {
-  // const [name, setName] = useState("Firstname, Lastname");
   const [profileUrlProfessional, setProfileUrlProfessional] = useState("");
   const [profileUrlSocial, setProfileUrlSocial] = useState("");
   const [profileUrlChild, setProfileUrlChild] = useState("");
-  // const [bio, setBio] = useState("");
-  // const [pledgeClass, setPledgeClass] = useState("");
-  // const [status, setStatus] = useState("");
-  // const [major, setMajor] = useState("");
-  // const [minor, setMinor] = useState("");
-  // const [email, setEmail] = useState("");
-  // const [linkedin, setLinkedin] = useState("");
-  // const [phone, setPhone] = useState("");
-  // const [chapter, setChapter] = useState("");
-  const curUser = useContext(LoginContext)[2]
-  useEffect(() => {
+  
+  const loginContext = useContext(LoginContext);
+  const curUser = loginContext.currentUser;
 
+  useEffect(() => {
     store
       .ref(`/profile-pictures/${auth.currentUser.uid}_professional`) //name in storage in firebase console
       .getDownloadURL()

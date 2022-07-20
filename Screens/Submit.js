@@ -10,21 +10,24 @@ import {
   TextInput,
 } from "react-native";
 import { AccountTop } from "./Account";
-import globalStyles from "../Styles";
+import globalStyles from "../styles/Styles";
 import DropDownPicker from "react-native-dropdown-picker";
-import { LoginContext } from "../App";
+import LoginContext from "../utils/LoginContext";
 import { useState, useEffect, createContext, useRef, useContext } from "react";
-import colors from "../Colors";
+import colors from "../styles/Colors";
 import * as ImagePicker from "expo-image-picker";
 import * as firebase from "firebase";
-import { db, auth, store } from "../firebase";
+import { db, auth, store } from "../utils/firebase";
 import { useNavigation } from "@react-navigation/native";
 function EventsDropDown() {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
-  const tempItems = useContext(LoginContext)[7];
+
+  const loginContext = useContext(LoginContext);
+  const tempItems = loginContext.allEvents;
   //TODO: filter out events after implementing submittedEvents array
   const [items, setItems] = useState(tempItems.current);
+
   const typeOfEvent = useContext(NewSubmission)[1];
   const eventName = useContext(NewSubmission)[2];
   const eventWeight = useContext(NewSubmission)[5];
@@ -236,10 +239,11 @@ export function SubmitPoints(props) {
 const NewSubmission = createContext();
 
 export function SubmitPage(props) {
+  const loginContext = useContext(LoginContext);
   const name =
-    useContext(LoginContext)[2].firstname +
+    loginContext.currentUser.firstname +
     " " +
-    useContext(LoginContext)[2].lastname;
+    loginContext.currentUser.lastname;
   const typeOfEvent = useRef("");
   const eventName = useRef("");
   const proofDesc = useRef("");

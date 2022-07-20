@@ -8,17 +8,18 @@ import {
   ScrollView,
 } from "react-native";
 import { EventSection } from "./Events";
-import globalStyles from "../Styles";
+import globalStyles from "../styles/Styles";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useEffect, useRef, useContext } from "react";
-import { db, auth } from "../firebase";
-import { LoginContext } from "../App";
+import { db, auth } from "../utils/firebase";
+import LoginContext from "../utils/LoginContext";
 
 const Tab = createMaterialTopTabNavigator();
 
 //TODO: Add SnapShot Listener so it can get updates.
 function WaitScreen() {
-  const curUser = useContext(LoginContext)[2];
+  const loginContext = useContext(LoginContext);
+  const curUser = loginContext.currentUser;
   const allSubmittedEvents = curUser.submittedPoints;
 
   const waiting = allSubmittedEvents.reduce((events, event) => {
@@ -39,7 +40,8 @@ function WaitScreen() {
 }
 
 function AcceptedScreen() {
-  const curUser = useContext(LoginContext)[2];
+  const loginContext = useContext(LoginContext);
+  const curUser = loginContext.currentUser;
   const allSubmittedEvents = curUser.submittedPoints;
 
   const completed = allSubmittedEvents.reduce((events, event) => {
@@ -60,7 +62,8 @@ function AcceptedScreen() {
 }
 
 function DeclinedScreen() {
-  const curUser = useContext(LoginContext)[2];
+  const loginContext = useContext(LoginContext);
+  const curUser = loginContext.currentUser;
   const allSubmittedEvents = curUser.submittedPoints;
 
   const declined = allSubmittedEvents.reduce((events, event) => {

@@ -1,7 +1,7 @@
 import { StyleSheet, Button, TouchableOpacity, Text, Image, View, } from "react-native";
 import { SubmitPoints } from "../Home";
 import { NewUserTextInput } from "./NewUser";
-import globalStyles from "../../Styles"
+import globalStyles from "../../styles/Styles"
 import { newUser } from "./About";
 import { setField } from "./About";
 
