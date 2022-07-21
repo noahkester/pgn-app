@@ -95,7 +95,7 @@ export function PeoplePage() {
   //checkbox
   const [isChecked, setChecked] = useState(false);
   const [curUser, setCurUser] = useState(null);
- 
+
   useEffect(() => {
     //will be a fetch once the backend is complete
     //https://snack.expo.dev/@aboutreact/react-native-search-bar-filter-on-listview
@@ -110,18 +110,20 @@ export function PeoplePage() {
           allUsers = [...allUsers].sort((a, b) =>
             a.firstname > b.firstname ? 1 : -1
           );
-          
-
           //store each url in a hashmap
-          store
-            .ref(`/profile-pictures/${data.id}_professional`)
-            .getDownloadURL()
-            .then((url) => {
-              profPicMap[data.id] = url;
-            })
-            .catch((e) =>
-              console.log("(Person) Error getting Professional Picture ", e)
-            );
+          if (data.id !== undefined) {
+            // Issue
+            store
+              .ref(`/profile-pictures/${data.id}_professional`)
+              .getDownloadURL()
+              .then((url) => {
+                profPicMap[data.id] = url;
+              })
+              .catch((e) => {
+                console.log("(Person) Error getting Professional Picture for " + data.id)
+              }
+              );
+          }
         });
         var currentUser = allUsers.find((t) => t.id === auth.currentUser.uid);
 

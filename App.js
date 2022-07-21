@@ -113,16 +113,17 @@ function App() {
                   tempAllEvents.push(data1);
                   var timeCategory = findTimeCategory(data1.time);
                   switch (timeCategory) {
+                    case -1:
+                      tempextraEvents.push(data1);
+                      break;
                     case 0:
                       temptodayEvents.push(data1);
                       break;
                     case 1:
                       temptomorrowEvents.push(data1);
                       break;
-                    case -1: // TODO
-                      tempextraEvents.push(data1);
-                      break;
                     case 2:
+                    case -2: // TODO, -2 is past event but we still want to see it
                       tempfutureEvents.push(data1);
                       break;
                   }

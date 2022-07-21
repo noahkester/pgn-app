@@ -152,7 +152,7 @@ export function PersonPage({ route }) {
         setProfileUrlProfessional(url);
       })
       .catch((e) =>
-        console.log("(Person) Error getting Professional Picture ", e)
+        console.log("(Person) Error getting Professional Picture")
       );
     store
       .ref(`/profile-pictures/${memberData.id}_social`) //name in storage in firebase console
@@ -160,7 +160,7 @@ export function PersonPage({ route }) {
       .then((url) => {
         setProfileUrlSocial(url);
       })
-      .catch((e) => console.log("(Person) Error getting Social Picture ", e));
+      .catch((e) => console.log("(Person) Error getting Social Picture"));
     store
       .ref(`/profile-pictures/${memberData.id}_child`) //name in storage in firebase console
       .getDownloadURL()
@@ -168,7 +168,7 @@ export function PersonPage({ route }) {
         setProfileUrlChild(url);
       })
       .catch((e) =>
-        console.log("(Person) Error getting Childhood Picture ", e)
+        console.log("(Person) Error getting Childhood Picture")
       );
   }, []);
   return (

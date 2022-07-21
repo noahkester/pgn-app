@@ -25,7 +25,7 @@ Events Structure
 
 function EventImage(props) {
   return (
-    <View>
+    <View style={{marginRight: 10}}>
       <View style={styles.iconCon}>
         <Image
           source={props.icon}
@@ -64,7 +64,7 @@ function Event(props) {
     >
       <EventImage icon={icon} />
       <View style={styles.eventText}>
-        <Text style={globalStyles.smallSemiBoldText}>{props.name}</Text>
+        <Text style={[globalStyles.smallSemiBoldText, {width: 180}]}>{props.name}</Text>
         <Text style={globalStyles.smallBoldText}>{props.location}</Text>
       </View>
       <View>
@@ -137,9 +137,9 @@ export function findTimeCategory(timestamp) {
   timestamp *= 1000;
   var currentTime = Date.now();
 
-  if (timestamp == 0) {
+  if (timestamp === 0) {
     return -1;
-  } else if (timestamp > currentTime) {
+  } else if (timestamp < currentTime) {
     return -2;
   }
   var a = new Date(timestamp);
