@@ -1,5 +1,5 @@
 import { StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Text, View, Dimensions, ImageBackground, } from "react-native";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import globalStyles from "../styles/Styles";
 import { useNavigation } from "@react-navigation/native";
 import colors from "webpack-dev-server/lib/utils/colors";
@@ -7,7 +7,6 @@ import { auth, db, store } from "../utils/firebase";
 
 import LoginContext from '../utils/LoginContext';
 
-import { useContext } from "react";
 import ImageCarousel from "./components/ImageCarousel";
 import UrlContext from "../utils/UrlContext";
 
@@ -82,34 +81,16 @@ function AccountInput(props) {
     <View style={styles.accountInput}>
       <Text style={globalStyles.smallSemiBoldText}>{props.label}</Text>
       <TextInput
-        style={[
-          styles.accountTextInput,
-          globalStyles.cardContainer,
-          globalStyles.smallSemiBoldText,
-        ]}
-      >
-        {props.input}
-      </TextInput>
+        style={[styles.accountTextInput, globalStyles.cardContainer, globalStyles.smallSemiBoldText,]}
+        onChangeText={(text) => {
+          props.setValue(text);
+        }}
+        defaultValue={props.input}
+      />
     </View>
   );
 }
-function AcademicInfo(props) {
-  return (
-    <View style={styles.academicSection}>
-      <AccountInput label="Major:" input={props.major} />
-      <AccountInput label="Minor:" input={props.minor} />
-    </View>
-  );
-}
-function ContactInfo(props) {
-  return (
-    <View style={styles.academicSection}>
-      <AccountInput label="Email:" input={props.email} />
-      <AccountInput label="Phone:" input={props.number} />
-      <AccountInput label="LinkedIn:" input={props.linkedin} />
-    </View>
-  );
-}
+
 function SaveButton(props) {
   const navigation = useNavigation();
   return (
@@ -177,6 +158,31 @@ function PledgeClass(props) {
 export function AccountPage() {
   const loginContext = useContext(LoginContext);
   const curUser = loginContext.currentUser;
+  const [major, setMajor] = useState(curUser.major);
+  const [minor, setMinor] = useState(curUser.minor);
+
+  const [email, setEmail] = useState(curUser.email);
+  const [phone, setPhone] = useState(curUser.phone);
+  const [linkedin, setLinkedin] = useState(curUser.linkedin);
+
+  const [changed, setChanged] = useState(false);
+
+  useEffect(() => {
+    //setChanged(true);
+    if (curUser.major !== major ||
+      curUser.minor !== minor ||
+      curUser.email !== email ||
+      curUser.phone !== phone ||
+      curUser.linkedin !== linkedin
+    ) {
+      console.log('changed to true');
+      setChanged(true);
+    }
+    else {
+      console.log('changed to false');
+      setChanged(false);
+    }
+  }, [major, minor, email, phone, linkedin]);
 
   return (
     <View style={styles.createAccountScreen}>
@@ -189,10 +195,18 @@ export function AccountPage() {
           <Profile />
           <Description description={curUser.bio} />
           <Chapter chapter={curUser.chapter} />
-          <PledgeClass pledgeClass={curUser.pledgeClass} status={curUser.status} />
-          <AcademicInfo major={curUser.major} minor={curUser.minor} />
-          <ContactInfo email={curUser.email} number={curUser.phone} linkedin={curUser.linkedin} />
-          <SaveButton />
+          <PledgeClass
+            pledgeClass={curUser.pledgeClass}
+            status={curUser.status}
+          />
+          <AccountInput label="Major:" input={major} setValue={setMajor} />
+          <AccountInput label="Minor:" input={minor} />
+
+          <AccountInput label="Email:" input={email} />
+          <AccountInput label="Phone:" input={phone} />
+          <AccountInput label="LinkedIn:" input={linkedin} />
+          <Text>{'test:' + changed}</Text>
+          {changed && <SaveButton />}
           <SignOutButton />
         </View>
       </ScrollView>
@@ -274,7 +288,7 @@ const styles = StyleSheet.create({
     width: "80%",
   },
   accountInput: {
-    width: "100%",
+    width: "90%",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",

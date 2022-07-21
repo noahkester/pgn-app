@@ -4,10 +4,8 @@ import { StyleSheet, TouchableOpacity, Text, Image, View } from "react-native";
 import colors from "../styles/Colors";
 import { useNavigation } from '@react-navigation/native';
 import { auth, db } from "../utils/firebase";
-import { useEffect, useState } from "react";
-
-const points = [3, 3, 6];
-const totalPoints = [4, 6, 6];
+import { useEffect, useState, useContext } from "react";
+import LoginContext from "../utils/LoginContext";
 
 export function SubmitPoints(props) {
   const navigation = useNavigation();
@@ -43,7 +41,8 @@ function PointImage(props) {
   );
 }
 function PointBar(props) {
-  var percent = (props.points / props.total) * 100 + "%";
+  var dec = (props.total == 0 || props.points / props.total > 1) ? 1 : props.points / props.total;
+  var percent = dec * 100 + "%";
   var color;
   if (props.title === "Philanthropy") {
     color = colors.maroon;
@@ -100,70 +99,28 @@ function PointDisplay(props) {
     </View>
   );
 }
-const accountInfo = {
-  name: "Noah Kester",
-  bio: "This is my bio",
-  linkedin: "https://thisisalink",
-  email: "noah@gmail.com",
-  number: "123-456-7890",
-  image: "",
-  pledgeClass: "Spring 2022",
-  status: "Active",
-  major: "Computer Science",
-};
-export function HomePage() {
-  const [philanthropyPoints, setPhilanthropyPoints] = useState(0);
-  const [socialPoints, setSocialPoints] = useState(0);
-  const [professionalPoints, setProfessionalPoints] = useState(0);
-  //error
-  const [totalPhilanthropyPoints, setTotalPhilanthropyPoints] = useState(3);
-  const [totalSocialPoints, setTotalSocialPoints] = useState(3);
-  const [totalProfessionalPoints, setTotalProfessionalPoints] = useState(3);
-  const navigation = useNavigation();
 
-  useEffect(() => {
-    db.collection("users")
-      .doc(auth.currentUser.uid)
-      .get()
-      .then((doc) => {
-        const data = doc.data();
-        setPhilanthropyPoints(data.philanthropyPoints);
-        setProfessionalPoints(data.professionalPoints);
-        setSocialPoints(data.socialPoints);
-        const status = data.status;
-        db.collection("admin-settings")
-          .doc("points")
-          .get()
-          .then((doc1) => {
-            const data1 = doc1.data();
-            switch (status) {
-              case "pledge":
-                setTotalPhilanthropyPoints(data1.pledgePhilanthropyPoints);
-                setTotalProfessionalPoints(data1.pledgeProfessionalPoints);
-                setTotalSocialPoints(data1.pledgeSocialPoints);
-                break;
-              case "active":
-                setTotalPhilanthropyPoints(data1.activePhilanthropyPoints);
-                setTotalProfessionalPoints(data1.activeProfessionalPoints);
-                setTotalSocialPoints(data1.activeSocialPoints);
-                break;
-              case "inactive":
-                setTotalPhilanthropyPoints(0);
-                setTotalProfessionalPoints(0);
-                setTotalSocialPoints(0);
-                break;
-              case "suspended":
-                //navigation.navigate("Suspeneded"); Screen for people who are suspended error message
-                // and locks them from the app TODO
-                break;
-            }
-          }).catch((error) => {
-            console.log("(Home) Error: Could not get admin points document");
-          })
-      }).catch((error) => {
-        console.log("(Home) Error: getting events documents: ", error);
-      });
-  }, [])
+export function HomePage() {
+  const navigation = useNavigation();
+  const loginContext = useContext(LoginContext);
+
+  var totalPhilanthropyPoints = 0;
+  var totalSocialPoints = 0;
+  var totalProfessionalPoints = 0;
+  switch(loginContext.currentUser.status) {
+    case 'active':
+      totalPhilanthropyPoints = 3;
+      totalSocialPoints = 3;
+      totalProfessionalPoints = 3;
+      break;
+    case 'pledge':
+      totalPhilanthropyPoints = 6;
+      totalSocialPoints = 6;
+      totalProfessionalPoints = 6;
+      break;
+    case 'inactive':
+      console.log("(Home) Error, inactive user, log out or send alert");
+  }
   return (
     <View style={styles.homeScreen}>
       <View style={{
@@ -171,9 +128,9 @@ export function HomePage() {
       }}
       />
       <PointDisplay
-        philanthropyPoints={philanthropyPoints}
-        socialPoints={socialPoints}
-        professionalPoints={professionalPoints}
+        philanthropyPoints={loginContext.currentUser.philanthropyPoints}
+        socialPoints={loginContext.currentUser.socialPoints}
+        professionalPoints={loginContext.currentUser.professionalPoints}
 
         totalPhilanthropyPoints={totalPhilanthropyPoints}
         totalSocialPoints={totalSocialPoints}

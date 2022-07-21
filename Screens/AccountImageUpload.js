@@ -6,6 +6,7 @@ import { AccountTop } from "./Account";
 import * as ImagePicker from "expo-image-picker";
 import { store, auth } from "../utils/firebase";
 
+
 function ImageUpload(props) {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [image, setImage] = useState(require("../images/imageUpload.png"));
