@@ -12,7 +12,7 @@ import globalStyles from "../../styles/Styles";
 import { NextButton } from "./NewUser";
 import React, { useState, useEffect } from "react";
 import { store, auth } from "../../utils/firebase";
-
+import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from "expo-image-picker";
 
 function ImageUpload(props) {
@@ -39,8 +39,16 @@ function ImageUpload(props) {
     });
 
     if (!result.cancelled) {
-      setImage(result);
-      uploadImage(result.uri, auth.currentUser.uid + "_" + props.type)
+      // Resize image here
+      const resizedResult = await ImageManipulator.manipulateAsync(
+        result.uri,
+        [{ resize: { width: 200 } }], // resize to width of 300 and preserve aspect ratio 
+        { format: 'jpeg' },
+      );
+      //======
+
+      setImage(resizedResult);
+      uploadImage(resizedResult.uri, auth.currentUser.uid + "_" + props.type)
         .then(() => {
           Alert.alert("Success!");
         })

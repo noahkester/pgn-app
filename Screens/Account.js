@@ -90,12 +90,14 @@ function AccountInput(props) {
     </View>
   );
 }
-
 function SaveButton(props) {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate("Navigation")}
+      onPress={() => {
+        navigation.navigate("Navigation");
+        props.onPress();
+      }}
       title={"Save and Exit"}
       style={[
         globalStyles.universityColorFill,
@@ -156,10 +158,12 @@ function PledgeClass(props) {
 }
 
 export function AccountPage() {
+
   const loginContext = useContext(LoginContext);
   const curUser = loginContext.currentUser;
   const [major, setMajor] = useState(curUser.major);
   const [minor, setMinor] = useState(curUser.minor);
+  const [activities, setActivities] = useState(curUser.activities.toString());
 
   const [email, setEmail] = useState(curUser.email);
   const [phone, setPhone] = useState(curUser.phone);
@@ -168,22 +172,65 @@ export function AccountPage() {
   const [changed, setChanged] = useState(false);
 
   useEffect(() => {
-    //setChanged(true);
+    setChanged(!changed);
     if (curUser.major !== major ||
       curUser.minor !== minor ||
+      curUser.activities.toString() !== activities ||
       curUser.email !== email ||
       curUser.phone !== phone ||
       curUser.linkedin !== linkedin
     ) {
-      console.log('changed to true');
       setChanged(true);
     }
     else {
-      console.log('changed to false');
       setChanged(false);
     }
   }, [major, minor, email, phone, linkedin]);
 
+  const updateProfile = () => {
+    const newInfo = {
+      id: curUser.id,
+      firstname: curUser.firstname,
+      lastname: curUser.lastname,
+      chapter: curUser.chapter,
+      pledgeClass: curUser.pledgeClass,
+
+      major: major,
+      minor: minor,
+
+      status: curUser.status,
+
+      activities: activities.split(', '),
+      bio: curUser.bio,
+
+      email: email,
+      linkedin: linkedin,
+      phone: phone,
+
+      philanthropyPoints: curUser.philanthropyPoints,
+      professionalPoints: curUser.professionalPoints,
+      socialPoints: curUser.socialPoints,
+      submittedPoints: curUser.submittedPoints,
+    }
+
+    db.collection("users")
+      .doc(auth.currentUser.uid)
+      .set(newInfo)
+      .then(() => {
+        console.log("(Account) New user Information successfully written!");
+        // Update useContext for LoginContext
+        loginContext.currentUser = test
+        db.collection("users")
+          .doc(auth.currentUser.uid)
+          .get()
+          .then((doc) => {
+            loginContext.currentUser = doc.data();
+          });
+      })
+      .catch((error) => {
+        console.error("(Account) Error writing document: ", error);
+      });
+  }
   return (
     <View style={styles.createAccountScreen}>
       <View style={styles.navBar}>
@@ -200,13 +247,12 @@ export function AccountPage() {
             status={curUser.status}
           />
           <AccountInput label="Major:" input={major} setValue={setMajor} />
-          <AccountInput label="Minor:" input={minor} />
-
-          <AccountInput label="Email:" input={email} />
-          <AccountInput label="Phone:" input={phone} />
-          <AccountInput label="LinkedIn:" input={linkedin} />
-          <Text>{'test:' + changed}</Text>
-          {changed && <SaveButton />}
+          <AccountInput label="Minor:" input={minor} setValue={setMinor} />
+          <AccountInput label="Activities:" input={activities} setValue={setActivities} />
+          <AccountInput label="Email:" input={email} setValue={setEmail} />
+          <AccountInput label="Phone:" input={phone} setValue={setPhone} />
+          <AccountInput label="LinkedIn:" input={linkedin} setValue={setLinkedin} />
+          {changed ? <SaveButton onPress={updateProfile} /> : null}
           <SignOutButton />
         </View>
       </ScrollView>

@@ -146,8 +146,8 @@ export function PeoplePage() {
 
   useEffect(() => {
     setSection(
-      filteredDataSource.map((people) => {
-        return <People data={people} profMap={profileMap} />;
+      filteredDataSource.map((people, index) => {
+        return <People key={index} data={people} profMap={profileMap} />;
       })
     );
   }, [filteredDataSource]);

@@ -5,7 +5,6 @@ import { useFonts, Poppins_600SemiBold, Poppins_700Bold } from "@expo-google-fon
 import { useNavigation, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
-
 // Screens and Page imports
 import { LoginSignupPage } from "./Screens/loginSignup/LoginSignup";
 import { LoginPage } from "./Screens/loginSignup/Login";
@@ -142,7 +141,6 @@ function App() {
               .then((url) => {
                 professionalUrl.current = url;
                 // Only the professional url is required
-                setAppIsReady(true);
                 console.log("(app.js) Successfully got professional picture");
               })
               .catch((e) =>
@@ -168,6 +166,7 @@ function App() {
               .catch((e) =>
                 console.log("(app.js) Errors while getting funny picture ")
               );
+            setAppIsReady(true);
           });
       } else {
         //TODO Do fetch calls for admin.js
@@ -216,10 +215,10 @@ function App() {
           }}
         >
           <Stack.Screen name="Navigation" component={NavigationPage} />
-          <Stack.Screen name="Account" children={AccountPage} />
+          <Stack.Screen name="Account" component={AccountPage} />
           <Stack.Screen name="AccountImageUpload" component={AccountImageUploadPage} />
-          <Stack.Screen name="Submit" children={SubmitPage} />
-          <Stack.Screen name="Person" children={PersonPage} />
+          <Stack.Screen name="Submit" component={SubmitPage} />
+          <Stack.Screen name="Person" component={PersonPage} />
         </Stack.Navigator>
       )
     }
@@ -228,11 +227,10 @@ function App() {
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
-
           gestureEnabled: true,
         }}
       >
-        <Stack.Screen name="LoginSignup" children={LoginSignupPage} />
+        <Stack.Screen name="LoginSignup" component={LoginSignupPage} />
         <Stack.Screen name="Login" component={LoginPage} />
         <Stack.Screen name="CreateAccount" component={CreateAccountPage} />
 

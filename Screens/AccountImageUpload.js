@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 import { AccountTop } from "./Account";
 import * as ImagePicker from "expo-image-picker";
 import { store, auth } from "../utils/firebase";
-
+import * as ImageManipulator from 'expo-image-manipulator';
 
 function ImageUpload(props) {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
@@ -31,8 +31,14 @@ function ImageUpload(props) {
     });
 
     if (!result.cancelled) {
-      setImage(result);
-      uploadImage(result.uri, auth.currentUser.uid + "_" + props.type)
+      const resizedResult = await ImageManipulator.manipulateAsync(
+        result.uri,
+        [{ resize: { width: 200 } }], // resize to width of 300 and preserve aspect ratio 
+        { format: 'jpeg' },
+      );
+
+      setImage(resizedResult);
+      uploadImage(resizedResult.uri, auth.currentUser.uid + "_" + props.type)
         .then(() => {
           Alert.alert("(AccountImageUpload) Success!");
         })
