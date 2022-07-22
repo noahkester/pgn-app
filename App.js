@@ -140,12 +140,14 @@ function App() {
               .getDownloadURL()
               .then((url) => {
                 professionalUrl.current = url;
+                setAppIsReady(true);
                 // Only the professional url is required
                 console.log("(app.js) Successfully got professional picture");
               })
-              .catch((e) =>
+              .catch((e) => {
+                setAppIsReady(true);
                 console.log("(app.js) Errors while getting professional picture ")
-              );
+              });
             store
               .ref(`/profile-pictures/${auth.currentUser.uid}_social`) //name in storage in firebase console
               .getDownloadURL()
@@ -166,7 +168,6 @@ function App() {
               .catch((e) =>
                 console.log("(app.js) Errors while getting funny picture ")
               );
-            setAppIsReady(true);
           });
       } else {
         //TODO Do fetch calls for admin.js

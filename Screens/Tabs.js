@@ -23,7 +23,6 @@ export function TopBar(props) {
   const urlContext = useContext(UrlContext);
   const currentUser = loginContext.currentUser;
   const profileUrl = urlContext.professionalUrl;
-
   return (
     <View style={styles.topBar}>
       <Profile

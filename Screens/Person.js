@@ -10,10 +10,9 @@ import {
 import React, { useEffect, useState } from "react";
 import globalStyles from "../styles/Styles";
 import { useNavigation } from "@react-navigation/native";
-import colors from "webpack-dev-server/lib/utils/colors";
 import { auth, db, store } from "../utils/firebase";
 import ImageCarousel from "./components/ImageCarousel";
-
+import { findRoleColor, findRoleBorder } from '../styles/Colors'
 /*
 Backend Stuff TODO:
 
@@ -165,6 +164,11 @@ export function PersonPage({ route }) {
             profileUrlSocial={profileUrlSocial}
             profileUrlFunny={profileUrlFunny}
           />
+          {(memberData.role !== '') &&
+            <View style={{ backgroundColor: findRoleColor(memberData.role), borderWidth: 3, borderColor: findRoleBorder(memberData.role), paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, borderRadius: 100 }}>
+              <Text style={{ color: '#FFFFFF', fontFamily: 'Poppins_600SemiBold' }}>{memberData.role}</Text>
+            </View>
+          }
           <Description description={memberData.bio} />
           <Chapter chapter={memberData.chapter} />
           <PledgeClass pledgeClass={memberData.pledgeClass} status={memberData.status} />

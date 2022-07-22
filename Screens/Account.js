@@ -4,7 +4,7 @@ import globalStyles from "../styles/Styles";
 import { useNavigation } from "@react-navigation/native";
 import colors from "webpack-dev-server/lib/utils/colors";
 import { auth, db, store } from "../utils/firebase";
-
+import { findRoleBorder, findRoleColor } from "../styles/Colors"
 import LoginContext from '../utils/LoginContext';
 
 import ImageCarousel from "./components/ImageCarousel";
@@ -242,6 +242,11 @@ export function AccountPage() {
       <ScrollView style={{ width: "100%" }}>
         <View style={{ alignItems: "center" }}>
           <Profile />
+          { (curUser.role !== '') &&
+            <View style={{ backgroundColor: findRoleColor(curUser.role), borderWidth: 3, borderColor: findRoleBorder(curUser.role), paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, borderRadius: 100 }}>
+              <Text style={{ color: '#FFFFFF', fontFamily: 'Poppins_600SemiBold' }}>{curUser.role}</Text>
+            </View>
+          }
           <Description description={bio} setValue={setBio} />
           <Chapter chapter={curUser.chapter} />
           <PledgeClass

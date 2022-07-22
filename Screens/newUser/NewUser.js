@@ -21,6 +21,7 @@ var newUser = {
   minor: "",
 
   status: "",
+  role: "",
 
   activities: [],
   bio: "",
@@ -49,6 +50,7 @@ function updateName(firstname, lastname) {
         const data = doc.data();
         newUser.status = data.status;
         newUser.pledgeClass = data.pledgeClass;
+        newUser.role = data.role;
         console.log("(NewUser) Found user and updated pledgeClass and status");
       })
       .catch((error) => {

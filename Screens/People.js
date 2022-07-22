@@ -1,22 +1,12 @@
-import {
-  StyleSheet,
-  Button,
-  TouchableOpacity,
-  TouchableHighlight,
-  Text,
-  TouchableWithoutFeedback,
-  TextInput,
-  Image,
-  View,
-  ScrollView,
-  Keyboard,
-} from "react-native";
+import { StyleSheet, Button, TouchableOpacity, TouchableHighlight, Text, TouchableWithoutFeedback, TextInput, Image, View, ScrollView, Keyboard, } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
 import globalStyles from "../styles/Styles";
 import { SearchBar } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { db, auth, store } from "../utils/firebase";
 import Checkbox from "expo-checkbox";
+import { findRoleColor, findRoleBorder } from '../styles/Colors';
+
 
 function PeopleImage(props) {
   // TODO Add images
@@ -52,9 +42,9 @@ function PeopleSection(props) {
     </View>
   );
 }
+
 function People(props) {
   const navigation = useNavigation();
-
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate("Person", { memberData: props.data })}
@@ -68,9 +58,20 @@ function People(props) {
       >
         <PeopleImage uri={props.profMap[props.data.id]} />
         <View style={styles.peopleText}>
-          <Text style={globalStyles.smallSemiBoldText}>
-            {props.data.firstname + " " + props.data.lastname}
-          </Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+            <View style={{ alignItems: 'baseline' }}>
+              <Text style={[globalStyles.smallSemiBoldText, { marginRight: 10 }]}>
+                {props.data.firstname + " " + props.data.lastname}
+              </Text>
+            </View>
+            {props.data.role &&
+              <View style={{ alignItems: 'baseline', backgroundColor: findRoleColor(props.data.role), borderRadius: 100, borderWidth: 2, borderColor: findRoleBorder(props.data.role), paddingLeft: 12, paddingRight: 12, height: 20, justifyContent: 'center' }}>
+                <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 10, color: '#FFFFFF' }}>
+                  {props.data.role}
+                </Text>
+              </View>
+            }
+          </View>
           <Text style={globalStyles.tinySemiBoldText}>
             {'"' + props.data.bio + '"'}
           </Text>
