@@ -149,7 +149,7 @@ export function LoginPage() {
     await auth
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        console.log("sign in successfull");
+        console.log("\n(Login) Sign in Successful!\n");
         success = true;
       })
       .catch((error) => {

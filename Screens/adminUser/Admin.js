@@ -3,7 +3,7 @@ import { AccountTop } from "../Account";
 import { useNavigation } from '@react-navigation/native';
 import globalStyles from "../../styles/Styles"
 import { PGNImage } from "../Tabs"
-import { db } from "../../utils/firebase";
+import { db, store } from "../../utils/firebase";
 import React, { useEffect, useState } from "react";
 
 // const pointsQueue = [
@@ -121,40 +121,55 @@ function AdminBottom(props) {
     )
 }
 function PointSheet(props) {
+    const [imageUri, setImageUri] = useState('');
+    useEffect(() => {
+        store
+            .ref(`/points/${props.image}`) //name in storage in firebase console
+            .getDownloadURL()
+            .then((url) => {
+                console.log(url);
+                setImageUri(url);
+                console.log("(admin.js) Successfully got point image " + props.image);
+            })
+            .catch((e) => {
+                console.log("(admin.js) Errors while getting " + props.image);
+            });
+    }, [])
     return (
         <View style={styles.pointSheet}>
             <View style={styles.space}></View>
             <View style={styles.pointTextLine}>
-                <Text style={globalStyles.largeSemiBoldText}>Name: </Text>
                 <Text style={globalStyles.largeSemiBoldText}>{props.name}</Text>
             </View>
             <View style={styles.pointTextLine}>
-                <Text style={globalStyles.largeSemiBoldText}>PC: </Text>
-                <Text style={globalStyles.largeSemiBoldText}>{props.pledgeClass}</Text>
+                <Text style={globalStyles.largeSemiBoldText}>{props.label}</Text>
             </View>
             <View style={styles.space}></View>
             <Text style={globalStyles.largeSemiBoldText}>{props.event}</Text>
             <Image
-                source={require("../../images/pgn.png")}
+                source={(imageUri == '') ? require("../../images/unknown-image.png") : { uri: imageUri }}
                 resizeMode="contain"
                 style={styles.pointImage}
             />
-            <Text style={globalStyles.largeSemiBoldText}>{props.description}</Text>
+            <Text style={globalStyles.largeSemiBoldText}>{props.proof}</Text>
         </View>
     )
 }
 function PointsQueue(props) {
-
-    const points = props.pointsQue.map((point) =>
-        <PointSheet
-            name={point.name}
-            pledgeClass={point.pledgeClass}
-            event={point.event}
-            image={point.image}
-            description={point.description}
-        />
+    const points = props.pointsQueue.map((point) => {
+        console.log(point);
+        return (
+            <PointSheet
+                name={point.name}
+                label={point.label}
+                event={point.event}
+                image={point.id + "_" + point.label}
+                proof={point.proof}
+            />);
+    }
     )
-    if (props.queueIndex >= props.pointsQue.length) {
+    //console.log('(Admin) Points queue: ' + JSON.stringify(points[2]));
+    if (props.queueIndex >= props.pointsQueue.length) {
         return (
             <View style={styles.pointQueue}>
                 <DoneImage />
@@ -168,26 +183,25 @@ function PointsQueue(props) {
     )
 }
 export function AdminPage(props) {
-    const [pointsQue, setPointsQue] = useState([]);
+    const [pointsQueue, setPointsQueue] = useState([]);
     //fetch data
     useEffect(() => {
-        var tempQue = [];
+        var tempQueue = [];
         db.collection("points-queue")
             .get()
             .then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
-                    tempQue.push(doc);
+                    tempQueue.push(doc.data());
                 })
-                setPointsQue(tempQue);
+                setPointsQueue(tempQueue);
             })
-    });
-    //console.log(JSON.stringify(pointsQue));
+    }, []);
     const [queueIndex, setQueueIndex] = useState(0);
     return (
         <View style={styles.adminScreen}>
             <AdminTop />
-            <Text style={globalStyles.largeSemiBoldText}>Remaining Points: {pointsQue.length - queueIndex}</Text>
-            <PointsQueue queueIndex={queueIndex} pointsQue={pointsQue} />
+            <Text style={globalStyles.largeSemiBoldText}>Remaining Points: {pointsQueue.length - queueIndex}</Text>
+            <PointsQueue queueIndex={queueIndex} pointsQueue={pointsQueue} />
             <AdminBottom index={queueIndex} customOnPress={setQueueIndex} />
         </View>
     )
