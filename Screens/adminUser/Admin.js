@@ -121,54 +121,53 @@ function AdminBottom(props) {
     )
 }
 function PointSheet(props) {
-    const [imageUri, setImageUri] = useState('');
-    useEffect(() => {
-        store
-            .ref(`/points/${props.image}`) //name in storage in firebase console
-            .getDownloadURL()
-            .then((url) => {
-                console.log(url);
-                setImageUri(url);
-                console.log("(admin.js) Successfully got point image " + props.image);
-            })
-            .catch((e) => {
-                console.log("(admin.js) Errors while getting " + props.image);
-            });
-    }, [])
+    if (Object.keys(props.data).length === 0) {
+        return (<View></View>)
+    }
     return (
         <View style={styles.pointSheet}>
             <View style={styles.space}></View>
             <View style={styles.pointTextLine}>
-                <Text style={globalStyles.largeSemiBoldText}>{props.name}</Text>
+                <Text style={globalStyles.largeSemiBoldText}>{props.data.name}</Text>
             </View>
             <View style={styles.pointTextLine}>
-                <Text style={globalStyles.largeSemiBoldText}>{props.label}</Text>
+                <Text style={globalStyles.largeSemiBoldText}>{props.data.label}</Text>
             </View>
             <View style={styles.space}></View>
-            <Text style={globalStyles.largeSemiBoldText}>{props.event}</Text>
             <Image
-                source={(imageUri == '') ? require("../../images/unknown-image.png") : { uri: imageUri }}
+                source={(props.image == '') ? require("../../images/unknown-image.png") : { uri: props.image }}
                 resizeMode="contain"
                 style={styles.pointImage}
             />
-            <Text style={globalStyles.largeSemiBoldText}>{props.proof}</Text>
+            <Text style={globalStyles.largeSemiBoldText}>{props.data.proof}</Text>
         </View>
     )
 }
 function PointsQueue(props) {
-    const points = props.pointsQueue.map((point) => {
-        console.log(point);
-        return (
-            <PointSheet
-                name={point.name}
-                label={point.label}
-                event={point.event}
-                image={point.id + "_" + point.label}
-                proof={point.proof}
-            />);
-    }
-    )
+    const [image, setImage] = useState('');
     //console.log('(Admin) Points queue: ' + JSON.stringify(points[2]));
+    const [point, setPoint] = useState({});
+    useEffect(() => {
+        if (props.pointsQueue[props.queueIndex] != null) {
+            setPoint(props.pointsQueue[props.queueIndex]);
+        }
+    }, [props.pointsQueue])
+
+    useEffect(() => {
+        if (!Object.keys(point).length === 0) {
+            store
+                .ref(`/points/${point.id + '_' + point.label}`) //name in storage in firebase console
+                .getDownloadURL()
+                .then((url) => {
+                    setImage(url);
+                    console.log("(point-queue) Successfully got point image");
+                })
+                .catch((e) =>
+                    console.log("(point-queue) Errors while getting point image")
+                );
+        }
+    }, [point]);
+
     if (props.queueIndex >= props.pointsQueue.length) {
         return (
             <View style={styles.pointQueue}>
@@ -178,12 +177,21 @@ function PointsQueue(props) {
     }
     return (
         <View style={styles.pointQueue}>
-            {points[props.queueIndex]}
+            <PointSheet
+                name={point.name}
+                label={point.label}
+                event={point.event}
+                image={image}
+                proof={point.proof}
+            />
         </View>
     )
 }
 export function AdminPage(props) {
-    const [pointsQueue, setPointsQueue] = useState([]);
+    const [queue, setQueue] = useState([]);
+    const [queueIndex, setQueueIndex] = useState(0);
+    const [currentPoint, setCurrentPoint] = useState({});
+    const [currentImage, setCurrentImage] = useState('');
     //fetch data
     useEffect(() => {
         var tempQueue = [];
@@ -193,15 +201,40 @@ export function AdminPage(props) {
                 querySnapshot.forEach((doc) => {
                     tempQueue.push(doc.data());
                 })
-                setPointsQueue(tempQueue);
+                setQueue(tempQueue);
             })
     }, []);
-    const [queueIndex, setQueueIndex] = useState(0);
+    useEffect(() => {
+        if (queue.length > 0) {
+            setCurrentPoint(queue[queueIndex]);
+        }
+    }, [queue, queueIndex])
+    useEffect(() => {
+        if (Object.keys(currentPoint).length === 0) {
+            return;
+        }
+        store
+            .ref(`/points/${currentPoint.id + '_' + currentPoint.label}`) //name in storage in firebase console
+            .getDownloadURL()
+            .then((url) => {
+                setCurrentImage(url);
+                console.log("(point-queue) Successfully got point image");
+            })
+            .catch((e) =>
+                console.log("(point-queue) Errors while getting point image")
+            );
+    }, [currentPoint])
+
     return (
         <View style={styles.adminScreen}>
             <AdminTop />
-            <Text style={globalStyles.largeSemiBoldText}>Remaining Points: {pointsQueue.length - queueIndex}</Text>
-            <PointsQueue queueIndex={queueIndex} pointsQueue={pointsQueue} />
+            <Text style={globalStyles.largeSemiBoldText}>Remaining Points: {queue.length - queueIndex}</Text>
+            <View style={styles.pointQueue}>
+                <PointSheet
+                    data={currentPoint}
+                    image={currentImage}
+                />
+            </View>
             <AdminBottom index={queueIndex} customOnPress={setQueueIndex} />
         </View>
     )
