@@ -79,8 +79,6 @@ function PointDisplay(props) {
   [test, setTest] = useState(0);
   return (
     <View style={styles.points}>
-      <TouchableOpacity onPress={() => { setTest(test + 1) }}><Text>Click</Text></TouchableOpacity>
-      <Text>{test}</Text>
       <PointCard
         title="Philanthropy"
         points={props.philanthropyPoints}

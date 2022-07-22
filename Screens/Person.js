@@ -43,7 +43,7 @@ function Profile(props) {
       data={[
         { uri: props.profileUrlProfessional },
         { uri: props.profileUrlSocial },
-        { uri: props.profileUrlChild },
+        { uri: props.profileUrlFunny },
       ]}
     />
   );
@@ -120,31 +120,12 @@ function PledgeClass(props) {
 }
 
 export function PersonPage({ route }) {
-  const [name, setName] = useState("Firstname, Lastname");
-  const [profileUrlProfessional, setProfileUrlProfessional] = useState("");
-  const [profileUrlSocial, setProfileUrlSocial] = useState("");
-  const [profileUrlChild, setProfileUrlChild] = useState("");
-  const [bio, setBio] = useState("");
-  const [pledgeClass, setPledgeClass] = useState("");
-  const [status, setStatus] = useState("");
-  const [major, setMajor] = useState("");
-  const [minor, setMinor] = useState("");
-  const [email, setEmail] = useState("");
-  const [linkedin, setLinkedin] = useState("");
-  const [phone, setPhone] = useState("");
-  const [chapter, setChapter] = useState("");
   const { memberData } = route.params;
+  const [profileUrlProfessional, setProfileUrlProfessional] = useState('https://www.iowagcsa.org/resources/Pictures/Member-Login-Icon.png');
+  const [profileUrlSocial, setProfileUrlSocial] = useState('https://www.iowagcsa.org/resources/Pictures/Member-Login-Icon.png');
+  const [profileUrlFunny, setProfileUrlFunny] = useState('https://www.iowagcsa.org/resources/Pictures/Member-Login-Icon.png');
+
   useEffect(() => {
-    setName(memberData.firstname + " " + memberData.lastname);
-    setBio(memberData.bio);
-    setPledgeClass(memberData.pledgeClass);
-    setStatus(memberData.status);
-    setMajor(memberData.major);
-    setMinor(memberData.minor);
-    setEmail(memberData.email);
-    setLinkedin(memberData.linkedin);
-    setPhone(memberData.phone);
-    setChapter(memberData.chapter);
     store
       .ref(`/profile-pictures/${memberData.id}_professional`) //name in storage in firebase console
       .getDownloadURL()
@@ -162,33 +143,33 @@ export function PersonPage({ route }) {
       })
       .catch((e) => console.log("(Person) Error getting Social Picture"));
     store
-      .ref(`/profile-pictures/${memberData.id}_child`) //name in storage in firebase console
+      .ref(`/profile-pictures/${memberData.id}_funny`) //name in storage in firebase console
       .getDownloadURL()
       .then((url) => {
-        setProfileUrlChild(url);
+        setProfileUrlFunny(url);
       })
       .catch((e) =>
-        console.log("(Person) Error getting Childhood Picture")
+        console.log("(Person) Error getting funny Picture")
       );
   }, []);
   return (
     <View style={styles.createAccountScreen}>
       <View style={styles.navBar}>
         <View></View>
-        <AccountTop name={name} address="People" />
+        <AccountTop name={memberData.firstname + " " + memberData.lastname} address="People" />
       </View>
       <ScrollView style={styles.accountInfo}>
         <View style={styles.innerScroll}>
           <Profile
             profileUrlProfessional={profileUrlProfessional}
             profileUrlSocial={profileUrlSocial}
-            profileUrlChild={profileUrlChild}
+            profileUrlFunny={profileUrlFunny}
           />
-          <Description description={bio} />
-          <Chapter chapter={chapter} />
-          <PledgeClass pledgeClass={pledgeClass} status={status} />
-          <AcademicInfo major={major} minor={minor} />
-          <ContactInfo email={email} number={phone} linkedin={linkedin} />
+          <Description description={memberData.bio} />
+          <Chapter chapter={memberData.chapter} />
+          <PledgeClass pledgeClass={memberData.pledgeClass} status={memberData.status} />
+          <AcademicInfo major={memberData.major} minor={memberData.minor} />
+          <ContactInfo email={memberData.email} number={memberData.phone} linkedin={memberData.linkedin} />
         </View>
       </ScrollView>
     </View>

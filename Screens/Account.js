@@ -21,7 +21,7 @@ export function AccountTop(props) {
       />
     </TouchableOpacity>
   ) : (
-    <View style={styles.invisiableElement}></View>
+    <View style={{ width: 60 }} />
   );
 
   return (
@@ -53,19 +53,18 @@ function Profile(props) {
 }
 
 function Description(props) {
-  var quote = props.description;
-  if (quote != "") {
-    quote = '"' + quote + '"';
-  }
   return (
     <View style={[globalStyles.cardContainer, styles.accountDescription]}>
       <TextInput
         style={globalStyles.smallSemiBoldText}
         multiline={true}
         placeholder="Quote"
-      >
-        {quote}
-      </TextInput>
+        onChangeText={(text) => {
+          props.setValue(text.substring(1, text.length - 1));
+        }}
+        defaultValue={"\"" + props.description + "\""}
+      />
+
     </View>
   );
 }
@@ -81,12 +80,24 @@ function AccountInput(props) {
     <View style={styles.accountInput}>
       <Text style={globalStyles.smallSemiBoldText}>{props.label}</Text>
       <TextInput
-        style={[styles.accountTextInput, globalStyles.cardContainer, globalStyles.smallSemiBoldText,]}
+        style={[{ width: "70%" }, globalStyles.cardContainer, globalStyles.smallSemiBoldText,]}
         onChangeText={(text) => {
           props.setValue(text);
         }}
         defaultValue={props.input}
       />
+    </View>
+  );
+}
+function PledgeClass(props) {
+  return (
+    <View style={{ flexDirection: "row", justifyContent: "space-between", width: "80%", paddingTop: 20 }}>
+      <Text style={globalStyles.smallSemiBoldText}>
+        {"PC " + props.pledgeClass}
+      </Text>
+      <Text style={globalStyles.smallSemiBoldText}>
+        {"Status: " + props.status}
+      </Text>
     </View>
   );
 }
@@ -102,7 +113,7 @@ function SaveButton(props) {
       style={[
         globalStyles.universityColorFill,
         globalStyles.button,
-        styles.saveButton,
+        { marginTop: 40 },
       ]}
     >
       <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>
@@ -135,7 +146,7 @@ export function SignOutButton(props) {
       style={[
         globalStyles.universityColorFill,
         globalStyles.button,
-        styles.signoutButton,
+        { marginTop: 10, marginBottom: 50 },
       ]}
     >
       <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>
@@ -144,23 +155,12 @@ export function SignOutButton(props) {
     </TouchableOpacity>
   );
 }
-function PledgeClass(props) {
-  return (
-    <View style={styles.pledgeClass}>
-      <Text style={globalStyles.smallSemiBoldText}>
-        {"PC " + props.pledgeClass}
-      </Text>
-      <Text style={globalStyles.smallSemiBoldText}>
-        {"Status: " + props.status}
-      </Text>
-    </View>
-  );
-}
 
 export function AccountPage() {
 
   const loginContext = useContext(LoginContext);
   const curUser = loginContext.currentUser;
+  const [bio, setBio] = useState(curUser.bio);
   const [major, setMajor] = useState(curUser.major);
   const [minor, setMinor] = useState(curUser.minor);
   const [activities, setActivities] = useState(curUser.activities.toString());
@@ -173,7 +173,9 @@ export function AccountPage() {
 
   useEffect(() => {
     setChanged(!changed);
-    if (curUser.major !== major ||
+    if (
+      curUser.bio !== bio ||
+      curUser.major !== major ||
       curUser.minor !== minor ||
       curUser.activities.toString() !== activities ||
       curUser.email !== email ||
@@ -200,8 +202,8 @@ export function AccountPage() {
 
       status: curUser.status,
 
-      activities: activities.split(', '),
-      bio: curUser.bio,
+      activities: activities.split(','),
+      bio: bio,
 
       email: email,
       linkedin: linkedin,
@@ -233,14 +235,14 @@ export function AccountPage() {
   }
   return (
     <View style={styles.createAccountScreen}>
-      <View style={styles.navBar}>
+      <View style={{ height: "15%", justifyContent: "space-between", paddingBottom: 10, width: "100%", }}>
         <View></View>
         <AccountTop name={curUser.firstname + " " + curUser.lastname} address="Navigation" rightElement={true} />
       </View>
-      <ScrollView style={styles.accountInfo}>
-        <View style={styles.innerScroll}>
+      <ScrollView style={{ width: "100%" }}>
+        <View style={{ alignItems: "center" }}>
           <Profile />
-          <Description description={curUser.bio} />
+          <Description description={bio} setValue={setBio} />
           <Chapter chapter={curUser.chapter} />
           <PledgeClass
             pledgeClass={curUser.pledgeClass}
@@ -260,12 +262,6 @@ export function AccountPage() {
   );
 }
 const styles = StyleSheet.create({
-  navBar: {
-    height: "15%",
-    justifyContent: "space-between",
-    paddingBottom: 10,
-    width: "100%",
-  },
   createAccountScreen: {
     height: "100%",
     width: "100%",
@@ -273,12 +269,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "white",
   },
-  accountInfo: {
-    width: "100%",
-  },
-  innerScroll: {
-    alignItems: "center",
-  },
+
   createAccountSubScreen: {
     height: "85%",
     width: "100%",
@@ -296,9 +287,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 30,
     width: "70%",
-  },
-  section: {
-    height: 20,
   },
   accountLogo: {
     width: 60,
@@ -326,9 +314,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: "80%",
   },
-  saveButton: {
-    marginTop: 40,
-  },
   academicSection: {
     marginTop: 20,
     width: "80%",
@@ -338,21 +323,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-  },
-  accountTextInput: {
-    width: "70%",
-  },
-  invisiableElement: {
-    width: 60,
-  },
-  pledgeClass: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "80%",
-    paddingTop: 20,
-  },
-  signoutButton: {
-    marginTop: 10,
-    marginBottom: 50,
   },
 });

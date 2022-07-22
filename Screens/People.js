@@ -120,7 +120,7 @@ export function PeoplePage() {
                 profPicMap[data.id] = url;
               })
               .catch((e) => {
-                console.log("(Person) Error getting Professional Picture for " + data.id)
+                console.log("(People) Error getting Professional Picture for " + data.id)
               }
               );
           }
