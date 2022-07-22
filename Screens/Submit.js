@@ -1,14 +1,4 @@
-import {
-  StyleSheet,
-  KeyboardAvoidingView,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Text,
-  Image,
-  View,
-  TextInput,
-} from "react-native";
+import { StyleSheet, KeyboardAvoidingView, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Text, Image, View, TextInput, } from "react-native";
 import { AccountTop } from "./Account";
 import globalStyles from "../styles/Styles";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -19,6 +9,9 @@ import * as ImagePicker from "expo-image-picker";
 import * as firebase from "firebase";
 import { db, auth, store } from "../utils/firebase";
 import { useNavigation } from "@react-navigation/native";
+import SubmissionContext, { SubmissionProvider } from "../utils/SubmissionContext"
+import * as ImageManipulator from 'expo-image-manipulator';
+
 function EventsDropDown() {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
@@ -27,10 +20,11 @@ function EventsDropDown() {
   const tempItems = loginContext.allEvents;
   //TODO: filter out events after implementing submittedEvents array
   const [items, setItems] = useState(tempItems.current);
+  const submissionContext = useContext(SubmissionContext);
 
-  const typeOfEvent = useContext(NewSubmission)[1];
-  const eventName = useContext(NewSubmission)[2];
-  const eventWeight = useContext(NewSubmission)[5];
+  const typeOfEvent = submissionContext.typeOfEvent;
+  const eventName = submissionContext.eventName;
+  const eventWeight = submissionContext.eventWeight;
   return (
     //integrate tickIconStyle to each event in items
     <DropDownPicker
@@ -85,14 +79,14 @@ function EventsDropDown() {
   );
 }
 
-function CameraShot() {
+/*function CameraShot() {
   const [image, setImage] = useState(require("../images/camera.png"));
   return (
     <TouchableOpacity
       style={[styles.imageUpload, { zIndex: -1 }]}
       onPress={async () => {
         var result = await ImagePicker.launchCameraAsync();
-        //sort out
+        //TODO Camera stuff
         if (!result.cancelled) {
           setImage(result);
           imageSrc.current = result.uri;
@@ -107,11 +101,12 @@ function CameraShot() {
       <Text style={globalStyles.smallSemiBoldText}>Take a photo</Text>
     </TouchableOpacity>
   );
-}
+}*/
 function ImageUpload() {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [image, setImage] = useState(require("../images/imageUpload.png"));
-  const imageSrc = useContext(NewSubmission)[4];
+  const submissionContext = useContext(SubmissionContext);
+  const imageSrc = submissionContext.imageSrc;
   useEffect(() => {
     async () => {
       const galleryStatus =
@@ -126,8 +121,13 @@ function ImageUpload() {
     });
 
     if (!result.cancelled) {
-      setImage(result);
-      imageSrc.current = result.uri;
+      const resizedResult = await ImageManipulator.manipulateAsync(
+        result.uri,
+        [{ resize: { width: 200 } }], // resize to width of 300 and preserve aspect ratio 
+        { format: 'jpeg' },
+      );
+      setImage(resizedResult);
+      imageSrc.current = resizedResult.uri;
     }
   };
   return (
@@ -143,7 +143,9 @@ function ImageUpload() {
   );
 }
 function ProofDescription() {
-  const proofDesc = useContext(NewSubmission)[3];
+  const submissionContext = useContext(SubmissionContext);
+  const proofDesc = submissionContext.proofDesc;
+
   return (
     <View style={styles.descriptionLabel}>
       <Text style={globalStyles.smallSemiBoldText}>Proof Description:</Text>
@@ -165,12 +167,14 @@ function ProofDescription() {
 }
 
 export function SubmitPoints(props) {
-  const name = useContext(NewSubmission)[0];
-  const typeOfEvent = useContext(NewSubmission)[1];
-  const eventName = useContext(NewSubmission)[2];
-  const proofDesc = useContext(NewSubmission)[3];
-  const imageSrc = useContext(NewSubmission)[4];
-  const eventWeight = useContext(NewSubmission)[5];
+  const submissionContext = useContext(SubmissionContext);
+
+  const name = submissionContext.name;
+  const typeOfEvent = submissionContext.typeOfEvent;
+  const eventName = submissionContext.eventName;
+  const proofDesc = submissionContext.proofDesc;
+  const imageSrc = submissionContext.imageSrc;
+  const eventWeight = submissionContext.eventWeight;
 
   const navigation = useNavigation();
 
@@ -204,29 +208,21 @@ export function SubmitPoints(props) {
             }),
           })
           .then(() => {
-            console.log("SubmittedEvents should be updated");
+            console.log("(Submit) Points Submission added to user array");
             uploadSubmissionImage(imageSrc.current, auth.currentUser.uid + "_" + eventName.current);
 
             db.collection("points-queue")
-            .doc(auth.currentUser.uid + "_" + eventName.current)
-            .set({
-              label: eventName.current,
-              id: auth.currentUser.uid,
-              name: name,
-              type: typeOfEvent.current,
-              proof: proofDesc.current,
-              status: "waiting",
-              weight: eventWeight.current,
-              
-            }).then(console.log("Event submission added to events"));
-            ;
+              .doc(auth.currentUser.uid + "_" + eventName.current)
+              .set({
+                label: eventName.current,
+                id: auth.currentUser.uid,
+                name: name,
+                type: typeOfEvent.current,
+                proof: proofDesc.current,
+                status: "waiting",
+                weight: eventWeight.current,
+              }).then(console.log("(Submit) Points Submission added to waiting queue"));
           });
-
-        // console.log(name);
-        // console.log(typeOfEvent);
-        // console.log(eventName);
-        // console.log(proofDesc);
-        // console.log(imageSrc);
         navigation.navigate("Navigation");
       }}
     >
@@ -241,9 +237,7 @@ const NewSubmission = createContext();
 export function SubmitPage(props) {
   const loginContext = useContext(LoginContext);
   const name =
-    loginContext.currentUser.firstname +
-    " " +
-    loginContext.currentUser.lastname;
+    loginContext.currentUser.firstname + " " + loginContext.currentUser.lastname;
   const typeOfEvent = useRef("");
   const eventName = useRef("");
   const proofDesc = useRef("");
@@ -258,31 +252,30 @@ export function SubmitPage(props) {
             <View style={styles.submitElement}>
               <AccountTop name="Submit Points" address="Navigation" />
             </View>
-            <NewSubmission.Provider
-              value={[
-                name,
-                typeOfEvent,
-                eventName,
-                proofDesc,
-                imageSrc,
-                eventWeight,
-                ,
-              ]}
+            <SubmissionProvider
+              value={{
+                'name': name,
+                'typeOfEvent': typeOfEvent,
+                'eventName': eventName,
+                'proofDesc': proofDesc,
+                'imageSrc': imageSrc,
+                'eventWeight': eventWeight
+              }}
             >
               <View style={styles.submitElement}>
                 <View style={styles.submitEvents}>
                   <EventsDropDown />
                 </View>
                 <View style={[styles.imageOptions, { zIndex: -1 }]}>
-                  <CameraShot />
-                  <ImageUpload  type = "points/"/>
+                  {/*<CameraShot />*/}
+                  <ImageUpload type="points/" />
                 </View>
                 <ProofDescription />
               </View>
               <View style={styles.submitElement}>
                 <SubmitPoints />
               </View>
-            </NewSubmission.Provider>
+            </SubmissionProvider>
           </View>
         </TouchableWithoutFeedback>
       </View>
