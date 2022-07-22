@@ -5,6 +5,7 @@ import globalStyles from "../../styles/Styles"
 import { PGNImage } from "../Tabs"
 import { db, store } from "../../utils/firebase";
 import React, { useEffect, useState } from "react";
+import UrlContext, { UrlProvider } from "../../utils/UrlContext";
 
 // const pointsQueue = [
 //     {
@@ -92,7 +93,11 @@ function AdminTop(props) {
 }
 function AcceptButton(props) {
     return (
-        <TouchableOpacity onPress={() => props.customOnPress(props.index + 1)}>
+        <TouchableOpacity onPress={() => {
+            if (props.index < props.max) {
+                props.customOnPress(props.index + 1)
+            }
+        }}>
             <Image
                 source={require("../../images/accept.png")}
                 style={styles.bottomButton}
@@ -103,7 +108,11 @@ function AcceptButton(props) {
 }
 function RejectButton(props) {
     return (
-        <TouchableOpacity onPress={() => props.customOnPress(props.index + 1)}>
+        <TouchableOpacity onPress={() => {
+            if (props.index < props.max) {
+                props.customOnPress(props.index + 1)
+            }
+        }}>
             <Image
                 source={require("../../images/reject.png")}
                 style={styles.bottomButton}
@@ -115,8 +124,8 @@ function RejectButton(props) {
 function AdminBottom(props) {
     return (
         <View style={styles.adminBottom}>
-            <RejectButton customOnPress={props.customOnPress} index={props.index} />
-            <AcceptButton customOnPress={props.customOnPress} index={props.index} />
+            <RejectButton customOnPress={props.customOnPress} index={props.index} max={props.max} />
+            <AcceptButton customOnPress={props.customOnPress} index={props.index} max={props.max} />
         </View>
     )
 }
@@ -143,99 +152,64 @@ function PointSheet(props) {
         </View>
     )
 }
-function PointsQueue(props) {
-    const [image, setImage] = useState('');
-    //console.log('(Admin) Points queue: ' + JSON.stringify(points[2]));
-    const [point, setPoint] = useState({});
-    useEffect(() => {
-        if (props.pointsQueue[props.queueIndex] != null) {
-            setPoint(props.pointsQueue[props.queueIndex]);
-        }
-    }, [props.pointsQueue])
 
-    useEffect(() => {
-        if (!Object.keys(point).length === 0) {
-            store
-                .ref(`/points/${point.id + '_' + point.label}`) //name in storage in firebase console
-                .getDownloadURL()
-                .then((url) => {
-                    setImage(url);
-                    console.log("(point-queue) Successfully got point image");
-                })
-                .catch((e) =>
-                    console.log("(point-queue) Errors while getting point image")
-                );
-        }
-    }, [point]);
-
-    if (props.queueIndex >= props.pointsQueue.length) {
-        return (
-            <View style={styles.pointQueue}>
-                <DoneImage />
-            </View>
-        )
-    }
-    return (
-        <View style={styles.pointQueue}>
-            <PointSheet
-                name={point.name}
-                label={point.label}
-                event={point.event}
-                image={image}
-                proof={point.proof}
-            />
-        </View>
-    )
-}
 export function AdminPage(props) {
     const [queue, setQueue] = useState([]);
+    const [urlMap, setUrlMap] = useState({});
     const [queueIndex, setQueueIndex] = useState(0);
     const [currentPoint, setCurrentPoint] = useState({});
     const [currentImage, setCurrentImage] = useState('');
+    const [dummyRender, setDummyRender] = useState(false);
     //fetch data
     useEffect(() => {
         var tempQueue = [];
+        var tempUrlMap = {};
         db.collection("points-queue")
             .get()
-            .then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    tempQueue.push(doc.data());
+            .then(async (querySnapshot) => {
+                querySnapshot.forEach(async (doc) => {
+                    const data = doc.data();
+                    tempQueue.push(data);
+                    const docId = data.id + '_' + data.label;
+                    store
+                        .ref(`/points/${docId}`) //name in storage in firebase console
+                        .getDownloadURL()
+                        .then((url) => {
+                            console.log("(point-queue) Successfully got point image");
+                            tempUrlMap[docId] = url;
+                            setDummyRender(true);
+                        })
+                        .catch((e) => {
+                            tempUrlQueue.push('');
+                            console.log("(point-queue) Errors while getting point image")
+                            resolve('');
+                        });
                 })
                 setQueue(tempQueue);
+                setUrlMap(tempUrlMap);
             })
     }, []);
     useEffect(() => {
-        if (queue.length > 0) {
+        if (queue.length > 0 && queueIndex < queue.length) {
             setCurrentPoint(queue[queueIndex]);
+            setCurrentImage(urlMap[queue[queueIndex].id + '_' + queue[queueIndex].label]);
         }
-    }, [queue, queueIndex])
-    useEffect(() => {
-        if (Object.keys(currentPoint).length === 0) {
-            return;
-        }
-        store
-            .ref(`/points/${currentPoint.id + '_' + currentPoint.label}`) //name in storage in firebase console
-            .getDownloadURL()
-            .then((url) => {
-                setCurrentImage(url);
-                console.log("(point-queue) Successfully got point image");
-            })
-            .catch((e) =>
-                console.log("(point-queue) Errors while getting point image")
-            );
-    }, [currentPoint])
+    }, [queue, queueIndex, dummyRender])
 
     return (
         <View style={styles.adminScreen}>
             <AdminTop />
             <Text style={globalStyles.largeSemiBoldText}>Remaining Points: {queue.length - queueIndex}</Text>
             <View style={styles.pointQueue}>
-                <PointSheet
-                    data={currentPoint}
-                    image={currentImage}
-                />
+                {(queueIndex == queue.length) ?
+                    <DoneImage /> :
+                    <PointSheet
+                        data={currentPoint}
+                        image={currentImage}
+                    />
+                }
             </View>
-            <AdminBottom index={queueIndex} customOnPress={setQueueIndex} />
+            <AdminBottom index={queueIndex} customOnPress={setQueueIndex} max={queue.length} />
         </View>
     )
 }
