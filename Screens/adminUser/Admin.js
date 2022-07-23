@@ -176,7 +176,7 @@ export function AdminPage(props) {
                         .getDownloadURL()
                         .then((url) => {
                             console.log("(point-queue) Successfully got point image");
-                            tempUrlMap[docId] = url;
+                            urlMap[docId] = url;
                             setDummyRender(true);
                         })
                         .catch((e) => {
@@ -186,7 +186,6 @@ export function AdminPage(props) {
                         });
                 })
                 setQueue(tempQueue);
-                setUrlMap(tempUrlMap);
             })
     }, []);
     useEffect(() => {
@@ -194,7 +193,7 @@ export function AdminPage(props) {
             setCurrentPoint(queue[queueIndex]);
             setCurrentImage(urlMap[queue[queueIndex].id + '_' + queue[queueIndex].label]);
         }
-    }, [queue, queueIndex, dummyRender])
+    }, [urlMap, queueIndex, dummyRender])
 
     return (
         <View style={styles.adminScreen}>

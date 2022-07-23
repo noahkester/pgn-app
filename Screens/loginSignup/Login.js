@@ -75,6 +75,7 @@ function LoginButton(props) {
       onPress={async () => {
         // Handle login defined in LoginPage, checks if user is in firebase
         if (await props.handleLogin()) {
+          loginContext.setAppIsReady(false);
           // There is a user in firebase, now check if they can go to the Home Page
           // Or if we need additional information from them and email verification
           const user = auth.currentUser;
@@ -89,11 +90,9 @@ function LoginButton(props) {
             if (user.email == "pgn.utexas.sudo@gmail.com") {
               isAdmin.current = true;
               setSignIn(true);
-              navigation.navigate("Admin");
             } else {
               isAdmin.current = false;
               setSignIn(true);
-              navigation.navigate("Router", { screen: 'Navigation' });
             }
             return;
           } else {

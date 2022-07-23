@@ -174,7 +174,6 @@ function App() {
         setAppIsReady(true);
       }
     }
-
   }
 
   useEffect(() => {
@@ -277,6 +276,8 @@ function App() {
               value={{
                 'isSignedIn': isSignedIn,
                 'setSignIn': setSignIn,
+                'appIsReady': appIsReady,
+                'setAppIsReady': setAppIsReady,
                 'currentUser': currentUser.current,
                 'todayEvents': todayEvents,
                 'tomorrowEvents': tomorrowEvents,
