@@ -167,7 +167,6 @@ export function AdminPage(props) {
     //fetch data
     useEffect(() => {
         var tempQueue = [];
-        var tempUrlMap = {};
         db.collection("points-queue")
             .get()
             .then(async (querySnapshot) => {
@@ -185,8 +184,7 @@ export function AdminPage(props) {
                         })
                         .catch((e) => {
                             tempUrlQueue.push('');
-                            console.log("(point-queue) Errors while getting point image")
-                            resolve('');
+                            console.log("(point-queue) Errors while getting point image");
                         });
                 })
                 setQueue(tempQueue);

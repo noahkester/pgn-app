@@ -168,6 +168,7 @@ function App() {
               .catch((e) =>
                 console.log("(app.js) Errors while getting funny picture ")
               );
+
           });
       } else {
         //TODO Do fetch calls for admin.js

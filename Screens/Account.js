@@ -204,6 +204,7 @@ export function AccountPage() {
 
       activities: activities.split(','),
       bio: bio,
+      role: curUser.role,
 
       email: email,
       linkedin: linkedin,

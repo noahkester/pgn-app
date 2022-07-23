@@ -109,6 +109,7 @@ export function PeoplePage() {
               .then((url) => {
                 profPicMap[data.id] = url;
                 setProfileMap(profPicMap);
+                console.log("(People) Success, got professional picture for " + data.id)
               })
               .catch((e) => {
                 console.log("(People) Error getting Professional Picture for " + data.id)
@@ -117,7 +118,7 @@ export function PeoplePage() {
           }
         });
         var currentUser = allUsers.find((t) => t.id === auth.currentUser.uid);
-
+        //setProfileMap(profPicMap);
         setCurUser(currentUser);
         allUsers = allUsers.filter(
           (item) => item.id != auth.currentUser.uid
@@ -130,6 +131,11 @@ export function PeoplePage() {
   }, []);
   useEffect(() => {
     console.log(profileMap);
+    setSection(
+      filteredDataSource.map((people, index) => {
+        return <People key={index} data={people} profMap={profileMap} />;
+      })
+    );
   }, [profileMap])
 
   //triggered when checkbox is pressed
