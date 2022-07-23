@@ -7,58 +7,6 @@ import { db, store } from "../../utils/firebase";
 import React, { useEffect, useState } from "react";
 import UrlContext, { UrlProvider } from "../../utils/UrlContext";
 
-// const pointsQueue = [
-//     {
-//         text: "one",
-//         name: "Noah Kester",
-//         pledgeClass: "Spring 2022",
-//         event: "Cold Cookie Profit Share",
-//         image: "../images/pgn.png",
-//         description: "This is a descriptiofs jkrf srjbfor bf"
-//     },
-//     {
-//         text: "two",
-//         name: "Michael Jordan",
-//         pledgeClass: "Fall 2021",
-//         event: "Cold Cookie Profit Share",
-//         image: "../images/pgn.png",
-//         description: "This is a description"
-//     },
-//     {
-//         text: "three",
-//         name: "Kyrie Irvin",
-//         pledgeClass: "Spring 2020",
-//         event: "Cold Cookie Profit Share",
-//         image: "../images/pgn.png",
-//         description: "This is a description"
-//     },
-//     {
-//         text: "four",
-//         name: "Jason Tatum",
-//         pledgeClass: "Spring 2020",
-//         event: "Cold Cookie Profit Share",
-//         image: "../images/pgn.png",
-//         description: "This is a description"
-//     },
-//     {
-//         text: "five",
-//         name: "Luka Doncic",
-//         pledgeClass: "Fall 2022",
-//         event: "Cold Cookie Profit Share",
-//         image: "../images/pgn.png",
-//         description: "This is a description"
-//     },
-//     {
-//         text: "eof",
-//         name: "James Harden",
-//         pledgeClass: "Spring 2022",
-//         event: "Cold Cookie Profit Share",
-//         image: "../images/pgn.png",
-//         description: "This is a description"
-//     }
-// ]
-
-
 function DoneImage() {
     return (
         <Image
@@ -95,7 +43,8 @@ function AcceptButton(props) {
     return (
         <TouchableOpacity onPress={() => {
             if (props.index < props.max) {
-                props.customOnPress(props.index + 1)
+                props.setQueueIndex(props.index + 1)
+                props.acceptPoint();
             }
         }}>
             <Image
@@ -110,7 +59,8 @@ function RejectButton(props) {
     return (
         <TouchableOpacity onPress={() => {
             if (props.index < props.max) {
-                props.customOnPress(props.index + 1)
+                props.setQueueIndex(props.index + 1);
+                props.rejectPoint();
             }
         }}>
             <Image
@@ -121,11 +71,48 @@ function RejectButton(props) {
         </TouchableOpacity>
     )
 }
+
 function AdminBottom(props) {
+    const acceptPoint = () => {
+        db.collection("points-queue").doc(props.pointData.id + '_' + props.pointData.label).delete().then(() => {
+            console.log("(points-queue) Deleted document");
+        }).catch((error) => {
+            console.log("(points-queue) Error deleting document");
+        });
+        db.collection('users').doc(props.pointData.id).get().then((doc) => {
+            const data = doc.data();
+            const submittedPoints = data.submittedPoints;
+            for (let i = 0; i < submittedPoints.length; i++) {
+                if (submittedPoints[i].label === props.pointData.label) {
+                    submittedPoints[i].status = 'accepted';
+                    break;
+                }
+            }
+            db.collection('users').doc(props.pointData.id).update({ submittedPoints: submittedPoints });
+        });
+    }
+    const rejectPoint = () => {
+        db.collection("points-queue").doc(props.pointData.id + '_' + props.pointData.label).delete().then(() => {
+            console.log("(points-queue) Deleted document");
+        }).catch((error) => {
+            console.log("(points-queue) Error deleting document");
+        });
+        db.collection('users').doc(props.pointData.id).get().then((doc) => {
+            const data = doc.data();
+            const submittedPoints = data.submittedPoints;
+            for (let i = 0; i < submittedPoints.length; i++) {
+                if (submittedPoints[i].label === props.pointData.label) {
+                    submittedPoints[i].status = 'rejected';
+                    break;
+                }
+            }
+            db.collection('users').doc(props.pointData.id).update({ submittedPoints: submittedPoints });
+        });
+    }
     return (
         <View style={styles.adminBottom}>
-            <RejectButton customOnPress={props.customOnPress} index={props.index} max={props.max} />
-            <AcceptButton customOnPress={props.customOnPress} index={props.index} max={props.max} />
+            <RejectButton rejectPoint={rejectPoint} setQueueIndex={props.setQueueIndex} index={props.index} max={props.max} />
+            <AcceptButton acceptPoint={acceptPoint} setQueueIndex={props.setQueueIndex} index={props.index} max={props.max} />
         </View>
     )
 }
@@ -208,7 +195,12 @@ export function AdminPage(props) {
                     />
                 }
             </View>
-            <AdminBottom index={queueIndex} customOnPress={setQueueIndex} max={queue.length} />
+            <AdminBottom
+                index={queueIndex}
+                setQueueIndex={setQueueIndex}
+                max={queue.length}
+                pointData={currentPoint}
+            />
         </View>
     )
 }
