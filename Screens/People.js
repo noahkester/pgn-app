@@ -23,11 +23,13 @@ function PeopleImage(props) {
   }
   return (
     <View style={styles.people}>
-      <Image
-        source={require("../images/profile.png")}
-        resizeMode="contain"
-        style={styles.peopleImageBackground}
-      />
+      <View style={[globalStyles.universityColorFill, { width: 50, height: 50, borderRadius: 25 }]}>
+        <Image
+          source={require("../images/account.png")}
+          resizeMode="contain"
+          style={{ width: '100%', height: '100%' }}
+        />
+      </View>
     </View>
   );
 }
@@ -54,29 +56,26 @@ function People(props) {
         ]}
       >
         <PeopleImage uri={props.profMap[props.data.id]} />
-        <View style={styles.peopleText}>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-            <View style={{ alignItems: 'baseline' }}>
+        <View style={{ width: "80%" }}>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap'}}>
+            <View style={{ alignItems: 'baseline'}}>
               <Text style={[globalStyles.smallSemiBoldText, { marginRight: 10 }]}>
                 {props.data.firstname + " " + props.data.lastname}
               </Text>
             </View>
-            {props.data.role ?
-              <View style={{ alignItems: 'baseline', backgroundColor: findRoleColor(props.data.role), borderRadius: 100, borderWidth: 2, borderColor: findRoleBorder(props.data.role), paddingLeft: 12, paddingRight: 12, height: 20, justifyContent: 'center' }}>
-                <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 10, color: '#FFFFFF' }}>
-                  {props.data.role}
-                </Text>
-              </View>
-              :
-              null
-            }
+            <View style={{ alignItems: 'baseline', backgroundColor: findRoleColor(props.data.role), borderRadius: 100, borderWidth: 2, borderColor: findRoleBorder(props.data.role), paddingLeft: 12, paddingRight: 12, height: 20, justifyContent: 'center' }}>
+              <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 10, color: '#FFFFFF' }}>
+                {props.data.role}
+              </Text>
+            </View>
           </View>
-          <Text style={globalStyles.tinySemiBoldText}>
+          <Text style={[globalStyles.tinySemiBoldText]}>
             {'"' + props.data.bio + '"'}
           </Text>
         </View>
       </View>
     </TouchableOpacity>
+
   );
 }
 export function PeoplePage() {
@@ -259,9 +258,6 @@ const styles = StyleSheet.create({
   },
   peopleClass: {
     marginBottom: 10,
-  },
-  peopleText: {
-    width: "80%",
   },
   peopleImageBackground: {
     position: "absolute",

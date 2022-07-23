@@ -25,7 +25,7 @@ Events Structure
 
 function EventImage(props) {
   return (
-    <View style={{marginRight: 10}}>
+    <View style={{ marginRight: 10 }}>
       <View style={styles.iconCon}>
         <Image
           source={props.icon}
@@ -64,16 +64,20 @@ function Event(props) {
     >
       <EventImage icon={icon} />
       <View style={styles.eventText}>
-        <Text style={[globalStyles.smallSemiBoldText, {width: 180}]}>{props.name}</Text>
+        <Text style={[globalStyles.smallSemiBoldText, { width: 180 }]}>{props.name}</Text>
         <Text style={globalStyles.smallBoldText}>{props.location}</Text>
       </View>
-      <View>
-        <Text style={[globalStyles.smallSemiBoldText, styles.date]}>
-          {"3/7"}
-        </Text>
-        <Text style={globalStyles.smallBoldText}>{"3:30"}</Text>
-        <Text style={globalStyles.smallBoldText}>{props.weight + points}</Text>
-      </View>
+      {
+        (props.time === 0) ?
+          <Text style={globalStyles.smallBoldText}>{props.weight + points}</Text> :
+          <View style={{ alignItems: 'flex-end' }}>
+            <Text style={[globalStyles.smallSemiBoldText, styles.date]}>
+              {unixEpochTimeToMonthDay(props.time)}
+            </Text>
+            <Text style={globalStyles.smallBoldText}>{unixEpochTimeToClock(props.time)}</Text>
+            <Text style={globalStyles.smallBoldText}>{props.weight + points}</Text>
+          </View>
+      }
     </View>
   );
 }
@@ -87,6 +91,7 @@ export function EventSection(props) {
       type={event.type}
       weight={event.weight}
       location={event.location}
+      time={event.time}
     />
   ));
   if (eventsList.length == 0) {
@@ -107,6 +112,13 @@ export function EventSection(props) {
       </View>
     </View>
   );
+}
+
+function unixEpochTimeToClock(timestamp) {
+  var a = new Date(timestamp * 1000);
+  var hours = a.getHours();
+  hours = (hours > 12) ? hours % 12 : hours;
+  return hours + ":" + a.getMinutes();
 }
 function unixEpochTimeToMonthDay(timestamp) {
   var a = new Date(timestamp * 1000);

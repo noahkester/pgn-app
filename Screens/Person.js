@@ -13,6 +13,8 @@ import { useNavigation } from "@react-navigation/native";
 import { auth, db, store } from "../utils/firebase";
 import ImageCarousel from "./components/ImageCarousel";
 import { findRoleColor, findRoleBorder } from '../styles/Colors'
+import * as Linking from 'expo-linking';
+
 /*
 Backend Stuff TODO:
 
@@ -100,7 +102,6 @@ function ContactInfo(props) {
     <View style={[styles.academicSection, { paddingBottom: 80 }]}>
       <AccountInput label="Email:" input={props.email} />
       <AccountInput label="Phone:" input={props.number} />
-      <AccountInput label="LinkedIn:" input={props.linkedin} />
     </View>
   );
 }
@@ -118,11 +119,26 @@ function PledgeClass(props) {
   );
 }
 
+function Activities(props) {
+  const list = props.activities.map((activity, index) => {
+    return (
+      <View key={index} style={{ backgroundColor: '#D9D9D9', marginLeft: 10, marginRight: 10, paddingLeft: 20, paddingRight: 20, paddingTop: 8, paddingBottom: 8, borderRadius: 8 }}>
+        <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#505050' }}>{activity}</Text>
+      </View>
+    )
+  })
+  return (
+    <View style={{ marginTop: 20, width: '90%', flexDirection: 'row', flexWrap: 'wrap' }}>
+      {list}
+    </View>
+  )
+}
+
 export function PersonPage({ route }) {
   const { memberData } = route.params;
-  const [profileUrlProfessional, setProfileUrlProfessional] = useState('https://www.iowagcsa.org/resources/Pictures/Member-Login-Icon.png');
-  const [profileUrlSocial, setProfileUrlSocial] = useState('https://www.iowagcsa.org/resources/Pictures/Member-Login-Icon.png');
-  const [profileUrlFunny, setProfileUrlFunny] = useState('https://www.iowagcsa.org/resources/Pictures/Member-Login-Icon.png');
+  const [profileUrlProfessional, setProfileUrlProfessional] = useState('');
+  const [profileUrlSocial, setProfileUrlSocial] = useState('');
+  const [profileUrlFunny, setProfileUrlFunny] = useState('');
 
   useEffect(() => {
     store
@@ -164,18 +180,36 @@ export function PersonPage({ route }) {
             profileUrlSocial={profileUrlSocial}
             profileUrlFunny={profileUrlFunny}
           />
-          {(memberData.role !== '') ?
-            <View style={{ backgroundColor: findRoleColor(memberData.role), borderWidth: 3, borderColor: findRoleBorder(memberData.role), paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, borderRadius: 100 }}>
-              <Text style={{ color: '#FFFFFF', fontFamily: 'Poppins_600SemiBold' }}>{memberData.role}</Text>
-            </View>
-            :
-            null
-          }
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {(memberData.role !== '') ?
+              <View style={{ backgroundColor: findRoleColor(memberData.role), borderWidth: 3, borderColor: findRoleBorder(memberData.role), paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, borderRadius: 100 }}>
+                <Text style={{ color: '#FFFFFF', fontFamily: 'Poppins_600SemiBold' }}>{memberData.role}</Text>
+              </View>
+              :
+              null
+            }
+            {(memberData.linkedin !== '') ?
+              <TouchableOpacity
+                style={{ marginLeft: 10, marginRight: 10 }}
+                onPress={() => {
+                  Linking.openURL(memberData.linkedin);
+                }}
+              >
+                <Image
+                  source={require("../images/linkedin.png")}
+                  style={{ width: 20, height: 20 }}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity> :
+              null
+            }
+          </View>
           <Description description={memberData.bio} />
+          <Activities activities={memberData.activities} />
           <Chapter chapter={memberData.chapter} />
           <PledgeClass pledgeClass={memberData.pledgeClass} status={memberData.status} />
           <AcademicInfo major={memberData.major} minor={memberData.minor} />
-          <ContactInfo email={memberData.email} number={memberData.phone} linkedin={memberData.linkedin} />
+          <ContactInfo email={memberData.email} number={memberData.phone} />
         </View>
       </ScrollView>
     </View>

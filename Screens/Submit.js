@@ -216,6 +216,7 @@ export function SubmitPoints(props) {
               type: typeOfEvent.current,
               status: "waiting",
               weight: eventWeight.current,
+              time: 0
             }),
           })
           .then(() => {

@@ -6,9 +6,11 @@ import {
     View,
     Dimensions,
     ImageBackground,
+    Image,
 } from 'react-native';
 import Carousel from 'react-native-anchor-carousel';
 import SimplePaginationDot from './SimplePaginationDot';
+import globalStyles from "../../styles/Styles";
 
 const { width: windowWidth } = Dimensions.get('window');
 
@@ -20,7 +22,6 @@ export default function ImageCarousel(props) {
     function handleCarouselScrollEnd(item, index) {
         setCurrentIndex(index);
     }
-
     function renderItem({ item, index }) {
         const { uri } = item;
         return (
@@ -30,10 +31,18 @@ export default function ImageCarousel(props) {
                 onPress={() => {
                     carouselRef.current.scrollToIndex(index);
                 }}>
-                <ImageBackground
-                    source={{ uri: uri }}
-                    style={styles.imageBackground}
-                />
+                {(uri === "") ?
+                    <View style={[styles.imageBackground, globalStyles.universityColorFill, {borderRadius: 1000, alignItems: 'center', justifyContent: 'center'}]}>
+                        <Image 
+                            source = {require('../../images/account.png')}
+                            style={{height: '100%', width: '100%'}}
+                        />
+                    </View> :
+                    <ImageBackground
+                        source={{ uri: uri }}
+                        style={styles.imageBackground}
+                    />
+                }
             </TouchableOpacity>
         );
     }

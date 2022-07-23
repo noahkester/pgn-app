@@ -44,9 +44,9 @@ function Profile(props) {
   return (
     <ImageCarousel
       data={[
-        { uri: urlContext.professionalUrl != '' ? urlContext.professionalUrl : 'https://www.iowagcsa.org/resources/Pictures/Member-Login-Icon.png' },
-        { uri: urlContext.socialUrl != '' ? urlContext.socialUrl : 'https://www.iowagcsa.org/resources/Pictures/Member-Login-Icon.png' },
-        { uri: urlContext.funnyUrl != '' ? urlContext.funnyUrl : 'https://www.iowagcsa.org/resources/Pictures/Member-Login-Icon.png' },
+        { uri: urlContext.professionalUrl },
+        { uri: urlContext.socialUrl },
+        { uri: urlContext.funnyUrl },
       ]}
     />
   );
