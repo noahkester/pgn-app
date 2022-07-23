@@ -57,8 +57,8 @@ function People(props) {
       >
         <PeopleImage uri={props.profMap[props.data.id]} />
         <View style={{ width: "80%" }}>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap'}}>
-            <View style={{ alignItems: 'baseline'}}>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+            <View style={{ alignItems: 'baseline' }}>
               <Text style={[globalStyles.smallSemiBoldText, { marginRight: 10 }]}>
                 {props.data.firstname + " " + props.data.lastname}
               </Text>
@@ -87,9 +87,8 @@ export function PeoplePage() {
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [masterDataSource, setMasterDataSource] = useState([]);
   const [section, setSection] = useState();
-
   //profile pictures
-  const [profileMap, setProfileMap] = useState([]);
+  const [profileMap, setProfileMap] = useState({});
 
   //checkbox
   const [isChecked, setChecked] = useState(false);
@@ -136,7 +135,6 @@ export function PeoplePage() {
         setProfileMap(profPicMap);
       });
   }, []);
-
 
   //triggered when checkbox is pressed
   useEffect(() => {
