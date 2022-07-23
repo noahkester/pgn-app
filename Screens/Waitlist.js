@@ -23,7 +23,7 @@ function WaitScreen() {
   const allSubmittedEvents = curUser.submittedPoints;
 
   const waiting = allSubmittedEvents.reduce((events, event) => {
-    if (event.status == "waiting") {
+    if (event.status === "waiting") {
       events.push(event);
     }
     return events;
@@ -45,7 +45,7 @@ function AcceptedScreen() {
   const allSubmittedEvents = curUser.submittedPoints;
 
   const completed = allSubmittedEvents.reduce((events, event) => {
-    if (event.status == "completed") {
+    if (event.status === "accepted") {
       events.push(event);
     }
     return events;
@@ -67,7 +67,7 @@ function DeclinedScreen() {
   const allSubmittedEvents = curUser.submittedPoints;
 
   const declined = allSubmittedEvents.reduce((events, event) => {
-    if (event.status == "declined") {
+    if (event.status === "rejected") {
       events.push(event);
     }
     return events;
@@ -108,7 +108,7 @@ function TopTab() {
           <Tab.Screen
             name="Denied"
             component={DeclinedScreen}
-            options={{ tabBarLabel: "Declined" }}
+            options={{ tabBarLabel: "Rejected" }}
           ></Tab.Screen>
         </Tab.Navigator>
       </View>

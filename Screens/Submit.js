@@ -17,9 +17,20 @@ function EventsDropDown() {
   const [value, setValue] = useState("");
 
   const loginContext = useContext(LoginContext);
-  const tempItems = loginContext.allEvents;
-  //TODO: filter out events after implementing submittedEvents array
-  const [items, setItems] = useState(tempItems.current);
+  var tempItems = loginContext.allEvents.current;
+  const submittedPoints = loginContext.currentUser.submittedPoints;
+  tempItems = tempItems.filter(
+    (event) => {
+      for (let i = 0; i < submittedPoints.length; i++) {
+        if (event.label === submittedPoints[i].label && submittedPoints[i].status !== 'rejected') {
+          return false;
+        }
+      }
+      return true;
+    }
+  );
+
+  const [items, setItems] = useState(tempItems);
   const submissionContext = useContext(SubmissionContext);
 
   const typeOfEvent = submissionContext.typeOfEvent;

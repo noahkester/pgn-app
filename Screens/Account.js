@@ -242,10 +242,12 @@ export function AccountPage() {
       <ScrollView style={{ width: "100%" }}>
         <View style={{ alignItems: "center" }}>
           <Profile />
-          { (curUser.role !== '') &&
+          { (curUser.role !== '') ?
             <View style={{ backgroundColor: findRoleColor(curUser.role), borderWidth: 3, borderColor: findRoleBorder(curUser.role), paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, borderRadius: 100 }}>
               <Text style={{ color: '#FFFFFF', fontFamily: 'Poppins_600SemiBold' }}>{curUser.role}</Text>
             </View>
+            :
+            null
           }
           <Description description={bio} setValue={setBio} />
           <Chapter chapter={curUser.chapter} />

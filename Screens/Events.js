@@ -99,11 +99,11 @@ export function EventSection(props) {
       </Text>
       <View>
         {eventsList}
-        {noEvents && (
+        {noEvents ? (
           <Text style={[globalStyles.smallBoldText, styles.noEventsText]}>
             No Events
           </Text>
-        )}
+        ) : null}
       </View>
     </View>
   );

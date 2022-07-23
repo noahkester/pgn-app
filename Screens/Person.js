@@ -164,10 +164,12 @@ export function PersonPage({ route }) {
             profileUrlSocial={profileUrlSocial}
             profileUrlFunny={profileUrlFunny}
           />
-          {(memberData.role !== '') &&
+          {(memberData.role !== '') ?
             <View style={{ backgroundColor: findRoleColor(memberData.role), borderWidth: 3, borderColor: findRoleBorder(memberData.role), paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, borderRadius: 100 }}>
               <Text style={{ color: '#FFFFFF', fontFamily: 'Poppins_600SemiBold' }}>{memberData.role}</Text>
             </View>
+            :
+            null
           }
           <Description description={memberData.bio} />
           <Chapter chapter={memberData.chapter} />

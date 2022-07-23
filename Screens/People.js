@@ -35,9 +35,6 @@ function PeopleImage(props) {
 function PeopleSection(props) {
   return (
     <View style={styles.peopleSection}>
-      {/* <Text style={[globalStyles.smallBoldText, styles.peopleClass]}>
-        {props.class}
-      </Text> */}
       <View>{props.section}</View>
     </View>
   );
@@ -64,12 +61,14 @@ function People(props) {
                 {props.data.firstname + " " + props.data.lastname}
               </Text>
             </View>
-            {props.data.role &&
+            {props.data.role ?
               <View style={{ alignItems: 'baseline', backgroundColor: findRoleColor(props.data.role), borderRadius: 100, borderWidth: 2, borderColor: findRoleBorder(props.data.role), paddingLeft: 12, paddingRight: 12, height: 20, justifyContent: 'center' }}>
                 <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 10, color: '#FFFFFF' }}>
                   {props.data.role}
                 </Text>
               </View>
+              :
+              null
             }
           </View>
           <Text style={globalStyles.tinySemiBoldText}>
