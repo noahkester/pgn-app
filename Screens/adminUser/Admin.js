@@ -74,11 +74,14 @@ function RejectButton(props) {
 
 function AdminBottom(props) {
     const acceptPoint = () => {
+        // First, delete the record from the points queue
         db.collection("points-queue").doc(props.pointData.id + '_' + props.pointData.label).delete().then(() => {
             console.log("(points-queue) Deleted document");
         }).catch((error) => {
             console.log("(points-queue) Error deleting document");
         });
+
+        // Next update the status value in the submitted points and increment the point value
         db.collection('users').doc(props.pointData.id).get().then((doc) => {
             const data = doc.data();
             const submittedPoints = data.submittedPoints;
@@ -87,6 +90,20 @@ function AdminBottom(props) {
                     submittedPoints[i].status = 'accepted';
                     break;
                 }
+            }
+            switch (props.pointData.type) {
+                case 'Philanthropy':
+                    db.collection('users').doc(props.pointData.id).update({ philanthropyPoints: data.philanthropyPoints + 1 });
+                    break;
+                case 'Social':
+                    db.collection('users').doc(props.pointData.id).update({ socialPoints: data.socialPoints + 1 });
+                    break;
+                case 'Professional':
+                    db.collection('users').doc(props.pointData.id).update({ professionalPoints: data.professionalPoints + 1 });
+                    break;
+                default:
+                    console.log('(accept-point switch statement) no match for ' + props.pointData.type);
+                    break;
             }
             db.collection('users').doc(props.pointData.id).update({ submittedPoints: submittedPoints });
         });
