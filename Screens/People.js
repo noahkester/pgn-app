@@ -34,14 +34,6 @@ function PeopleImage(props) {
   );
 }
 
-function PeopleSection(props) {
-  return (
-    <View style={styles.peopleSection}>
-      <View>{props.section}</View>
-    </View>
-  );
-}
-
 function People(props) {
   const navigation = useNavigation();
   return (
@@ -116,6 +108,7 @@ export function PeoplePage() {
               .getDownloadURL()
               .then((url) => {
                 profPicMap[data.id] = url;
+                setProfileMap(profPicMap);
               })
               .catch((e) => {
                 console.log("(People) Error getting Professional Picture for " + data.id)
@@ -132,9 +125,12 @@ export function PeoplePage() {
         setFilteredDataSource(allUsers);
         setMasterDataSource(allUsers);
 
-        setProfileMap(profPicMap);
+        //setProfileMap(profPicMap);
       });
   }, []);
+  useEffect(() => {
+    console.log(profileMap);
+  }, [profileMap])
 
   //triggered when checkbox is pressed
   useEffect(() => {
@@ -226,7 +222,9 @@ export function PeoplePage() {
         </View>
         <ScrollView style={globalStyles.scroll}>
           <View style={globalStyles.scrollView}>
-            <PeopleSection section={section} class={"PC Spring 2022"} />
+            <View style={styles.peopleSection}>
+              <View>{section}</View>
+            </View>
           </View>
         </ScrollView>
       </View>

@@ -75,7 +75,7 @@ function LoginButton(props) {
       onPress={async () => {
         // Handle login defined in LoginPage, checks if user is in firebase
         if (await props.handleLogin()) {
-          loginContext.setAppIsReady(false);
+          //loginContext.setAppIsReady(false);
           // There is a user in firebase, now check if they can go to the Home Page
           // Or if we need additional information from them and email verification
           const user = auth.currentUser;
