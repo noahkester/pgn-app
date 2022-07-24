@@ -17,25 +17,46 @@ function EventsDropDown() {
   const [value, setValue] = useState("");
 
   const loginContext = useContext(LoginContext);
-  var tempItems = loginContext.allEvents.current;
-  const submittedPoints = loginContext.currentUser.submittedPoints;
-  tempItems = tempItems.filter(
-    (event) => {
-      for (let i = 0; i < submittedPoints.length; i++) {
-        if (event.label === submittedPoints[i].label && submittedPoints[i].status !== 'rejected') {
-          return false;
-        }
-      }
-      return true;
-    }
-  );
 
-  const [items, setItems] = useState(tempItems);
+  const [items, setItems] = useState([]);
   const submissionContext = useContext(SubmissionContext);
 
   const typeOfEvent = submissionContext.typeOfEvent;
   const eventName = submissionContext.eventName;
   const eventWeight = submissionContext.eventWeight;
+
+  useEffect(() => {
+    console.log('(submit) rendered');
+    db.collection("users")
+      .doc(auth.currentUser.uid)
+      .get()
+      .then((doc) => {
+        var data = doc.data();
+        loginContext.currentUser = data;
+        const submittedPoints = loginContext.currentUser.submittedPoints;
+        var tempItems = [];
+        db.collection("events")
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              tempItems.push(doc.data());
+            });
+            tempItems = tempItems.filter(
+              (event) => {
+                for (let i = 0; i < submittedPoints.length; i++) {
+                  if (event.label === submittedPoints[i].label && submittedPoints[i].status !== 'rejected') {
+                    return false;
+                  }
+                }
+                return true;
+              }
+            );
+            setItems(tempItems);
+          });
+      })
+  }, [])
+
+
   return (
     //integrate tickIconStyle to each event in items
     <DropDownPicker

@@ -6,6 +6,7 @@ import { PGNImage } from "../Tabs"
 import { db, store } from "../../utils/firebase";
 import React, { useEffect, useState } from "react";
 import UrlContext, { UrlProvider } from "../../utils/UrlContext";
+var allSettled = require('promise.allsettled');
 
 function DoneImage() {
     return (
@@ -170,22 +171,31 @@ export function AdminPage(props) {
         db.collection("points-queue")
             .get()
             .then(async (querySnapshot) => {
+                var promises = [];
+                var tempUrlMap = {};
                 querySnapshot.forEach(async (doc) => {
                     const data = doc.data();
                     tempQueue.push(data);
                     const docId = data.id + '_' + data.label;
-                    store
+                    const promise = store
                         .ref(`/points/${docId}`) //name in storage in firebase console
                         .getDownloadURL()
                         .then((url) => {
                             console.log("(point-queue) Successfully got point image");
-                            urlMap[docId] = url;
+                            tempUrlMap[docId] = url;
                             setDummyRender(true);
                         })
                         .catch((e) => {
                             tempUrlQueue.push('');
                             console.log("(point-queue) Errors while getting point image");
                         });
+                    promises.push(promise);
+                })
+                allSettled(promises).then((results) => {
+                    results.forEach((result) => {
+                        console.log("(people.js) Promise allSettled");
+                    });
+                    setUrlMap(tempUrlMap);
                 })
                 setQueue(tempQueue);
             })
