@@ -22,7 +22,7 @@ function EventsDropDown() {
   const submissionContext = useContext(SubmissionContext);
 
   const typeOfEvent = submissionContext.typeOfEvent;
-  const eventName = submissionContext.eventName;
+  const eventLabel = submissionContext.eventLabel;
   const eventWeight = submissionContext.eventWeight;
 
   useEffect(() => {
@@ -61,7 +61,7 @@ function EventsDropDown() {
     //integrate tickIconStyle to each event in items
     <DropDownPicker
       onSelectItem={(item) => {
-        eventName.current = item.name;
+        eventLabel.current = item.name;
         eventWeight.current = item.weight;
         typeOfEvent.current = item.type;
       }}
@@ -203,7 +203,7 @@ export function SubmitPoints(props) {
 
   const name = submissionContext.name;
   const typeOfEvent = submissionContext.typeOfEvent;
-  const eventName = submissionContext.eventName;
+  const eventLabel = submissionContext.eventLabel;
   const proofDesc = submissionContext.proofDesc;
   const imageSrc = submissionContext.imageSrc;
   const eventWeight = submissionContext.eventWeight;
@@ -233,7 +233,7 @@ export function SubmitPoints(props) {
           .doc(auth.currentUser.uid)
           .update({
             submittedPoints: firebase.firestore.FieldValue.arrayUnion({
-              label: eventName.current,
+              label: eventLabel.current,
               type: typeOfEvent.current,
               status: "waiting",
               weight: eventWeight.current,
@@ -242,12 +242,12 @@ export function SubmitPoints(props) {
           })
           .then(() => {
             console.log("(Submit) Points Submission added to user array");
-            uploadSubmissionImage(imageSrc.current, auth.currentUser.uid + "_" + eventName.current);
+            uploadSubmissionImage(imageSrc.current, auth.currentUser.uid + "_" + eventLabel.current);
 
             db.collection("points-queue")
-              .doc(auth.currentUser.uid + "_" + eventName.current)
+              .doc(auth.currentUser.uid + "_" + eventLabel.current)
               .set({
-                label: eventName.current,
+                label: eventLabel.current,
                 id: auth.currentUser.uid,
                 name: name,
                 type: typeOfEvent.current,
@@ -272,7 +272,7 @@ export function SubmitPage(props) {
   const name =
     loginContext.currentUser.firstname + " " + loginContext.currentUser.lastname;
   const typeOfEvent = useRef("");
-  const eventName = useRef("");
+  const eventLabel = useRef("");
   const proofDesc = useRef("");
   const imageSrc = useRef("");
   const eventWeight = useRef(0);
@@ -289,7 +289,7 @@ export function SubmitPage(props) {
               value={{
                 'name': name,
                 'typeOfEvent': typeOfEvent,
-                'eventName': eventName,
+                'eventLabel': eventLabel,
                 'proofDesc': proofDesc,
                 'imageSrc': imageSrc,
                 'eventWeight': eventWeight
