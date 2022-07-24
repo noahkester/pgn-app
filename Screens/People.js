@@ -7,6 +7,8 @@ import { db, auth, store } from "../utils/firebase";
 import Checkbox from "expo-checkbox";
 import { findRoleColor, findRoleBorder } from '../styles/Colors';
 
+var allSettled = require('promise.allsettled');
+
 
 function PeopleImage(props) {
   // TODO Add images
@@ -94,6 +96,7 @@ export function PeoplePage() {
     db.collection("users")
       .get()
       .then((querySnapshot) => {
+        var promises = [];
         querySnapshot.forEach((doc) => {
           var data = doc.data();
           allUsers.push(data);
@@ -103,20 +106,27 @@ export function PeoplePage() {
           //store each url in a hashmap
           if (data.id !== undefined) {
             // Issue
-            store
+            // Refactor to async and await
+            // Step 1: declare empty array, standard for loop push async function without await. to resolve all at once, promise.all([functions, functions, ...])
+            const promise = store
               .ref(`/profile-pictures/${data.id}_professional`)
               .getDownloadURL()
               .then((url) => {
                 profPicMap[data.id] = url;
-                setProfileMap(profPicMap);
                 console.log("(People) Success, got professional picture for " + data.id)
               })
               .catch((e) => {
                 console.log("(People) Error getting Professional Picture for " + data.id)
-              }
-              );
+              });
+            promises.push(promise);
           }
         });
+        allSettled(promises).then((results) => {
+          results.forEach((result) => {
+            console.log("(people.js) Promise allSettled");
+          });
+          setProfileMap(profPicMap);
+        })
         var currentUser = allUsers.find((t) => t.id === auth.currentUser.uid);
         //setProfileMap(profPicMap);
         setCurUser(currentUser);
@@ -125,12 +135,9 @@ export function PeoplePage() {
         );
         setFilteredDataSource(allUsers);
         setMasterDataSource(allUsers);
-
-        //setProfileMap(profPicMap);
       });
   }, []);
   useEffect(() => {
-    console.log(profileMap);
     setSection(
       filteredDataSource.map((people, index) => {
         return <People key={index} data={people} profMap={profileMap} />;
