@@ -32,6 +32,7 @@ import { LoginProvider } from './utils/LoginContext';
 import { UrlContext, UrlProvider } from './utils/UrlContext';
 
 const Stack = createNativeStackNavigator();
+var allSettled = require('promise.allsettled');
 
 function App() {
   // Persistant references used throughout the app
@@ -98,6 +99,7 @@ function App() {
         var tempfutureEvents = [];
         var tempextraEvents = [];
         var tempAllEvents = [];
+
         db.collection("users")
           .doc(auth.currentUser.uid)
           .get()
@@ -135,20 +137,19 @@ function App() {
 
                 console.log("(app.js) Events and User Read in App.js");
               });
-            store
+            var promises = [];
+            const p1 = store
               .ref(`/profile-pictures/${auth.currentUser.uid}_professional`) //name in storage in firebase console
               .getDownloadURL()
               .then((url) => {
                 professionalUrl.current = url;
-                setAppIsReady(true);
                 // Only the professional url is required
                 console.log("(app.js) Successfully got professional picture");
               })
               .catch((e) => {
-                setAppIsReady(true);
                 console.log("(app.js) Errors while getting professional picture ")
               });
-            store
+            const p2 = store
               .ref(`/profile-pictures/${auth.currentUser.uid}_social`) //name in storage in firebase console
               .getDownloadURL()
               .then((url) => {
@@ -158,7 +159,7 @@ function App() {
               .catch((e) =>
                 console.log("(app.js) Errors while getting social picture ")
               );
-            store
+            const p3 = store
               .ref(`/profile-pictures/${auth.currentUser.uid}_funny`) //name in storage in firebase console
               .getDownloadURL()
               .then((url) => {
@@ -168,7 +169,17 @@ function App() {
               .catch((e) =>
                 console.log("(app.js) Errors while getting funny picture ")
               );
+            promises.push(p1);
+            promises.push(p2);
+            promises.push(p3);
+            allSettled(promises).then((results) => {
+              results.forEach((result) => {
+                console.log("(app.js) Promise allSettled");
+              });
+              setAppIsReady(true);
+            })
           });
+
       } else {
         //TODO Do fetch calls for admin.js
         setAppIsReady(true);
