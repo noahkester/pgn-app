@@ -6,35 +6,58 @@ import { PGNImage } from "../Tabs"
 import { db, store } from "../../utils/firebase";
 import React, { useEffect, useState } from "react";
 import UrlContext, { UrlProvider } from "../../utils/UrlContext";
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import IonIcons from 'react-native-vector-icons/Ionicons';
 var allSettled = require('promise.allsettled');
 
-function DoneImage() {
-    return (
-        <Image
-            source={require("../../images/adminparty.png")}
-            style={styles.adminParty}
-            resizeMode="contain"
-        />
-    )
-}
 function SettingsButton() {
     const navigation = useNavigation();
     return (
-        <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
-            <View style={styles.settingsButton}>
-                <Image
-                    source={require("../../images/settings.png")}
-                    style={styles.settingsIcon}
-                    resizeMode="contain"
-                />
-                <Text style={globalStyles.smallBoldText}>Settings</Text>
-            </View>
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row' }}>
+            <TouchableOpacity onPress={() => navigation.navigate("AdminEvents")}>
+                <View style={[styles.settingsButton, {}]}>
+                    <View style={[{ width: 60, height: 60, alignItems: 'center', justifyContent: 'center', borderRadius: 30 }, globalStyles.universityColorFill]}>
+                        <FontAwesome5Icon
+                            name="calendar-day"
+                            color={'#FFFFFF'}
+                            size={34}
+                        />
+                    </View>
+                </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+                onPress={() => navigation.navigate("AddCode")}
+                style={{ marginLeft: 16 }}
+            >
+                <View style={[styles.settingsButton, {}]}>
+                    <View style={[{ width: 60, height: 60, alignItems: 'center', justifyContent: 'center', borderRadius: 30 }, globalStyles.universityColorFill]}>
+                        <IonIcons
+                            name="md-barcode"
+                            color={'#FFFFFF'}
+                            size={42}
+                            style={{ marginLeft: 3 }}
+                        />
+                    </View>
+                </View>
+            </TouchableOpacity>
+        </View>
     )
 }
 function AdminTop(props) {
     return (
-        <View style={styles.adminTop}>
+        <View style={{
+            height: 160,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingLeft: 15,
+            paddingRight: 15,
+            backgroundColor: "white",
+            paddingTop: 25,
+            position: "absolute",
+            top: 0,
+            width: "100%"
+        }}>
             <SettingsButton />
             <PGNImage />
         </View>
@@ -94,13 +117,13 @@ function AdminBottom(props) {
             }
             switch (props.pointData.type) {
                 case 'Philanthropy':
-                    db.collection('users').doc(props.pointData.id).update({ philanthropyPoints: data.philanthropyPoints + 1 });
+                    db.collection('users').doc(props.pointData.id).update({ philanthropyPoints: data.philanthropyPoints + props.pointData.weight });
                     break;
                 case 'Social':
-                    db.collection('users').doc(props.pointData.id).update({ socialPoints: data.socialPoints + 1 });
+                    db.collection('users').doc(props.pointData.id).update({ socialPoints: data.socialPoints + props.pointData.weight });
                     break;
                 case 'Professional':
-                    db.collection('users').doc(props.pointData.id).update({ professionalPoints: data.professionalPoints + 1 });
+                    db.collection('users').doc(props.pointData.id).update({ professionalPoints: data.professionalPoints + props.pointData.weight });
                     break;
                 default:
                     console.log('(accept-point switch statement) no match for ' + props.pointData.type);
@@ -139,21 +162,22 @@ function PointSheet(props) {
         return (<View></View>)
     }
     return (
-        <View style={styles.pointSheet}>
-            <View style={styles.space}></View>
-            <View style={styles.pointTextLine}>
-                <Text style={globalStyles.largeSemiBoldText}>{props.data.name}</Text>
-            </View>
-            <View style={styles.pointTextLine}>
-                <Text style={globalStyles.largeSemiBoldText}>{props.data.label}</Text>
-            </View>
-            <View style={styles.space}></View>
+        <View style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+        }}>
+            <Text style={globalStyles.largeSemiBoldText}>{props.data.label}</Text>
+            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16 }}>{props.data.name}</Text>
             <Image
                 source={(props.image == '') ? require("../../images/unknown-image.png") : { uri: props.image }}
                 resizeMode="contain"
-                style={styles.pointImage}
+                style={{
+                    height: 240,
+                    width: 240
+                }}
             />
-            <Text style={globalStyles.largeSemiBoldText}>{props.data.proof}</Text>
+            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16 }}>{'Proof: ' + props.data.proof}</Text>
         </View>
     )
 }
@@ -208,52 +232,51 @@ export function AdminPage(props) {
     }, [urlMap, queueIndex, dummyRender])
 
     return (
-        <View style={styles.adminScreen}>
+        <View style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "white"
+        }}>
             <AdminTop />
-            <Text style={globalStyles.largeSemiBoldText}>Remaining Points: {queue.length - queueIndex}</Text>
-            <View style={styles.pointQueue}>
+            <Text style={[globalStyles.largeSemiBoldText, { position: 'absolute', top: 180 }]}>Remaining Points: {queue.length - queueIndex}</Text>
+            <View style={{
+                width: '90%', height: 400, borderRadius: 15,
+                backgroundColor: '#FFFFFF',
+                shadowColor: "#BBBBBB",
+                shadowOpacity: 0.5,
+                shadowRadius: 16,
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}>
                 {(queueIndex == queue.length) ?
-                    <DoneImage /> :
+                    <Image
+                        source={require("../../images/adminparty.png")}
+                        style={{
+                            width: 200,
+                            height: 200,
+                        }}
+                        resizeMode="contain"
+                    />
+                    :
                     <PointSheet
                         data={currentPoint}
                         image={currentImage}
                     />
                 }
             </View>
-            <AdminBottom
-                index={queueIndex}
-                setQueueIndex={setQueueIndex}
-                max={queue.length}
-                pointData={currentPoint}
-            />
+            {(queueIndex !== queue.length) ?
+                <AdminBottom
+                    index={queueIndex}
+                    setQueueIndex={setQueueIndex}
+                    max={queue.length}
+                    pointData={currentPoint}
+                /> : null
+            }
         </View>
     )
 }
 const styles = StyleSheet.create({
-    adminScreen: {
-        height: "100%",
-        width: "100%",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "white"
-    },
-    adminParty: {
-        width: 300,
-        height: 300,
-    },
-    adminTop: {
-        height: 160,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        paddingLeft: 15,
-        paddingRight: 15,
-        backgroundColor: "white",
-        paddingTop: 25,
-        position: "absolute",
-        top: 0,
-        width: "100%"
-    },
     adminBottom: {
         height: 160,
         flexDirection: "row",
@@ -285,9 +308,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center"
     },
-    pointQueue: {
-        width: "80%",
-    },
+
     pointImage: {
         height: 200,
         width: 200

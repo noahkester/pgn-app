@@ -57,7 +57,7 @@ export function Profile(props) {
         {image}
       </TouchableOpacity>
 
-      <Text style={globalStyles.smallBoldText}>Hello {props.name}!</Text>
+      <Text style={[globalStyles.smallBoldText, {marginTop: 6}]}>Hello {props.name}!</Text>
       <Text style={globalStyles.smallBoldText}>PC {props.class}</Text>
     </View>
   );

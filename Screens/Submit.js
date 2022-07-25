@@ -56,14 +56,14 @@ function EventsDropDown() {
       })
   }, [])
 
-
   return (
     //integrate tickIconStyle to each event in items
     <DropDownPicker
       onSelectItem={(item) => {
-        eventLabel.current = item.name;
+        eventLabel.current = item.label;
         eventWeight.current = item.weight;
         typeOfEvent.current = item.type;
+        console.log('selected ');
       }}
       placeholder="Select Event"
       placeholderStyle={[globalStyles.mediumBoldText, globalStyles.grayText]}

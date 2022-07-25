@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext, useMemo, useCallback, useRef } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Button, TouchableOpacity, Text, Image, View } from "react-native";
-import { useFonts, Poppins_600SemiBold, Poppins_700Bold } from "@expo-google-fonts/poppins";
+import { useFonts, Poppins_600SemiBold, Poppins_700Bold, Poppins_400Regular } from "@expo-google-fonts/poppins";
 import { useNavigation, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
@@ -22,6 +22,8 @@ import { ContactPage } from "./Screens/newUser/Contact";
 import { EmailVerificationPage } from "./Screens/newUser/EmailVerification";
 import { PersonPage } from "./Screens/Person";
 import { AccountImageUploadPage } from "./Screens/AccountImageUpload";
+import { AddEventPage } from './Screens/adminUser/AddEvent';
+import { AddCodePage } from './Screens/adminUser/AddCode';
 
 // Firebase and misc imports
 import { auth, getCurrentUser, db, store } from "./utils/firebase";
@@ -182,7 +184,17 @@ function App() {
 
       } else {
         //TODO Do fetch calls for admin.js
-        setAppIsReady(true);
+        db.collection("events")
+          .get()
+          .then((querySnapshot) => {
+            var tempAllEvents = [];
+            querySnapshot.forEach((doc) => {
+              var data = doc.data();
+              tempAllEvents.push(data);
+            });
+            allEvents.current = tempAllEvents;
+            setAppIsReady(true);
+          });
       }
     }
   }
@@ -212,7 +224,9 @@ function App() {
             }}
           >
             <Stack.Screen name="Admin" component={AdminPage} />
-            <Stack.Screen name="Settings" component={AdminSettingsPage} />
+            <Stack.Screen name="AdminEvents" component={AdminSettingsPage} />
+            <Stack.Screen name="AddEvent" component={AddEventPage} />
+            <Stack.Screen name="AddCode" component={AddCodePage} />
           </Stack.Navigator>
         )
       }
@@ -269,6 +283,7 @@ function App() {
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
     Poppins_600SemiBold,
+    Poppins_400Regular
   });
   if (!appIsReady || !fontsLoaded) {
     return null;
