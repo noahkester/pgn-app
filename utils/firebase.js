@@ -48,6 +48,17 @@ export function sendEmail(user) {
     console.log("(firebase) Email send to: " + user.email);
   });
 }
+export function sendPasswordReset(email) {
+  auth.sendPasswordResetEmail(email)
+    .then(() => {
+      console.log('Password reset sent');
+    })
+    .catch((error) => {
+      console.log('Issue sending reset password')
+    });
+}
+
+
 export async function getProfilePicture(name) {
   var ref = firebase.storage().ref("/profile-pictures/" + name);
   return new Promise((resolve, reject) => {

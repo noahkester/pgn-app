@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import globalStyles from "../../styles/Styles";
-import { auth, db } from "../../utils/firebase";
+import { auth, db, sendPasswordReset } from "../../utils/firebase";
 import { AccountTop } from "../Account";
 import { useNavigation } from "@react-navigation/native";
 import { useContext } from "react";
@@ -141,7 +141,7 @@ function LoginButton(props) {
                 }
                 else {
                   console.log("(Login) User Account has not been created");
-                navigation.navigate("Name");
+                  navigation.navigate("Name");
                 }
               })
               .catch(() => {
@@ -235,6 +235,13 @@ export function LoginPage() {
         <ErrorMessage message={passwordMessage} />
         <View style={{ height: 10 }}></View>
         <LoginButton title="Login" handleLogin={handleLogin} />
+        <TouchableOpacity
+          onPress={() => {
+            sendPasswordReset(email);
+          }}
+        >
+          <Text>Reset Password</Text>
+        </TouchableOpacity>
       </KeyboardAvoidingView>
     </View>
   );
