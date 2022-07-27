@@ -27,24 +27,27 @@ function EventsDropDown() {
 
   useEffect(() => {
     console.log('(submit) rendered');
-    db.collection("users")
-      .doc(auth.currentUser.uid)
+    var tempItems = []
+    var approvedOrWaiting = []
+    db.collection("events")
       .get()
-      .then((doc) => {
-        var data = doc.data();
-        loginContext.currentUser = data;
-        const submittedPoints = loginContext.currentUser.submittedPoints;
-        var tempItems = [];
-        db.collection("events")
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          tempItems.push(doc.data());
+        });
+        db.collection("points")
+          .where("id", "==", loginContext.currentUser.id)
           .get()
           .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
-              tempItems.push(doc.data());
+              const data = doc.data();
+              if (data.status == "waiting" || data.status == "accepted")
+                approvedOrWaiting.push(data.label)
             });
             tempItems = tempItems.filter(
               (event) => {
-                for (let i = 0; i < submittedPoints.length; i++) {
-                  if (event.label === submittedPoints[i].label && submittedPoints[i].status !== 'rejected') {
+                for (let i = 0; i < approvedOrWaiting.length; i++) {
+                  if (event.label === approvedOrWaiting[i]) {
                     return false;
                   }
                 }
@@ -52,7 +55,7 @@ function EventsDropDown() {
               }
             );
             setItems(tempItems);
-          });
+          })
       })
   }, [])
 
@@ -232,19 +235,13 @@ export function SubmitPoints(props) {
         db.collection("users")
           .doc(auth.currentUser.uid)
           .update({
-            submittedPoints: firebase.firestore.FieldValue.arrayUnion({
-              label: eventLabel.current,
-              type: typeOfEvent.current,
-              status: "waiting",
-              weight: eventWeight.current,
-              time: 0
-            }),
+            submittedPoints: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.uid + "_" + eventLabel.current)
           })
           .then(() => {
             console.log("(Submit) Points Submission added to user array");
             uploadSubmissionImage(imageSrc.current, auth.currentUser.uid + "_" + eventLabel.current);
 
-            db.collection("points-queue")
+            db.collection("points")
               .doc(auth.currentUser.uid + "_" + eventLabel.current)
               .set({
                 label: eventLabel.current,

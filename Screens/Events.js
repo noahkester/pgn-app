@@ -91,7 +91,7 @@ export function EventSection(props) {
       type={event.type}
       weight={event.weight}
       location={event.location}
-      time={event.time}
+      time={('time' in event) ? event.time : 0}
     />
   ));
   if (eventsList.length == 0) {
