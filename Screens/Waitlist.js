@@ -6,31 +6,59 @@ import {
   Image,
   View,
   ScrollView,
+  RefreshControl,
 } from "react-native";
 import { EventSection } from "./Events";
 import globalStyles from "../styles/Styles";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { useEffect, useRef, useContext } from "react";
+import { useEffect, useRef, useContext, useState, useCallback } from "react";
 import { db, auth } from "../utils/firebase";
 import LoginContext from "../utils/LoginContext";
 
 const Tab = createMaterialTopTabNavigator();
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
 
 //TODO: Add SnapShot Listener so it can get updates.
 function WaitScreen() {
   const loginContext = useContext(LoginContext);
   const curUser = loginContext.currentUser;
-  const allSubmittedEvents = curUser.submittedPoints;
+  const [waiting, setWaiting] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const waiting = allSubmittedEvents.reduce((events, event) => {
-    if (event.status === "waiting") {
-      events.push(event);
-    }
-    return events;
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    wait(1000).then(() => setRefreshing(false));
   }, []);
+
+  useEffect(() => {
+    console.log('wait screen useEffect')
+    db.collection("points")
+      .where("id", "==", curUser.id)
+      .get()
+      .then((querySnapshot) => {
+        var tempWaiting = []
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          if (data.status == "waiting")
+            tempWaiting.push(data)
+        });
+        setWaiting(tempWaiting);
+      })
+  }, [refreshing])
+
   return (
     <View style={styles.eventScreen}>
-      <ScrollView style={globalStyles.scroll}>
+      <ScrollView
+        style={globalStyles.scroll}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
         <View style={globalStyles.scrollView}>
           <EventSection events={waiting} />
         </View>
@@ -42,19 +70,40 @@ function WaitScreen() {
 function AcceptedScreen() {
   const loginContext = useContext(LoginContext);
   const curUser = loginContext.currentUser;
-  const allSubmittedEvents = curUser.submittedPoints;
+  const [accepted, setAccepted] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const completed = allSubmittedEvents.reduce((events, event) => {
-    if (event.status === "accepted") {
-      events.push(event);
-    }
-    return events;
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    wait(1000).then(() => setRefreshing(false));
   }, []);
+  useEffect(() => {
+    db.collection("points")
+      .where("id", "==", curUser.id)
+      .get()
+      .then((querySnapshot) => {
+        var tempAccepted = []
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          if (data.status == "accepted")
+            tempAccepted.push(data)
+        });
+        setAccepted(tempAccepted);
+      })
+  }, [refreshing])
   return (
     <View style={styles.eventScreen}>
-      <ScrollView style={globalStyles.scroll}>
+      <ScrollView
+        style={globalStyles.scroll}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
         <View style={globalStyles.scrollView}>
-          <EventSection events={completed} />
+          <EventSection events={accepted} />
         </View>
       </ScrollView>
     </View>
@@ -64,19 +113,40 @@ function AcceptedScreen() {
 function DeclinedScreen() {
   const loginContext = useContext(LoginContext);
   const curUser = loginContext.currentUser;
-  const allSubmittedEvents = curUser.submittedPoints;
+  const [rejected, setRejected] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const declined = allSubmittedEvents.reduce((events, event) => {
-    if (event.status === "rejected") {
-      events.push(event);
-    }
-    return events;
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    wait(1000).then(() => setRefreshing(false));
   }, []);
+  useEffect(() => {
+    db.collection("points")
+      .where("id", "==", curUser.id)
+      .get()
+      .then((querySnapshot) => {
+        var tempRejected = []
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          if (data.status == "rejected")
+            tempRejected.push(data)
+        });
+        setRejected(tempRejected);
+      })
+  }, [refreshing])
   return (
     <View style={styles.eventScreen}>
-      <ScrollView style={globalStyles.scroll}>
+      <ScrollView
+        style={globalStyles.scroll}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
         <View style={globalStyles.scrollView}>
-          <EventSection events={declined} />
+          <EventSection events={rejected} />
         </View>
       </ScrollView>
     </View>
