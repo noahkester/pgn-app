@@ -82,6 +82,9 @@ function App() {
             }
             setSignIn(true);
             console.log("(app.js) SignIn set to true");
+          }else{
+            console.log("(APP.js): user email not verified!! ")
+            setAppIsReady(true);
           }
         })
         .catch(() => {
@@ -214,6 +217,7 @@ function App() {
     // var test = isAdmin ? "Admin" : "Navigation";
 
     if (isSignedIn) {
+      console.log("Rendering Pages 1");
       if (isAdmin.current) {
         return (
           <Stack.Navigator
@@ -248,6 +252,7 @@ function App() {
       )
     }
     // User is not signed in
+    console.log("Rendering Pages 2");
     return (
       <Stack.Navigator
         screenOptions={{
@@ -286,6 +291,7 @@ function App() {
     Poppins_400Regular
   });
   if (!appIsReady || !fontsLoaded) {
+    console.log("(app.js) app is not ready!");
     return null;
   } else {
     return (

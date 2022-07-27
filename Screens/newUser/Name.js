@@ -386,6 +386,7 @@ export function NamePage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [chapter, setChapter] = useState("");
+  console.log("Inside Name Page");
   return (
     <View style={styles.screen}>
       <View></View>
@@ -416,11 +417,12 @@ export function NamePage() {
 }
 const styles = StyleSheet.create({
   screen: {
+    flex: 1,
     height: "100%",
     width: "100%",
     flexDirection: "column",
     justifyContent: "space-between",
-    alignItems: "center",
+    
     backgroundColor: "white",
   },
   iconStyle: {
