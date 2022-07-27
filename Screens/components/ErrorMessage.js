@@ -4,7 +4,7 @@ import globalStyles from "../../styles/Styles"
 export function ErrorMessage(props) {
     return (
         <View style={styles.errorMessage}>
-            <Text style={[styles.errorMessageText, globalStyles.smallBoldText, globalStyles.errorRedText]}>{props.message}</Text>
+            <Text style={[styles.errorMessageText, globalStyles.smallBoldText, globalStyles.errorRedText,]}>{props.message}</Text>
         </View>
     )
 }

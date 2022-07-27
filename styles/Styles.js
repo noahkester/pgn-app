@@ -21,9 +21,9 @@ export default StyleSheet.create({
   errorRedText: {
     color: colors.errorRed
   },
-  errorRedText: {
-    color: colors.messageGreen
-  },
+  // errorRedText: {
+  //   color: colors.messageGreen
+  // },
   grayBorder: {
     borderWidth: 1,
     borderColor: colors.gray,
