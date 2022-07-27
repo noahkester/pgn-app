@@ -132,26 +132,20 @@ function LoginButton(props) {
             // 1: User has not verified their email, but has added account information
             console.log("Checking: " + user.uid);
             db.collection("users")
-              .where("id", "==", user.uid)
+              .doc(user.uid)
               .get()
-              .then((querySnapshot) => {
-                querySnapshot.forEach((user) => {
-                  if (user.exists) {
-                    console.log(
-                      "(Login) User account has been created but missing email verification"
-                    );
-                    // setAppIsReady(true);
-                    navigation.navigate("EmailVerification");
-                  }
-                });
-                console.log(
-                  "(Login) User auth created but missing account information"
-                );
-                //
+              .then((doc) => {
+                if (doc.exists) {
+                  console.log("(Login) User account has been created but missing email verification");
+                  navigation.navigate("EmailVerification");
+                }
+                else {
+                  console.log("(Login) User Account has not been created");
                 navigation.navigate("Name");
+                }
               })
               .catch(() => {
-                console.log("(Login) ERROR: Could not get firebase account");
+                console.log("(Login) Firebase issues");
               });
           }
         }
