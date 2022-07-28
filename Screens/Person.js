@@ -90,32 +90,23 @@ function AccountInput(props) {
     </View>
   );
 }
-function AcademicInfo(props) {
-  return (
-    <View style={styles.academicSection}>
-      <AccountInput label="Major:" input={props.major} />
-      <AccountInput label="Minor:" input={props.minor} />
-    </View>
-  );
-}
-function ContactInfo(props) {
-  return (
-    <View style={[styles.academicSection, { paddingBottom: 80 }]}>
-      <AccountInput label="Email:" input={props.email} />
-      <AccountInput label="Phone:" input={props.number} />
-    </View>
-  );
-}
+
 
 function PledgeClass(props) {
   return (
-    <View style={styles.pledgeClass}>
-      <Text style={globalStyles.smallSemiBoldText}>
-        {"PC " + props.pledgeClass}
-      </Text>
-      <Text style={globalStyles.smallSemiBoldText}>
-        {"Status: " + props.status}
-      </Text>
+    <View style={{ width: '80%' }}>
+      <View style={styles.pledgeClass}>
+        <Text style={globalStyles.smallSemiBoldText}>
+          {"PC " + props.pledgeClass}
+        </Text>
+        <Text style={globalStyles.smallSemiBoldText}>
+          {"Status: " + props.status}
+        </Text>
+      </View>
+      {(props.pledgeTask == "") ?
+        null :
+        <Text style={[globalStyles.smallSemiBoldText, { marginTop: 10, marginBottom: 10 }]}>{"Pledge task: " + props.pledgeTask}</Text>
+      }
     </View>
   );
 }
@@ -173,9 +164,6 @@ export function PersonPage({ route }) {
     promises.push(p2);
     promises.push(p3);
     allSettled(promises).then((results) => {
-      results.forEach((result) => {
-        console.log("(person.js) Promise allSettled");
-      });
       setPageIsReady(true);
     })
   }, []);
@@ -220,9 +208,13 @@ export function PersonPage({ route }) {
             <Description description={memberData.bio} />
             <Activities activities={memberData.activities} />
             <Chapter chapter={memberData.chapter} />
-            <PledgeClass pledgeClass={memberData.pledgeClass} status={memberData.status} />
-            <AcademicInfo major={memberData.major} minor={memberData.minor} />
-            <ContactInfo email={memberData.email} number={memberData.phone} />
+            <PledgeClass pledgeClass={memberData.pledgeClass} status={memberData.status} pledgeTask={memberData.pledgeTask} />
+
+            <AccountInput label="Major:" input={memberData.major} />
+            <AccountInput label="Minor:" input={memberData.minor} />
+            <AccountInput label="Hometown:" input={memberData.hometown} />
+            <AccountInput label="Email:" input={memberData.email} />
+            <AccountInput label="Phone:" input={memberData.number} />
           </View>
         </ScrollView>
       </View>
@@ -298,7 +290,7 @@ const styles = StyleSheet.create({
     width: "80%",
   },
   accountInput: {
-    width: "100%",
+    width: "80%",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -312,7 +304,7 @@ const styles = StyleSheet.create({
   pledgeClass: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "80%",
+    width: "100%",
     paddingTop: 20,
   },
   signoutButton: {

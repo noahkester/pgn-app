@@ -44,8 +44,10 @@ function Event(props) {
     icon = require("../images/professional.png");
   } else if (props.type === "Social") {
     icon = require("../images/social.png");
+  } else if (props.type === "Interview") {
+    icon = require("../images/interview.png");
   } else {
-    //Uncaught error
+    console.log('strange error');
   }
   var points = "";
   if (props.weight == 1) {

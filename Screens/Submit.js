@@ -41,7 +41,7 @@ function EventsDropDown() {
           .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
               const data = doc.data();
-              if (data.status == "waiting" || data.status == "accepted")
+              if ((data.status == "waiting" || data.status == "accepted") && data.type !== "Interview")
                 approvedOrWaiting.push(data.label)
             });
             tempItems = tempItems.filter(

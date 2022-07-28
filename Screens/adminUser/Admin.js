@@ -117,6 +117,9 @@ function AdminBottom(props) {
                 case 'Professional':
                     db.collection('users').doc(props.pointData.id).update({ professionalPoints: data.professionalPoints + props.pointData.weight });
                     break;
+                case 'Interview':
+                    db.collection('users').doc(props.pointData.id).update({ activeInterviews: data.activeInterviews + props.pointData.weight });
+                    break;
                 default:
                     console.log('(accept-point switch statement) no match for ' + props.pointData.type);
                     break;
@@ -197,9 +200,6 @@ export function AdminPage(props) {
                     promises.push(promise);
                 })
                 allSettled(promises).then((results) => {
-                    results.forEach((result) => {
-                        console.log("(admin.js) Promise allSettled");
-                    });
                     setUrlMap(tempUrlMap);
                 })
                 setQueue(tempQueue);

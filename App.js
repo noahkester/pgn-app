@@ -113,6 +113,7 @@ function App() {
           .then((doc) => {
             var data = doc.data();
             currentUser.current = data;
+
             db.collection("events")
               .get()
               .then((querySnapshot) => {
@@ -180,9 +181,6 @@ function App() {
             promises.push(p2);
             promises.push(p3);
             allSettled(promises).then((results) => {
-              results.forEach((result) => {
-                console.log("(app.js) Promise allSettled");
-              });
               setAppIsReady(true);
             })
           });
@@ -335,6 +333,7 @@ function App() {
                   status: "",
                   role: "",
 
+                  hometown: "",
                   activities: [],
                   bio: "",
 
@@ -345,6 +344,7 @@ function App() {
                   philanthropyPoints: 0,
                   professionalPoints: 0,
                   socialPoints: 0,
+                  activeInterviews: 0,
                   submittedPoints: [],
                 }}
               >

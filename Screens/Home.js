@@ -97,6 +97,21 @@ function PointDisplay(props) {
         totalPoints={props.totalSocialPoints}
         icon={require("../images/social.png")}
       />
+      {(props.isPledge) ?
+        <View style={{ borderWidth: 1, marginTop: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-evenly'}}>
+          <Image
+            source={require("../images/interview.png")}
+            resizeMode="contain"
+            style={{
+              width: 36,
+              height: 36,
+            }}
+          />
+          <Text style={globalStyles.smallSemiBoldText}>{'Active Interviews: '}</Text>
+          <Text style={globalStyles.smallSemiBoldText}>{props.activeInterviews + '/3'}</Text>
+        </View>
+        : null
+      }
     </View>
   );
 }
@@ -108,6 +123,7 @@ export function HomePage() {
   var totalPhilanthropyPoints = 0;
   var totalSocialPoints = 0;
   var totalProfessionalPoints = 0;
+  //TODO make dynamic from firebase pull
   switch (loginContext.currentUser.status) {
     case 'active':
       totalPhilanthropyPoints = 3;
@@ -122,6 +138,7 @@ export function HomePage() {
     case 'inactive':
       console.log("(Home) Error, inactive user, log out or send alert");
   }
+
   return (
     <View style={styles.homeScreen}>
       <View style={{
@@ -136,6 +153,8 @@ export function HomePage() {
         totalPhilanthropyPoints={totalPhilanthropyPoints}
         totalSocialPoints={totalSocialPoints}
         totalProfessionalPoints={totalProfessionalPoints}
+        activeInterviews={loginContext.currentUser.activeInterviews}
+        isPledge={loginContext.currentUser.status === "pledge"}
       />
       <SubmitPoints address="Submit" title="Submit Points" />
     </View>
