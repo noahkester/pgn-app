@@ -6,13 +6,15 @@ import {
   Image,
   View,
   ScrollView,
+  RefreshControl,
 } from "react-native";
 import { EventSection } from "./Events";
 import globalStyles from "../styles/Styles";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { useEffect, useRef, useContext } from "react";
+import { useEffect, useRef, useContext, useCallback, useState } from "react";
 import { db, auth } from "../utils/firebase";
 import LoginContext from "../utils/LoginContext";
+import { createContext } from "react";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -20,8 +22,29 @@ const Tab = createMaterialTopTabNavigator();
 function WaitScreen() {
   const loginContext = useContext(LoginContext);
   const curUser = loginContext.currentUser;
-  const allSubmittedEvents = curUser.submittedPoints;
+  const submissionContext = useContext(Submissions);
+  const allSubmittedEvents = submissionContext.allSubmittedEvents;
+  const [refreshing, setRefreshing] = useState(false);
 
+
+  const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
+
+  const onRefreshPull = useCallback(() => {
+    setRefreshing(true);
+    wait(1000).then(() => {
+      db.collection("users")
+        .doc(curUser.id)
+        .get()
+        .then((doc) => {
+          console.log("submissions updated");
+          const data = doc.data();
+          submissionContext.setEvents(data.submittedPoints);
+          setRefreshing(false);
+        });
+    });
+  });
   const waiting = allSubmittedEvents.reduce((events, event) => {
     if (event.status === "waiting") {
       events.push(event);
@@ -30,7 +53,11 @@ function WaitScreen() {
   }, []);
   return (
     <View style={styles.eventScreen}>
-      <ScrollView style={globalStyles.scroll}>
+      <ScrollView
+        style={globalStyles.scroll}
+        refreshControl={<RefreshControl onRefresh={onRefreshPull}
+        refreshing = {refreshing} />}
+      >
         <View style={globalStyles.scrollView}>
           <EventSection events={waiting} />
         </View>
@@ -40,9 +67,33 @@ function WaitScreen() {
 }
 
 function AcceptedScreen() {
+  const submissionContext = useContext(Submissions);
+  const allSubmittedEvents = submissionContext.allSubmittedEvents;
   const loginContext = useContext(LoginContext);
   const curUser = loginContext.currentUser;
-  const allSubmittedEvents = curUser.submittedPoints;
+
+
+  const [refreshing, setRefreshing] = useState(false);
+
+
+  const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
+
+  const onRefreshPull = useCallback(() => {
+    setRefreshing(true);
+    wait(1000).then(() => {
+      db.collection("users")
+        .doc(curUser.id)
+        .get()
+        .then((doc) => {
+          console.log("submissions updated");
+          const data = doc.data();
+          submissionContext.setEvents(data.submittedPoints);
+          setRefreshing(false);
+        });
+    });
+  });
 
   const completed = allSubmittedEvents.reduce((events, event) => {
     if (event.status === "accepted") {
@@ -52,7 +103,9 @@ function AcceptedScreen() {
   }, []);
   return (
     <View style={styles.eventScreen}>
-      <ScrollView style={globalStyles.scroll}>
+      <ScrollView style={globalStyles.scroll}
+              refreshControl={<RefreshControl onRefresh={onRefreshPull}
+              refreshing = {refreshing} />}>
         <View style={globalStyles.scrollView}>
           <EventSection events={completed} />
         </View>
@@ -64,8 +117,31 @@ function AcceptedScreen() {
 function DeclinedScreen() {
   const loginContext = useContext(LoginContext);
   const curUser = loginContext.currentUser;
-  const allSubmittedEvents = curUser.submittedPoints;
+  const submissionContext = useContext(Submissions);
+  const allSubmittedEvents = submissionContext.allSubmittedEvents;
 
+
+  const [refreshing, setRefreshing] = useState(false);
+
+
+  const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
+
+  const onRefreshPull = useCallback(() => {
+    setRefreshing(true);
+    wait(1000).then(() => {
+      db.collection("users")
+        .doc(curUser.id)
+        .get()
+        .then((doc) => {
+          console.log("submissions updated");
+          const data = doc.data();
+          submissionContext.setEvents(data.submittedPoints);
+          setRefreshing(false);
+        });
+    });
+  });
   const declined = allSubmittedEvents.reduce((events, event) => {
     if (event.status === "rejected") {
       events.push(event);
@@ -74,7 +150,9 @@ function DeclinedScreen() {
   }, []);
   return (
     <View style={styles.eventScreen}>
-      <ScrollView style={globalStyles.scroll}>
+      <ScrollView style={globalStyles.scroll}
+              refreshControl={<RefreshControl onRefresh={onRefreshPull}
+              refreshing = {refreshing} />}>
         <View style={globalStyles.scrollView}>
           <EventSection events={declined} />
         </View>
@@ -83,12 +161,19 @@ function DeclinedScreen() {
   );
 }
 
+const Submissions = createContext({});
 function TopTab() {
-
+  const loginContext = useContext(LoginContext);
+  const curUser = loginContext.currentUser;
+  const [allSubmittedEvents, setEvents] = useState(curUser.submittedPoints);
 
   return (
     <View style={styles.eventScreen}>
       <View style={{ width: "100%", height: "100%" }}>
+        <Submissions.Provider value = {{
+          "allSubmittedEvents": allSubmittedEvents,
+          "setEvents": setEvents,
+        }}>
         <Tab.Navigator
           sceneContainerStyle={{
             backgroundColor: colors.white,
@@ -111,6 +196,7 @@ function TopTab() {
             options={{ tabBarLabel: "Rejected" }}
           ></Tab.Screen>
         </Tab.Navigator>
+        </Submissions.Provider>
       </View>
     </View>
   );
