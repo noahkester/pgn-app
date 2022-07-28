@@ -14,6 +14,7 @@ import { auth, db, store } from "../utils/firebase";
 import ImageCarousel from "./components/ImageCarousel";
 import { findRoleColor, findRoleBorder } from '../styles/Colors'
 import * as Linking from 'expo-linking';
+var allSettled = require('promise.allsettled');
 
 /*
 Backend Stuff TODO:
@@ -139,9 +140,11 @@ export function PersonPage({ route }) {
   const [profileUrlProfessional, setProfileUrlProfessional] = useState('');
   const [profileUrlSocial, setProfileUrlSocial] = useState('');
   const [profileUrlFunny, setProfileUrlFunny] = useState('');
+  const [pageIsReady, setPageIsReady] = useState(false);
 
   useEffect(() => {
-    store
+    var promises = []
+    const p1 = store
       .ref(`/profile-pictures/${memberData.id}_professional`) //name in storage in firebase console
       .getDownloadURL()
       .then((url) => {
@@ -150,14 +153,14 @@ export function PersonPage({ route }) {
       .catch((e) =>
         console.log("(Person) Error getting Professional Picture")
       );
-    store
+    const p2 = store
       .ref(`/profile-pictures/${memberData.id}_social`) //name in storage in firebase console
       .getDownloadURL()
       .then((url) => {
         setProfileUrlSocial(url);
       })
       .catch((e) => console.log("(Person) Error getting Social Picture"));
-    store
+    const p3 = store
       .ref(`/profile-pictures/${memberData.id}_funny`) //name in storage in firebase console
       .getDownloadURL()
       .then((url) => {
@@ -166,53 +169,64 @@ export function PersonPage({ route }) {
       .catch((e) =>
         console.log("(Person) Error getting funny Picture")
       );
+    promises.push(p1);
+    promises.push(p2);
+    promises.push(p3);
+    allSettled(promises).then((results) => {
+      results.forEach((result) => {
+        console.log("(person.js) Promise allSettled");
+      });
+      setPageIsReady(true);
+    })
   }, []);
   return (
-    <View style={styles.createAccountScreen}>
-      <View style={styles.navBar}>
-        <View></View>
-        <AccountTop name={memberData.firstname + " " + memberData.lastname} address="People" />
-      </View>
-      <ScrollView style={styles.accountInfo}>
-        <View style={styles.innerScroll}>
-          <Profile
-            profileUrlProfessional={profileUrlProfessional}
-            profileUrlSocial={profileUrlSocial}
-            profileUrlFunny={profileUrlFunny}
-          />
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            {(memberData.role !== '') ?
-              <View style={{ backgroundColor: findRoleColor(memberData.role), borderWidth: 3, borderColor: findRoleBorder(memberData.role), paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, borderRadius: 100 }}>
-                <Text style={{ color: '#FFFFFF', fontFamily: 'Poppins_600SemiBold' }}>{memberData.role}</Text>
-              </View>
-              :
-              null
-            }
-            {(memberData.linkedin !== '') ?
-              <TouchableOpacity
-                style={{ marginLeft: 10, marginRight: 10 }}
-                onPress={() => {
-                  Linking.openURL(memberData.linkedin);
-                }}
-              >
-                <Image
-                  source={require("../images/linkedin.png")}
-                  style={{ width: 20, height: 20 }}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity> :
-              null
-            }
-          </View>
-          <Description description={memberData.bio} />
-          <Activities activities={memberData.activities} />
-          <Chapter chapter={memberData.chapter} />
-          <PledgeClass pledgeClass={memberData.pledgeClass} status={memberData.status} />
-          <AcademicInfo major={memberData.major} minor={memberData.minor} />
-          <ContactInfo email={memberData.email} number={memberData.phone} />
+    (pageIsReady) ?
+      <View style={styles.createAccountScreen}>
+        <View style={styles.navBar}>
+          <View></View>
+          <AccountTop name={memberData.firstname + " " + memberData.lastname} address="People" />
         </View>
-      </ScrollView>
-    </View>
+        <ScrollView style={styles.accountInfo}>
+          <View style={styles.innerScroll}>
+            <Profile
+              profileUrlProfessional={profileUrlProfessional}
+              profileUrlSocial={profileUrlSocial}
+              profileUrlFunny={profileUrlFunny}
+            />
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              {(memberData.role !== '') ?
+                <View style={{ backgroundColor: findRoleColor(memberData.role), borderWidth: 3, borderColor: findRoleBorder(memberData.role), paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, borderRadius: 100 }}>
+                  <Text style={{ color: '#FFFFFF', fontFamily: 'Poppins_600SemiBold' }}>{memberData.role}</Text>
+                </View>
+                :
+                null
+              }
+              {(memberData.linkedin !== '') ?
+                <TouchableOpacity
+                  style={{ marginLeft: 10, marginRight: 10 }}
+                  onPress={() => {
+                    Linking.openURL(memberData.linkedin);
+                  }}
+                >
+                  <Image
+                    source={require("../images/linkedin.png")}
+                    style={{ width: 20, height: 20 }}
+                    resizeMode="contain"
+                  />
+                </TouchableOpacity> :
+                null
+              }
+            </View>
+            <Description description={memberData.bio} />
+            <Activities activities={memberData.activities} />
+            <Chapter chapter={memberData.chapter} />
+            <PledgeClass pledgeClass={memberData.pledgeClass} status={memberData.status} />
+            <AcademicInfo major={memberData.major} minor={memberData.minor} />
+            <ContactInfo email={memberData.email} number={memberData.phone} />
+          </View>
+        </ScrollView>
+      </View>
+      : null
   );
 }
 const styles = StyleSheet.create({
