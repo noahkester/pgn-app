@@ -14,6 +14,8 @@ import React, { useState, useEffect } from "react";
 import { store, auth } from "../../utils/firebase";
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from "expo-image-picker";
+import { useNavigation } from "@react-navigation/native";
+import NewUserContext from "../../utils/NewUserContext";
 
 function ImageUpload(props) {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
@@ -80,6 +82,10 @@ function ImageUploadCard(props) {
 }
 
 export function ProfilePicturesPage() {
+  const navigation = useNavigation();
+  const nextScreen = () => {
+    navigation.navigate("About");
+  }
   return (
     <View style={styles.screen}>
       <View></View>
@@ -103,7 +109,7 @@ export function ProfilePicturesPage() {
           imageSrc={require("../../images/imageUpload3.png")}
         />
       </View>
-      <NextButton address="About" title="Next" />
+      <NextButton onPress={nextScreen} title="Next" />
     </View>
   );
 }

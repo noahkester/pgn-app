@@ -32,6 +32,8 @@ import { findTimeCategory } from "./Screens/Events";
 // Context import
 import { LoginProvider } from './utils/LoginContext';
 import { UrlContext, UrlProvider } from './utils/UrlContext';
+import { NewUserProvider } from './utils/NewUserContext';
+import { UnknownUserPage } from "./Screens/newUser/UnknownUser";
 
 const Stack = createNativeStackNavigator();
 var allSettled = require('promise.allsettled');
@@ -82,7 +84,7 @@ function App() {
             }
             setSignIn(true);
             console.log("(app.js) SignIn set to true");
-          }else{
+          } else {
             console.log("(APP.js): user email not verified!! ")
             setAppIsReady(true);
           }
@@ -217,7 +219,6 @@ function App() {
     // var test = isAdmin ? "Admin" : "Navigation";
 
     if (isSignedIn) {
-      console.log("Rendering Pages 1");
       if (isAdmin.current) {
         return (
           <Stack.Navigator
@@ -252,8 +253,8 @@ function App() {
       )
     }
     // User is not signed in
-    console.log("Rendering Pages 2");
     return (
+
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
@@ -265,6 +266,7 @@ function App() {
         <Stack.Screen name="CreateAccount" component={CreateAccountPage} />
 
         <Stack.Screen name="Name" component={NamePage} />
+        <Stack.Screen name="UnknownUser" component={UnknownUserPage} />
         <Stack.Screen name="Education" component={EducationPage} />
         <Stack.Screen name="ProfilePictures" component={ProfilePicturesPage} />
         <Stack.Screen name="About" component={AboutPage} />
@@ -319,15 +321,43 @@ function App() {
                 'isAdmin': isAdmin
               }}
             >
-              <Stack.Navigator
-                screenOptions={{
-                  headerShown: false,
+              <NewUserProvider
+                value={{
+                  id: "",
+                  firstname: "",
+                  lastname: "",
+                  chapter: "University of Texas",
+                  pledgeClass: "",
 
-                  gestureEnabled: true,
+                  major: "",
+                  minor: "",
+
+                  status: "",
+                  role: "",
+
+                  activities: [],
+                  bio: "",
+
+                  email: "",
+                  linkedin: "",
+                  phone: "",
+
+                  philanthropyPoints: 0,
+                  professionalPoints: 0,
+                  socialPoints: 0,
+                  submittedPoints: [],
                 }}
               >
-                <Stack.Screen name="Router" component={LoadPage} />
-              </Stack.Navigator>
+                <Stack.Navigator
+                  screenOptions={{
+                    headerShown: false,
+
+                    gestureEnabled: true,
+                  }}
+                >
+                  <Stack.Screen name="Router" component={LoadPage} />
+                </Stack.Navigator>
+              </NewUserProvider>
             </LoginProvider>
           </UrlProvider>
         </NavigationContainer>

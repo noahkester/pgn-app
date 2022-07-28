@@ -9,21 +9,30 @@ import {
 import { SubmitPoints } from "../Home";
 import globalStyles from "../../styles/Styles";
 import { AboutTextInput } from "./NewUser";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { getCurrentUser } from "../../utils/firebase";
 import { NextButton } from "./NewUser";
+import NewUserContext from "../../utils/NewUserContext";
+import { useNavigation } from "@react-navigation/native";
 
 export function AboutPage() {
   const [activities, setActivities] = useState("");
   const [quote, setQuote] = useState("");
+  const navigation = useNavigation();
+  const newUserContext = useContext(NewUserContext);
 
+  const updateAbout = () => {
+    newUserContext.activities = activities;
+    newUserContext.quote = quote;
+    navigation.navigate("Contact");
+  }
   return (
     <View style={styles.screen}>
       <View></View>
       <View style={{ width: "100%", alignItems: "center" }}>
         <Text style={globalStyles.largeSemiBoldText}>About</Text>
         <AboutTextInput
-          placeholder="Activities/Orgs: Bowling, Piano, TX Momentum..."
+          placeholder="Activities/Orgs: Bowling, Piano, ..."
           onCustomChange={text => setActivities(text)}
         />
         <AboutTextInput
@@ -31,7 +40,7 @@ export function AboutPage() {
           onCustomChange={text => setQuote(text)}
         />
       </View>
-      <NextButton address="Contact" title="Next" values={[activities, quote]} inputPage="about" />
+      <NextButton onPress={updateAbout} title="Next" />
     </View>
   );
 }

@@ -4,11 +4,20 @@ import { NewUserTextInput } from "./NewUser";
 import globalStyles from "../../styles/Styles"
 import { setField } from "./About";
 import { NextButton } from "./NewUser";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import NewUserContext from "../../utils/NewUserContext";
+import { useNavigation } from "@react-navigation/native";
 
 export function EducationPage() {
     const [major, setMajor] = useState("");
     const [minor, setMinor] = useState("");
+    const newUserContext = useContext(NewUserContext);
+    const navigation = useNavigation();
+    const updateEducation = () => {
+        newUserContext.major = major;
+        newUserContext.minor = minor;
+        navigation.navigate("ProfilePictures");
+    }
     return (
         <View style={styles.screen}>
             <View></View>
@@ -22,7 +31,9 @@ export function EducationPage() {
                 />
                 <View style={{ height: 10 }}></View>
             </View>
-            <NextButton address="ProfilePictures" title="Next" values={[major, minor]} inputPage="education"/>
+            <NextButton
+                onPress={updateEducation}
+                title="Next" />
         </View>
     );
 }
