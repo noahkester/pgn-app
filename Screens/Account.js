@@ -91,14 +91,20 @@ function AccountInput(props) {
 }
 function PledgeClass(props) {
   return (
-    <View style={{ flexDirection: "row", justifyContent: "space-between", width: "80%", paddingTop: 20 }}>
-      <Text style={globalStyles.smallSemiBoldText}>
-        {"PC " + props.pledgeClass}
-      </Text>
-      <Text style={globalStyles.smallSemiBoldText}>
-        {"Status: " + props.status}
-      </Text>
-    </View>
+    <View style={{ width: '80%' }}>
+      <View style={{ flexDirection: "row", justifyContent: "space-between", width: "100%", paddingTop: 20 }}>
+        <Text style={globalStyles.smallSemiBoldText}>
+          {"PC " + props.pledgeClass}
+        </Text>
+        <Text style={globalStyles.smallSemiBoldText}>
+          {"Status: " + props.status}
+        </Text>
+      </View>
+      {(props.pledgeTask == "") ?
+        null :
+        <Text style={[globalStyles.smallSemiBoldText, { marginTop: 10, marginBottom: 10 }]}>{"Pledge task: " + props.pledgeTask}</Text>
+      }
+    </View >
   );
 }
 function SaveButton(props) {
@@ -163,6 +169,8 @@ export function AccountPage() {
   const [bio, setBio] = useState(curUser.bio);
   const [major, setMajor] = useState(curUser.major);
   const [minor, setMinor] = useState(curUser.minor);
+
+  const [hometown, setHometown] = useState(curUser.hometown);
   const [activities, setActivities] = useState(curUser.activities.toString());
 
   const [email, setEmail] = useState(curUser.email);
@@ -180,14 +188,15 @@ export function AccountPage() {
       curUser.activities.toString() !== activities ||
       curUser.email !== email ||
       curUser.phone !== phone ||
-      curUser.linkedin !== linkedin
+      curUser.linkedin !== linkedin ||
+      curUser.hometown !== hometown
     ) {
       setChanged(true);
     }
     else {
       setChanged(false);
     }
-  }, [bio, major, minor, email, phone, linkedin]);
+  }, [hometown, bio, major, minor, email, phone, linkedin]);
 
   const updateProfile = () => {
     const newInfo = {
@@ -201,7 +210,9 @@ export function AccountPage() {
       minor: minor,
 
       status: curUser.status,
+      pledgeTask: curUser.pledgeTask,
 
+      hometown: hometown,
       activities: activities.split(','),
       bio: bio,
       role: curUser.role,
@@ -255,9 +266,11 @@ export function AccountPage() {
           <PledgeClass
             pledgeClass={curUser.pledgeClass}
             status={curUser.status}
+            pledgeTask={curUser.pledgeTask}
           />
           <AccountInput label="Major:" input={major} setValue={setMajor} />
           <AccountInput label="Minor:" input={minor} setValue={setMinor} />
+          <AccountInput label="Hometown:" input={hometown} setValue={setHometown} />
           <AccountInput label="Activities:" input={activities} setValue={setActivities} />
           <AccountInput label="Email:" input={email} setValue={setEmail} />
           <AccountInput label="Phone:" input={phone} setValue={setPhone} />

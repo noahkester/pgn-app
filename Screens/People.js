@@ -122,9 +122,6 @@ export function PeoplePage() {
           }
         });
         allSettled(promises).then((results) => {
-          results.forEach((result) => {
-            console.log("(people.js) Promise allSettled");
-          });
           setProfileMap(profPicMap);
         })
         var currentUser = allUsers.find((t) => t.id === auth.currentUser.uid);

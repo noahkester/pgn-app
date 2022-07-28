@@ -13,9 +13,12 @@ import { setField } from "./About";
 import ucolors from "../../styles/UniversityColors";
 import DropDownPicker from "react-native-dropdown-picker";
 import colors from "../../styles/Colors";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { NextButton } from "./NewUser";
-import { auth } from "../../utils/firebase";
+import { auth, db } from "../../utils/firebase";
+import NewUserContext from "../../utils/NewUserContext";
+import { useNavigation } from "@react-navigation/native";
+
 function UniversityDropdown(props) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
@@ -386,7 +389,33 @@ export function NamePage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [chapter, setChapter] = useState("");
-  console.log("Inside Name Page");
+  const newUserContext = useContext(NewUserContext);
+  const navigation = useNavigation();
+
+  const checkAdminMembers = () => {
+    const name = (firstName + lastName).toLowerCase();
+    db.collection("admin-members")
+      .doc(name)
+      .get()
+      .then((doc) => {
+        const data = doc.data();
+        newUserContext.status = data.status;
+        newUserContext.pledgeClass = data.pledgeClass;
+        newUserContext.role = data.role;
+        newUserContext.firstname = firstName;
+        newUserContext.lastname = lastName;
+        newUserContext.id = auth.currentUser.uid;
+        newUserContext.email = auth.currentUser.email;
+
+        console.log("(NewUser) Found user and updated pledgeClass and status");
+        navigation.navigate('Education');
+      })
+      .catch((error) => {
+        console.log("(New User) Could not find user in system: FATAL ERROR");
+        navigation.navigate('UnknownUser');
+      });
+  }
+
   return (
     <View style={styles.screen}>
       <View></View>
@@ -407,10 +436,8 @@ export function NamePage() {
         />
       </View>
       <NextButton
-        address="Education"
         title="Next"
-        values={[firstName, lastName]}
-        inputPage="name"
+        onPress={checkAdminMembers}
       />
     </View>
   );
@@ -422,7 +449,7 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "column",
     justifyContent: "space-between",
-    
+
     backgroundColor: "white",
   },
   iconStyle: {

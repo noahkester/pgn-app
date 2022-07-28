@@ -98,23 +98,15 @@ function RejectButton(props) {
 
 function AdminBottom(props) {
     const acceptPoint = () => {
-        // First, delete the record from the points queue
-        db.collection("points-queue").doc(props.pointData.id + '_' + props.pointData.label).delete().then(() => {
-            console.log("(points-queue) Deleted document");
+        // First, update the record from the points queue
+        db.collection("points").doc(props.pointData.id + '_' + props.pointData.label).update({ status: 'accepted' }).then(() => {
+            console.log("(points) Updated points status to accepted");
         }).catch((error) => {
-            console.log("(points-queue) Error deleting document");
+            console.log("(points) Error updating points status");
         });
-
-        // Next update the status value in the submitted points and increment the point value
         db.collection('users').doc(props.pointData.id).get().then((doc) => {
+            // Next update the status value in the submitted points and increment the point value
             const data = doc.data();
-            const submittedPoints = data.submittedPoints;
-            for (let i = 0; i < submittedPoints.length; i++) {
-                if (submittedPoints[i].label === props.pointData.label) {
-                    submittedPoints[i].status = 'accepted';
-                    break;
-                }
-            }
             switch (props.pointData.type) {
                 case 'Philanthropy':
                     db.collection('users').doc(props.pointData.id).update({ philanthropyPoints: data.philanthropyPoints + props.pointData.weight });
@@ -125,29 +117,20 @@ function AdminBottom(props) {
                 case 'Professional':
                     db.collection('users').doc(props.pointData.id).update({ professionalPoints: data.professionalPoints + props.pointData.weight });
                     break;
+                case 'Interview':
+                    db.collection('users').doc(props.pointData.id).update({ activeInterviews: data.activeInterviews + props.pointData.weight });
+                    break;
                 default:
                     console.log('(accept-point switch statement) no match for ' + props.pointData.type);
                     break;
             }
-            db.collection('users').doc(props.pointData.id).update({ submittedPoints: submittedPoints });
-        });
+        })
     }
     const rejectPoint = () => {
-        db.collection("points-queue").doc(props.pointData.id + '_' + props.pointData.label).delete().then(() => {
-            console.log("(points-queue) Deleted document");
+        db.collection("points").doc(props.pointData.id + '_' + props.pointData.label).update({ status: 'rejected' }).then(() => {
+            console.log("(points) Updated points status to rejected");
         }).catch((error) => {
-            console.log("(points-queue) Error deleting document");
-        });
-        db.collection('users').doc(props.pointData.id).get().then((doc) => {
-            const data = doc.data();
-            const submittedPoints = data.submittedPoints;
-            for (let i = 0; i < submittedPoints.length; i++) {
-                if (submittedPoints[i].label === props.pointData.label) {
-                    submittedPoints[i].status = 'rejected';
-                    break;
-                }
-            }
-            db.collection('users').doc(props.pointData.id).update({ submittedPoints: submittedPoints });
+            console.log("(points) Error updating points status");
         });
     }
     return (
@@ -192,7 +175,8 @@ export function AdminPage(props) {
     //fetch data
     useEffect(() => {
         var tempQueue = [];
-        db.collection("points-queue")
+        db.collection("points")
+            .where('status', '==', 'waiting')
             .get()
             .then(async (querySnapshot) => {
                 var promises = [];
@@ -205,20 +189,17 @@ export function AdminPage(props) {
                         .ref(`/points/${docId}`) //name in storage in firebase console
                         .getDownloadURL()
                         .then((url) => {
-                            console.log("(point-queue) Successfully got point image");
+                            console.log("(points) Successfully got point image");
                             tempUrlMap[docId] = url;
                             setDummyRender(true);
                         })
                         .catch((e) => {
                             tempUrlQueue.push('');
-                            console.log("(point-queue) Errors while getting point image");
+                            console.log("(points) Errors while getting point image");
                         });
                     promises.push(promise);
                 })
                 allSettled(promises).then((results) => {
-                    results.forEach((result) => {
-                        console.log("(people.js) Promise allSettled");
-                    });
                     setUrlMap(tempUrlMap);
                 })
                 setQueue(tempQueue);

@@ -100,7 +100,8 @@ export function AddEventPage() {
             location: '',
             time: 0,
             type: '',
-            weight: 1
+            weight: 1,
+            value: Math.floor(Math.random() * 1000000000)
         }
     );
     const eventDocName = (event) => {
@@ -109,7 +110,7 @@ export function AddEventPage() {
     return (
         <View style={{ backgroundColor: '#FFFFFF', flex: 1 }}>
             <AccountTop name={'New Event'} />
-            <View style={{alignItems: 'center'}}>
+            <View style={{ alignItems: 'center' }}>
                 <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, width: '80%', marginTop: 30 }}>Name:</Text>
                 <TextInput
                     style={[{ width: "80%" }, globalStyles.cardContainer, globalStyles.smallSemiBoldText,]}
@@ -157,7 +158,7 @@ export function AddEventPage() {
                                 console.error("(addevent.js) error writing document: ", error);
                             });
                     }}
-                    style={[globalStyles.universityColorFill, globalStyles.button, {marginTop: 30}]}
+                    style={[globalStyles.universityColorFill, globalStyles.button, { marginTop: 30 }]}
                 >
                     <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>Create!</Text>
                 </TouchableOpacity>

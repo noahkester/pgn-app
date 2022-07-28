@@ -14,6 +14,7 @@ import { auth, db, store } from "../utils/firebase";
 import ImageCarousel from "./components/ImageCarousel";
 import { findRoleColor, findRoleBorder } from '../styles/Colors'
 import * as Linking from 'expo-linking';
+var allSettled = require('promise.allsettled');
 
 /*
 Backend Stuff TODO:
@@ -89,32 +90,23 @@ function AccountInput(props) {
     </View>
   );
 }
-function AcademicInfo(props) {
-  return (
-    <View style={styles.academicSection}>
-      <AccountInput label="Major:" input={props.major} />
-      <AccountInput label="Minor:" input={props.minor} />
-    </View>
-  );
-}
-function ContactInfo(props) {
-  return (
-    <View style={[styles.academicSection, { paddingBottom: 80 }]}>
-      <AccountInput label="Email:" input={props.email} />
-      <AccountInput label="Phone:" input={props.number} />
-    </View>
-  );
-}
+
 
 function PledgeClass(props) {
   return (
-    <View style={styles.pledgeClass}>
-      <Text style={globalStyles.smallSemiBoldText}>
-        {"PC " + props.pledgeClass}
-      </Text>
-      <Text style={globalStyles.smallSemiBoldText}>
-        {"Status: " + props.status}
-      </Text>
+    <View style={{ width: '80%' }}>
+      <View style={styles.pledgeClass}>
+        <Text style={globalStyles.smallSemiBoldText}>
+          {"PC " + props.pledgeClass}
+        </Text>
+        <Text style={globalStyles.smallSemiBoldText}>
+          {"Status: " + props.status}
+        </Text>
+      </View>
+      {(props.pledgeTask == "") ?
+        null :
+        <Text style={[globalStyles.smallSemiBoldText, { marginTop: 10, marginBottom: 10 }]}>{"Pledge task: " + props.pledgeTask}</Text>
+      }
     </View>
   );
 }
@@ -139,9 +131,11 @@ export function PersonPage({ route }) {
   const [profileUrlProfessional, setProfileUrlProfessional] = useState('');
   const [profileUrlSocial, setProfileUrlSocial] = useState('');
   const [profileUrlFunny, setProfileUrlFunny] = useState('');
+  const [pageIsReady, setPageIsReady] = useState(false);
 
   useEffect(() => {
-    store
+    var promises = []
+    const p1 = store
       .ref(`/profile-pictures/${memberData.id}_professional`) //name in storage in firebase console
       .getDownloadURL()
       .then((url) => {
@@ -150,14 +144,14 @@ export function PersonPage({ route }) {
       .catch((e) =>
         console.log("(Person) Error getting Professional Picture")
       );
-    store
+    const p2 = store
       .ref(`/profile-pictures/${memberData.id}_social`) //name in storage in firebase console
       .getDownloadURL()
       .then((url) => {
         setProfileUrlSocial(url);
       })
       .catch((e) => console.log("(Person) Error getting Social Picture"));
-    store
+    const p3 = store
       .ref(`/profile-pictures/${memberData.id}_funny`) //name in storage in firebase console
       .getDownloadURL()
       .then((url) => {
@@ -166,53 +160,65 @@ export function PersonPage({ route }) {
       .catch((e) =>
         console.log("(Person) Error getting funny Picture")
       );
+    promises.push(p1);
+    promises.push(p2);
+    promises.push(p3);
+    allSettled(promises).then((results) => {
+      setPageIsReady(true);
+    })
   }, []);
   return (
-    <View style={styles.createAccountScreen}>
-      <View style={styles.navBar}>
-        <View></View>
-        <AccountTop name={memberData.firstname + " " + memberData.lastname} address="People" />
-      </View>
-      <ScrollView style={styles.accountInfo}>
-        <View style={styles.innerScroll}>
-          <Profile
-            profileUrlProfessional={profileUrlProfessional}
-            profileUrlSocial={profileUrlSocial}
-            profileUrlFunny={profileUrlFunny}
-          />
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            {(memberData.role !== '') ?
-              <View style={{ backgroundColor: findRoleColor(memberData.role), borderWidth: 3, borderColor: findRoleBorder(memberData.role), paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, borderRadius: 100 }}>
-                <Text style={{ color: '#FFFFFF', fontFamily: 'Poppins_600SemiBold' }}>{memberData.role}</Text>
-              </View>
-              :
-              null
-            }
-            {(memberData.linkedin !== '') ?
-              <TouchableOpacity
-                style={{ marginLeft: 10, marginRight: 10 }}
-                onPress={() => {
-                  Linking.openURL(memberData.linkedin);
-                }}
-              >
-                <Image
-                  source={require("../images/linkedin.png")}
-                  style={{ width: 20, height: 20 }}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity> :
-              null
-            }
-          </View>
-          <Description description={memberData.bio} />
-          <Activities activities={memberData.activities} />
-          <Chapter chapter={memberData.chapter} />
-          <PledgeClass pledgeClass={memberData.pledgeClass} status={memberData.status} />
-          <AcademicInfo major={memberData.major} minor={memberData.minor} />
-          <ContactInfo email={memberData.email} number={memberData.phone} />
+    (pageIsReady) ?
+      <View style={styles.createAccountScreen}>
+        <View style={styles.navBar}>
+          <View></View>
+          <AccountTop name={memberData.firstname + " " + memberData.lastname} address="People" />
         </View>
-      </ScrollView>
-    </View>
+        <ScrollView style={styles.accountInfo}>
+          <View style={styles.innerScroll}>
+            <Profile
+              profileUrlProfessional={profileUrlProfessional}
+              profileUrlSocial={profileUrlSocial}
+              profileUrlFunny={profileUrlFunny}
+            />
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              {(memberData.role !== '') ?
+                <View style={{ backgroundColor: findRoleColor(memberData.role), borderWidth: 3, borderColor: findRoleBorder(memberData.role), paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, borderRadius: 100 }}>
+                  <Text style={{ color: '#FFFFFF', fontFamily: 'Poppins_600SemiBold' }}>{memberData.role}</Text>
+                </View>
+                :
+                null
+              }
+              {(memberData.linkedin !== '') ?
+                <TouchableOpacity
+                  style={{ marginLeft: 10, marginRight: 10 }}
+                  onPress={() => {
+                    Linking.openURL(memberData.linkedin);
+                  }}
+                >
+                  <Image
+                    source={require("../images/linkedin.png")}
+                    style={{ width: 20, height: 20 }}
+                    resizeMode="contain"
+                  />
+                </TouchableOpacity> :
+                null
+              }
+            </View>
+            <Description description={memberData.bio} />
+            <Activities activities={memberData.activities} />
+            <Chapter chapter={memberData.chapter} />
+            <PledgeClass pledgeClass={memberData.pledgeClass} status={memberData.status} pledgeTask={memberData.pledgeTask} />
+
+            <AccountInput label="Major:" input={memberData.major} />
+            <AccountInput label="Minor:" input={memberData.minor} />
+            <AccountInput label="Hometown:" input={memberData.hometown} />
+            <AccountInput label="Email:" input={memberData.email} />
+            <AccountInput label="Phone:" input={memberData.number} />
+          </View>
+        </ScrollView>
+      </View>
+      : null
   );
 }
 const styles = StyleSheet.create({
@@ -284,7 +290,7 @@ const styles = StyleSheet.create({
     width: "80%",
   },
   accountInput: {
-    width: "100%",
+    width: "80%",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -298,7 +304,7 @@ const styles = StyleSheet.create({
   pledgeClass: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "80%",
+    width: "100%",
     paddingTop: 20,
   },
   signoutButton: {

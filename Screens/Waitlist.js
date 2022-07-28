@@ -17,6 +17,9 @@ import LoginContext from "../utils/LoginContext";
 import { createContext } from "react";
 
 const Tab = createMaterialTopTabNavigator();
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
 
 //TODO: Add SnapShot Listener so it can get updates.
 function WaitScreen() {
@@ -51,6 +54,23 @@ function WaitScreen() {
     }
     return events;
   }, []);
+
+  useEffect(() => {
+    console.log('wait screen useEffect')
+    db.collection("points")
+      .where("id", "==", curUser.id)
+      .get()
+      .then((querySnapshot) => {
+        var tempWaiting = []
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          if (data.status == "waiting")
+            tempWaiting.push(data)
+        });
+        setWaiting(tempWaiting);
+      })
+  }, [refreshing])
+
   return (
     <View style={styles.eventScreen}>
       <ScrollView
@@ -95,19 +115,31 @@ function AcceptedScreen() {
     });
   });
 
-  const completed = allSubmittedEvents.reduce((events, event) => {
-    if (event.status === "accepted") {
-      events.push(event);
-    }
-    return events;
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    wait(1000).then(() => setRefreshing(false));
   }, []);
+  useEffect(() => {
+    db.collection("points")
+      .where("id", "==", curUser.id)
+      .get()
+      .then((querySnapshot) => {
+        var tempAccepted = []
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          if (data.status == "accepted")
+            tempAccepted.push(data)
+        });
+        setAccepted(tempAccepted);
+      })
+  }, [refreshing])
   return (
     <View style={styles.eventScreen}>
       <ScrollView style={globalStyles.scroll}
               refreshControl={<RefreshControl onRefresh={onRefreshPull}
               refreshing = {refreshing} />}>
         <View style={globalStyles.scrollView}>
-          <EventSection events={completed} />
+          <EventSection events={accepted} />
         </View>
       </ScrollView>
     </View>
@@ -148,13 +180,27 @@ function DeclinedScreen() {
     }
     return events;
   }, []);
+  useEffect(() => {
+    db.collection("points")
+      .where("id", "==", curUser.id)
+      .get()
+      .then((querySnapshot) => {
+        var tempRejected = []
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          if (data.status == "rejected")
+            tempRejected.push(data)
+        });
+        setRejected(tempRejected);
+      })
+  }, [refreshing])
   return (
     <View style={styles.eventScreen}>
       <ScrollView style={globalStyles.scroll}
               refreshControl={<RefreshControl onRefresh={onRefreshPull}
               refreshing = {refreshing} />}>
         <View style={globalStyles.scrollView}>
-          <EventSection events={declined} />
+          <EventSection events={rejected} />
         </View>
       </ScrollView>
     </View>

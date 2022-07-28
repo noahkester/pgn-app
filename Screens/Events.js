@@ -44,8 +44,10 @@ function Event(props) {
     icon = require("../images/professional.png");
   } else if (props.type === "Social") {
     icon = require("../images/social.png");
+  } else if (props.type === "Interview") {
+    icon = require("../images/interview.png");
   } else {
-    //Uncaught error
+    console.log('strange error');
   }
   var points = "";
   if (props.weight == 1) {
@@ -91,7 +93,7 @@ export function EventSection(props) {
       type={event.type}
       weight={event.weight}
       location={event.location}
-      time={event.time}
+      time={('time' in event) ? event.time : 0}
     />
   ));
   if (eventsList.length == 0) {
