@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useCallback } from "react";
 import {
   StyleSheet,
   TouchableOpacity,
@@ -6,15 +6,19 @@ import {
   Text,
   View,
   ScrollView,
+  RefreshControl,
 } from "react-native";
 import globalStyles from "../../styles/Styles";
 import colors from "../../styles/Colors";
-import { SignOutButton } from "../Account";
 import { SubmitPoints } from "../Home";
 import LoginContext from "../../utils/LoginContext";
 import { useNavigation } from "@react-navigation/native";
 import { EventSection } from "../Events";
+import { db } from '../../utils/firebase'
 
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
 function AccountTop(props) {
   const navigation = useNavigation();
   return (
@@ -54,6 +58,23 @@ function AccountTop(props) {
 
 export function AdminEventsPage() {
   const loginContext = useContext(LoginContext);
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    db.collection("events")
+      .get()
+      .then((querySnapshot) => {
+        tempAllEvents = [];
+        querySnapshot.forEach((doc) => {
+          var data1 = doc.data();
+          tempAllEvents.push(data1);
+        })
+        loginContext.allEvents.current = tempAllEvents;
+      })
+    wait(1000).then(() => {
+      setRefreshing(false)
+    });
+  }, []);
   return (
     <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
       <View style={{
@@ -66,9 +87,14 @@ export function AdminEventsPage() {
       <ScrollView
         style={[globalStyles.scroll, {}]}
         contentContainerStyle={{ alignItems: 'center' }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
       >
         <EventSection time="All Events" events={loginContext.allEvents.current} />
-        <SignOutButton />
       </ScrollView>
     </View>
   );

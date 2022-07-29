@@ -128,7 +128,20 @@ export function AdminSettingsPage() {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <TouchableOpacity
                     onPress={() => {
-
+                        db.collection("events")
+                            .get()
+                            .then((querySnapshot) => {
+                                querySnapshot.forEach((doc) => {
+                                    doc.ref.delete();
+                                })
+                            })
+                        db.collection("chapter-meetings")
+                            .get()
+                            .then((querySnapshot) => {
+                                querySnapshot.forEach((doc) => {
+                                    doc.ref.delete();
+                                })
+                            })
                     }}
                     style={{ marginRight: 16 }}
                 >
@@ -221,6 +234,7 @@ export function AdminSettingsPage() {
                 }}
                 defaultValue={""}
             />
+            <SignOutButton />
         </View >
     )
 }

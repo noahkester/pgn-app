@@ -88,6 +88,22 @@ function Type(props) {
                     }}
                 />
             </TouchableOpacity>
+            <TouchableOpacity
+                style={{ borderBottomWidth: (type === 'interview') ? 3 : 0, borderColor: '#BEE0BE' }}
+                onPress={() => {
+                    setType('interview');
+                    props.newEvent.current.type = 'Interview';
+                }}
+            >
+                <Image
+                    source={require('../../images/interview.png')}
+                    resizeMode="contain"
+                    style={{
+                        width: 50,
+                        height: 50,
+                    }}
+                />
+            </TouchableOpacity>
         </View>
     )
 }
