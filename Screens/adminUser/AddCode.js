@@ -11,26 +11,19 @@ import { unixEpochTimeToClock, unixEpochTimeToMonthDay, dateObjectToUnixEpoch, a
 function AccountTop(props) {
     const navigation = useNavigation();
     return (
-        <View style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            width: "100%",
-            paddingLeft: 10,
-            paddingRight: 10,
-            height: 160,
-            paddingTop: 70,
-            backgroundColor: '#FFFFFF',
-            position: 'absolute',
-            top: 0
-        }}>
+        <View
+            style={{
+                flexDirection: "row", alignItems: "center", justifyContent: "space-between",
+                width: "100%", height: 160,
+                paddingLeft: 10, paddingRight: 10, paddingTop: 70,
+                backgroundColor: '#FFFFFF',
+                position: 'absolute',
+                top: 0
+            }}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
                 <Image
                     source={require("../../images/back.png")}
-                    style={{
-                        width: 60,
-                        height: 60,
-                    }}
+                    style={{ width: 60, height: 60 }}
                     resizeMode="contain"
                 />
             </TouchableOpacity>
@@ -85,12 +78,8 @@ export function AddCodePage() {
                 >
                     <Text>Auto generate</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={showDatePicker}
-                >
-                    <Text
-                        style={{ marginTop: 60, fontFamily: 'Poppins_600SemiBold', fontSize: 20 }}
-                    >
+                <TouchableOpacity onPress={showDatePicker} >
+                    <Text style={{ marginTop: 60, fontFamily: 'Poppins_600SemiBold', fontSize: 20 }} >
                         {'Meeting Time: ' + unixEpochTimeToMonthDay(dateObjectToUnixEpoch(meetingTime)) + " " + unixEpochTimeToClock(dateObjectToUnixEpoch(meetingTime))}
                     </Text>
                 </TouchableOpacity>

@@ -14,6 +14,21 @@ function SettingsButton() {
     const navigation = useNavigation();
     return (
         <View style={{ flexDirection: 'row' }}>
+            <TouchableOpacity
+                onPress={() => navigation.navigate("AdminSettings")}
+                style={{ marginRight: 16 }}
+            >
+                <View style={[styles.settingsButton, {}]}>
+                    <View style={[{ width: 60, height: 60, alignItems: 'center', justifyContent: 'center', borderRadius: 30 }, globalStyles.universityColorFill]}>
+                        <IonIcons
+                            name="settings-sharp"
+                            color={'#FFFFFF'}
+                            size={42}
+                            style={{}}
+                        />
+                    </View>
+                </View>
+            </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate("AdminEvents")}>
                 <View style={[styles.settingsButton, {}]}>
                     <View style={[{ width: 60, height: 60, alignItems: 'center', justifyContent: 'center', borderRadius: 30 }, globalStyles.universityColorFill]}>

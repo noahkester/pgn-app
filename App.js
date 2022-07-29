@@ -13,7 +13,7 @@ import { NavigationPage } from "./Screens/Tabs";
 import { AccountPage } from "./Screens/Account";
 import { SubmitPage } from "./Screens/Submit";
 import { AdminPage } from "./Screens/adminUser/Admin";
-import { AdminSettingsPage } from "./Screens/adminUser/AdminSettings";
+import { AdminEventsPage } from "./Screens/adminUser/AdminEvents";
 import { NamePage } from "./Screens/newUser/Name";
 import { EducationPage } from "./Screens/newUser/Education";
 import { ProfilePicturesPage } from "./Screens/newUser/ProfilePictures";
@@ -26,6 +26,7 @@ import { AddEventPage } from './Screens/adminUser/AddEvent';
 import { AddCodePage } from './Screens/adminUser/AddCode';
 import { SubmitAttendancePage } from './Screens/SubmitAttendance';
 import { AttendancePage } from './Screens/Attendance';
+import { AdminSettingsPage } from './Screens/adminUser/AdminSettings';
 
 // Firebase and misc imports
 import { auth, getCurrentUser, db, store } from "./utils/firebase";
@@ -229,9 +230,10 @@ function App() {
             }}
           >
             <Stack.Screen name="Admin" component={AdminPage} />
-            <Stack.Screen name="AdminEvents" component={AdminSettingsPage} />
+            <Stack.Screen name="AdminEvents" component={AdminEventsPage} />
             <Stack.Screen name="AddEvent" component={AddEventPage} />
             <Stack.Screen name="AddCode" component={AddCodePage} />
+            <Stack.Screen name="AdminSettings" component={AdminSettingsPage} />
           </Stack.Navigator>
         )
       }

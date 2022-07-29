@@ -19,7 +19,6 @@ function AccountTop(props) {
             height: 160,
             paddingTop: 70,
             backgroundColor: '#FFFFFF'
-
         }}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
                 <Image
@@ -31,7 +30,7 @@ function AccountTop(props) {
                     resizeMode="contain"
                 />
             </TouchableOpacity>
-            <Text style={globalStyles.largeBoldText}>{props.name}</Text>
+            <Text style={{ fontFamily: "Poppins_700Bold", fontSize: 20 }}>{props.name}</Text>
             <View style={{ width: 60 }} />
         </View>
     );
@@ -127,7 +126,17 @@ export function AddEventPage() {
             <View style={{ alignItems: 'center' }}>
                 <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, width: '80%', marginTop: 30 }}>Name:</Text>
                 <TextInput
-                    style={[{ width: "80%" }, globalStyles.cardContainer, globalStyles.smallSemiBoldText,]}
+                    style={{
+                        width: "80%",
+                        backgroundColor: "#FFFFFF",
+                        shadowColor: '#BBBBBB',
+                        shadowOpacity: 0.25,
+                        shadowRadius: 10,
+                        padding: 15,
+                        borderRadius: 10,
+                        fontFamily: "Poppins_600SemiBold",
+                        fontSize: 16
+                    }}
                     onChangeText={(text) => {
                         newEvent.current.label = text;
                     }}
@@ -135,7 +144,15 @@ export function AddEventPage() {
                 />
                 <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, width: '80%', marginTop: 30 }}>Location:</Text>
                 <TextInput
-                    style={[{ width: "80%" }, globalStyles.cardContainer, globalStyles.smallSemiBoldText,]}
+                    style={{
+                        width: "80%", backgroundColor: "#FFFFFF",
+                        shadowColor: '#BBBBBB',
+                        shadowOpacity: 0.25,
+                        shadowRadius: 10,
+                        padding: 15,
+                        borderRadius: 10, fontFamily: "Poppins_600SemiBold",
+                        fontSize: 16
+                    }}
                     onChangeText={(text) => {
                         newEvent.current.location = text;
                     }}
