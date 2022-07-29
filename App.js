@@ -24,6 +24,7 @@ import { PersonPage } from "./Screens/Person";
 import { AccountImageUploadPage } from "./Screens/AccountImageUpload";
 import { AddEventPage } from './Screens/adminUser/AddEvent';
 import { AddCodePage } from './Screens/adminUser/AddCode';
+import { SubmitAttendancePage } from './Screens/SubmitAttendance';
 
 // Firebase and misc imports
 import { auth, getCurrentUser, db, store } from "./utils/firebase";
@@ -246,6 +247,7 @@ function App() {
           <Stack.Screen name="Account" component={AccountPage} />
           <Stack.Screen name="AccountImageUpload" component={AccountImageUploadPage} />
           <Stack.Screen name="Submit" component={SubmitPage} />
+          <Stack.Screen name="Attendance" component={SubmitAttendancePage} />
           <Stack.Screen name="Person" component={PersonPage} />
         </Stack.Navigator>
       )

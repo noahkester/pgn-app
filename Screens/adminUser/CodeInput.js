@@ -10,8 +10,8 @@ import {
 
 const CELL_COUNT = 6;
 
-const BasicExample = () => {
-    const [value, setValue] = useState('');
+export default function BasicExample(moreprops) {
+    const { value, setValue } = moreprops;
     const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
     const [props, getCellOnLayoutHandler] = useClearByFocusCell({
         value,
@@ -62,6 +62,3 @@ const styles = StyleSheet.create({
         color: '#C57035'
     },
 });
-
-
-export default BasicExample;

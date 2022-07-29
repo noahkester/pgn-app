@@ -11,6 +11,7 @@ import { db, auth, store } from "../utils/firebase";
 import { useNavigation } from "@react-navigation/native";
 import SubmissionContext, { SubmissionProvider } from "../utils/SubmissionContext"
 import * as ImageManipulator from 'expo-image-manipulator';
+import IonIcons from 'react-native-vector-icons/Ionicons';
 
 function EventsDropDown() {
   const [open, setOpen] = useState(false);
@@ -257,7 +258,7 @@ export function SubmitPoints(props) {
       }}
     >
       <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>
-        Submit
+        Submit Point
       </Text>
     </TouchableOpacity>
   );
@@ -273,6 +274,7 @@ export function SubmitPage(props) {
   const proofDesc = useRef("");
   const imageSrc = useRef("");
   const eventWeight = useRef(0);
+  const navigation = useNavigation();
 
   return (
     <KeyboardAvoidingView enabled={true} behavior={"padding"}>
@@ -280,7 +282,38 @@ export function SubmitPage(props) {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.submitSubScreen}>
             <View style={styles.submitElement}>
-              <AccountTop name="Submit Points" address="Navigation" />
+              <View style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                width: "100%",
+                paddingLeft: 10,
+              }}>
+                <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                  <Image
+                    source={require("../images/back.png")}
+                    style={{
+                      width: 60,
+                      height: 60,
+                    }}
+                    resizeMode="contain"
+                  />
+                </TouchableOpacity>
+                <Text style={globalStyles.largeBoldText}>Submit</Text>
+                <TouchableOpacity
+                  style={[{ width: 60, height: 60, alignItems: 'center', justifyContent: 'center', borderRadius: 30, marginRight: 10 }, globalStyles.universityColorFill]}
+                  onPress={() => {
+                    navigation.navigate("Attendance");
+                  }}
+                >
+                  <IonIcons
+                    name="md-barcode"
+                    color={'#FFFFFF'}
+                    size={42}
+                    style={{ marginLeft: 3 }}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
             <SubmissionProvider
               value={{

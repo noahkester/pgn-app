@@ -4,6 +4,7 @@ import { useNavigation, NavigationContainer } from "@react-navigation/native";
 import globalStyles from "../../styles/Styles";
 import { db } from "../../utils/firebase";
 import BasicExample from "./CodeInput";
+import { useEffect } from "react";
 function AccountTop(props) {
     const navigation = useNavigation();
     return (
@@ -36,26 +37,52 @@ function AccountTop(props) {
     );
 }
 export function AddCodePage() {
+    const [value, setValue] = useState('');
+    const navigation = useNavigation();
+    const makeid = (length) => {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() *
+                charactersLength));
+        }
+        return result;
+    }
     return (
         <View style={{ flex: 1, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }}>
             <AccountTop name={'Attendance'} />
             <View style={{ width: '80%' }}>
-                <BasicExample />
+                <BasicExample value={value} setValue={setValue} />
+                <TouchableOpacity
+                    style={{ marginTop: 10 }}
+                    onPress={() => {
+                        setValue(makeid(6));
+                    }}
+                >
+                    <Text>Auto generate</Text>
+                </TouchableOpacity>
                 <Text style={{ marginTop: 60, fontFamily: 'Poppins_600SemiBold', fontSize: 20 }}>{'Date:'}</Text>
             </View>
             <TouchableOpacity
                 onPress={() => {
-                    /*db.collection("events")
-                        .doc(eventDocName(newEvent.current))
-                        .set(newEvent.current)
+                    db.collection("chapter-meetings")
+                        .doc(value)
+                        .set(
+                            {
+                                attendees: [],
+                                meetingTime: 'timegoeshere',
+                                expirationTime: 'timegoeshere'
+                            }
+                        )
                         .then(() => {
-                            console.log("(addevent.js) event successfully written!");
+                            console.log("(addcode.js) chapter meeting successfully written!");
                             navigation.goBack();
                         })
                         .catch((error) => {
-                            console.error("(addevent.js) error writing document: ", error);
-                        });*/
-                    navigation.goBack();
+                            console.error("(addcode.js) error writing chapter meeting ", error);
+                            navigation.goBack();
+                        });
                 }}
                 style={[globalStyles.universityColorFill, globalStyles.button, { marginTop: 30 }]}
             >

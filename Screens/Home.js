@@ -163,21 +163,9 @@ export function HomePage() {
         activeInterviews={loginContext.currentUser.activeInterviews}
         isPledge={loginContext.currentUser.status === "pledge"}
       />
-      <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-
-        <View style={{ marginLeft: 10, width: '76%', marginRight: 10 }}>
-          <SubmitPoints address="Submit" title="Submit Points" />
-        </View>
-        <View style={[{ width: 60, height: 60, alignItems: 'center', justifyContent: 'center', borderRadius: 30 }, globalStyles.universityColorFill]}>
-          <IonIcons
-            name="md-barcode"
-            color={'#FFFFFF'}
-            size={42}
-            style={{ marginLeft: 3 }}
-          />
-        </View>
+      <View style={{ width: '90%', flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+          <SubmitPoints address="Submit" title="Submit" />
       </View>
-
     </View>
   );
 }
