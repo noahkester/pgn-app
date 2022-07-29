@@ -5,6 +5,9 @@ import globalStyles from "../../styles/Styles";
 import { db } from "../../utils/firebase";
 import BasicExample from "./CodeInput";
 import { useEffect } from "react";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { unixEpochTimeToClock, unixEpochTimeToMonthDay, dateObjectToUnixEpoch, addHours } from '../../utils/time'
+
 function AccountTop(props) {
     const navigation = useNavigation();
     return (
@@ -38,6 +41,10 @@ function AccountTop(props) {
 }
 export function AddCodePage() {
     const [value, setValue] = useState('');
+    const [meetingTime, setMeetingTime] = useState(new Date())
+    const [expirationTime, setExpirationTime] = useState(new Date())
+    //const [open, setOpen] = useState(false)
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const navigation = useNavigation();
     const makeid = (length) => {
         var result = '';
@@ -49,9 +56,25 @@ export function AddCodePage() {
         }
         return result;
     }
+    useEffect(() => {
+        console.log(meetingTime);
+    }, [meetingTime])
+    const showDatePicker = () => {
+        setDatePickerVisibility(true);
+    };
+    const hideDatePicker = () => {
+        setDatePickerVisibility(false);
+    };
+    const handleConfirm = (date) => {
+        setMeetingTime(date);
+        hideDatePicker();
+    };
+    useEffect(() => {
+        expirationTime.setTime(meetingTime.getTime() + 3 * 60 * 60 * 1000);
+    }, [meetingTime])
     return (
         <View style={{ flex: 1, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }}>
-            <AccountTop name={'Attendance'} />
+            <AccountTop name={'New Meeting'} />
             <View style={{ width: '80%' }}>
                 <BasicExample value={value} setValue={setValue} />
                 <TouchableOpacity
@@ -62,7 +85,22 @@ export function AddCodePage() {
                 >
                     <Text>Auto generate</Text>
                 </TouchableOpacity>
-                <Text style={{ marginTop: 60, fontFamily: 'Poppins_600SemiBold', fontSize: 20 }}>{'Date:'}</Text>
+                <TouchableOpacity
+                    onPress={showDatePicker}
+                >
+                    <Text
+                        style={{ marginTop: 60, fontFamily: 'Poppins_600SemiBold', fontSize: 20 }}
+                    >
+                        {'Meeting Time: ' + unixEpochTimeToMonthDay(dateObjectToUnixEpoch(meetingTime)) + " " + unixEpochTimeToClock(dateObjectToUnixEpoch(meetingTime))}
+                    </Text>
+                </TouchableOpacity>
+                <DateTimePickerModal
+                    isVisible={isDatePickerVisible}
+                    mode="datetime"
+                    onConfirm={handleConfirm}
+                    onCancel={hideDatePicker}
+                    date={meetingTime}
+                />
             </View>
             <TouchableOpacity
                 onPress={() => {
@@ -71,8 +109,8 @@ export function AddCodePage() {
                         .set(
                             {
                                 attendees: [],
-                                meetingTime: 'timegoeshere',
-                                expirationTime: 'timegoeshere'
+                                meetingTime: dateObjectToUnixEpoch(meetingTime),
+                                expirationTime: dateObjectToUnixEpoch(expirationTime)
                             }
                         )
                         .then(() => {

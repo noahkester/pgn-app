@@ -303,7 +303,7 @@ export function SubmitPage(props) {
                 <TouchableOpacity
                   style={[{ width: 60, height: 60, alignItems: 'center', justifyContent: 'center', borderRadius: 30, marginRight: 10 }, globalStyles.universityColorFill]}
                   onPress={() => {
-                    navigation.navigate("Attendance");
+                    navigation.navigate("SubmitAttendance");
                   }}
                 >
                   <IonIcons

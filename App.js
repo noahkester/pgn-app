@@ -25,10 +25,11 @@ import { AccountImageUploadPage } from "./Screens/AccountImageUpload";
 import { AddEventPage } from './Screens/adminUser/AddEvent';
 import { AddCodePage } from './Screens/adminUser/AddCode';
 import { SubmitAttendancePage } from './Screens/SubmitAttendance';
+import { AttendancePage } from './Screens/Attendance';
 
 // Firebase and misc imports
 import { auth, getCurrentUser, db, store } from "./utils/firebase";
-import { findTimeCategory } from "./Screens/Events";
+import { findTimeCategory } from "./utils/time";
 
 // Context import
 import { LoginProvider } from './utils/LoginContext';
@@ -247,7 +248,8 @@ function App() {
           <Stack.Screen name="Account" component={AccountPage} />
           <Stack.Screen name="AccountImageUpload" component={AccountImageUploadPage} />
           <Stack.Screen name="Submit" component={SubmitPage} />
-          <Stack.Screen name="Attendance" component={SubmitAttendancePage} />
+          <Stack.Screen name="SubmitAttendance" component={SubmitAttendancePage} />
+          <Stack.Screen name="Attendance" component={AttendancePage} />
           <Stack.Screen name="Person" component={PersonPage} />
         </Stack.Navigator>
       )

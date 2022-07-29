@@ -12,6 +12,9 @@ import { useContext } from "react";
 import LoginContext from "../utils/LoginContext";
 import { db } from "../utils/firebase";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useNavigation } from "@react-navigation/native";
+import { unixEpochTimeToClock, unixEpochTimeToMonthDay } from '../utils/time';
 /*
 Events Structure
 {
@@ -116,69 +119,6 @@ export function EventSection(props) {
   );
 }
 
-function unixEpochTimeToClock(timestamp) {
-  var a = new Date(timestamp * 1000);
-  var hours = a.getHours();
-  hours = (hours > 12) ? hours % 12 : hours;
-  return hours + ":" + a.getMinutes();
-}
-function unixEpochTimeToMonthDay(timestamp) {
-  var a = new Date(timestamp * 1000);
-  var months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  var month = months[a.getMonth()];
-  var date = a.getDate();
-  var time = month + " " + date;
-  return time;
-}
-
-// Will return -1 for past date, 0 for current, 1 for tomorrow, 2 for future
-// based on the current date
-export function findTimeCategory(timestamp) {
-  // convert from seconds to miliseconds (js Date library uses ms)
-  timestamp *= 1000;
-  var currentTime = Date.now();
-
-  if (timestamp === 0) {
-    return -1;
-  } else if (timestamp < currentTime) {
-    return -2;
-  }
-  var a = new Date(timestamp);
-  var b = new Date(currentTime);
-  // It is the current day
-  if (
-    a.getDate() == b.getDate() &&
-    a.getMonth() == b.getMonth() &&
-    a.getFullYear == b.getFullYear
-  ) {
-    return 0;
-  }
-  // It is tomorrow
-  b = new Date((currentTime + 86400) * 1000);
-  if (
-    a.getDate() == b.getDate() &&
-    a.getMonth() == b.getMonth() &&
-    a.getFullYear == b.getFullYear
-  ) {
-    return 1;
-  }
-  // Day off in the future
-  return 2;
-}
-
 export function EventsPage() {
 
 
@@ -211,6 +151,7 @@ export function EventsPage() {
     );
   }
   const Tab = createMaterialTopTabNavigator();
+  const navigation = useNavigation();
   return (
     <View style={styles.eventScreen}>
       <View style={{ width: "100%", height: "100%" }}>
@@ -232,6 +173,19 @@ export function EventsPage() {
             options={{ tabBarLabel: "Extra" }}
           />
         </Tab.Navigator>
+        <TouchableOpacity
+          style={[{ width: 60, height: 60, alignItems: 'center', justifyContent: 'center', borderRadius: 30, position: 'absolute', bottom: 12, right: 12 }, globalStyles.universityColorFill]}
+          onPress={() => {
+            navigation.navigate("Attendance");
+          }}
+        >
+          <MaterialCommunityIcons
+            name="clipboard-text-clock"
+            color={'#FFFFFF'}
+            size={42}
+            style={{}}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );

@@ -5,7 +5,7 @@ import globalStyles from "../styles/Styles";
 import { auth, db } from "../utils/firebase";
 import BasicExample from "./adminUser/CodeInput";
 import * as firebase from "firebase";
-
+import { dateObjectToUnixEpoch } from '../utils/time'
 function AccountTop(props) {
     const navigation = useNavigation();
     return (
@@ -43,7 +43,7 @@ export function SubmitAttendancePage() {
 
     return (
         <View style={{ flex: 1, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }}>
-            <AccountTop name={'Attendance'} />
+            <AccountTop name={'Submit Attendance'} />
             <View style={{ width: '80%' }}>
                 <BasicExample value={value} setValue={setValue} />
             </View>
@@ -53,10 +53,15 @@ export function SubmitAttendancePage() {
                     const docRef = db.collection("chapter-meetings").doc(value);
                     docRef.get().then((doc) => {
                         if (doc.exists) {
-                            docRef.update({
-                                attendees: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.uid)
-                            })
-                            console.log("Got credit");
+                            if (dateObjectToUnixEpoch(new Date()) < doc.data().expirationTime) {
+                                docRef.update({
+                                    attendees: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.uid)
+                                })
+                                console.log("Got credit");
+                            }
+                            else {
+                                console.log("Meeting code expired");
+                            }
                             setValue('')
                         }
                         else {
