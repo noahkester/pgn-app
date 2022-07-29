@@ -12,7 +12,7 @@ import { EventSection } from "./Events";
 import globalStyles from "../styles/Styles";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useEffect, useRef, useContext, useState, useCallback } from "react";
-import { db, auth } from "../utils/firebase";
+import { db, auth, store } from "../utils/firebase";
 import LoginContext from "../utils/LoginContext";
 
 const Tab = createMaterialTopTabNavigator();
@@ -33,18 +33,23 @@ function WaitScreen() {
   }, []);
 
   useEffect(() => {
-    console.log('wait screen useEffect')
-    db.collection("points")
-      .where("id", "==", curUser.id)
+    db.collection("users")
+      .doc(auth.currentUser.uid)
       .get()
-      .then((querySnapshot) => {
-        var tempWaiting = []
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          if (data.status == "waiting")
-            tempWaiting.push(data)
-        });
-        setWaiting(tempWaiting);
+      .then((doc) => {
+        loginContext.currentUser = doc.data();
+        db.collection("points")
+          .where('__name__', 'in', curUser.submittedPoints)
+          .get()
+          .then((querySnapshot) => {
+            var tempWaiting = []
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              if (data.status == "waiting")
+                tempWaiting.push(data)
+            });
+            setWaiting(tempWaiting);
+          })
       })
   }, [refreshing])
 
@@ -78,17 +83,23 @@ function AcceptedScreen() {
     wait(1000).then(() => setRefreshing(false));
   }, []);
   useEffect(() => {
-    db.collection("points")
-      .where("id", "==", curUser.id)
+    db.collection("users")
+      .doc(auth.currentUser.uid)
       .get()
-      .then((querySnapshot) => {
-        var tempAccepted = []
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          if (data.status == "accepted")
-            tempAccepted.push(data)
-        });
-        setAccepted(tempAccepted);
+      .then((doc) => {
+        loginContext.currentUser = doc.data();
+        db.collection("points")
+          .where('__name__', 'in', curUser.submittedPoints)
+          .get()
+          .then((querySnapshot) => {
+            var tempAccepted = []
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              if (data.status == "accepted")
+                tempAccepted.push(data)
+            });
+            setAccepted(tempAccepted);
+          })
       })
   }, [refreshing])
   return (
@@ -121,17 +132,23 @@ function DeclinedScreen() {
     wait(1000).then(() => setRefreshing(false));
   }, []);
   useEffect(() => {
-    db.collection("points")
-      .where("id", "==", curUser.id)
+    db.collection("users")
+      .doc(auth.currentUser.uid)
       .get()
-      .then((querySnapshot) => {
-        var tempRejected = []
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          if (data.status == "rejected")
-            tempRejected.push(data)
-        });
-        setRejected(tempRejected);
+      .then((doc) => {
+        loginContext.currentUser = doc.data();
+        db.collection("points")
+          .where('__name__', 'in', curUser.submittedPoints)
+          .get()
+          .then((querySnapshot) => {
+            var tempRejected = []
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              if (data.status == "rejected")
+                tempRejected.push(data)
+            });
+            setRejected(tempRejected);
+          })
       })
   }, [refreshing])
   return (
