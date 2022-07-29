@@ -4,7 +4,8 @@ import { StyleSheet, Button, TouchableOpacity, Text, Image, View, TextInput } fr
 import { useNavigation, NavigationContainer } from "@react-navigation/native";
 import globalStyles from "../../styles/Styles";
 import { db } from "../../utils/firebase";
-
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { dateObjectToUnixEpoch, unixEpochTimeToMonthDay, unixEpochTimeToClock } from '../../utils/time'
 function AccountTop(props) {
     const navigation = useNavigation();
     return (
@@ -94,6 +95,8 @@ function Type(props) {
 
 export function AddEventPage() {
     const navigation = useNavigation();
+    const [meetingTime, setMeetingTime] = useState(new Date());
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const newEvent = useRef(
         {
             label: '',
@@ -107,6 +110,17 @@ export function AddEventPage() {
     const eventDocName = (event) => {
         return event.label.replace(/\s/g, "").toLowerCase() + event.time;
     }
+    const showDatePicker = () => {
+        setDatePickerVisibility(true);
+    };
+    const hideDatePicker = () => {
+        setDatePickerVisibility(false);
+    };
+    const handleConfirm = (date) => {
+        newEvent.current.time = dateObjectToUnixEpoch(date);
+        setMeetingTime(date);
+        hideDatePicker();
+    };
     return (
         <View style={{ backgroundColor: '#FFFFFF', flex: 1 }}>
             <AccountTop name={'New Event'} />
@@ -130,12 +144,26 @@ export function AddEventPage() {
                 <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, width: '80%', marginTop: 30 }}>Type:</Text>
                 <Type newEvent={newEvent} />
                 <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, width: '80%', marginTop: 30 }}>Time:</Text>
-                <TextInput
-                    style={[{ width: "80%" }, globalStyles.cardContainer, globalStyles.smallSemiBoldText,]}
-                    onChangeText={(text) => {
-                        newEvent.current.time = parseInt(text);
+                <TouchableOpacity
+                    onPress={showDatePicker}
+                    style={[{ width: "80%" }, globalStyles.cardContainer]}
+                >
+                    <Text style={globalStyles.smallSemiBoldText}>{(newEvent.current.time == 0) ? 0 : unixEpochTimeToMonthDay(newEvent.current.time) + " " + unixEpochTimeToClock(newEvent.current.time)}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => {
+                        newEvent.current.time = 0;
+                        setMeetingTime(new Date());
                     }}
-                    defaultValue={''}
+                >
+                    <Text>None</Text>
+                </TouchableOpacity>
+                <DateTimePickerModal
+                    isVisible={isDatePickerVisible}
+                    mode="datetime"
+                    onConfirm={handleConfirm}
+                    onCancel={hideDatePicker}
+                    date={meetingTime}
                 />
                 <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, width: '80%', marginTop: 30 }}>Points:</Text>
                 <TextInput

@@ -33,6 +33,7 @@ export function unixEpochTimeToClock(timestamp) {
     var a = new Date(timestamp * 1000);
     var hours = a.getHours();
     hours = (hours > 12) ? hours % 12 : hours;
+    hours = (hours == 0) ? 12 : hours;
     return hours + ":" + a.getMinutes();
 }
 export function findTimeCategory(timestamp) {
