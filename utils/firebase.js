@@ -1,5 +1,6 @@
 // Import the functions you need from the SDKs you need
 import * as firebase from "firebase";
+import { Alert } from "react-native";
 // TODO: Add SDKs for firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 import "firebase/firestore";
@@ -51,10 +52,14 @@ export function sendEmail(user) {
 export function sendPasswordReset(email) {
   auth.sendPasswordResetEmail(email)
     .then(() => {
-      console.log('Password reset sent');
+      Alert.alert('Email Sent', 'Check spam folder', [
+        { text: 'OK' },
+      ]);
     })
-    .catch((error) => {
-      console.log('Issue sending reset password')
+    .catch(() => {
+      Alert.alert('Enter valid email address', '', [
+        { text: 'OK' },
+      ]);
     });
 }
 

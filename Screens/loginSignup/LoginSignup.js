@@ -1,114 +1,40 @@
-import { StyleSheet, TouchableOpacity, Image, Text, View, } from "react-native";
+import React from "react";
+import { TouchableOpacity, Image, Text, View, } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
-import React, { useState } from "react";
-import globalStyles from "../../styles/Styles";
-import ucolors from "../../styles/UniversityColors";
-import DropDownPicker from "react-native-dropdown-picker";
-import colors from "../../styles/Colors";
-import { useEffect } from "react";
-/*
-TODO: Figure out how to pass in style 'classes' through components
-Add functionality to the dropdown (only stylistic right now)
-*/
-export function LoginButton(props) {
+function LoginButtons() {
   const navigation = useNavigation();
   return (
-    <TouchableOpacity
-      onPress={async () => {
-        navigation.navigate(props.address)
-      }}
-      style={[globalStyles.lightGrayFill, globalStyles.button, globalStyles.grayBorder]}
-    >
-      <Text style={globalStyles.mediumBoldText}>{props.title}</Text>
-    </TouchableOpacity>
-  );
-}
-
-function LoginButtons() {
-  return (
-    <View style={styles.loginSignupButtons}>
-      <LoginButton title="Create Account" address="CreateAccount" />
-      <View style={styles.space}></View>
-      <LoginButton title="Log in" address="Login" />
+    <View style={{ position: 'absolute', bottom: 60, width: '100%', flexDirection: 'column', alignItems: 'center' }}>
+      <TouchableOpacity
+        onPress={async () => {
+          navigation.navigate('CreateAccount')
+        }}
+        style={{ width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 30, borderWidth: 1, borderColor: '#DBDBDB', backgroundColor: '#FAFAFA' }}
+      >
+        <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}>{'Create account'}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={async () => {
+          navigation.navigate('Login')
+        }}
+        style={{ marginTop: 10, width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 30, borderWidth: 1, borderColor: '#DBDBDB', backgroundColor: '#FFFFFF' }}
+      >
+        <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}>{'Log in'}</Text>
+      </TouchableOpacity>
     </View>
   );
 }
-/*
-<LoginButton title="Guest Account" address="Navigation" />
-      <LoginButton title="Admin Account" address="Admin" />
-*/
+
 export function LoginSignupPage() {
   return (
-    //to centralize buttons
-    <View style={styles.loginSignup}>
-      <View style={styles.loginSignupScreen}>
-        <View style={styles.topSubElement}>
-          <Image
-            source={require("../../images/pgn.png")}
-            style={styles.loginImage}
-            resizeMode="contain"
-          />
-        </View>
-        <LoginButtons />
-      </View>
+    <View style={{ flex: 1, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }}>
+      <Image
+        source={require('../../images/pgn.png')}
+        style={{ width: 300, height: 300, marginBottom: 120 }}
+        resizeMode='contain'
+      />
+      <LoginButtons />
     </View>
   );
 }
-
-// Styles
-const styles = StyleSheet.create({
-  topSubElement: {
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    height: "75%"
-  },
-  loginSignup: {
-    height: "100%",
-    flexDirection: "column",
-    justifyContent: "center",
-    backgroundColor: "white"
-  },
-  loginSignupScreen: {
-    flexDirection: "column",
-    backgroundColor: colors.white,
-    alignItems: "center",
-    justifyContent: "space-between",
-    height: "90%"
-  },
-  universityDropdown: {
-    width: "90%",
-    height: 60,
-    backgroundColor: colors.universityColor,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingLeft: 15,
-    paddingRight: 15,
-  },
-  loginImage: {
-    width: 300,
-    height: 300,
-  },
-  universityLogo: {
-    width: 75
-  },
-  dropArrow: {
-    width: 24
-  },
-  loginSignupButtons: {
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-    height: "25%",
-  },
-  space: {
-    height: 10
-  },
-  iconStyle: {
-    width: 30,
-    height: 30
-  }
-});

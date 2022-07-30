@@ -1,158 +1,129 @@
-import {
-  StyleSheet,
-  KeyboardAvoidingView,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-} from "react-native";
-import React, { useState } from "react";
-import globalStyles from "../../styles/Styles";
-import { PasswordInput, CustomTextInput } from "./Login";
-import { ErrorMessage } from "../components/ErrorMessage";
-import { auth, db } from "../../utils/firebase";
-import { AccountTop } from "../Account";
+import { TouchableOpacity, TextInput, Text, View } from "react-native";
+import React, { useState, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
+import Octicons from 'react-native-vector-icons/Octicons';
 
-function CreateAccountButton(props) {
-  const navigation = useNavigation();
-  return (
-    <TouchableOpacity
-      onPress={async () => {
-        // Handle create account defined in CreateAccountPage
-        if (await props.handleCreateAccount()) {
-          const user = auth.currentUser;
-          if (!user) {
-            // This should never happen but in case
-            console.log(
-              "(ERROR): No current user after create account success"
-            );
-          }
-          navigation.navigate("Name");
-        }
-        // Do not need to catch user attempt failed, handled in the handleCreateAccount method
-      }}
-      style={[
-        globalStyles.lightGrayFill,
-        globalStyles.button,
-        globalStyles.grayBorder,
-      ]}
-    >
-      <Text style={globalStyles.mediumBoldText}>{props.title}</Text>
-    </TouchableOpacity>
-  );
-}
+import LoginContext from "../../utils/LoginContext";
+import { auth } from "../../utils/firebase";
 
 export function CreateAccountPage() {
-  const [email, setEmail] = useState("");
-  const [password1, setPassword1] = useState("");
-  const [password2, setPassword2] = useState("");
-  const [emailMessage, setEmailMessage] = useState("");
-  const [passwordMessage, setPasswordMessage] = useState("");
+  const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
 
-  const handleCreateAccount = async () => {
-    setEmailMessage("");
-    setPasswordMessage("");
-    var success = false;
-    if (password1 !== password2) {
-      setPasswordMessage("Passwords do not match");
+  const [password, setPassword] = useState('');
+  const [password2, setPassword2] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  const navigation = useNavigation();
+
+  const handleCreateAccount = () => {
+    setEmailError('');
+    setPasswordError('');
+    if (password !== password2) {
+      setPasswordError("Passwords do not match");
+      setPassword('');
+      setPassword2('');
       return;
     }
-    await auth
-      .createUserWithEmailAndPassword(email, password1)
+    auth
+      .createUserWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log("(Create Account) New user with email: ", user.email);
-        success = true;
+        navigation.navigate("Name");
       })
       .catch((error) => {
         switch (error.code) {
           case "auth/invalid-email":
-            setEmailMessage("Invalid email format");
+            setEmailError("Invalid email format");
             break;
           case "auth/email-already-exists":
           case "auth/email-already-in-use":
-            console.log("here");
-            setEmailMessage("Email already registered");
+            setEmailError("Email already registered");
             break;
           case "auth/weak-password":
           case "auth/invalid-password":
-            setPasswordMessage("Password must be > 6 characters");
+            setPasswordError("Password must be > 6 characters");
             break;
           default:
             console.log(error.code);
         }
       });
-    return success;
   };
+
   return (
-    <View style={styles.screen}>
-      <View style={styles.backNav}>
-        <View></View>
-        <AccountTop name={""} address="LoginSignup" />
+    <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+      <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center' }}>
+        <TouchableOpacity
+          style={{ marginLeft: 16 }}
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <Octicons
+            name="chevron-left"
+            color={'#262626'}
+            size={42}
+          />
+        </TouchableOpacity>
       </View>
-      <KeyboardAvoidingView
-        behaviors="padding"
-        style={styles.createAccountScreen}
+      <View
+        style={{ flex: 1, alignItems: "center", marginTop: 180 }}
       >
-        <Text style={globalStyles.mediumBoldText}>Create New Account</Text>
-        <View style={styles.section} />
-        <CustomTextInput
-          label="Email:"
-          value={email}
-          onCustomChange={(text) => setEmail(text)}
-          placeholder="Enter Email"
-        />
-        <ErrorMessage message={emailMessage} />
-        <PasswordInput
-          label="Password:"
-          value={password1}
-          onCustomChange={(text) => setPassword1(text)}
-          placeholder="Create Password"
-        />
-        <PasswordInput
-          label=""
-          value={password2}
-          onCustomChange={(text) => setPassword2(text)}
-          placeholder="Re-type Password"
-        />
-        <ErrorMessage message={passwordMessage} />
-        <CreateAccountButton
-          title="Create Account"
-          handleCreateAccount={handleCreateAccount}
-        />
-      </KeyboardAvoidingView>
+        <View style={{ width: '100%', flexDirection: 'column', alignItems: 'center' }}>
+          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626', marginBottom: 20 }}>Create account</Text>
+          <View style={{ borderWidth: 1, borderRadius: 25, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}
+              placeholder={'Email Address'}
+              onChangeText={(text) => setEmail(text)}
+            >
+              {email}
+            </TextInput>
+          </View>
+          {(emailError == '') ? null :
+            <Text style={{ width: '90%', paddingTop: 4, paddingLeft: 10, fontFamily: 'Poppins_500Medium', color: '#E35B56' }}>{emailError}</Text>
+          }
+          <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+          <View style={{ borderWidth: 1, borderRadius: 25, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}
+              placeholder={'Password'}
+              secureTextEntry={true}
+              onChangeText={(text) => setPassword(text)}
+            >
+              {password}
+            </TextInput>
+          </View>
+          <View style={{ marginTop: 10, borderWidth: 1, borderRadius: 25, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}
+              placeholder={'Re-Type Password'}
+              secureTextEntry={true}
+              onChangeText={(text) => setPassword2(text)}
+            >
+              {password2}
+            </TextInput>
+          </View>
+          {(passwordError == '') ? null :
+            <Text style={{ width: '90%', paddingTop: 4, paddingLeft: 10, fontFamily: 'Poppins_500Medium', color: '#E35B56' }}>{passwordError}</Text>
+          }
+        </View>
+        <View style={{ width: '100%', alignItems: 'center', position: 'absolute', bottom: 60 }}>
+          <TouchableOpacity
+            style={{ width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 30, borderWidth: 1, borderColor: '#DBDBDB', backgroundColor: '#FAFAFA' }}
+            onPress={handleCreateAccount}
+          >
+            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}>{'Create account'}</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 }
-const styles = StyleSheet.create({
-  screen: {
-    backgroundColor: "white",
-  },
-  backNav: {
-    height: "15%",
-    justifyContent: "space-between",
-    paddingBottom: 10,
-  },
-  createAccountScreen: {
-    height: "80%",
-    width: "100%",
-    marginTop: "25%",
-    alignItems: "center",
-  },
-  inputContainer: {
-    flexDirection: "row",
-    width: "90%",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  textInputContainer: {
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 30,
-    width: "70%",
-  },
-  section: {
-    height: 20,
-  },
-});

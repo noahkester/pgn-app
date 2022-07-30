@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext, useMemo, useCallback, useRef } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Button, TouchableOpacity, Text, Image, View } from "react-native";
-import { useFonts, Poppins_600SemiBold, Poppins_700Bold, Poppins_400Regular } from "@expo-google-fonts/poppins";
+import { useFonts, Poppins_600SemiBold, Poppins_700Bold, Poppins_400Regular, Poppins_500Medium } from "@expo-google-fonts/poppins";
 import { useNavigation, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
@@ -294,6 +294,7 @@ function App() {
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
     Poppins_600SemiBold,
+    Poppins_500Medium,
     Poppins_400Regular
   });
   if (!appIsReady || !fontsLoaded) {

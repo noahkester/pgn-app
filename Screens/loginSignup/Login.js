@@ -1,248 +1,151 @@
-import {
-  TouchableOpacity,
-  StyleSheet,
-  TextInput,
-  Text,
-  View,
-  KeyboardAvoidingView,
-} from "react-native";
-import React, { useState } from "react";
-import globalStyles from "../../styles/Styles";
-import { auth, db, sendPasswordReset } from "../../utils/firebase";
-import { AccountTop } from "../Account";
+import { TouchableOpacity, TextInput, Text, View, Alert } from "react-native";
+import React, { useState, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { useContext } from "react";
-import { setField } from "../newUser/About";
-import { ErrorMessage } from "../components/ErrorMessage";
+import Octicons from 'react-native-vector-icons/Octicons';
+
 import LoginContext from "../../utils/LoginContext";
+import { auth, db, sendPasswordReset } from "../../utils/firebase";
 
-// Text Input for Login Password
-export function PasswordInput(props) {
-  return (
-    <View
-      style={{
-        flexDirection: "row",
-        width: "90%",
-        justifyContent: "space-between",
-        alignItems: "center",
-      }}
-    >
-      <Text style={globalStyles.mediumBoldText}>{props.label}</Text>
-      <View
-        style={[
-          {
-            borderWidth: 1,
-            padding: 10,
-            borderRadius: 30,
-            marginTop: 10,
-            width: "70%",
-          },
-          globalStyles.grayBorder,
-        ]}
-      >
-        <TextInput
-          autoCapitalize="none"
-          autoCorrect={false}
-          placeholder={props.placeholder}
-          style={globalStyles.mediumBoldText}
-          secureTextEntry={true}
-          onChangeText={(text) => props.onCustomChange(text)}
-        >
-          {props.value}
-        </TextInput>
-      </View>
-    </View>
-  );
-}
+const adminEmail = 'pgn.utexas.sudo@gmail.com';
 
-// Used for email / username
-export function CustomTextInput(props) {
-  return (
-    <View
-      style={{
-        flexDirection: "row",
-        width: "90%",
-        justifyContent: "space-between",
-        alignItems: "center",
-      }}
-    >
-      <Text style={globalStyles.mediumBoldText}>{props.label}</Text>
-      <View
-        style={[
-          {
-            borderWidth: 1,
-            padding: 10,
-            borderRadius: 30,
-            marginTop: 10,
-            width: "70%",
-          },
-          globalStyles.grayBorder,
-        ]}
-      >
-        <TextInput
-          autoCapitalize="none"
-          autoCorrect={false}
-          style={globalStyles.mediumBoldText}
-          placeholder={props.placeholder}
-          onChangeText={(text) => props.onCustomChange(text)}
-        >
-          {props.value}
-        </TextInput>
-      </View>
-    </View>
-  );
-}
+export function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
 
-function LoginButton(props) {
+  const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
   const navigation = useNavigation();
 
   const loginContext = useContext(LoginContext);
   const setAppIsReady = loginContext.setAppIsReady;
   const setSignIn = loginContext.setSignIn;
   const isAdmin = loginContext.isAdmin;
-  return (
-    <TouchableOpacity
-      onPress={async () => {
-        // Handle login defined in LoginPage, checks if user is in firebase
-        if (await props.handleLogin()) {
-          const user = auth.currentUser;
-          // There is a user in firebase, now check if they can go to the Home Page
-          // Or if we need additional information from them and email verification
 
-          if (!user) {
-            // This should never happen but in case
-            console.log(
-              "(login.js) ERROR: No current user after login success"
-            );
-            return;
-          }
-          if (user.emailVerified) {
-            // User has verified their email, continue to home screen
-            loginContext.setAppIsReady(false);
-            if (user.email == "pgn.utexas.sudo@gmail.com") {
-              isAdmin.current = true;
-              setSignIn(true);
-            } else {
-              isAdmin.current = false;
-              setSignIn(true);
-            }
-            return;
-          } else {
-            // Two cases
-            // 1: User has not verified their email, but has added account information
-            console.log("Checking: " + user.uid);
-            db.collection("users")
-              .doc(user.uid)
-              .get()
-              .then((doc) => {
-                if (doc.exists) {
-                  console.log("(Login) User account has been created but missing email verification");
-                  navigation.navigate("EmailVerification");
-                }
-                else {
-                  console.log("(Login) User Account has not been created");
-                  navigation.navigate("Name");
-                }
-              })
-              .catch(() => {
-                console.log("(Login) Firebase issues");
-              });
-          }
-        }
-        console.log("In onPress3");
-        // Do not need to catch user attempt failed, handled in the handleLogin method
-      }}
-      style={[
-        globalStyles.lightGrayFill,
-        globalStyles.button,
-        globalStyles.grayBorder,
-      ]}
-    >
-      <Text style={globalStyles.mediumBoldText}>{props.title}</Text>
-    </TouchableOpacity>
-  );
-}
-export function LoginPage() {
-  const [email, setEmail] = useState("");
-
-  const [password, setPassword] = useState("");
-  const [emailMessage, setEmailMessage] = useState("");
-  const [passwordMessage, setPasswordMessage] = useState("");
-
-  const handleLogin = async () => {
-    var success = false;
-    setEmailMessage("");
-    setPasswordMessage("");
-    await auth
+  const handleLogin = () => {
+    setEmailError('');
+    setPasswordError('');
+    auth
       .signInWithEmailAndPassword(email, password)
       .then(() => {
         console.log("\n(Login) Sign in Successful!\n");
-        success = true;
+        const user = auth.currentUser;
+        if (user.emailVerified) {
+          // User has verified their email, continue to home screen
+          loginContext.setAppIsReady(false);
+          if (user.email === adminEmail) {
+            isAdmin.current = true;
+            setSignIn(true);
+          }
+          else {
+            isAdmin.current = false;
+            setSignIn(true);
+          }
+          return;
+        }
+        else {
+          db.collection("users")
+            .doc(user.uid)
+            .get()
+            .then((doc) => {
+              if (doc.exists) {
+                console.log("(Login) User account has been created but missing email verification");
+                navigation.navigate("EmailVerification");
+              }
+              else {
+                console.log("(Login) User Account has not been created");
+                navigation.navigate("Name");
+              }
+            })
+            .catch(() => {
+              console.log("(Login) Firebase issues");
+            });
+        }
       })
       .catch((error) => {
         switch (error.code) {
           case "auth/invalid-email":
-            console.log("sign in bad1");
-            setEmailMessage("Invalid email format");
+            setEmailError("Invalid email format");
             break;
           case "auth/wrong-password":
-            console.log("sign in bad2");
-            setPasswordMessage("Incorrect password");
+            setPasswordError("Incorrect password");
             break;
           case "auth/user-not-found":
-            console.log("sign in bad3");
-            setEmailMessage("No user found");
+            setEmailError("No user found");
             break;
         }
       });
-    return success;
   };
 
   return (
-    <View style={{ backgroundColor: "#ffffff" }}>
-      <View
-        style={{
-          marginTop: "15%",
-          justifyContent: "space-between",
-          height: "15%",
-          paddingBottom: 10,
-        }}
-      >
-        <AccountTop name={""} address="LoginSignup" />
-      </View>
-      <KeyboardAvoidingView
-        behaviors="padding"
-        style={{
-          height: "80%",
-          width: "100%",
-          marginTop: "30%",
-          alignItems: "center",
-        }}
-      >
-        <CustomTextInput
-          label="Username:"
-          value={email}
-          onCustomChange={setEmail}
-          placeholder="Enter Email"
-        />
-        <ErrorMessage message={emailMessage} />
-        <PasswordInput
-          label="Password:"
-          value={password}
-          onCustomChange={setPassword}
-          placeholder="Enter Password"
-        />
-        <ErrorMessage message={passwordMessage} />
-        <View style={{ height: 10 }}></View>
-        <LoginButton title="Login" handleLogin={handleLogin} />
+    <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+      <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center' }}>
         <TouchableOpacity
+          style={{ marginLeft: 16 }}
           onPress={() => {
-            sendPasswordReset(email);
+            navigation.goBack();
           }}
         >
-          <Text>Reset Password</Text>
+          <Octicons
+            name="chevron-left"
+            color={'#262626'}
+            size={42}
+          />
         </TouchableOpacity>
-      </KeyboardAvoidingView>
+      </View>
+      <View
+        style={{ flex: 1, alignItems: "center", marginTop: 180 }}
+      >
+        <View style={{ width: '100%', flexDirection: 'column', alignItems: 'center' }}>
+          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626', marginBottom: 20 }}>Log in</Text>
+          <View style={{ borderWidth: 1, borderRadius: 25, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}
+              placeholder={'Email Address'}
+              onChangeText={(text) => setEmail(text)}
+            >
+              {email}
+            </TextInput>
+          </View>
+          {(emailError == '') ? null :
+            <Text style={{ width: '90%', paddingTop: 4, paddingLeft: 10, fontFamily: 'Poppins_500Medium', color: '#E35B56' }}>{emailError}</Text>
+          }
+          <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+          <View style={{ borderWidth: 1, borderRadius: 25, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}
+              placeholder={'Password'}
+              secureTextEntry={true}
+              onChangeText={(text) => setPassword(text)}
+            >
+              {password}
+            </TextInput>
+          </View>
+          {(passwordError == '') ? null :
+            <Text style={{ width: '90%', paddingTop: 4, paddingLeft: 10, fontFamily: 'Poppins_500Medium', color: '#E35B56' }}>{passwordError}</Text>
+          }
+        </View>
+        <View style={{ width: '100%', alignItems: 'center', position: 'absolute', bottom: 60 }}>
+          <TouchableOpacity
+            style={{ width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 30, borderWidth: 1, borderColor: '#DBDBDB', backgroundColor: '#FAFAFA' }}
+            onPress={handleLogin}
+          >
+            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}>{'Log in'}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ marginTop: 6 }}
+            onPress={() => {
+              sendPasswordReset(email);
+            }}
+          >
+            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 12, color: '#8E8E8E' }}>Password Reset</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 }
