@@ -77,7 +77,7 @@ function PointCard(props) {
 }
 function PointDisplay(props) {
   return (
-    <View style={{ width: "80%", height: 300, flexDirection: "column", justifyContent: "space-between", alignContent: "space-between", }}>
+    <View style={{ width: "85%", height: 300, flexDirection: "column", justifyContent: "space-between", alignContent: "space-between", }}>
       <PointCard
         title="Professional"
         points={props.professionalPoints}

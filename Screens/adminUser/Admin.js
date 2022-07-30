@@ -1,8 +1,6 @@
 import { StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Text, View } from "react-native";
-import { AccountTop } from "../Account";
 import { useNavigation } from '@react-navigation/native';
 import globalStyles from "../../styles/Styles"
-import { PGNImage } from "../Tabs"
 import { db, store } from "../../utils/firebase";
 import React, { useEffect, useState } from "react";
 import UrlContext, { UrlProvider } from "../../utils/UrlContext";
@@ -74,7 +72,11 @@ function AdminTop(props) {
             width: "100%"
         }}>
             <SettingsButton />
-            <PGNImage />
+            <Image
+                source={require("../../images/pgn.png")}
+                resizeMode="cover"
+                style={{ width: 100, height: 100 }}
+            />
         </View>
     )
 }

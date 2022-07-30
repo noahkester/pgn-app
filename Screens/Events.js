@@ -15,16 +15,6 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from "@react-navigation/native";
 import { unixEpochTimeToClock, unixEpochTimeToMonthDay } from '../utils/time';
-/*
-Events Structure
-{
-  location: Insomnia cookies. Near Castilian
-  name: Cold Cookie Profit Share
-  time: 167394290
-  type: Philanthropy
-  weight: 1
-}
-*/
 
 function EventImage(props) {
   return (
@@ -35,6 +25,43 @@ function EventImage(props) {
           resizeMode="contain"
           style={styles.eventImageIcon}
         />
+      </View>
+    </View>
+  );
+}
+function TodayEvent(props) {
+  var icon;
+  if (props.type === "Philanthropy") {
+    icon = require("../images/philanthropy.png");
+  } else if (props.type === "Professional") {
+    icon = require("../images/professional.png");
+  } else if (props.type === "Social") {
+    icon = require("../images/social.png");
+  } else if (props.type === "Interview") {
+    icon = require("../images/interview.png");
+  } else {
+    console.log('strange error');
+  }
+  var points = "";
+  if (props.weight == 1) {
+    points = " pt";
+  } else {
+    points = " pts";
+  }
+
+  return (
+    <View
+      style={{ borderWidth: 1, marginTop: 5, marginBottom: 5, width: '85%', borderColor: '#DBDBDB', borderRadius: 10 }}
+    >
+      <View style={{ backgroundColor: '#FAFAFA', borderBottomWidth: 1, borderColor: '#DBDBDB', borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
+        <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626', paddingLeft: 10, paddingTop: 6, paddingBottom: 6 }}>Today</Text>
+      </View>
+      <View style={{ width: '100%', flexDirection: 'row', paddingLeft: 10, paddingRight: 10, paddingTop: 16, paddingBottom: 16 }}>
+        <EventImage icon={icon} />
+        <View style={styles.eventText}>
+          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626', width: 180 }}>{props.name}</Text>
+          <Text style={{ fontFamily: 'Poppins_500Medium', fontSize: 12, color: '#262626' }}>{props.location + ' ' + props.weight + points}</Text>
+        </View>
       </View>
     </View>
   );
@@ -61,28 +88,25 @@ function Event(props) {
 
   return (
     <View
-      style={[
-        globalStyles.cardContainer,
-        styles.eventCard,
-        globalStyles.cardAlign,
-      ]}
+      style={{ borderWidth: 1, marginTop: 5, marginBottom: 5, width: '85%', borderColor: '#DBDBDB', borderRadius: 10 }}
     >
-      <EventImage icon={icon} />
-      <View style={styles.eventText}>
-        <Text style={[globalStyles.smallSemiBoldText, { width: 180 }]}>{props.name}</Text>
-        <Text style={globalStyles.smallBoldText}>{props.location}</Text>
+      <View style={{ width: '100%', flexDirection: 'row', paddingLeft: 10, paddingRight: 10, paddingTop: 16, paddingBottom: 16 }}>
+        <EventImage icon={icon} />
+        <View style={styles.eventText}>
+          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626', width: 180 }}>{props.name}</Text>
+          <Text style={{ fontFamily: 'Poppins_500Medium', fontSize: 12, color: '#262626' }}>{props.location + ' ' + props.weight + points}</Text>
+        </View>
+        {
+          (props.time === 0) ?
+            <Text style={globalStyles.smallBoldText}>{props.weight + points}</Text> :
+            <View style={{ alignItems: 'flex-end' }}>
+              <Text style={[globalStyles.smallSemiBoldText, styles.date]}>
+                {unixEpochTimeToMonthDay(props.time)}
+              </Text>
+              <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}>{unixEpochTimeToClock(props.time)}</Text>
+            </View>
+        }
       </View>
-      {
-        (props.time === 0) ?
-          <Text style={globalStyles.smallBoldText}>{props.weight + points}</Text> :
-          <View style={{ alignItems: 'flex-end' }}>
-            <Text style={[globalStyles.smallSemiBoldText, styles.date]}>
-              {unixEpochTimeToMonthDay(props.time)}
-            </Text>
-            <Text style={globalStyles.smallBoldText}>{unixEpochTimeToClock(props.time)}</Text>
-            <Text style={globalStyles.smallBoldText}>{props.weight + points}</Text>
-          </View>
-      }
     </View>
   );
 }
@@ -90,30 +114,32 @@ export function EventSection(props) {
   const events = props.events;
   var noEvents = false;
   const eventsList = events.map((event) => (
-    <Event
-      key={event.label}
-      name={event.label}
-      type={event.type}
-      weight={event.weight}
-      location={event.location}
-      time={('time' in event) ? event.time : 0}
-    />
+    props.today ?
+      <TodayEvent
+        key={event.label}
+        name={event.label}
+        type={event.type}
+        weight={event.weight}
+        location={event.location}
+        time={('time' in event) ? event.time : 0}
+      />
+      :
+      <Event
+        key={event.label}
+        name={event.label}
+        type={event.type}
+        weight={event.weight}
+        location={event.location}
+        time={('time' in event) ? event.time : 0}
+      />
   ));
   if (eventsList.length == 0) {
     noEvents = true;
   }
   return (
-    <View style={styles.eventSection}>
-      <Text style={[globalStyles.smallBoldText, styles.eventTime]}>
-        {props.time}
-      </Text>
+    <View style={{ width: '100%', alignItems: 'center' }}>
       <View>
         {eventsList}
-        {noEvents ? (
-          <Text style={[globalStyles.smallBoldText, styles.noEventsText]}>
-            No Events
-          </Text>
-        ) : null}
       </View>
     </View>
   );
@@ -131,9 +157,11 @@ export function EventsPage() {
     return (
       <ScrollView style={globalStyles.scroll}>
         <View style={globalStyles.scrollView}>
-          <EventSection time="Today" events={todayEvents.current} />
-          <EventSection time="Tomorrow" events={tomorrowEvents.current} />
-          <EventSection time="Future" events={futureEvents.current} />
+          <EventSection today={true} time="Today" events={todayEvents.current} />
+          <View style={{ width: '90%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+          <EventSection today={false} time="Tomorrow" events={tomorrowEvents.current} />
+          <View style={{ width: '90%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+          <EventSection today={false} time="Future" events={futureEvents.current} />
         </View>
       </ScrollView>
     );
@@ -199,7 +227,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   eventSection: {
-    width: "80%",
+    width: "100%",
   },
   eventCard: {
     marginBottom: 10,

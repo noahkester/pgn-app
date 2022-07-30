@@ -57,7 +57,8 @@ export function findTimeCategory(timestamp) {
         return 0;
     }
     // It is tomorrow
-    b = new Date((currentTime + 86400) * 1000);
+    b = new Date();
+    b.setDate(b.getDate() + 1);
     if (
         a.getDate() == b.getDate() &&
         a.getMonth() == b.getMonth() &&
