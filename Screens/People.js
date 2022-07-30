@@ -43,17 +43,18 @@ function People(props) {
       onPress={() => navigation.navigate("Person", { memberData: props.data })}
     >
       <View
-        style={[
+        /*style={[
           globalStyles.cardContainer,
           styles.peopleCard,
           globalStyles.cardAlign,
-        ]}
+        ]}*/
+        style={{ padding: 15, marginBottom: 10, borderWidth: 1, borderColor: '#DBDBDB', borderRadius: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}
       >
         <PeopleImage uri={props.profMap[props.data.id]} />
         <View style={{ width: "80%" }}>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
             <View style={{ alignItems: 'baseline' }}>
-              <Text style={[globalStyles.smallSemiBoldText, { marginRight: 10 }]}>
+              <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#262626', fontSize: 16, marginRight: 10 }}>
                 {props.data.firstname + " " + props.data.lastname}
               </Text>
             </View>
@@ -63,9 +64,12 @@ function People(props) {
               </Text>
             </View>
           </View>
-          <Text style={[globalStyles.tinySemiBoldText]}>
-            {'"' + props.data.bio + '"'}
-          </Text>
+          {
+            (props.data.bio === '') ? null :
+              <Text style={{ fontFamily: 'Poppins_500Medium', fontSize: 10, }}>
+                {'"' + props.data.bio + '"'}
+              </Text>
+          }
         </View>
       </View>
     </TouchableOpacity>
@@ -195,45 +199,36 @@ export function PeoplePage() {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.eventScreen}>
         {/* //https://reactnativeelements.com/docs/components/searchbar#calling */}
-
-        <SearchBar
-          cancelButtonProps={{
-            buttonTextStyle: {
-              fontSize: 13,
-            },
-          }}
-          inputContainerStyle={
-            {
-              //background Color neeeds to be put manually here
-            }
-          }
-          containerStyle={{
-            backgroundColor: globalStyles.universityColorFill,
-            width: "50%",
-            right: "4%",
-            height: "5%",
-            alignSelf: "flex-end",
-            borderRadius: 10,
-            marginBottom: "2%",
-          }}
-          style={globalStyles.smallBoldText}
-          platform="ios"
-          placeholder="Type Here..."
-          onChangeText={(text) => searchFilter(text)}
-          value={search}
-        />
-        <View style={styles.myPledgeClass}>
-          <Text style={globalStyles.mediumBoldText}>My Pledge Class</Text>
+        <View style={{ width: '85%', flexDirection: 'row', justifyContent: 'space-between', marginTop: 16 }}>
+          <SearchBar
+            autoComplete={false}
+            cancelButtonTitle={''}
+            inputContainerStyle={{ backgroundColor: '#FFFFFF' }}
+            containerStyle={{
+              width: '85%',
+              borderRadius: 10,
+              borderWidth: 1,
+              borderColor: '#DBDBDB',
+              height: 40,
+            }}
+            style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#8E8E8E' }}
+            platform="ios"
+            placeholder="Type Here..."
+            onChangeText={(text) => searchFilter(text)}
+            value={search}
+          />
           <Checkbox
-            style={{ marginLeft: "2%", alignSelf: "center" }}
+            style={{ alignSelf: "center", borderWidth: 1, width: 40, height: 40, borderRadius: 10, borderColor: '#DBDBDB' }}
             value={isChecked}
             onValueChange={setChecked}
           />
+          <Text style={{ position: 'absolute', right: 0, top: -16, fontFamily: 'Poppins_600SemiBold', fontSize: 12, color: '#8E8E8E' }}>My PC</Text>
         </View>
-        <ScrollView style={globalStyles.scroll}>
-          <View style={globalStyles.scrollView}>
-            <View style={styles.peopleSection}>
-              <View>{section}</View>
+        <View style={{ width: '90%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+        <ScrollView style={{ width: '100%' }}>
+          <View style={{ justifyContent: "center", alignItems: "center" }}>
+            <View style={{ width: '85%' }}>
+              {section}
             </View>
           </View>
         </ScrollView>

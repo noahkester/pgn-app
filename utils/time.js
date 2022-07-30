@@ -43,8 +43,6 @@ export function findTimeCategory(timestamp) {
 
     if (timestamp === 0) {
         return -1;
-    } else if (timestamp < currentTime) {
-        return -2;
     }
     var a = new Date(timestamp);
     var b = new Date(currentTime);
@@ -65,6 +63,9 @@ export function findTimeCategory(timestamp) {
         a.getFullYear == b.getFullYear
     ) {
         return 1;
+    }
+    if (timestamp < currentTime) {
+        return -2;
     }
     // Day off in the future
     return 2;

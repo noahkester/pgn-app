@@ -91,7 +91,7 @@ export function NavigationPage() {
                 <FoundationIcon
                   name="home"
                   color={color}
-                  size={44}
+                  size={40}
                 />
               );
             },
@@ -107,7 +107,7 @@ export function NavigationPage() {
                 <FontAwesome5Icon
                   name="calendar-day"
                   color={color}
-                  size={36}
+                  size={32}
                 />
               );
             },
@@ -123,7 +123,7 @@ export function NavigationPage() {
                 <MaterialCommunityIcons
                   name="people-alt"
                   color={color}
-                  size={44}
+                  size={40}
                 />
               );
             },
@@ -139,7 +139,7 @@ export function NavigationPage() {
                 <FontAwesome5Icon
                   name='clipboard-list'
                   color={color}
-                  size={38}
+                  size={34}
                 />
               );
             }

@@ -60,9 +60,9 @@ function PointCard(props) {
     <View style={{ borderWidth: 1, paddingLeft: 8, paddingRight: 8, paddingTop: 12, paddingBottom: 12, borderColor: '#DBDBDB', borderRadius: 10 }}>
       <View style={globalStyles.cardAlign}>
         <PointImage points={props.points} icon={props.icon} />
-        <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}>{props.title}</Text>
+        <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 18, color: '#262626' }}>{props.title}</Text>
         <View style={{ flexDirection: 'row', justifyContent: 'center', width: 50 }}>
-          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}>
+          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 18, color: '#262626' }}>
             {props.points + "/" + props.totalPoints}
           </Text>
         </View>
