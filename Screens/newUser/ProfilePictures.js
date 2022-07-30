@@ -1,21 +1,12 @@
-import {
-  StyleSheet,
-  Button,
-  TouchableOpacity,
-  Text,
-  Image,
-  View,
-  Alert,
-} from "react-native";
-import { SubmitPoints } from "../Home";
-import globalStyles from "../../styles/Styles";
-import { NextButton } from "./NewUser";
-import React, { useState, useEffect } from "react";
-import { store, auth } from "../../utils/firebase";
+import { StyleSheet, TouchableOpacity, Text, Image, View, Alert } from "react-native";
+import React, { useState, useEffect, useContext } from "react";
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
+import Octicons from 'react-native-vector-icons/Octicons';
+
 import NewUserContext from "../../utils/NewUserContext";
+import { db, store, auth } from "../../utils/firebase";
 
 function ImageUpload(props) {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
@@ -41,13 +32,11 @@ function ImageUpload(props) {
     });
 
     if (!result.cancelled) {
-      // Resize image here
       const resizedResult = await ImageManipulator.manipulateAsync(
         result.uri,
-        [{ resize: { width: 200 } }], // resize to width of 300 and preserve aspect ratio 
+        [{ resize: { width: 200 } }],
         { format: 'jpeg' },
       );
-      //======
 
       setImage(resizedResult);
       uploadImage(resizedResult.uri, auth.currentUser.uid + "_" + props.type)
@@ -61,100 +50,84 @@ function ImageUpload(props) {
   };
   return (
     <TouchableOpacity
-      style={[styles.imageUpload, { zIndex: -1 }]}
+      style={{ width: '100%', height: 140, justifyContent: "center", alignItems: "center", zIndex: -1 }}
       onPress={() => {
         pickImage();
       }}
     >
-      <Image source={image} style={styles.cloudImage} resizeMode="contain" />
+      <Image source={image} style={{ width: "60%", maxHeight: 110 }} resizeMode="contain" />
     </TouchableOpacity>
   );
 }
 function ImageUploadCard(props) {
   return (
-    <View style={styles.imageUploadCard}>
-      <Text style={globalStyles.mediumBoldText}>{props.title}</Text>
-      <View style={[globalStyles.cardContainer, styles.uploadContainer]}>
-        <ImageUpload type={props.type} />
-      </View>
+    <View style={{ borderWidth: 1, width: '80%', borderRadius: 10, borderColor: '#DBDBDB', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+      <ImageUpload type={props.type} />
+      <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626', marginBottom: 10 }}>{props.title}</Text>
     </View>
   );
 }
 
 export function ProfilePicturesPage() {
   const navigation = useNavigation();
-  const nextScreen = () => {
-    navigation.navigate("About");
+  const newUserContext = useContext(NewUserContext);
+  const uploadData = () => {
+    db.collection("users")
+      .doc(auth.currentUser.uid)
+      .set(newUserContext)
+      .then(() => {
+        console.log("(NewUser) User Information successfully written!");
+        navigation.navigate("EmailVerification");
+      })
+      .catch((error) => {
+        console.error("(NewUser) Error writing document: ", error);
+      });
   }
   return (
-    <View style={styles.screen}>
-      <View></View>
-      <View style={{ width: "100%", alignItems: "center" }}>
-        <Text style={[globalStyles.largeSemiBoldText, styles.title]}>
-          Profile Pictures
-        </Text>
+    <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+      <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center' }}>
+        <TouchableOpacity
+          style={{ marginLeft: 16 }}
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <Octicons
+            name="chevron-left"
+            color={'#262626'}
+            size={42}
+          />
+        </TouchableOpacity>
+      </View>
+      <View
+        style={{ flex: 1, alignItems: "center" }}
+      >
         <ImageUploadCard
-          title="Professional Pic"
+          title="Professional"
           type="professional"
           imageSrc={require("../../images/imageUpload1.png")}
         />
+        <View style={{ width: '70%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
         <ImageUploadCard
-          title="Party/Fun Pic"
+          title="Party"
           type="social"
           imageSrc={require("../../images/imageUpload2.png")}
         />
+        <View style={{ width: '70%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
         <ImageUploadCard
-          title="Funny Pic"
+          title="Random"
           type="funny"
           imageSrc={require("../../images/imageUpload3.png")}
         />
       </View>
-      <NextButton onPress={nextScreen} title="Next" />
+      <View style={{ width: '100%', alignItems: 'center', position: 'absolute', bottom: 60 }}>
+        <TouchableOpacity
+          style={{ width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 30, borderWidth: 1, borderColor: '#DBDBDB', backgroundColor: '#FAFAFA' }}
+          onPress={uploadData}
+        >
+          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}>{'Complete'}</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
-const styles = StyleSheet.create({
-  imageUpload: {
-    width: 140,
-    height: 160,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  cloudImage: {
-    width: "60%",
-    maxHeight: 110,
-  },
-  screen: {
-    height: "100%",
-    width: "100%",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "white",
-  },
-  title: {
-    marginBottom: 10,
-  },
-  uploadContainer: {
-    marginBottom: 10,
-    width: 150,
-    height: 120,
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  imageUploadCard: {
-    alignItems: "center",
-  },
-  uploadImage: {
-    width: 80,
-    height: 80,
-  },
-  checkImage: {
-    position: "absolute",
-    top: -5,
-    right: -15,
-    width: 48,
-    height: 48,
-  },
-});

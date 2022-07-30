@@ -5,6 +5,7 @@ import {
   Text,
   Image,
   View,
+  TextInput
 } from "react-native";
 import { SubmitPoints } from "../Home";
 import { NewUserTextInput } from "./NewUser";
@@ -18,6 +19,7 @@ import { NextButton } from "./NewUser";
 import { auth, db } from "../../utils/firebase";
 import NewUserContext from "../../utils/NewUserContext";
 import { useNavigation } from "@react-navigation/native";
+import Octicons from 'react-native-vector-icons/Octicons';
 
 function UniversityDropdown(props) {
   const [open, setOpen] = useState(false);
@@ -417,28 +419,59 @@ export function NamePage() {
   }
 
   return (
-    <View style={styles.screen}>
-      <View></View>
-      <View style={{ width: "100%", alignItems: "center" }}>
-        <Text style={globalStyles.largeSemiBoldText}>Name and School</Text>
-        <View style={{ height: 10 }}></View>
-        <UniversityDropdown setChapter={setChapter} />
-        <View style={{ height: 10 }}></View>
-        <NewUserTextInput
-          placeholder="First name"
-          onCustomChange={(text) => {
-            setFirstName(text.charAt(0).toUpperCase() + text.slice(1));
+    <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+      <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center' }}>
+        <TouchableOpacity
+          style={{ marginLeft: 16 }}
+          onPress={() => {
+            navigation.goBack();
           }}
-        />
-        <NewUserTextInput
-          placeholder="Last name"
-          onCustomChange={(text) => setLastName(text.charAt(0).toUpperCase() + text.slice(1))}
-        />
+        >
+          <Octicons
+            name="chevron-left"
+            color={'#262626'}
+            size={42}
+          />
+        </TouchableOpacity>
       </View>
-      <NextButton
-        title="Next"
-        onPress={checkAdminMembers}
-      />
+      <View
+        style={{ flex: 1, alignItems: "center", marginTop: 180 }}
+      >
+        <View style={{ width: '100%', flexDirection: 'column', alignItems: 'center' }}>
+          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626', marginBottom: 20 }}>Name</Text>
+          <View style={{ borderWidth: 1, borderRadius: 25, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}
+              placeholder={'First Name'}
+              onChangeText={(text) => setFirstName(text)}
+            >
+              {firstName}
+            </TextInput>
+          </View>
+          <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+          <View style={{ borderWidth: 1, borderRadius: 25, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}
+              placeholder={'Last Name'}
+              onChangeText={(text) => setLastName(text)}
+            >
+              {lastName}
+            </TextInput>
+          </View>
+        </View>
+        <View style={{ width: '100%', alignItems: 'center', position: 'absolute', bottom: 60 }}>
+          <TouchableOpacity
+            style={{ width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 30, borderWidth: 1, borderColor: '#DBDBDB', backgroundColor: '#FAFAFA' }}
+            onPress={checkAdminMembers}
+          >
+            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}>{'Next'}</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 }

@@ -1,15 +1,10 @@
-import { StyleSheet, Button, TouchableOpacity, Text, Image, View, } from "react-native";
-import { SubmitPoints } from "../Home";
-import { NewUserTextInput } from "./NewUser";
-import globalStyles from "../../styles/Styles"
-import { newUser } from "./About";
-import { setField } from "./About";
-import { getCurrentUser, db, auth } from "../../utils/firebase";
 import React from "react";
-import { NextButton } from "./NewUser";
 import { useState, useContext } from "react";
-import NewUserContext from "../../utils/NewUserContext";
+import { TouchableOpacity, Text, TextInput, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import Octicons from 'react-native-vector-icons/Octicons';
+
+import NewUserContext from "../../utils/NewUserContext";
 
 export function ContactPage() {
     const [linkedin, setLinkedin] = useState("");
@@ -20,41 +15,62 @@ export function ContactPage() {
     const updateContact = () => {
         newUserContext.linkedin = linkedin;
         newUserContext.phone = phone;
-        console.log(newUser);
-        db.collection("users")
-            .doc(auth.currentUser.uid)
-            .set(newUserContext)
-            .then(() => {
-                console.log("(NewUser) User Information successfully written!");
-                navigation.navigate("EmailVerification");
-            })
-            .catch((error) => {
-                console.error("(NewUser) Error writing document: ", error);
-            });
+        navigation.navigate("ProfilePictures");
     }
     return (
-        <View style={styles.screen}>
-            <View></View>
-            <View style={{ width: "100%", alignItems: "center" }}>
-                <Text style={globalStyles.largeSemiBoldText}>Contact</Text>
-                <NewUserTextInput
-                    placeholder="LinkedIn URL" onCustomChange={text => setLinkedin(text)}
-                />
-                <NewUserTextInput
-                    placeholder="Phone: 123-456-7890" onCustomChange={text => setPhone(text)}
-                />
+        <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+            <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center' }}>
+                <TouchableOpacity
+                    style={{ marginLeft: 16 }}
+                    onPress={() => {
+                        navigation.goBack();
+                    }}
+                >
+                    <Octicons
+                        name="chevron-left"
+                        color={'#262626'}
+                        size={42}
+                    />
+                </TouchableOpacity>
             </View>
-            <NextButton onPress={updateContact} title="Complete!" />
+            <View
+                style={{ flex: 1, alignItems: "center", marginTop: 180 }}
+            >
+                <View style={{ width: '100%', flexDirection: 'column', alignItems: 'center' }}>
+                    <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626', marginBottom: 20 }}>Contact</Text>
+                    <View style={{ borderWidth: 1, borderRadius: 25, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
+                        <TextInput
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}
+                            placeholder={'Linkedin URL'}
+                            onChangeText={(text) => setLinkedin(text)}
+                        >
+                            {linkedin}
+                        </TextInput>
+                    </View>
+                    <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+                    <View style={{ borderWidth: 1, borderRadius: 25, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
+                        <TextInput
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}
+                            placeholder={'Phone'}
+                            onChangeText={(text) => setPhone(text)}
+                        >
+                            {phone}
+                        </TextInput>
+                    </View>
+                </View>
+                <View style={{ width: '100%', alignItems: 'center', position: 'absolute', bottom: 60 }}>
+                    <TouchableOpacity
+                        style={{ width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 30, borderWidth: 1, borderColor: '#DBDBDB', backgroundColor: '#FAFAFA' }}
+                        onPress={updateContact}
+                    >
+                        <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}>{'Next'}</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
         </View>
     );
 }
-const styles = StyleSheet.create({
-    screen: {
-        height: "100%",
-        width: "100%",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        alignItems: "center",
-        backgroundColor: "white"
-    }
-});

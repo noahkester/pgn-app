@@ -1,20 +1,12 @@
-import {
-  StyleSheet,
-  Button,
-  TouchableOpacity,
-  Text,
-  Image,
-  View,
-} from "react-native";
-import { NewUserTextInput } from "../loginSignup/Login";
-import globalStyles from "../../styles/Styles";
-import React, { useState, useEffect } from "react";
-import { auth, db, sendEmail } from "../../utils/firebase";
-import { NavigationPage } from "../Tabs";
+import { TouchableOpacity, Text, View } from "react-native";
+import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { NewUserErrorMessage } from "../components/ErrorMessage";
-// TODO, add protection for spamming button (time interval)
-// ADD check element that confirms email was sent
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Octicons from 'react-native-vector-icons/Octicons';
+
+import { auth, sendEmail } from "../../utils/firebase";
+import { NavigationPage } from "../Tabs";
+
 export function EmailVerificationPage() {
   const user = auth.currentUser;
   if (user && user.emailVerified) {
@@ -22,88 +14,64 @@ export function EmailVerificationPage() {
   }
   return <LoadingPage />;
 }
-export function EmailContinueButton(props) {
-  const navigation = useNavigation();
-  return (
-    // For safety might want to add a limit on this
-    <TouchableOpacity
-      title={"Send Email"}
-      style={[
-        globalStyles.lightGrayFill,
-        globalStyles.button,
-        globalStyles.grayBorder,
-      ]}
-      onPress={() => {
-        const user = auth.currentUser;
-        if (user) {
-          sendEmail(user);
-          props.setMessage("Sent! Check your spam folder");
-        } else {
-          console.log(
-            "(EmailVerification) Cannot send to email: no user logged in"
-          );
-        }
-      }}
-    >
-      <Text style={globalStyles.mediumBoldText}>{"Send Email"}</Text>
-    </TouchableOpacity>
-  );
-}
 
-function LoginInText() {
-  const navigation = useNavigation();
-  return (
-    <TouchableOpacity
-      onPress={() => {
-        navigation.navigate("Router", { screen: "Login" });
-      }}
-    >
-      <Text style={[globalStyles.miniSemiBoldText, { marginBottom: 50 }]}>
-        Verified? Log in!
-      </Text>
-    </TouchableOpacity>
-  );
-}
 export function LoadingPage() {
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
+
+  const navigation = useNavigation();
+
   return (
-    <View style={styles.screen}>
-      <View></View>
-      <View style={{ width: "100%", alignItems: "center" }}>
-        <Text style={globalStyles.largeSemiBoldText}>Email Verification</Text>
-        <Image
-          source={require("../../images/paper-plane.png")}
-          style={styles.planeImage}
-          resizeMode="contain"
-        />
-        <View style={{ height: 10 }}></View>
-        <EmailContinueButton
-          title=""
-          address="Navigation"
-          setMessage={setMessage}
-        />
-        <NewUserErrorMessage message={message} />
+    <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+      <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center' }}>
+        <TouchableOpacity
+          style={{ marginLeft: 16 }}
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <Octicons
+            name="chevron-left"
+            color={'#262626'}
+            size={42}
+          />
+        </TouchableOpacity>
       </View>
-      <LoginInText />
+      <View style={{ alignItems: "center", marginTop: 120 }}>
+        <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626', marginBottom: 20 }}>Email Verification</Text>
+        <FontAwesome
+          name={'paper-plane'}
+          size={140}
+          color={'#9C9C9C'}
+          resizeMode='contain'
+        />
+        {(message == '') ? null :
+          <Text style={{ paddingTop: 30, fontFamily: 'Poppins_500Medium', color: '#5FB05F' }}>{message}</Text>
+        }
+      </View>
+      <View style={{ width: '100%', alignItems: 'center', position: 'absolute', bottom: 60 }}>
+        <TouchableOpacity
+          style={{ width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 30, borderWidth: 1, borderColor: '#DBDBDB', backgroundColor: '#FAFAFA' }}
+          onPress={() => {
+            const user = auth.currentUser;
+            if (user) {
+              sendEmail(user);
+              setMessage("Sent! Check your spam folder");
+            } else {
+              setMessage("Issue sending email. Refresh app");
+            }
+          }}
+        >
+          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}>{'Send Email'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{ marginTop: 6 }}
+          onPress={() => {
+            navigation.navigate("Router", { screen: "Login" });
+          }}
+        >
+          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 12, color: '#8E8E8E' }}>Verified? Log in</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
-const styles = StyleSheet.create({
-  screen: {
-    height: "100%",
-    width: "100%",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "white",
-  },
-  planeImage: {
-    marginTop: 50,
-    marginBottom: 50,
-    width: 150,
-    height: 150,
-  },
-  submitButton: {
-    marginBottom: 10,
-  },
-});
