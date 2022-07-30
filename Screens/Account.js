@@ -6,7 +6,7 @@ import colors from "webpack-dev-server/lib/utils/colors";
 import { auth, db, store } from "../utils/firebase";
 import { findRoleBorder, findRoleColor } from "../styles/Colors"
 import LoginContext from '../utils/LoginContext';
-
+import Octicons from 'react-native-vector-icons/Octicons';
 import ImageCarousel from "./components/ImageCarousel";
 import UrlContext from "../utils/UrlContext";
 
@@ -54,7 +54,15 @@ function Profile(props) {
 
 function Description(props) {
   return (
-    <View style={[globalStyles.cardContainer, styles.accountDescription]}>
+    <View style={{
+      marginTop: 20,
+      width: "85%",
+      backgroundColor: "#FFFFFF",
+      borderWidth: 1,
+      borderColor: '#DBDBDB',
+      padding: 15,
+      borderRadius: 10,
+    }}>
       <TextInput
         style={globalStyles.smallSemiBoldText}
         multiline={true}
@@ -68,30 +76,32 @@ function Description(props) {
     </View>
   );
 }
-function Chapter(props) {
-  return (
-    <View style={{ paddingTop: 60 }}>
-      <Text style={[globalStyles.mediumSemiBoldText]}>{props.chapter}</Text>
-    </View>
-  );
-}
 function AccountInput(props) {
   return (
-    <View style={styles.accountInput}>
-      <Text style={globalStyles.smallSemiBoldText}>{props.label}</Text>
-      <TextInput
-        style={[{ width: "70%" }, globalStyles.cardContainer, globalStyles.smallSemiBoldText,]}
-        onChangeText={(text) => {
-          props.setValue(text);
-        }}
-        defaultValue={props.input}
-      />
-    </View>
+    <TextInput
+      style={{
+        width: "85%",
+        borderWidth: 1,
+        borderColor: '#D9D9D9',
+        backgroundColor: '#FAFAFA',
+        padding: 15,
+        borderRadius: 10,
+        fontFamily: 'Poppins_600SemiBold',
+        color: '#808080',
+        fontSize: 16,
+        marginTop: 10
+      }}
+      onChangeText={(text) => {
+        props.setValue(text);
+      }}
+      defaultValue={props.value}
+      placeholder={props.placeholder}
+    />
   );
 }
 function PledgeClass(props) {
   return (
-    <View style={{ width: '80%' }}>
+    <View style={{ width: '85%' }}>
       <View style={{ flexDirection: "row", justifyContent: "space-between", width: "100%", paddingTop: 20 }}>
         <Text style={globalStyles.smallSemiBoldText}>
           {"PC " + props.pledgeClass}
@@ -118,8 +128,18 @@ function SaveButton(props) {
       title={"Save and Exit"}
       style={[
         globalStyles.universityColorFill,
-        globalStyles.button,
-        { marginTop: 40 },
+        {
+          marginTop: 10,
+          marginBottom: 60,
+          borderRadius: 30,
+          width: "90%",
+          alignItems: "center",
+          justifyContent: "center",
+          paddingTop: 15,
+          paddingBottom: 15,
+          borderWidth: 6,
+          borderColor: '#E9C9B2',
+        }
       ]}
     >
       <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>
@@ -151,8 +171,18 @@ export function SignOutButton(props) {
       title={"Signout"}
       style={[
         globalStyles.universityColorFill,
-        globalStyles.button,
-        { marginTop: 10, marginBottom: 50 },
+        {
+          marginTop: 10,
+          marginBottom: 60,
+          borderRadius: 30,
+          width: "90%",
+          alignItems: "center",
+          justifyContent: "center",
+          paddingTop: 15,
+          paddingBottom: 15,
+          borderWidth: 6,
+          borderColor: '#E9C9B2',
+        }
       ]}
     >
       <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>
@@ -178,6 +208,8 @@ export function AccountPage() {
   const [linkedin, setLinkedin] = useState(curUser.linkedin);
 
   const [changed, setChanged] = useState(false);
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     setChanged(!changed);
@@ -247,36 +279,63 @@ export function AccountPage() {
   }
   return (
     <View style={styles.createAccountScreen}>
-      <View style={{ height: "15%", justifyContent: "space-between", paddingBottom: 10, width: "100%", }}>
-        <View></View>
-        <AccountTop name={curUser.firstname + " " + curUser.lastname} address="Navigation" rightElement={true} />
+      <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <TouchableOpacity
+          style={{ width: 68, alignItems: 'center' }}
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <Octicons
+            name="chevron-left"
+            color={'#262626'}
+            size={42}
+          />
+        </TouchableOpacity>
+        <Text style={{ textAlign: 'center', fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626' }}>{curUser.firstname + ' ' + curUser.lastname}</Text>
+        <TouchableOpacity
+          style={{ width: 68, height: 68, alignItems: 'center', justifyContent: 'center', borderRadius: 34, marginRight: 16 }}
+          onPress={() => {
+            navigation.navigate('AddEvent');
+          }}
+        >
+          <TouchableOpacity onPress={() => navigation.navigate("AccountImageUpload")}>
+            <Image
+              source={require("../images/imageUpload.png")}
+              style={styles.imageLogo}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+        </TouchableOpacity>
       </View>
       <ScrollView style={{ width: "100%" }}>
         <View style={{ alignItems: "center" }}>
           <Profile />
-          {(curUser.role !== '') ?
-            <View style={{ backgroundColor: findRoleColor(curUser.role), borderWidth: 3, borderColor: findRoleBorder(curUser.role), paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, borderRadius: 100 }}>
+          {(curUser.role === '') ? null :
+            <View style={{ backgroundColor: findRoleColor(curUser.role), borderWidth: 3, borderColor: findRoleBorder(curUser.role), paddingTop: 6, paddingBottom: 6, paddingLeft: 20, paddingRight: 20, borderRadius: 100 }}>
               <Text style={{ color: '#FFFFFF', fontFamily: 'Poppins_600SemiBold' }}>{curUser.role}</Text>
             </View>
-            :
-            null
           }
           <Description description={bio} setValue={setBio} />
-          <Chapter chapter={curUser.chapter} />
           <PledgeClass
             pledgeClass={curUser.pledgeClass}
             status={curUser.status}
             pledgeTask={curUser.pledgeTask}
           />
-          <AccountInput label="Major:" input={major} setValue={setMajor} />
-          <AccountInput label="Minor:" input={minor} setValue={setMinor} />
-          <AccountInput label="Hometown:" input={hometown} setValue={setHometown} />
-          <AccountInput label="Activities:" input={activities} setValue={setActivities} />
-          <AccountInput label="Email:" input={email} setValue={setEmail} />
-          <AccountInput label="Phone:" input={phone} setValue={setPhone} />
-          <AccountInput label="LinkedIn:" input={linkedin} setValue={setLinkedin} />
-          {changed ? <SaveButton onPress={updateProfile} /> : null}
-          <SignOutButton />
+          <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, marginLeft: 10, width: '85%' }}>Education</Text>
+          <AccountInput placeholder="Major" value={major} setValue={setMajor} />
+          <AccountInput placeholder="Minor" value={minor} setValue={setMinor} />
+          <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, marginLeft: 10, width: '85%' }}>About</Text>
+          <AccountInput placeholder="Hometown" value={hometown} setValue={setHometown} />
+          <AccountInput placeholder="Activities" value={activities} setValue={setActivities} />
+          <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, marginLeft: 10, width: '85%' }}>Contact</Text>
+          <AccountInput placeholder="Email" value={email} setValue={setEmail} />
+          <AccountInput placeholder="Phone" value={phone} setValue={setPhone} />
+          <AccountInput placeholder="Linkedin URL" value={linkedin} setValue={setLinkedin} />
+          {changed ? <SaveButton onPress={updateProfile} /> : <SignOutButton />}
         </View>
       </ScrollView>
     </View>
