@@ -1,17 +1,9 @@
 import React, { useState, useContext, useCallback } from "react";
-import {
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  Text,
-  View,
-  ScrollView,
-  RefreshControl,
-} from "react-native";
+import { TouchableOpacity, Image, Text, View, ScrollView, RefreshControl } from "react-native";
 import globalStyles from "../../styles/Styles";
-import colors from "../../styles/Colors";
-import { SubmitPoints } from "../Home";
+
 import LoginContext from "../../utils/LoginContext";
+import Octicons from 'react-native-vector-icons/Octicons';
 import { useNavigation } from "@react-navigation/native";
 import { EventSection } from "../Events";
 import { db } from '../../utils/firebase'
@@ -19,30 +11,29 @@ import { db } from '../../utils/firebase'
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 }
-function AccountTop(props) {
+function AccountTop() {
   const navigation = useNavigation();
   return (
-    <View style={{
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-      width: "100%",
-      paddingLeft: 10,
-      paddingRight: 10
-    }}>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Image
-          source={require("../../images/back.png")}
-          style={{
-            width: 60,
-            height: 60,
-          }}
-          resizeMode="contain"
+    <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+      <TouchableOpacity
+        style={{ width: 68, alignItems:'center' }}
+        onPress={() => {
+          navigation.goBack();
+        }}
+      >
+        <Octicons
+          name="chevron-left"
+          color={'#262626'}
+          size={42}
         />
       </TouchableOpacity>
-      <Text style={globalStyles.largeBoldText}>{props.name}</Text>
+      <Text style={{ textAlign: 'center', fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626' }}>All Events</Text>
       <TouchableOpacity
-        onPress={() => navigation.navigate("AddEvent")}>
+        style={{ width: 68, height: 68, alignItems: 'center', justifyContent: 'center', borderRadius: 34, marginRight: 16 }}
+        onPress={() => {
+          navigation.navigate('AddEvent');
+        }}
+      >
         <Image
           source={require("../../images/add.png")}
           style={{
@@ -77,13 +68,7 @@ export function AdminEventsPage() {
   }, []);
   return (
     <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
-      <View style={{
-        height: 160,
-        paddingTop: 70,
-        backgroundColor: '#FFFFFF'
-      }}>
-        <AccountTop name="Schedule Events" address="Admin" />
-      </View>
+      <AccountTop />
       <ScrollView
         style={[globalStyles.scroll, {}]}
         contentContainerStyle={{ alignItems: 'center' }}

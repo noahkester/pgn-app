@@ -51,14 +51,14 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         lineHeight: 52,
         fontSize: 30,
-        borderWidth: 2,
-        borderColor: '#777777',
+        borderWidth: 1,
+        borderColor: '#DBDBDB',
         textAlign: 'center',
         fontFamily: 'Poppins_400Regular',
-        color: '#777777'
+        color: '#262626'
     },
     focusCell: {
-        borderColor: '#C57035',
-        color: '#C57035'
+        borderColor: '#E5C0A6',
+        color: '#E5C0A6'
     },
 });

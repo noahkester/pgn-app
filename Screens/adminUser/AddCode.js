@@ -5,33 +5,11 @@ import globalStyles from "../../styles/Styles";
 import { db } from "../../utils/firebase";
 import BasicExample from "./CodeInput";
 import { useEffect } from "react";
+import Octicons from 'react-native-vector-icons/Octicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { unixEpochTimeToClock, unixEpochTimeToMonthDay, dateObjectToUnixEpoch, addHours } from '../../utils/time'
 
-function AccountTop(props) {
-    const navigation = useNavigation();
-    return (
-        <View
-            style={{
-                flexDirection: "row", alignItems: "center", justifyContent: "space-between",
-                width: "100%", height: 160,
-                paddingLeft: 10, paddingRight: 10, paddingTop: 70,
-                backgroundColor: '#FFFFFF',
-                position: 'absolute',
-                top: 0
-            }}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-                <Image
-                    source={require("../../images/back.png")}
-                    style={{ width: 60, height: 60 }}
-                    resizeMode="contain"
-                />
-            </TouchableOpacity>
-            <Text style={globalStyles.largeBoldText}>{props.name}</Text>
-            <View style={{ width: 60 }} />
-        </View>
-    );
-}
 export function AddCodePage() {
     const [value, setValue] = useState('');
     const [meetingTime, setMeetingTime] = useState(new Date())
@@ -62,56 +40,92 @@ export function AddCodePage() {
         setMeetingTime(date);
         hideDatePicker();
     };
+    const createMeeting = () => {
+        db.collection("chapter-meetings")
+            .doc(value)
+            .set(
+                {
+                    attendees: [],
+                    meetingTime: dateObjectToUnixEpoch(meetingTime),
+                    expirationTime: dateObjectToUnixEpoch(expirationTime)
+                }
+            )
+            .then(() => {
+                console.log("(addcode.js) chapter meeting successfully written!");
+                navigation.goBack();
+            })
+            .catch((error) => {
+                console.error("(addcode.js) error writing chapter meeting ", error);
+                navigation.goBack();
+            });
+    }
     useEffect(() => {
         expirationTime.setTime(meetingTime.getTime() + 3 * 60 * 60 * 1000);
     }, [meetingTime])
     return (
-        <View style={{ flex: 1, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }}>
-            <AccountTop name={'New Meeting'} />
+        <View style={{ flex: 1, backgroundColor: '#FFFFFF', alignItems: 'center' }}>
+            <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <TouchableOpacity
+                    style={{ width: 68, alignItems:'center' }}
+                    onPress={() => {
+                        navigation.goBack();
+                    }}
+                >
+                    <Octicons
+                        name="chevron-left"
+                        color={'#262626'}
+                        size={42}
+                    />
+                </TouchableOpacity>
+            </View>
+            <Text style={{ marginTop: 120, fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626', marginBottom: 20 }}>Create Meeting</Text>
             <View style={{ width: '80%' }}>
                 <BasicExample value={value} setValue={setValue} />
                 <TouchableOpacity
-                    style={{ marginTop: 10 }}
+                    style={{ marginTop: 10, borderWidth: 1, borderColor: '#DBDBDB', borderRadius: 6, width: 50, height: 36, alignItems: 'center', justifyContent: 'center' }}
                     onPress={() => {
                         setValue(makeid(6));
                     }}
                 >
-                    <Text>Auto generate</Text>
+                    <FontAwesome
+                        name="random"
+                        color={'#262626'}
+                        size={24}
+                    />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={showDatePicker} >
-                    <Text style={{ marginTop: 60, fontFamily: 'Poppins_600SemiBold', fontSize: 20 }} >
-                        {'Meeting Time: ' + unixEpochTimeToMonthDay(dateObjectToUnixEpoch(meetingTime)) + " " + unixEpochTimeToClock(dateObjectToUnixEpoch(meetingTime))}
-                    </Text>
-                </TouchableOpacity>
-                <DateTimePickerModal
-                    isVisible={isDatePickerVisible}
-                    mode="datetime"
-                    onConfirm={handleConfirm}
-                    onCancel={hideDatePicker}
-                    date={meetingTime}
-                />
             </View>
             <TouchableOpacity
+                style={{ marginTop: 10, width: '90%', borderWidth: 1, borderColor: '#DBDBDB', borderRadius: 30, height: 54, justifyContent: 'center', paddingLeft: 20 }}
+                onPress={showDatePicker}
+            >
+                <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#8E8E8E' }} >
+                    {unixEpochTimeToMonthDay(dateObjectToUnixEpoch(meetingTime)) + " " + unixEpochTimeToClock(dateObjectToUnixEpoch(meetingTime))}
+                </Text>
+            </TouchableOpacity>
+            <DateTimePickerModal
+                isVisible={isDatePickerVisible}
+                mode="datetime"
+                onConfirm={handleConfirm}
+                onCancel={hideDatePicker}
+                date={meetingTime}
+            />
+
+            <TouchableOpacity
                 onPress={() => {
-                    db.collection("chapter-meetings")
-                        .doc(value)
-                        .set(
-                            {
-                                attendees: [],
-                                meetingTime: dateObjectToUnixEpoch(meetingTime),
-                                expirationTime: dateObjectToUnixEpoch(expirationTime)
-                            }
-                        )
-                        .then(() => {
-                            console.log("(addcode.js) chapter meeting successfully written!");
-                            navigation.goBack();
-                        })
-                        .catch((error) => {
-                            console.error("(addcode.js) error writing chapter meeting ", error);
-                            navigation.goBack();
-                        });
+                    createMeeting()
                 }}
-                style={[globalStyles.universityColorFill, globalStyles.button, { marginTop: 30 }]}
+                style={[globalStyles.universityColorFill, {
+                    borderRadius: 36,
+                    width: "90%",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    paddingTop: 15,
+                    paddingBottom: 15,
+                    position: 'absolute',
+                    borderWidth: 6,
+                    borderColor: '#E9C9B2',
+                    bottom: 60
+                }]}
             >
                 <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>Create!</Text>
             </TouchableOpacity>

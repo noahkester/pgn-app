@@ -1,11 +1,11 @@
-import { StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Text, View } from "react-native";
-import { useNavigation } from '@react-navigation/native';
-import globalStyles from "../../styles/Styles"
-import { db, store } from "../../utils/firebase";
 import React, { useEffect, useState } from "react";
-import UrlContext, { UrlProvider } from "../../utils/UrlContext";
+import { StyleSheet, TouchableOpacity, Image, Text, View } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import IonIcons from 'react-native-vector-icons/Ionicons';
+
+import globalStyles from "../../styles/Styles"
+import { db, store } from "../../utils/firebase";
 var allSettled = require('promise.allsettled');
 
 function SettingsButton() {
@@ -17,11 +17,11 @@ function SettingsButton() {
                 style={{ marginRight: 16 }}
             >
                 <View style={[styles.settingsButton, {}]}>
-                    <View style={[{ width: 60, height: 60, alignItems: 'center', justifyContent: 'center', borderRadius: 30 }, globalStyles.universityColorFill]}>
+                    <View style={[{ width: 68, height: 68, alignItems: 'center', justifyContent: 'center', borderRadius: 36, borderWidth: 8, borderColor: '#F2DDCE' }, globalStyles.universityColorFill]}>
                         <IonIcons
                             name="settings-sharp"
                             color={'#FFFFFF'}
-                            size={42}
+                            size={36}
                             style={{}}
                         />
                     </View>
@@ -29,11 +29,11 @@ function SettingsButton() {
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate("AdminEvents")}>
                 <View style={[styles.settingsButton, {}]}>
-                    <View style={[{ width: 60, height: 60, alignItems: 'center', justifyContent: 'center', borderRadius: 30 }, globalStyles.universityColorFill]}>
+                    <View style={[{ width: 68, height: 68, alignItems: 'center', justifyContent: 'center', borderRadius: 36, borderWidth: 8, borderColor: '#F2DDCE' }, globalStyles.universityColorFill]}>
                         <FontAwesome5Icon
                             name="calendar-day"
                             color={'#FFFFFF'}
-                            size={34}
+                            size={30}
                         />
                     </View>
                 </View>
@@ -43,11 +43,11 @@ function SettingsButton() {
                 style={{ marginLeft: 16 }}
             >
                 <View style={[styles.settingsButton, {}]}>
-                    <View style={[{ width: 60, height: 60, alignItems: 'center', justifyContent: 'center', borderRadius: 30 }, globalStyles.universityColorFill]}>
+                    <View style={[{ width: 68, height: 68, alignItems: 'center', justifyContent: 'center', borderRadius: 36, borderWidth: 8, borderColor: '#F2DDCE' }, globalStyles.universityColorFill]}>
                         <IonIcons
                             name="md-barcode"
                             color={'#FFFFFF'}
-                            size={42}
+                            size={38}
                             style={{ marginLeft: 3 }}
                         />
                     </View>
@@ -168,7 +168,7 @@ function PointSheet(props) {
             alignItems: "center",
         }}>
             <Text style={globalStyles.largeSemiBoldText}>{props.data.label}</Text>
-            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16 }}>{props.data.name}</Text>
+            <Text style={{ fontFamily: 'Poppins_500Medium', color: '#262626', fontSize: 16 }}>{props.data.name}</Text>
             <Image
                 source={(props.image == '') ? require("../../images/unknown-image.png") : { uri: props.image }}
                 resizeMode="contain"
@@ -177,7 +177,7 @@ function PointSheet(props) {
                     width: 240
                 }}
             />
-            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16 }}>{'Proof: ' + props.data.proof}</Text>
+            <Text style={{ fontFamily: 'Poppins_500Medium', color: '#262626', fontSize: 16 }}>{'Proof: ' + props.data.proof}</Text>
         </View>
     )
 }
@@ -241,9 +241,8 @@ export function AdminPage(props) {
             <View style={{
                 width: '90%', height: 400, borderRadius: 15,
                 backgroundColor: '#FFFFFF',
-                shadowColor: "#BBBBBB",
-                shadowOpacity: 0.5,
-                shadowRadius: 16,
+                borderWidth: 1,
+                borderColor: '#DBDBDB',
                 alignItems: 'center',
                 justifyContent: 'center'
             }}>

@@ -5,33 +5,26 @@ import { useNavigation, NavigationContainer } from "@react-navigation/native";
 import globalStyles from "../../styles/Styles";
 import { db } from "../../utils/firebase";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import Octicons from 'react-native-vector-icons/Octicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { dateObjectToUnixEpoch, unixEpochTimeToMonthDay, unixEpochTimeToClock } from '../../utils/time'
-function AccountTop(props) {
+
+function AccountTop() {
     const navigation = useNavigation();
     return (
-        <View style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            width: "100%",
-            paddingLeft: 10,
-            paddingRight: 10,
-            height: 160,
-            paddingTop: 70,
-            backgroundColor: '#FFFFFF'
-        }}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-                <Image
-                    source={require("../../images/back.png")}
-                    style={{
-                        width: 60,
-                        height: 60,
-                    }}
-                    resizeMode="contain"
+        <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <TouchableOpacity
+                style={{ marginLeft: 16, width: 68 }}
+                onPress={() => {
+                    navigation.goBack();
+                }}
+            >
+                <Octicons
+                    name="chevron-left"
+                    color={'#262626'}
+                    size={42}
                 />
             </TouchableOpacity>
-            <Text style={{ fontFamily: "Poppins_700Bold", fontSize: 20 }}>{props.name}</Text>
-            <View style={{ width: 60 }} />
         </View>
     );
 }
@@ -39,9 +32,9 @@ function AccountTop(props) {
 function Type(props) {
     const [type, setType] = useState('social');
     return (
-        <View style={{ flexDirection: 'row', width: '80%', justifyContent: 'space-evenly', backgroundColor: '#FFFFFF' }}>
+        <View style={{ borderWidth: 1, borderColor: '#DBDBDB', borderRadius: 10, padding: 10, flexDirection: 'row', width: '90%', justifyContent: 'space-evenly', backgroundColor: '#FFFFFF' }}>
             <TouchableOpacity
-                style={{ borderBottomWidth: (type === 'social') ? 3 : 0, borderColor: '#BEE0BE' }}
+                style={{ paddingBottom: 6, borderBottomWidth: (type === 'social') ? 3 : 0, borderColor: '#BEE0BE' }}
                 onPress={() => {
                     setType('social');
                     props.newEvent.current.type = 'Social';
@@ -57,7 +50,7 @@ function Type(props) {
                 />
             </TouchableOpacity>
             <TouchableOpacity
-                style={{ borderBottomWidth: (type === 'philanthropy') ? 3 : 0, borderColor: '#BEE0BE' }}
+                style={{ paddingBottom: 6, borderBottomWidth: (type === 'philanthropy') ? 3 : 0, borderColor: '#BEE0BE' }}
                 onPress={() => {
                     setType('philanthropy');
                     props.newEvent.current.type = 'Philanthropy';
@@ -73,7 +66,7 @@ function Type(props) {
                 />
             </TouchableOpacity>
             <TouchableOpacity
-                style={{ borderBottomWidth: (type === 'professional') ? 3 : 0, borderColor: '#BEE0BE' }}
+                style={{ paddingBottom: 6, borderBottomWidth: (type === 'professional') ? 3 : 0, borderColor: '#BEE0BE' }}
                 onPress={() => {
                     setType('professional');
                     props.newEvent.current.type = 'Professional';
@@ -89,7 +82,7 @@ function Type(props) {
                 />
             </TouchableOpacity>
             <TouchableOpacity
-                style={{ borderBottomWidth: (type === 'interview') ? 3 : 0, borderColor: '#BEE0BE' }}
+                style={{ paddingBottom: 6, borderBottomWidth: (type === 'interview') ? 3 : 0, borderColor: '#BEE0BE' }}
                 onPress={() => {
                     setType('interview');
                     props.newEvent.current.type = 'Interview';
@@ -137,93 +130,100 @@ export function AddEventPage() {
         hideDatePicker();
     };
     return (
-        <View style={{ backgroundColor: '#FFFFFF', flex: 1 }}>
-            <AccountTop name={'New Event'} />
-            <View style={{ alignItems: 'center' }}>
-                <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, width: '80%', marginTop: 30 }}>Name:</Text>
+        <View style={{ backgroundColor: '#FFFFFF', flex: 1, alignItems: 'center' }}>
+            <AccountTop />
+            <Text style={{ marginTop: 60, fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626', marginBottom: 20 }}>Create Event</Text>
+            <View style={{ borderWidth: 1, borderRadius: 25, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
                 <TextInput
-                    style={{
-                        width: "80%",
-                        backgroundColor: "#FFFFFF",
-                        shadowColor: '#BBBBBB',
-                        shadowOpacity: 0.25,
-                        shadowRadius: 10,
-                        padding: 15,
-                        borderRadius: 10,
-                        fontFamily: "Poppins_600SemiBold",
-                        fontSize: 16
-                    }}
-                    onChangeText={(text) => {
-                        newEvent.current.label = text;
-                    }}
-                    defaultValue={''}
-                />
-                <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, width: '80%', marginTop: 30 }}>Location:</Text>
-                <TextInput
-                    style={{
-                        width: "80%", backgroundColor: "#FFFFFF",
-                        shadowColor: '#BBBBBB',
-                        shadowOpacity: 0.25,
-                        shadowRadius: 10,
-                        padding: 15,
-                        borderRadius: 10, fontFamily: "Poppins_600SemiBold",
-                        fontSize: 16
-                    }}
-                    onChangeText={(text) => {
-                        newEvent.current.location = text;
-                    }}
-                    defaultValue={''}
-                />
-                <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, width: '80%', marginTop: 30 }}>Type:</Text>
-                <Type newEvent={newEvent} />
-                <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, width: '80%', marginTop: 30 }}>Time:</Text>
-                <TouchableOpacity
-                    onPress={showDatePicker}
-                    style={[{ width: "80%" }, globalStyles.cardContainer]}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}
+                    placeholder={'Title'}
+                    onChangeText={(text) => { newEvent.current.label = text; }}
                 >
-                    <Text style={globalStyles.smallSemiBoldText}>{(newEvent.current.time == 0) ? 0 : unixEpochTimeToMonthDay(newEvent.current.time) + " " + unixEpochTimeToClock(newEvent.current.time)}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => {
-                        newEvent.current.time = 0;
-                        setMeetingTime(new Date());
-                    }}
-                >
-                    <Text>None</Text>
-                </TouchableOpacity>
-                <DateTimePickerModal
-                    isVisible={isDatePickerVisible}
-                    mode="datetime"
-                    onConfirm={handleConfirm}
-                    onCancel={hideDatePicker}
-                    date={meetingTime}
-                />
-                <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, width: '80%', marginTop: 30 }}>Points:</Text>
-                <TextInput
-                    style={[{ width: "80%" }, globalStyles.cardContainer, globalStyles.smallSemiBoldText,]}
-                    onChangeText={(text) => {
-                        newEvent.current.weight = parseInt(text);
-                    }}
-                    defaultValue={''}
-                />
-                <TouchableOpacity
-                    onPress={() => {
-                        db.collection("events")
-                            .doc(eventDocName(newEvent.current))
-                            .set(newEvent.current)
-                            .then(() => {
-                                console.log("(addevent.js) event successfully written!");
-                                navigation.goBack();
-                            })
-                            .catch((error) => {
-                                console.error("(addevent.js) error writing document: ", error);
-                            });
-                    }}
-                    style={[globalStyles.universityColorFill, globalStyles.button, { marginTop: 30 }]}
-                >
-                    <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>Create!</Text>
-                </TouchableOpacity>
+                    {''}
+                </TextInput>
             </View>
+            <View style={{ marginTop: 10, borderWidth: 1, borderRadius: 25, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
+                <TextInput
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}
+                    placeholder={'Location'}
+                    onChangeText={(text) => { newEvent.current.location = text; }}
+                >
+                    {''}
+                </TextInput>
+            </View>
+            <TouchableOpacity
+                style={{ marginTop: 10, borderWidth: 1, borderRadius: 25, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}
+                onPress={showDatePicker}
+            >
+                <Text
+                    style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}
+                    onChangeText={(text) => { newEvent.current.label = text; }}
+                >
+                    {(newEvent.current.time == 0) ? 'Time: none' : unixEpochTimeToMonthDay(newEvent.current.time) + " " + unixEpochTimeToClock(newEvent.current.time)}
+                </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                onPress={() => {
+                    newEvent.current.time = 0;
+                    setMeetingTime(new Date());
+                }}
+            >
+                <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 12, color: '#8E8E8E' }}>Reset time</Text>
+            </TouchableOpacity>
+            <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+            <Type newEvent={newEvent} />
+
+            <DateTimePickerModal
+                isVisible={isDatePickerVisible}
+                mode="datetime"
+                onConfirm={handleConfirm}
+                onCancel={hideDatePicker}
+                date={meetingTime}
+            />
+            <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+            <View style={{ borderWidth: 1, borderRadius: 25, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
+                <TextInput
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}
+                    placeholder={'Points'}
+                    onChangeText={(text) => { newEvent.current.weight = parseInt(text); }}
+                >
+                    {''}
+                </TextInput>
+            </View>
+            <TouchableOpacity
+                onPress={() => {
+                    db.collection("events")
+                        .doc(eventDocName(newEvent.current))
+                        .set(newEvent.current)
+                        .then(() => {
+                            console.log("(addevent.js) event successfully written!");
+                            navigation.goBack();
+                        })
+                        .catch((error) => {
+                            console.error("(addevent.js) error writing document: ", error);
+                        });
+                }}
+                style={[globalStyles.universityColorFill, {
+                    borderRadius: 36,
+                    width: "90%",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    paddingTop: 15,
+                    paddingBottom: 15,
+                    position: 'absolute',
+                    borderWidth: 6,
+                    borderColor: '#E9C9B2',
+                    bottom: 60
+                }]}
+            >
+                <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>Create!</Text>
+            </TouchableOpacity>
         </View>
     )
 }

@@ -79,17 +79,17 @@ function PointDisplay(props) {
   return (
     <View style={{ width: "85%", height: 300, flexDirection: "column", justifyContent: "space-between", alignContent: "space-between", }}>
       <PointCard
-        title="Professional"
-        points={props.professionalPoints}
-        totalPoints={props.totalProfessionalPoints}
-        icon={require("../images/professional.png")}
-      />
-      <View style={{ height: 10 }} />
-      <PointCard
         title="Philanthropy"
         points={props.philanthropyPoints}
         totalPoints={props.totalPhilanthropyPoints}
         icon={require("../images/philanthropy.png")}
+      />
+      <View style={{ height: 10 }} />
+      <PointCard
+        title="Professional"
+        points={props.professionalPoints}
+        totalPoints={props.totalProfessionalPoints}
+        icon={require("../images/professional.png")}
       />
       <View style={{ height: 10 }} />
       <PointCard

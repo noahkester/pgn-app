@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
     },
     tabBarActiveTintColor: "white",
     tabBarInactiveTintColor: "black",
-    tabBarLabelStyle: globalStyles.smallBoldText,
+    tabBarLabelStyle: { fontFamily: 'Poppins_600SemiBold', fontSize: 12 },
 
     tabBarIndicatorStyle: {
       backgroundColor: "#C57035",

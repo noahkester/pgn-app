@@ -34,7 +34,11 @@ export function unixEpochTimeToClock(timestamp) {
     var hours = a.getHours();
     hours = (hours > 12) ? hours % 12 : hours;
     hours = (hours == 0) ? 12 : hours;
-    return hours + ":" + a.getMinutes();
+    var mins = a.getMinutes();
+    if (mins < 10) {
+        mins = '0' + mins;
+    }
+    return hours + ":" + mins;
 }
 export function findTimeCategory(timestamp) {
     // convert from seconds to miliseconds (js Date library uses ms)

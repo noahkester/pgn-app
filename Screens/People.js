@@ -43,11 +43,6 @@ function People(props) {
       onPress={() => navigation.navigate("Person", { memberData: props.data })}
     >
       <View
-        /*style={[
-          globalStyles.cardContainer,
-          styles.peopleCard,
-          globalStyles.cardAlign,
-        ]}*/
         style={{ padding: 15, marginBottom: 10, borderWidth: 1, borderColor: '#DBDBDB', borderRadius: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}
       >
         <PeopleImage uri={props.profMap[props.data.id]} />
