@@ -91,6 +91,15 @@ export function AdminSettingsPage() {
                                     doc.ref.update({
                                         submittedPoints: []
                                     });
+                                    doc.ref.update({
+                                        philanthropyPoints: 0
+                                    });
+                                    doc.ref.update({
+                                        socialPoints: 0
+                                    });
+                                    doc.ref.update({
+                                        professionalPoints: 0
+                                    });
                                 })
                             })
                         db.collection("points")

@@ -1,12 +1,10 @@
-
-import globalStyles from "../styles/Styles";
-import { StyleSheet, TouchableOpacity, Text, Image, View } from "react-native";
-import colors from "../styles/Colors";
+import { TouchableOpacity, Text, Image, View } from "react-native";
 import { useNavigation } from '@react-navigation/native';
-import { auth, db } from "../utils/firebase";
-import { useEffect, useState, useContext } from "react";
+import { useContext } from "react";
+
+import colors from "../styles/Colors";
+import globalStyles from "../styles/Styles";
 import LoginContext from "../utils/LoginContext";
-import IonIcons from 'react-native-vector-icons/Ionicons';
 
 export function SubmitPoints(props) {
   const navigation = useNavigation();
@@ -15,20 +13,13 @@ export function SubmitPoints(props) {
       title={props.title}
       style={[
         globalStyles.universityColorFill,
-        {
-          borderRadius: 30,
-          width: "100%",
-          alignItems: "center",
-          justifyContent: "center",
-          paddingTop: 15,
-          paddingBottom: 15,
-        }
+        { borderRadius: 32, width: "100%", alignItems: "center", justifyContent: "center", height: 64, borderWidth: 6, borderColor: '#E9C9B2' }
       ]}
       onPress={() => {
         navigation.navigate(props.address);
       }}
     >
-      <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>
+      <Text style={{ color: '#FFFFFF', fontFamily: 'Poppins_700Bold', fontSize: 16 }}>
         {props.title}
       </Text>
     </TouchableOpacity>
@@ -36,15 +27,15 @@ export function SubmitPoints(props) {
 }
 function PointImage(props) {
   return (
-    <View style={styles.pointImage}>
-      <View style={styles.iconCon}>
+    <View style={{ height: 50, width: 50 }}>
+      <View style={{ height: 50, alignItems: "center", justifyContent: "center" }}>
         <Image
           source={props.icon}
           resizeMode="contain"
-          style={styles.pointImageIcon}
+          style={{ width: 50, height: 50 }}
         />
       </View>
-    </View>
+    </View >
   );
 }
 function PointBar(props) {
@@ -60,19 +51,21 @@ function PointBar(props) {
   }
   return (
     <View
-      style={[styles.pointBar, { width: percent, borderColor: color }]}
+      style={{ marginTop: 10, borderBottomWidth: 3, width: percent, borderColor: color }}
     ></View>
   );
 }
 function PointCard(props) {
   return (
-    <View style={globalStyles.cardContainer}>
+    <View style={{ borderWidth: 1, paddingLeft: 8, paddingRight: 8, paddingTop: 12, paddingBottom: 12, borderColor: '#DBDBDB', borderRadius: 10 }}>
       <View style={globalStyles.cardAlign}>
         <PointImage points={props.points} icon={props.icon} />
-        <Text style={globalStyles.largeSemiBoldText}>{props.title}</Text>
-        <Text style={globalStyles.largeSemiBoldText}>
-          {props.points + "/" + props.totalPoints}
-        </Text>
+        <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}>{props.title}</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', width: 50 }}>
+          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}>
+            {props.points + "/" + props.totalPoints}
+          </Text>
+        </View>
       </View>
       <PointBar
         points={props.points}
@@ -83,21 +76,22 @@ function PointCard(props) {
   );
 }
 function PointDisplay(props) {
-  [test, setTest] = useState(0);
   return (
-    <View style={styles.points}>
-      <PointCard
-        title="Philanthropy"
-        points={props.philanthropyPoints}
-        totalPoints={props.totalPhilanthropyPoints}
-        icon={require("../images/philanthropy.png")}
-      />
+    <View style={{ width: "80%", height: 300, flexDirection: "column", justifyContent: "space-between", alignContent: "space-between", }}>
       <PointCard
         title="Professional"
         points={props.professionalPoints}
         totalPoints={props.totalProfessionalPoints}
         icon={require("../images/professional.png")}
       />
+      <View style={{ height: 10 }} />
+      <PointCard
+        title="Philanthropy"
+        points={props.philanthropyPoints}
+        totalPoints={props.totalPhilanthropyPoints}
+        icon={require("../images/philanthropy.png")}
+      />
+      <View style={{ height: 10 }} />
       <PointCard
         title="Social"
         points={props.socialPoints}
@@ -105,17 +99,9 @@ function PointDisplay(props) {
         icon={require("../images/social.png")}
       />
       {(props.isPledge) ?
-        <View style={{ marginTop: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-evenly' }}>
-          <Image
-            source={require("../images/interview.png")}
-            resizeMode="contain"
-            style={{
-              width: 36,
-              height: 36,
-            }}
-          />
-          <Text style={globalStyles.smallSemiBoldText}>{'Active Interviews: '}</Text>
-          <Text style={globalStyles.smallSemiBoldText}>{props.activeInterviews + '/3'}</Text>
+        <View style={{ marginTop: 16, flexDirection: 'column', alignItems: 'center', justifyContent: 'space-evenly' }}>
+          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 12, color: '#262626' }}>{'Active Interviews: '}</Text>
+          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 12, color: '#262626' }}>{props.activeInterviews + '/3'}</Text>
         </View>
         : null
       }
@@ -124,7 +110,6 @@ function PointDisplay(props) {
 }
 
 export function HomePage() {
-  const navigation = useNavigation();
   const loginContext = useContext(LoginContext);
 
   var totalPhilanthropyPoints = 0;
@@ -147,7 +132,7 @@ export function HomePage() {
   }
 
   return (
-    <View style={styles.homeScreen}>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}>
       <View style={{
         justifyContent: "center"
       }}
@@ -160,52 +145,13 @@ export function HomePage() {
         totalPhilanthropyPoints={totalPhilanthropyPoints}
         totalSocialPoints={totalSocialPoints}
         totalProfessionalPoints={totalProfessionalPoints}
+
         activeInterviews={loginContext.currentUser.activeInterviews}
         isPledge={loginContext.currentUser.status === "pledge"}
       />
       <View style={{ width: '90%', flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-          <SubmitPoints address="Submit" title="Submit" />
+        <SubmitPoints address="Submit" title="Submit" />
       </View>
     </View>
   );
 }
-const styles = StyleSheet.create({
-  homeScreen: {
-    width: "100%",
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  submitButton: {
-    marginBottom: 10,
-  },
-  points: {
-    width: "80%",
-    height: 260,
-    flexDirection: "column",
-    justifyContent: "space-between",
-    alignContent: "space-between",
-  },
-  pointImage: {
-    height: 50,
-    width: 50,
-  },
-  pointImageBackground: {
-    position: "absolute",
-    width: 50,
-    height: 50,
-  },
-  pointImageIcon: {
-    width: 50,
-    height: 50,
-  },
-  iconCon: {
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  pointBar: {
-    marginTop: 10,
-    borderBottomWidth: 3,
-  },
-});

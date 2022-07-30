@@ -1,22 +1,20 @@
 import { StyleSheet, Text, Image, View, TouchableOpacity } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Octicons } from "@expo/vector-icons";
-import globalStyles from "../styles/Styles";
+import FoundationIcon from 'react-native-vector-icons/Foundation';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialIcons';
+import { useNavigation } from "@react-navigation/native";
+import { useContext } from "react";
+
 import { HomePage } from "./Home";
 import { EventsPage } from "./Events";
 import { PeoplePage } from "./People";
 import { WaitlistPage } from "./Waitlist";
-import { useNavigation } from "@react-navigation/native";
-import { useContext } from "react";
-import { auth, db, store, getProfilePicture } from "../utils/firebase";
+
 import LoginContext from "../utils/LoginContext";
 import UrlContext from "../utils/UrlContext";
+import globalStyles from "../styles/Styles";
 import colors from "../styles/Colors";
-import { useEffect, useState } from "react";
-import FoundationIcon from 'react-native-vector-icons/Foundation';
-import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialIcons';
-// import { exists } from "react-native-fs";
 
 export function TopBar(props) {
   const loginContext = useContext(LoginContext);
@@ -24,66 +22,53 @@ export function TopBar(props) {
   const currentUser = loginContext.currentUser;
   const profileUrl = urlContext.professionalUrl;
   return (
-    <View style={styles.topBar}>
+    <View style={{ marginTop: 32, width: "100%", height: 160, flexDirection: "row", justifyContent: "space-between", alignItems: 'center', backgroundColor: "#FFFFFF", paddingHorizontal: 20 }}>
       <Profile
         name={currentUser.firstname}
         class={currentUser.pledgeClass}
         profileUrl={profileUrl}
       />
-      <PGNImage />
+      <Image
+        source={require("../images/pgn.png")}
+        resizeMode="cover"
+        style={{ width: 100, height: 100 }}
+      />
     </View>
   );
 }
-//put these two funcs here bc we'll be exporting it to each tab since they're stable
+
 export function Profile(props) {
   const navigation = useNavigation();
-  const image = props.profileUrl ? (
-    <Image
-      source={{ uri: props.profileUrl }}
-      resizeMode="cover"
-      style={styles.profile}
-    />
-  ) : (
-    <Image
-      source={require("../images/profile.png")}
-      resizeMode="cover"
-      style={styles.profile}
-    />
-  );
 
   return (
-    <View style={styles.topBarCon}>
+    <View style={{ width: 100, height: 120, flexDirection: "column", alignItems: "center", justifyContent: "center", textAlignVertical: 'top' }}>
       <TouchableOpacity onPress={() => navigation.navigate("Account")}>
-        {image}
+        <Image
+          source={props.profileUrl ? { uri: props.profileUrl } : require("../images/profile.png")}
+          resizeMode="cover"
+          style={{ width: 80, height: 80, borderRadius: 40 }}
+        />
       </TouchableOpacity>
-
-      <Text style={[globalStyles.smallBoldText, {marginTop: 6}]}>Hello {props.name}!</Text>
-      <Text style={globalStyles.smallBoldText}>PC {props.class}</Text>
+      <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 14, marginTop: 6, color: '#262626' }}>Hello {props.name}!</Text>
+      <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 10, color: '#262626' }}>PC {props.class}</Text>
     </View>
   );
 }
-export function PGNImage() {
-  return (
-    <Image
-      source={require("../images/pgn.png")}
-      resizeMode="cover"
-      style={styles.topBarPGN}
-    />
-  );
-}
+
 export function NavigationPage() {
   const Tab = createBottomTabNavigator();
+
   return (
     <View
       style={{
         flex: 1,
+        backgroundColor: '#FFFFFF'
       }}
     >
       <TopBar />
       <Tab.Navigator
-        // Background of each screen
         sceneContainerStyle={{
-          backgroundColor: colors.white,
+          backgroundColor: '#FFFFFF',
         }}
         screenOptions={{
           tabBarShowLabel: false,
@@ -92,7 +77,6 @@ export function NavigationPage() {
             height: 100,
           },
 
-          //color when the tab is pressed
           tabBarActiveTintColor: colors.universityColor,
           headerShown: false,
           tabBarInactiveTintColor: colors.darkGray,
@@ -165,50 +149,3 @@ export function NavigationPage() {
     </View>
   );
 }
-const styles = StyleSheet.create({
-  icons1: {
-    height: 50,
-    width: 30,
-  },
-  icons2: {
-    height: 50,
-    width: 30,
-  },
-  icons3: {
-    height: 50,
-    width: 45,
-  },
-  icons4: {
-    height: 50,
-    width: 28,
-  },
-  topBar: {
-    width: "100%",
-    height: 200,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingTop: 60,
-    backgroundColor: "white",
-    paddingHorizontal: 20,
-  },
-  topBarCon: {
-    width: 100,
-    height: 120,
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    textAlignVertical: 'top'
-  },
-  topBarPGN: {
-    width: 120,
-    height: 100,
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  profile: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-  },
-});
