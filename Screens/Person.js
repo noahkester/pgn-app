@@ -1,44 +1,16 @@
-import {
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Image,
-  TextInput,
-  Text,
-  View,
-} from "react-native";
+import { ScrollView, TouchableOpacity, Image, TextInput, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import globalStyles from "../styles/Styles";
 import { useNavigation } from "@react-navigation/native";
-import { auth, db, store } from "../utils/firebase";
-import ImageCarousel from "./components/ImageCarousel";
-import { findRoleColor, findRoleBorder } from '../styles/Colors'
 import * as Linking from 'expo-linking';
+import Octicons from 'react-native-vector-icons/Octicons';
+
+import globalStyles from "../styles/Styles";
+import { findRoleColor, findRoleBorder } from '../styles/Colors'
+import ImageCarousel from "./components/ImageCarousel";
+import { store } from "../utils/firebase";
+
 var allSettled = require('promise.allsettled');
 
-/*
-Backend Stuff TODO:
-
-Popualate Fields with database pull
-Get inputs on "Save and Exit" and save to database
-
-*/
-export function AccountTop(props) {
-  const navigation = useNavigation();
-  return (
-    <View style={styles.accountTop}>
-      <TouchableOpacity onPress={() => navigation.navigate(props.address)}>
-        <Image
-          source={require("../images/back.png")}
-          style={styles.accountLogo}
-          resizeMode="contain"
-        />
-      </TouchableOpacity>
-      <Text style={globalStyles.largeBoldText}>{props.name}</Text>
-      <View style={styles.invisiableElement}></View>
-    </View>
-  );
-}
 function Profile(props) {
   return (
     <ImageCarousel
@@ -51,51 +23,45 @@ function Profile(props) {
   );
 }
 function Description(props) {
-  var quote = props.description;
-  if (quote != "") {
-    quote = '"' + quote + '"';
-  }
   return (
-    <View style={[globalStyles.cardContainer, styles.accountDescription]}>
-      <Text
+    <View style={{ marginTop: 20, width: "85%", backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: '#DBDBDB', padding: 15, borderRadius: 10 }}>
+      <TextInput
         style={globalStyles.smallSemiBoldText}
         multiline={true}
         placeholder="Quote"
-      >
-        {quote}
-      </Text>
-    </View>
-  );
-}
-function Chapter(props) {
-  return (
-    <View style={{ paddingTop: 60 }}>
-      <Text style={[globalStyles.smallSemiBoldText]}>{props.chapter}</Text>
-    </View>
-  );
-}
-function AccountInput(props) {
-  return (
-    <View style={styles.accountInput}>
-      <Text style={globalStyles.smallSemiBoldText}>{props.label}</Text>
-      <Text
-        style={[
-          styles.accountTextInput,
-          globalStyles.cardContainer,
-          globalStyles.smallSemiBoldText,
-        ]}
-      >
-        {props.input}
-      </Text>
+        onChangeText={(text) => {
+          props.setValue(text.substring(1, text.length - 1));
+        }}
+        defaultValue={"\"" + props.description + "\""}
+      />
     </View>
   );
 }
 
+function AccountInput(props) {
+  return (
+    <View style={{
+      width: "85%",
+      borderWidth: 1,
+      borderColor: '#D9D9D9',
+      backgroundColor: '#FAFAFA',
+      padding: 15,
+      borderRadius: 10,
+      marginTop: 10
+    }}>
+      <Text
+        style={{ fontFamily: 'Poppins_600SemiBold', color: '#808080', fontSize: 16 }}
+      >
+        {props.value}
+      </Text>
+    </View>
+  );
+}
 
 function PledgeClass(props) {
   return (
-    <View style={{ width: '80%' }}>
-      <View style={styles.pledgeClass}>
+    <View style={{ width: '85%' }}>
+      <View style={{ flexDirection: "row", justifyContent: "space-between", width: "100%", paddingTop: 20 }}>
         <Text style={globalStyles.smallSemiBoldText}>
           {"PC " + props.pledgeClass}
         </Text>
@@ -103,19 +69,19 @@ function PledgeClass(props) {
           {"Status: " + props.status}
         </Text>
       </View>
-      {(props.pledgeTask == "") ?
+      {(props.pledgeTask == '') ?
         null :
         <Text style={[globalStyles.smallSemiBoldText, { marginTop: 10, marginBottom: 10 }]}>{"Pledge task: " + props.pledgeTask}</Text>
       }
-    </View>
+    </View >
   );
 }
 
 function Activities(props) {
   const list = props.activities.map((activity, index) => {
     return (
-      <View key={index} style={{ backgroundColor: '#D9D9D9', marginLeft: 10, marginRight: 10, paddingLeft: 20, paddingRight: 20, paddingTop: 8, paddingBottom: 8, borderRadius: 8 }}>
-        <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#505050' }}>{activity}</Text>
+      <View key={index} style={{ backgroundColor: '#FAFAFA', borderWidth: 1, marginTop: 10, borderColor: '#D9D9D9', marginLeft: 10, marginRight: 10, paddingLeft: 20, paddingRight: 20, paddingTop: 8, paddingBottom: 8, borderRadius: 8 }}>
+        <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#808080' }}>{activity}</Text>
       </View>
     )
   })
@@ -132,6 +98,8 @@ export function PersonPage({ route }) {
   const [profileUrlSocial, setProfileUrlSocial] = useState('');
   const [profileUrlFunny, setProfileUrlFunny] = useState('');
   const [pageIsReady, setPageIsReady] = useState(false);
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     var promises = []
@@ -169,13 +137,31 @@ export function PersonPage({ route }) {
   }, []);
   return (
     (pageIsReady) ?
-      <View style={styles.createAccountScreen}>
-        <View style={styles.navBar}>
-          <View></View>
-          <AccountTop name={memberData.firstname + " " + memberData.lastname} address="People" />
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "#FFFFFF" }}>
+        <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <TouchableOpacity
+            style={{ width: 68, alignItems: 'center' }}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
+            <Octicons
+              name="chevron-left"
+              color={'#262626'}
+              size={42}
+            />
+          </TouchableOpacity>
+          <Text style={{ textAlign: 'center', fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626' }}>{memberData.firstname + ' ' + memberData.lastname}</Text>
+          <TouchableOpacity
+            style={{ width: 68, height: 68, alignItems: 'center', justifyContent: 'center', borderRadius: 34, marginRight: 16 }}
+            onPress={() => {
+              navigation.navigate('AddEvent');
+            }}
+          >
+          </TouchableOpacity>
         </View>
-        <ScrollView style={styles.accountInfo}>
-          <View style={styles.innerScroll}>
+        <ScrollView style={{ width: "100%" }}>
+          <View style={{ alignItems: "center", marginBottom: 60 }}>
             <Profile
               profileUrlProfessional={profileUrlProfessional}
               profileUrlSocial={profileUrlSocial}
@@ -183,7 +169,7 @@ export function PersonPage({ route }) {
             />
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {(memberData.role !== '') ?
-                <View style={{ backgroundColor: findRoleColor(memberData.role), borderWidth: 3, borderColor: findRoleBorder(memberData.role), paddingTop: 10, paddingBottom: 10, paddingLeft: 20, paddingRight: 20, borderRadius: 100 }}>
+                <View style={{ backgroundColor: findRoleColor(memberData.role), borderWidth: 3, borderColor: findRoleBorder(memberData.role), paddingTop: 6, paddingBottom: 6, paddingLeft: 20, paddingRight: 20, borderRadius: 100 }}>
                   <Text style={{ color: '#FFFFFF', fontFamily: 'Poppins_600SemiBold' }}>{memberData.role}</Text>
                 </View>
                 :
@@ -207,108 +193,21 @@ export function PersonPage({ route }) {
             </View>
             <Description description={memberData.bio} />
             <Activities activities={memberData.activities} />
-            <Chapter chapter={memberData.chapter} />
             <PledgeClass pledgeClass={memberData.pledgeClass} status={memberData.status} pledgeTask={memberData.pledgeTask} />
-
-            <AccountInput label="Major:" input={memberData.major} />
-            <AccountInput label="Minor:" input={memberData.minor} />
-            <AccountInput label="Hometown:" input={memberData.hometown} />
-            <AccountInput label="Email:" input={memberData.email} />
-            <AccountInput label="Phone:" input={memberData.number} />
+            <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, marginLeft: 10, width: '85%' }}>Education</Text>
+            <AccountInput value={memberData.major} />
+            <AccountInput value={memberData.minor} />
+            <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, marginLeft: 10, width: '85%' }}>Hometown</Text>
+            <AccountInput value={memberData.hometown} />
+            <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, marginLeft: 10, width: '85%' }}>Contact</Text>
+            <AccountInput value={memberData.email} />
+            <AccountInput value={memberData.number} />
           </View>
         </ScrollView>
       </View>
       : null
   );
 }
-const styles = StyleSheet.create({
-  navBar: {
-    height: "15%",
-    justifyContent: "space-between",
-    paddingBottom: 10,
-    width: "100%",
-  },
-  createAccountScreen: {
-    height: "100%",
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "white",
-  },
-  accountInfo: {
-    width: "100%",
-  },
-  innerScroll: {
-    alignItems: "center",
-  },
-  createAccountSubScreen: {
-    height: "85%",
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  inputContainer: {
-    flexDirection: "row",
-    width: "90%",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  textInputContainer: {
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 30,
-    width: "70%",
-  },
-  section: {
-    height: 20,
-  },
-  accountLogo: {
-    width: 60,
-    height: 60,
-  },
-  accountTop: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-    paddingLeft: 10,
-  },
-  largeProfile: {
-    marginTop: 15,
-    width: 200,
-    height: 200,
-  },
-  accountDescription: {
-    marginTop: 20,
-    width: "80%",
-  },
-  saveButton: {
-    marginTop: 40,
-  },
-  academicSection: {
-    marginTop: 20,
-    width: "80%",
-  },
-  accountInput: {
-    width: "80%",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  accountTextInput: {
-    width: "70%",
-  },
-  invisiableElement: {
-    width: 60,
-  },
-  pledgeClass: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    paddingTop: 20,
-  },
-  signoutButton: {
-    marginTop: 10,
-    marginBottom: 50,
-  },
-});

@@ -1,43 +1,15 @@
 import { StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Text, View, Dimensions, ImageBackground, } from "react-native";
-import React, { useRef, useEffect, useState, useContext } from "react";
-import globalStyles from "../styles/Styles";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
-import colors from "webpack-dev-server/lib/utils/colors";
-import { auth, db, store } from "../utils/firebase";
-import { findRoleBorder, findRoleColor } from "../styles/Colors"
-import LoginContext from '../utils/LoginContext';
 import Octicons from 'react-native-vector-icons/Octicons';
+
+import globalStyles from "../styles/Styles";
+import { findRoleBorder, findRoleColor } from "../styles/Colors"
 import ImageCarousel from "./components/ImageCarousel";
+
+import { auth, db } from "../utils/firebase";
+import LoginContext from '../utils/LoginContext';
 import UrlContext from "../utils/UrlContext";
-
-export function AccountTop(props) {
-  const navigation = useNavigation();
-  const rightElement = props.rightElement ? (
-    <TouchableOpacity onPress={() => navigation.navigate("AccountImageUpload")}>
-      <Image
-        source={require("../images/imageUpload.png")}
-        style={styles.imageLogo}
-        resizeMode="contain"
-      />
-    </TouchableOpacity>
-  ) : (
-    <View style={{ width: 60 }} />
-  );
-
-  return (
-    <View style={styles.accountTop}>
-      <TouchableOpacity onPress={() => navigation.navigate(props.address)}>
-        <Image
-          source={require("../images/back.png")}
-          style={styles.accountLogo}
-          resizeMode="contain"
-        />
-      </TouchableOpacity>
-      <Text style={globalStyles.largeBoldText}>{props.name}</Text>
-      {rightElement}
-    </View>
-  );
-}
 
 function Profile(props) {
   const urlContext = useContext(UrlContext);
@@ -54,15 +26,7 @@ function Profile(props) {
 
 function Description(props) {
   return (
-    <View style={{
-      marginTop: 20,
-      width: "85%",
-      backgroundColor: "#FFFFFF",
-      borderWidth: 1,
-      borderColor: '#DBDBDB',
-      padding: 15,
-      borderRadius: 10,
-    }}>
+    <View style={{ marginTop: 20, width: "85%", backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: '#DBDBDB', padding: 15, borderRadius: 10 }}>
       <TextInput
         style={globalStyles.smallSemiBoldText}
         multiline={true}
@@ -278,7 +242,7 @@ export function AccountPage() {
       });
   }
   return (
-    <View style={styles.createAccountScreen}>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "#FFFFFF", }}>
       <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <TouchableOpacity
           style={{ width: 68, alignItems: 'center' }}
@@ -302,7 +266,7 @@ export function AccountPage() {
           <TouchableOpacity onPress={() => navigation.navigate("AccountImageUpload")}>
             <Image
               source={require("../images/imageUpload.png")}
-              style={styles.imageLogo}
+              style={{ width: 60, height: 60, marginRight: 10 }}
               resizeMode="contain"
             />
           </TouchableOpacity>
@@ -341,67 +305,3 @@ export function AccountPage() {
     </View>
   );
 }
-const styles = StyleSheet.create({
-  createAccountScreen: {
-    height: "100%",
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "white",
-  },
-
-  createAccountSubScreen: {
-    height: "85%",
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  inputContainer: {
-    flexDirection: "row",
-    width: "90%",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  textInputContainer: {
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 30,
-    width: "70%",
-  },
-  accountLogo: {
-    width: 60,
-    height: 60,
-  },
-  imageLogo: {
-    width: 60,
-    height: 60,
-    marginRight: 10,
-  },
-  accountTop: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-    paddingLeft: 10,
-  },
-  largeProfile: {
-    marginTop: 15,
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-  },
-  accountDescription: {
-    marginTop: 20,
-    width: "80%",
-  },
-  academicSection: {
-    marginTop: 20,
-    width: "80%",
-  },
-  accountInput: {
-    width: "90%",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-});

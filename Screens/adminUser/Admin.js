@@ -3,6 +3,7 @@ import { StyleSheet, TouchableOpacity, Image, Text, View } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import IonIcons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import globalStyles from "../../styles/Styles"
 import { db, store } from "../../utils/firebase";
@@ -53,6 +54,21 @@ function SettingsButton() {
                     </View>
                 </View>
             </TouchableOpacity>
+            <TouchableOpacity
+                onPress={() => navigation.navigate("View")}
+                style={{ marginLeft: 16 }}
+            >
+                <View style={[styles.settingsButton, {}]}>
+                    <View style={[{ width: 68, height: 68, alignItems: 'center', justifyContent: 'center', borderRadius: 36, borderWidth: 8, borderColor: '#F2DDCE' }, globalStyles.universityColorFill]}>
+                        <MaterialIcons
+                            name="people-alt"
+                            color={'#FFFFFF'}
+                            size={36}
+                            style={{ marginLeft: 3 }}
+                        />
+                    </View>
+                </View>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -72,11 +88,6 @@ function AdminTop(props) {
             width: "100%"
         }}>
             <SettingsButton />
-            <Image
-                source={require("../../images/pgn.png")}
-                resizeMode="cover"
-                style={{ width: 100, height: 100 }}
-            />
         </View>
     )
 }

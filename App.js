@@ -27,6 +27,7 @@ import { AddCodePage } from './Screens/adminUser/AddCode';
 import { SubmitAttendancePage } from './Screens/SubmitAttendance';
 import { AttendancePage } from './Screens/Attendance';
 import { AdminSettingsPage } from './Screens/adminUser/AdminSettings';
+import { ViewPeoplePage } from "./Screens/adminUser/ViewPeople";
 
 // Firebase and misc imports
 import { auth, getCurrentUser, db, store } from "./utils/firebase";
@@ -233,6 +234,7 @@ function App() {
             <Stack.Screen name="AdminEvents" component={AdminEventsPage} />
             <Stack.Screen name="AddEvent" component={AddEventPage} />
             <Stack.Screen name="AddCode" component={AddCodePage} />
+            <Stack.Screen name="View" component={ViewPeoplePage} />
             <Stack.Screen name="AdminSettings" component={AdminSettingsPage} />
           </Stack.Navigator>
         )
