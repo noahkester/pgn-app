@@ -12,63 +12,25 @@ var allSettled = require('promise.allsettled');
 function SettingsButton() {
     const navigation = useNavigation();
     return (
-        <View style={{ flexDirection: 'row' }}>
-            <TouchableOpacity
-                onPress={() => navigation.navigate("AdminSettings")}
-                style={{ marginRight: 16 }}
-            >
-                <View style={[styles.settingsButton, {}]}>
-                    <View style={[{ width: 68, height: 68, alignItems: 'center', justifyContent: 'center', borderRadius: 36, borderWidth: 8, borderColor: '#F2DDCE' }, globalStyles.universityColorFill]}>
-                        <IonIcons
-                            name="settings-sharp"
-                            color={'#FFFFFF'}
-                            size={36}
-                            style={{}}
-                        />
-                    </View>
-                </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate("AdminEvents")}>
-                <View style={[styles.settingsButton, {}]}>
-                    <View style={[{ width: 68, height: 68, alignItems: 'center', justifyContent: 'center', borderRadius: 36, borderWidth: 8, borderColor: '#F2DDCE' }, globalStyles.universityColorFill]}>
-                        <FontAwesome5Icon
-                            name="calendar-day"
-                            color={'#FFFFFF'}
-                            size={30}
-                        />
-                    </View>
-                </View>
-            </TouchableOpacity>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
             <TouchableOpacity
                 onPress={() => navigation.navigate("AddCode")}
-                style={{ marginLeft: 16 }}
+                style={{ marginLeft: 8 }}
             >
-                <View style={[styles.settingsButton, {}]}>
-                    <View style={[{ width: 68, height: 68, alignItems: 'center', justifyContent: 'center', borderRadius: 36, borderWidth: 8, borderColor: '#F2DDCE' }, globalStyles.universityColorFill]}>
-                        <IonIcons
-                            name="md-barcode"
-                            color={'#FFFFFF'}
-                            size={38}
-                            style={{ marginLeft: 3 }}
-                        />
-                    </View>
+                <View style={[{ width: 68, height: 68, alignItems: 'center', justifyContent: 'center', borderRadius: 36, borderWidth: 8, borderColor: '#F2DDCE' }, globalStyles.universityColorFill]}>
+                    <IonIcons
+                        name="md-barcode"
+                        color={'#FFFFFF'}
+                        size={38}
+                        style={{ marginLeft: 3 }}
+                    />
                 </View>
             </TouchableOpacity>
-            <TouchableOpacity
-                onPress={() => navigation.navigate("View")}
-                style={{ marginLeft: 16 }}
-            >
-                <View style={[styles.settingsButton, {}]}>
-                    <View style={[{ width: 68, height: 68, alignItems: 'center', justifyContent: 'center', borderRadius: 36, borderWidth: 8, borderColor: '#F2DDCE' }, globalStyles.universityColorFill]}>
-                        <MaterialIcons
-                            name="people-alt"
-                            color={'#FFFFFF'}
-                            size={36}
-                            style={{ marginLeft: 3 }}
-                        />
-                    </View>
-                </View>
-            </TouchableOpacity>
+            <Image
+                source={require("../../images/pgn.png")}
+                resizeMode="cover"
+                style={{ width: 100, height: 100 }}
+            />
         </View>
     )
 }

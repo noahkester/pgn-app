@@ -15,18 +15,7 @@ function AccountTop() {
   const navigation = useNavigation();
   return (
     <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-      <TouchableOpacity
-        style={{ width: 68, alignItems:'center' }}
-        onPress={() => {
-          navigation.goBack();
-        }}
-      >
-        <Octicons
-          name="chevron-left"
-          color={'#262626'}
-          size={42}
-        />
-      </TouchableOpacity>
+      <View style={{width: 68}}></View>
       <Text style={{ textAlign: 'center', fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626' }}>All Events</Text>
       <TouchableOpacity
         style={{ width: 68, height: 68, alignItems: 'center', justifyContent: 'center', borderRadius: 34, marginRight: 16 }}

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from "react";
-import { StyleSheet, Button, TouchableOpacity, Text, Image, View, TextInput } from "react-native";
+import { StyleSheet, ScrollView, Button, TouchableOpacity, Text, Image, View, TextInput } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Octicons from 'react-native-vector-icons/Octicons';
 import { db } from "../../utils/firebase";
@@ -106,22 +106,15 @@ export function ViewPeoplePage() {
     return (
         <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
             <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                <TouchableOpacity
-                    style={{ width: 68, alignItems: 'center' }}
-                    onPress={() => {
-                        navigation.goBack();
-                    }}
-                >
-                    <Octicons
-                        name="chevron-left"
-                        color={'#262626'}
-                        size={42}
-                    />
-                </TouchableOpacity>
+                <View style={{ width: 68 }}></View>
             </View>
             <View style={{ width: '100%', alignItems: 'center' }}>
-                <Text style={{width: '85%', fontFamily: 'Poppins_600SemiBold'}}>{'                                    PRP     PP       SP       AI        Attd'}</Text>
-                {data}
+                <Text style={{ width: '85%', fontFamily: 'Poppins_600SemiBold', marginBottom: 10 }}>{'                                    PRP     PP       SP       AI        Attd'}</Text>
+                <ScrollView style={{ width: '100%' }}>
+                    <View style={{ alignItems: 'center' }}>
+                        {data}
+                    </View>
+                </ScrollView>
             </View>
         </View>
     )

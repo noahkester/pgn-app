@@ -28,7 +28,7 @@ import { SubmitAttendancePage } from './Screens/SubmitAttendance';
 import { AttendancePage } from './Screens/Attendance';
 import { AdminSettingsPage } from './Screens/adminUser/AdminSettings';
 import { ViewPeoplePage } from "./Screens/adminUser/ViewPeople";
-
+import { AdminTabsPage } from './Screens/adminUser/AdminTabs';
 // Firebase and misc imports
 import { auth, getCurrentUser, db, store } from "./utils/firebase";
 import { findTimeCategory } from "./utils/time";
@@ -230,7 +230,7 @@ function App() {
               gestureEnabled: true,
             }}
           >
-            <Stack.Screen name="Admin" component={AdminPage} />
+            <Stack.Screen name="Admin" component={AdminTabsPage} />
             <Stack.Screen name="AdminEvents" component={AdminEventsPage} />
             <Stack.Screen name="AddEvent" component={AddEventPage} />
             <Stack.Screen name="AddCode" component={AddCodePage} />

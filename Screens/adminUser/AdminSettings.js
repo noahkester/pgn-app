@@ -37,7 +37,7 @@ function SignOutButton(props) {
                 globalStyles.universityColorFill,
                 {
                     position: 'absolute',
-                    bottom: 60,
+                    bottom: 10,
 
                     borderRadius: 30,
                     width: "90%",
@@ -62,6 +62,10 @@ export function AdminSettingsPage() {
     const [editMode, setEditMode] = useState(false);
     const [userError, setUserError] = useState('');
     const [userName, setUserName] = useState('');
+    const [role, setRole] = useState('');
+    const [pledgeClass, setPledgeClass] = useState('');
+    const [status, setStatus] = useState('');
+    const [adding, setAdding] = useState(false);
 
     const setAllToActive = () => {
         db.collection("users")
@@ -125,8 +129,7 @@ export function AdminSettingsPage() {
     const deleteUser = () => {
         setUserError('');
         console.log('deleted user');
-        // delete from admin members
-        // delete from users
+        // TODO delete from users
         // delete photos
         const docname = userName.replace(/\s/g, '').toLowerCase();
         console.log(docname);
@@ -144,21 +147,61 @@ export function AdminSettingsPage() {
                 }
             })
     }
+    const updateUser = () => {
+        setUserError('');
+        console.log('updating user');
+        const docname = userName.replace(/\s/g, '').toLowerCase();
+        console.log(docname);
+        if (docname == '') return;
+        const docRef = db.collection("admin-members").doc(docname);
+        if (role !== '') {
+            docRef.update({ role: role }).then(() => {
+                setUserName('');
+                setRole('');
+            }).catch(() => {
+                setUserError('Could not find user to update');
+            });
+        }
+        if (status !== '') {
+            docRef.update({ status: status.toLowerCase() }).then(() => {
+                setUserName('');
+                setStatus('');
+            }).catch(() => {
+                setUserError('Could not find user to update');
+            });
+        }
+        if (pledgeClass !== '') {
+            docRef.update({ pledgeClass: pledgeClass }).then(() => {
+                setUserName('');
+                setPledgeClass('');
+            }).catch(() => {
+                setUserError('Could not find user to update');
+            });
+        }
+        //TODO Update user from users
+    }
+    const addUser = () => {
+        setUserError('');
+        const docname = userName.replace(/\s/g, '').toLowerCase();
+        if (docname == '') return;
+        db
+            .collection("admin-members")
+            .doc(docname)
+            .set({
+                status: status.toLowerCase(),
+                pledgeClass: pledgeClass,
+                role: role
+            }).then(() => {
+                setUserName('');
+                setRole('');
+            }).catch(() => {
+                setUserError('Could not create new user');
+            })
+    }
     return (
         <View style={{ flex: 1, backgroundColor: '#FFFFFF', alignItems: 'center' }}>
             <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                <TouchableOpacity
-                    style={{ width: 68, alignItems: 'center' }}
-                    onPress={() => {
-                        navigation.goBack();
-                    }}
-                >
-                    <Octicons
-                        name="chevron-left"
-                        color={'#262626'}
-                        size={42}
-                    />
-                </TouchableOpacity>
+                <View style={{ width: 68 }}></View>
                 <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626' }}>Settings</Text>
                 <TouchableOpacity
                     style={[{ width: 68, height: 68, borderWidth: 8, borderColor: '#F2DDCE', alignItems: 'center', justifyContent: 'center', borderRadius: 34, marginRight: 16 }, globalStyles.universityColorFill]}
@@ -252,12 +295,13 @@ export function AdminSettingsPage() {
             <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
             <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 18, marginLeft: 10, width: '85%' }}>Edit users</Text>
             <TextInput
-                style={{ backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#DBDBDB', padding: 12, borderRadius: 10, width: '85%', fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#8E8E8E' }}
+                style={{ backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#DBDBDB', padding: 10, borderRadius: 10, width: '85%', fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#8E8E8E' }}
                 placeholder="Name"
                 onChangeText={(text) => {
                     setUserName(text);
                 }}
                 defaultValue={""}
+                autoComplete={false}
             >
                 {userName}
             </TextInput>
@@ -282,6 +326,7 @@ export function AdminSettingsPage() {
                         <TouchableOpacity
                             onPress={() => {
                                 setEditMode(!editMode);
+                                setAdding(true);
                             }}
                         >
                             <MaterialIcons
@@ -309,18 +354,26 @@ export function AdminSettingsPage() {
                 (editMode) ?
                     <View style={{ width: '85%', marginTop: 10 }}>
                         <TextInput
-                            style={{ backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#DBDBDB', padding: 12, borderRadius: 10, width: '100%', fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#8E8E8E' }}
+                            style={{ backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#DBDBDB', padding: 10, borderRadius: 10, width: '100%', fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#8E8E8E' }}
                             placeholder="Pledge Class"
                             onChangeText={(text) => {
-
+                                setPledgeClass(text);
                             }}
                             defaultValue={""}
                         />
                         <TextInput
-                            style={{ marginTop: 10, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#DBDBDB', padding: 12, borderRadius: 10, width: '100%', fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#8E8E8E' }}
+                            style={{ marginTop: 10, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#DBDBDB', padding: 10, borderRadius: 10, width: '100%', fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#8E8E8E' }}
+                            placeholder="Status"
+                            onChangeText={(text) => {
+                                setStatus(text);
+                            }}
+                            defaultValue={""}
+                        />
+                        <TextInput
+                            style={{ marginTop: 10, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#DBDBDB', padding: 10, borderRadius: 10, width: '100%', fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#8E8E8E' }}
                             placeholder="Role"
                             onChangeText={(text) => {
-
+                                setRole(text);
                             }}
                             defaultValue={""}
                         />
@@ -328,6 +381,7 @@ export function AdminSettingsPage() {
                             <TouchableOpacity
                                 onPress={() => {
                                     setEditMode(false);
+                                    setAdding(false);
                                 }}
                             >
                                 <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 14, color: '#E35B56' }}>Cancel</Text>
@@ -335,6 +389,8 @@ export function AdminSettingsPage() {
                             <TouchableOpacity
                                 onPress={() => {
                                     setEditMode(false);
+                                    setAdding(false);
+                                    (adding) ? addUser() : updateUser();
                                 }}
                             >
                                 <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 14, color: '#3E95EF' }}>Update</Text>
