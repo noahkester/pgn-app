@@ -1,10 +1,11 @@
-import React, { useState, useEffect, createContext, useMemo, useCallback, useRef } from "react";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Button, TouchableOpacity, Text, Image, View } from "react-native";
+// From React
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { View } from "react-native";
 import { useFonts, Poppins_600SemiBold, Poppins_700Bold, Poppins_400Regular, Poppins_500Medium } from "@expo-google-fonts/poppins";
-import { useNavigation, NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
+
 // Screens and Page imports
 import { LoginSignupPage } from "./Screens/loginSignup/LoginSignup";
 import { LoginPage } from "./Screens/loginSignup/Login";
@@ -12,7 +13,6 @@ import { CreateAccountPage } from "./Screens/loginSignup/CreateAccount";
 import { NavigationPage } from "./Screens/Tabs";
 import { AccountPage } from "./Screens/Account";
 import { SubmitPage } from "./Screens/Submit";
-import { AdminPage } from "./Screens/adminUser/Admin";
 import { AdminEventsPage } from "./Screens/adminUser/AdminEvents";
 import { NamePage } from "./Screens/newUser/Name";
 import { EducationPage } from "./Screens/newUser/Education";
@@ -29,13 +29,14 @@ import { AttendancePage } from './Screens/Attendance';
 import { AdminSettingsPage } from './Screens/adminUser/AdminSettings';
 import { ViewPeoplePage } from "./Screens/adminUser/ViewPeople";
 import { AdminTabsPage } from './Screens/adminUser/AdminTabs';
-// Firebase and misc imports
+
+// Util imports
 import { auth, getCurrentUser, db, store } from "./utils/firebase";
 import { findTimeCategory } from "./utils/time";
 
 // Context import
 import { LoginProvider } from './utils/LoginContext';
-import { UrlContext, UrlProvider } from './utils/UrlContext';
+import { UrlProvider } from './utils/UrlContext';
 import { NewUserProvider } from './utils/NewUserContext';
 import { UnknownUserPage } from "./Screens/newUser/UnknownUser";
 
@@ -50,8 +51,6 @@ function App() {
   const extraEvents = useRef([]);
   const allEvents = useRef([]);
 
-  // User Context
-
   // States used for rendering app and checking for user sign-in status
   const [appIsReady, setAppIsReady] = useState(false);
   const [isSignedIn, setSignIn] = useState(false);
@@ -63,22 +62,16 @@ function App() {
   const socialUrl = useRef('');
   const funnyUrl = useRef('');
 
-  //for profileURL
-
   useEffect(() => {
     async function prepare() {
       try {
         // Keep the splash screen visible while we fetch resources
         await SplashScreen.preventAutoHideAsync();
-        // make any API calls you need to do here
       } catch (e) {
         console.warn(e);
-      } finally {
-        // Tell the application to render
       }
     }
     async function wait() {
-      // https://stackoverflow.com/questions/39231344/how-to-wait-for-firebaseauth-to-finish-initializing
       await getCurrentUser(auth)
         .then((user) => {
           if (user.emailVerified) {
@@ -103,123 +96,112 @@ function App() {
   }, []);
 
   async function loadInfo() {
-    if (isSignedIn) {
-      if (!isAdmin.current) {
-        var temptodayEvents = [];
-        var temptomorrowEvents = [];
-        var tempfutureEvents = [];
-        var tempextraEvents = [];
-        var tempAllEvents = [];
+    if (!isSignedIn) {
+      return;
+    }
+    if (!isAdmin.current) {
+      var temptodayEvents = [];
+      var temptomorrowEvents = [];
+      var tempfutureEvents = [];
+      var tempextraEvents = [];
+      var tempAllEvents = [];
 
-        db.collection("users")
-          .doc(auth.currentUser.uid)
-          .get()
-          .then((doc) => {
-            var data = doc.data();
-            currentUser.current = data;
+      db.collection("users")
+        .doc(auth.currentUser.uid)
+        .get()
+        .then((doc) => {
+          var data = doc.data();
+          currentUser.current = data;
 
-            db.collection("events")
-              .get()
-              .then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                  var data1 = doc.data();
-                  tempAllEvents.push(data1);
-                  var timeCategory = findTimeCategory(data1.time);
-                  switch (timeCategory) {
-                    case -1:
-                      tempextraEvents.push(data1);
-                      break;
-                    case 0:
-                      temptodayEvents.push(data1);
-                      break;
-                    case 1:
-                      temptomorrowEvents.push(data1);
-                      break;
-                    case 2:
-                    case -2: // TODO, -2 is past event but we still want to see it
-                      tempfutureEvents.push(data1);
-                      break;
-                  }
-                });
-                todayEvents.current = temptodayEvents;
-                tomorrowEvents.current = temptomorrowEvents;
-                futureEvents.current = tempfutureEvents;
-                extraEvents.current = tempextraEvents;
-                allEvents.current = tempAllEvents;
-
-                console.log("(app.js) Events and User Read in App.js");
+          db.collection("events")
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                var data1 = doc.data();
+                tempAllEvents.push(data1);
+                var timeCategory = findTimeCategory(data1.time);
+                switch (timeCategory) {
+                  case -1:
+                    tempextraEvents.push(data1);
+                    break;
+                  case 0:
+                    temptodayEvents.push(data1);
+                    break;
+                  case 1:
+                    temptomorrowEvents.push(data1);
+                    break;
+                  case 2:
+                    tempfutureEvents.push(data1);
+                    break;
+                }
               });
-            var promises = [];
-            const p1 = store
-              .ref(`/profile-pictures/${auth.currentUser.uid}_professional`) //name in storage in firebase console
-              .getDownloadURL()
-              .then((url) => {
-                professionalUrl.current = url;
-                // Only the professional url is required
-                console.log("(app.js) Successfully got professional picture");
-              })
-              .catch((e) => {
-                console.log("(app.js) Errors while getting professional picture ")
-              });
-            const p2 = store
-              .ref(`/profile-pictures/${auth.currentUser.uid}_social`) //name in storage in firebase console
-              .getDownloadURL()
-              .then((url) => {
-                socialUrl.current = url;
-                console.log("(app.js) Successfully got social picture");
-              })
-              .catch((e) =>
-                console.log("(app.js) Errors while getting social picture ")
-              );
-            const p3 = store
-              .ref(`/profile-pictures/${auth.currentUser.uid}_funny`) //name in storage in firebase console
-              .getDownloadURL()
-              .then((url) => {
-                funnyUrl.current = url;
-                console.log("(app.js) Successfully got funny picture");
-              })
-              .catch((e) =>
-                console.log("(app.js) Errors while getting funny picture ")
-              );
-            promises.push(p1);
-            promises.push(p2);
-            promises.push(p3);
-            allSettled(promises).then((results) => {
-              setAppIsReady(true);
-            })
-          });
-
-      } else {
-        //TODO Do fetch calls for admin.js
-        db.collection("events")
-          .get()
-          .then((querySnapshot) => {
-            var tempAllEvents = [];
-            querySnapshot.forEach((doc) => {
-              var data = doc.data();
-              tempAllEvents.push(data);
+              todayEvents.current = temptodayEvents;
+              tomorrowEvents.current = temptomorrowEvents;
+              futureEvents.current = tempfutureEvents;
+              extraEvents.current = tempextraEvents;
+              allEvents.current = tempAllEvents;
             });
-            allEvents.current = tempAllEvents;
+          var promises = [];
+          const p1 = store
+            .ref(`/profile-pictures/${auth.currentUser.uid}_professional`)
+            .getDownloadURL()
+            .then((url) => {
+              professionalUrl.current = url;
+              // Only the professional url is required
+              console.log("(app.js) Successfully got professional picture");
+            })
+            .catch((e) => {
+              console.log("(app.js) Errors while getting professional picture ")
+            });
+          const p2 = store
+            .ref(`/profile-pictures/${auth.currentUser.uid}_social`)
+            .getDownloadURL()
+            .then((url) => {
+              socialUrl.current = url;
+              console.log("(app.js) Successfully got social picture");
+            })
+            .catch((e) =>
+              console.log("(app.js) Errors while getting social picture ")
+            );
+          const p3 = store
+            .ref(`/profile-pictures/${auth.currentUser.uid}_funny`)
+            .getDownloadURL()
+            .then((url) => {
+              funnyUrl.current = url;
+              console.log("(app.js) Successfully got funny picture");
+            })
+            .catch((e) =>
+              console.log("(app.js) Errors while getting funny picture ")
+            );
+          promises.push(p1);
+          promises.push(p2);
+          promises.push(p3);
+          allSettled(promises).then(() => {
             setAppIsReady(true);
+          })
+        });
+
+    } else {
+      // For Admin users
+      db.collection("events")
+        .get()
+        .then((querySnapshot) => {
+          var tempAllEvents = [];
+          querySnapshot.forEach((doc) => {
+            var data = doc.data();
+            tempAllEvents.push(data);
           });
-      }
+          allEvents.current = tempAllEvents;
+          setAppIsReady(true);
+        });
     }
   }
 
   useEffect(() => {
-    console.log(
-      "\n(app.js) isSignedIn UseEffect: isAdmin: " +
-      isAdmin.current +
-      ", isSignedIn: " +
-      isSignedIn +
-      "\n"
-    );
     loadInfo();
   }, [isSignedIn]);
 
   function LoadPage() {
-    // var test = isAdmin ? "Admin" : "Navigation";
-
     if (isSignedIn) {
       if (isAdmin.current) {
         return (
@@ -260,7 +242,6 @@ function App() {
     }
     // User is not signed in
     return (
-
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
@@ -299,12 +280,16 @@ function App() {
     Poppins_500Medium,
     Poppins_400Regular
   });
+
   if (!appIsReady || !fontsLoaded) {
-    console.log("(app.js) app is not ready!");
     return null;
-  } else {
+  }
+  else {
     return (
-      <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      <View
+        style={{ flex: 1 }}
+        onLayout={onLayoutRootView}
+      >
         <NavigationContainer>
           <UrlProvider
             value={{

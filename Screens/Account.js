@@ -2,8 +2,11 @@ import { StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Text, View,
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Octicons from 'react-native-vector-icons/Octicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import globalStyles from "../styles/Styles";
+import colors from '../styles/Colors'
 import { findRoleBorder, findRoleColor } from "../styles/Colors"
 import ImageCarousel from "./components/ImageCarousel";
 
@@ -102,7 +105,7 @@ function SaveButton(props) {
           paddingTop: 15,
           paddingBottom: 15,
           borderWidth: 6,
-          borderColor: '#E9C9B2',
+          borderColor: colors.universityFadedColor,
         }
       ]}
     >
@@ -128,7 +131,6 @@ export function SignOutButton(props) {
             loginContext.setSignIn(false);
 
             navigation.navigate("Router", { screen: "LoginSignup" });
-            console.log("(Account) Signed out. Navigating to Start");
           })
           .catch((error) => console.log(error.message));
       }}
@@ -145,7 +147,7 @@ export function SignOutButton(props) {
           paddingTop: 15,
           paddingBottom: 15,
           borderWidth: 6,
-          borderColor: '#E9C9B2',
+          borderColor: colors.universityFadedColor,
         }
       ]}
     >
@@ -264,22 +266,38 @@ export function AccountPage() {
           }}
         >
           <TouchableOpacity onPress={() => navigation.navigate("AccountImageUpload")}>
-            <Image
-              source={require("../images/imageUpload.png")}
-              style={{ width: 60, height: 60, marginRight: 10 }}
-              resizeMode="contain"
-            />
+            <View style={{ borderWidth: 1, width: 68, height: 68, borderRadius: 36, borderWidth: 8, borderColor: colors.universityFadedColor, backgroundColor: colors.universityColor, alignItems: 'center', justifyContent: 'center' }}>
+              <MaterialCommunityIcons
+                name="image-plus"
+                color={'#FFFFFF'}
+                size={34}
+              />
+            </View>
           </TouchableOpacity>
         </TouchableOpacity>
       </View>
       <ScrollView style={{ width: "100%" }}>
         <View style={{ alignItems: "center" }}>
           <Profile />
-          {(curUser.role === '') ? null :
-            <View style={{ backgroundColor: findRoleColor(curUser.role), borderWidth: 3, borderColor: findRoleBorder(curUser.role), paddingTop: 6, paddingBottom: 6, paddingLeft: 20, paddingRight: 20, borderRadius: 100 }}>
-              <Text style={{ color: '#FFFFFF', fontFamily: 'Poppins_600SemiBold' }}>{curUser.role}</Text>
-            </View>
-          }
+          <View style={{ flexDirection: 'row' }}>
+            {(curUser.role === '') ? null :
+              <View style={{ backgroundColor: findRoleColor(curUser.role), borderWidth: 3, borderColor: findRoleBorder(curUser.role), paddingTop: 6, paddingBottom: 6, paddingLeft: 20, paddingRight: 20, borderRadius: 100 }}>
+                <Text style={{ color: '#FFFFFF', fontFamily: 'Poppins_600SemiBold' }}>{curUser.role}</Text>
+              </View>
+            }
+            <TouchableOpacity
+              style={{ marginLeft: 10, width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}
+              onPress={() => {
+                navigation.navigate('AddEvent');
+              }}
+            >
+              <FontAwesome5
+                name="palette"
+                color={'#262626'}
+                size={34}
+              />
+            </TouchableOpacity>
+          </View>
           <Description description={bio} setValue={setBio} />
           <PledgeClass
             pledgeClass={curUser.pledgeClass}

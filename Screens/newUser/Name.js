@@ -409,11 +409,9 @@ export function NamePage() {
         newUserContext.id = auth.currentUser.uid;
         newUserContext.email = auth.currentUser.email;
 
-        console.log("(NewUser) Found user and updated pledgeClass and status");
         navigation.navigate('Education');
       })
-      .catch((error) => {
-        console.log("(New User) Could not find user in system: FATAL ERROR");
+      .catch(() => {
         navigation.navigate('UnknownUser');
       });
   }

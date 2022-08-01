@@ -12,8 +12,7 @@ export function SubmitPoints(props) {
     <TouchableOpacity
       title={props.title}
       style={[
-        globalStyles.universityColorFill,
-        { borderRadius: 32, width: "100%", alignItems: "center", justifyContent: "center", height: 64, borderWidth: 6, borderColor: '#E9C9B2' }
+        { backgroundColor: colors.universityColor, borderRadius: 32, width: "100%", alignItems: "center", justifyContent: "center", height: 64, borderWidth: 6, borderColor: colors.universityFadedColor }
       ]}
       onPress={() => {
         navigation.navigate(props.address);

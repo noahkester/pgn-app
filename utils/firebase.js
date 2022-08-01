@@ -23,19 +23,6 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 const store = firebase.storage();
 
-auth.onAuthStateChanged(function (user) {
-  if (user) {
-    console.log("(firebase) Current User: " + user.email);
-    if (user.emailVerified) {
-      console.log("(firebase) Email (verified)");
-    } else {
-      console.log("(firebase) Email (not verified)");
-    }
-  } else {
-    console.log("(firebase) No User Logged In");
-    documentReadAllowed = false;
-  }
-});
 export function getCurrentUser(auth) {
   return new Promise((resolve, reject) => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -47,6 +34,11 @@ export function getCurrentUser(auth) {
 export function sendEmail(user) {
   user.sendEmailVerification().then(() => {
     console.log("(firebase) Email send to: " + user.email);
+  })
+  .catch(() => {
+    Alert.alert('Could not send email', '', [
+      { text: 'OK' },
+    ]);
   });
 }
 export function sendPasswordReset(email) {

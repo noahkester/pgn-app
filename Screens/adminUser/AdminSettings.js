@@ -28,7 +28,6 @@ function SignOutButton(props) {
                         loginContext.setSignIn(false);
 
                         navigation.navigate("Router", { screen: "LoginSignup" });
-                        console.log("(Account) Signed out. Navigating to Start");
                     })
                     .catch((error) => console.log(error.message));
             }}

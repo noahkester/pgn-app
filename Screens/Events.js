@@ -7,6 +7,7 @@ import { useContext } from "react";
 import globalStyles from "../styles/Styles";
 import LoginContext from "../utils/LoginContext";
 import { unixEpochTimeToClock, unixEpochTimeToMonthDay } from '../utils/time';
+import colors from "../styles/Colors";
 
 function EventImage(props) {
   return (
@@ -92,8 +93,8 @@ function Event(props) {
         <View style={{ flexDirection: 'column', flex: 1, width: "60%", justifyContent: "center", alignSelf: 'center' }}>
           <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626', width: 180 }}>{props.name}</Text>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={{ fontFamily: 'Poppins_500Medium', fontSize: 12, color: '#262626' }}>{props.location + ' '}</Text>
-            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 12, color: '#85C67E' }}>{props.weight + points}</Text>
+            <Text style={{ fontFamily: 'Poppins_500Medium', fontSize: 14, color: '#262626' }}>{props.location + ' '}</Text>
+            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 14, color: '#85C67E' }}>{props.weight + points}</Text>
           </View>
         </View>
         {
@@ -198,7 +199,7 @@ export function EventsPage() {
             tabBarLabelStyle: { fontFamily: 'Poppins_600SemiBold', fontSize: 12 },
 
             tabBarIndicatorStyle: {
-              backgroundColor: "#C57035",
+              backgroundColor: colors.universityColor,
               left: 40,
               width: "30.5%",
               height: "60%",
@@ -219,7 +220,7 @@ export function EventsPage() {
           />
         </Tab.Navigator>
         <TouchableOpacity
-          style={[{ width: 68, height: 68, borderWidth: 8, borderColor: '#F2DDCE', alignItems: 'center', justifyContent: 'center', borderRadius: 34, position: 'absolute', bottom: 12, right: 12 }, globalStyles.universityColorFill]}
+          style={[{ width: 68, height: 68, borderWidth: 8, alignItems: 'center', justifyContent: 'center', borderRadius: 34, position: 'absolute', bottom: 12, right: 12, backgroundColor: colors.universityColor, borderColor: colors.universityFadedColor }]}
           onPress={() => {
             navigation.navigate("Attendance");
           }}

@@ -14,7 +14,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { useEffect, useRef, useContext, useState, useCallback } from "react";
 import { db, auth, store } from "../utils/firebase";
 import LoginContext from "../utils/LoginContext";
-
+import colors from '../styles/Colors'
 const Tab = createMaterialTopTabNavigator();
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     tabBarLabelStyle: { fontFamily: 'Poppins_600SemiBold', fontSize: 12 },
 
     tabBarIndicatorStyle: {
-      backgroundColor: "#C57035",
+      backgroundColor: colors.universityColor,
       left: 20,
       width: "23.5%",
       height: "60%",

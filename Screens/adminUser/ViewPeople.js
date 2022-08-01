@@ -48,26 +48,28 @@ function PersonCard(props) {
     }
 
     return (
-        <View style={{ width: '85%', borderWidth: 1, borderColor: '#DBDBDB', height: 60, marginBottom: 10, borderRadius: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
-            <View style={{ height: 60, justifyContent: 'center', marginLeft: 10 }}>
-                <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 14 }}>{props.firstname}</Text>
-                <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 14 }}>{props.lastname}</Text>
-            </View>
-            <View style={{ flexDirection: 'row' }}>
-                <View style={{ width: 40, height: '100%', borderWidth: 1, backgroundColor: prpColor, alignItems: 'center', justifyContent: 'center', borderColor: '#DBDBDB' }}>
-                    <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{props.prp}</Text>
+        <View style={{ width: '85%' }}>
+            <View style={{ flex: 1, borderWidth: 1, borderColor: '#DBDBDB', height: 60, marginBottom: 10, borderRadius: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
+                <View style={{ height: 60, width: '40%', justifyContent: 'center' }}>
+                    <Text style={{ marginLeft: 10, fontFamily: 'Poppins_600SemiBold', fontSize: 14 }}>{props.firstname}</Text>
+                    <Text style={{ marginLeft: 10, fontFamily: 'Poppins_600SemiBold', fontSize: 14 }}>{props.lastname}</Text>
                 </View>
-                <View style={{ width: 40, height: '100%', borderWidth: 1, backgroundColor: ppColor, alignItems: 'center', justifyContent: 'center', borderColor: '#DBDBDB' }}>
-                    <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{props.pp}</Text>
-                </View>
-                <View style={{ width: 40, height: '100%', borderWidth: 1, backgroundColor: spColor, alignItems: 'center', justifyContent: 'center', borderColor: '#DBDBDB' }}>
-                    <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{props.sp}</Text>
-                </View>
-                <View style={{ width: 40, height: '100%', borderWidth: 1, backgroundColor: aiColor, alignItems: 'center', justifyContent: 'center', borderColor: '#DBDBDB' }}>
-                    <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{props.ai}</Text>
-                </View>
-                <View style={{ width: 60, height: '100%', borderWidth: 1, borderTopRightRadius: 10, borderBottomRightRadius: 10, backgroundColor: attdColor, alignItems: 'center', justifyContent: 'center', borderColor: '#DBDBDB' }}>
-                    <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{(props.attd / totalAttd * 100) + '%'}</Text>
+                <View style={{ flexDirection: 'row', width: '60%' }}>
+                    <View style={{ width: '19%', height: '100%', borderWidth: 1, backgroundColor: prpColor, alignItems: 'center', justifyContent: 'center', borderColor: '#DBDBDB' }}>
+                        <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{props.prp}</Text>
+                    </View>
+                    <View style={{ width: '19%', height: '100%', borderWidth: 1, backgroundColor: ppColor, alignItems: 'center', justifyContent: 'center', borderColor: '#DBDBDB' }}>
+                        <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{props.pp}</Text>
+                    </View>
+                    <View style={{ width: '19%', height: '100%', borderWidth: 1, backgroundColor: spColor, alignItems: 'center', justifyContent: 'center', borderColor: '#DBDBDB' }}>
+                        <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{props.sp}</Text>
+                    </View>
+                    <View style={{ width: '19%', height: '100%', borderWidth: 1, backgroundColor: aiColor, alignItems: 'center', justifyContent: 'center', borderColor: '#DBDBDB' }}>
+                        <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{props.ai}</Text>
+                    </View>
+                    <View style={{ width: '24%', height: '100%', borderWidth: 1, borderTopRightRadius: 10, borderBottomRightRadius: 10, backgroundColor: attdColor, alignItems: 'center', justifyContent: 'center', borderColor: '#DBDBDB' }}>
+                        <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{(props.attd / totalAttd * 100) + '%'}</Text>
+                    </View>
                 </View>
             </View>
         </View>
@@ -109,9 +111,18 @@ export function ViewPeoplePage() {
                 <View style={{ width: 68 }}></View>
             </View>
             <View style={{ width: '100%', alignItems: 'center' }}>
-                <Text style={{ width: '85%', fontFamily: 'Poppins_600SemiBold', marginBottom: 10 }}>{'                                    PRP     PP       SP       AI        Attd'}</Text>
+                <View style={{ width: '85%', height: 30, flexDirection: 'row' }}>
+                    <View style={{ width: '40%' }}></View>
+                    <View style={{ width: '60%', flexDirection: 'row' }}>
+                        <Text style={{ width: '19%', fontFamily: 'Poppins_600SemiBold', textAlign: 'center' }}>PRP</Text>
+                        <Text style={{ width: '19%', fontFamily: 'Poppins_600SemiBold', textAlign: 'center' }}>PP</Text>
+                        <Text style={{ width: '19%', fontFamily: 'Poppins_600SemiBold', textAlign: 'center' }}>SP</Text>
+                        <Text style={{ width: '19%', fontFamily: 'Poppins_600SemiBold', textAlign: 'center' }}>AI</Text>
+                        <Text style={{ width: '24%', fontFamily: 'Poppins_600SemiBold', textAlign: 'center' }}>Attd</Text>
+                    </View>
+                </View>
                 <ScrollView style={{ width: '100%' }}>
-                    <View style={{ alignItems: 'center' }}>
+                    <View style={{ alignItems: 'center', marginBottom: 300 }}>
                         {data}
                     </View>
                 </ScrollView>
