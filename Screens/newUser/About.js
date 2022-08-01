@@ -15,7 +15,7 @@ export function AboutPage() {
   const updateAbout = () => {
     newUserContext.hometown = hometown;
     newUserContext.activities = activities;
-    newUserContext.quote = quote;
+    newUserContext.bio = quote;
     navigation.navigate("Contact");
   }
   return (
@@ -74,7 +74,7 @@ export function AboutPage() {
               {activities}
             </TextInput>
           </View>
-          
+
           <Text style={{ marginTop: 6, fontFamily: 'Poppins_600SemiBold', fontSize: 12, color: '#8E8E8E' }}>For multiple, separate with commas</Text>
         </View>
         <View style={{ width: '100%', alignItems: 'center', position: 'absolute', bottom: 60 }}>

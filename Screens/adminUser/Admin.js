@@ -124,7 +124,18 @@ function AdminBottom(props) {
         });
     }
     return (
-        <View style={styles.adminBottom}>
+        <View style={{
+            height: 120,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingLeft: 15,
+            paddingRight: 15,
+            backgroundColor: "white",
+            position: "absolute",
+            width: "100%",
+            bottom: 0
+        }}>
             <RejectButton rejectPoint={rejectPoint} setQueueIndex={props.setQueueIndex} index={props.index} max={props.max} />
             <AcceptButton acceptPoint={acceptPoint} setQueueIndex={props.setQueueIndex} index={props.index} max={props.max} />
         </View>
@@ -210,9 +221,9 @@ export function AdminPage(props) {
             backgroundColor: "white"
         }}>
             <AdminTop />
-            <Text style={[globalStyles.largeSemiBoldText, { position: 'absolute', top: 180 }]}>Remaining Points: {queue.length - queueIndex}</Text>
+            {/*<Text style={[globalStyles.largeSemiBoldText]}>Remaining Points: {queue.length - queueIndex}</Text>*/}
             <View style={{
-                width: '90%', height: 400, borderRadius: 15,
+                width: '90%', height: 380, borderRadius: 15,
                 backgroundColor: '#FFFFFF',
                 borderWidth: 1,
                 borderColor: '#DBDBDB',

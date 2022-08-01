@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import SubmissionContext, { SubmissionProvider } from "../utils/SubmissionContext"
 import * as ImageManipulator from 'expo-image-manipulator';
 import IonIcons from 'react-native-vector-icons/Ionicons';
+import Octicons from 'react-native-vector-icons/Octicons';
 
 function EventsDropDown() {
   const [open, setOpen] = useState(false);
@@ -67,10 +68,13 @@ function EventsDropDown() {
         eventLabel.current = item.label;
         eventWeight.current = item.weight;
         typeOfEvent.current = item.type;
-        console.log('selected ');
       }}
       placeholder="Select Event"
-      placeholderStyle={[globalStyles.mediumBoldText, globalStyles.grayText]}
+      placeholderStyle={{
+        color: '#8E8E8E',
+        fontFamily: 'Poppins_600SemiBold',
+        fontSize: 16
+      }}
       open={open}
       value={value}
       items={items}
@@ -80,36 +84,37 @@ function EventsDropDown() {
       listMode="SCROLLVIEW"
       itemSeparator={true}
       itemSeparatorStyle={{
-        backgroundColor: colors.lightGray,
+        backgroundColor: '#DBDBDB',
       }}
       searchable={true}
       searchTextInputStyle={{
-        borderWidth: 0,
+        borderWidth: 1,
+        borderColor: '#DBDBDB',
+        fontFamily: 'Poppins_600SemiBold',
+        fontSize: 14
       }}
+      searchPlaceholderTextColor={'#8E8E8E'}
       searchContainerStyle={{
         borderBottomColor: colors.lightGray,
       }}
-      searchPlaceholderTextColor={colors.gray}
+      searchPlaceholder={'Search'}
       dropDownContainerStyle={{
-        backgroundColor: "white",
-        borderWidth: 1,
-        borderColor: colors.lightGray,
-        shadowColor: "#BBBBBB",
+        backgroundColor: "#FFFFFF",
         shadowOpacity: 0.25,
         shadowRadius: 10,
-        width: "100%",
-        height: 180,
+        width: "85%",
+        border: 1,
+        borderColor: '#DBDBDB',
       }}
-      textStyle={globalStyles.mediumBoldText}
+      textStyle={{
+        color: '#8E8E8E',
+        fontFamily: 'Poppins_600SemiBold',
+        fontSize: 14
+      }}
       style={{
-        justifyContent: "center",
-        flexDirection: "row",
-        alignItems: "center",
-        width: "100%",
-        shadowColor: "#BBBBBB",
-        shadowOpacity: 0.25,
-        shadowRadius: 10,
-        borderWidth: 0,
+        width: "85%",
+        borderWidth: 1,
+        borderColor: '#DBDBDB',
       }}
     />
   );
@@ -174,7 +179,6 @@ function ImageUpload() {
       }}
     >
       <Image source={image} style={styles.cloudImage} resizeMode="contain" />
-      <Text style={globalStyles.smallSemiBoldText}>Select image</Text>
     </TouchableOpacity>
   );
 }
@@ -183,21 +187,18 @@ function ProofDescription() {
   const proofDesc = submissionContext.proofDesc;
 
   return (
-    <View style={styles.descriptionLabel}>
-      <Text style={globalStyles.smallSemiBoldText}>Proof Description:</Text>
-      <View style={[globalStyles.cardContainer, styles.proofDescription]}>
-        <TextInput
-          style={globalStyles.smallSemiBoldText}
-          //USE THIS if we want to implement textbox getting bigger, using multiline disables the return key
-          // from exiting the keyboard
-          //onContentSizeChange
-          returnKeyType="done"
-          onChangeText={(text) => {
-            proofDesc.current = text;
-          }}
-          placeholder="Optional"
-        />
-      </View>
+    <View style={{ borderWidth: 1, width: '85%', borderRadius: 10, height: 50, justifyContent: 'center', paddingLeft: 10, borderColor: '#D8D8D8' }}>
+      <TextInput
+        style={globalStyles.smallSemiBoldText}
+        //USE THIS if we want to implement textbox getting bigger, using multiline disables the return key
+        // from exiting the keyboard
+        //onContentSizeChange
+        returnKeyType="done"
+        onChangeText={(text) => {
+          proofDesc.current = text;
+        }}
+        placeholder="Proof (optional)"
+      />
     </View>
   );
 }
@@ -228,8 +229,16 @@ export function SubmitPoints(props) {
       title={props.title}
       style={[
         globalStyles.universityColorFill,
-        globalStyles.button,
-        styles.submitButton,
+        {
+          borderWidth: 6,
+          borderRadius: 36,
+          borderColor: '#E9C9B2',
+          width: "90%",
+          alignItems: "center",
+          justifyContent: "center",
+          paddingTop: 15,
+          paddingBottom: 15,
+        }
       ]}
       onPress={() => {
         //console.log(user);
@@ -277,71 +286,70 @@ export function SubmitPage(props) {
   const navigation = useNavigation();
 
   return (
-    <KeyboardAvoidingView enabled={true} behavior={"padding"}>
-      <View style={styles.submitScreen}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.submitSubScreen}>
-            <View style={styles.submitElement}>
-              <View style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                width: "100%",
-                paddingLeft: 10,
-              }}>
-                <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-                  <Image
-                    source={require("../images/back.png")}
-                    style={{
-                      width: 60,
-                      height: 60,
-                    }}
-                    resizeMode="contain"
-                  />
-                </TouchableOpacity>
-                <Text style={globalStyles.largeBoldText}>Submit</Text>
-                <TouchableOpacity
-                  style={[{ width: 60, height: 60, alignItems: 'center', justifyContent: 'center', borderRadius: 30, marginRight: 10 }, globalStyles.universityColorFill]}
-                  onPress={() => {
-                    navigation.navigate("SubmitAttendance");
-                  }}
-                >
-                  <IonIcons
-                    name="md-barcode"
-                    color={'#FFFFFF'}
-                    size={42}
-                    style={{ marginLeft: 3 }}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <SubmissionProvider
-              value={{
-                'name': name,
-                'typeOfEvent': typeOfEvent,
-                'eventLabel': eventLabel,
-                'proofDesc': proofDesc,
-                'imageSrc': imageSrc,
-                'eventWeight': eventWeight
+    <KeyboardAvoidingView style={{ flex: 1 }} enabled={true} behavior={"padding"}>
+      <TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
+        <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+          <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <TouchableOpacity
+              style={{ width: 68, alignItems: 'center' }}
+              onPress={() => {
+                navigation.goBack();
               }}
             >
-              <View style={styles.submitElement}>
-                <View style={styles.submitEvents}>
-                  <EventsDropDown />
-                </View>
-                <View style={[styles.imageOptions, { zIndex: -1 }]}>
-                  {/*<CameraShot />*/}
-                  <ImageUpload type="points/" />
-                </View>
-                <ProofDescription />
-              </View>
-              <View style={styles.submitElement}>
-                <SubmitPoints />
-              </View>
-            </SubmissionProvider>
+              <Octicons
+                name="chevron-left"
+                color={'#262626'}
+                size={42}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[{ width: 68, height: 68, alignItems: 'center', justifyContent: 'center', borderRadius: 36, marginRight: 10, borderWidth: 8, borderColor: '#E9C9B2' }, globalStyles.universityColorFill]}
+              onPress={() => {
+                navigation.navigate("SubmitAttendance");
+              }}
+            >
+              <IonIcons
+                name="md-barcode"
+                color={'#FFFFFF'}
+                size={38}
+                style={{ marginLeft: 3 }}
+              />
+            </TouchableOpacity>
           </View>
-        </TouchableWithoutFeedback>
-      </View>
+
+          <SubmissionProvider
+            value={{
+              'name': name,
+              'typeOfEvent': typeOfEvent,
+              'eventLabel': eventLabel,
+              'proofDesc': proofDesc,
+              'imageSrc': imageSrc,
+              'eventWeight': eventWeight
+            }}
+          >
+            <View style={{ width: "100%", alignItems: "center" }}>
+              <Text style={{ marginTop: 60, fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626', marginBottom: 20 }}>Submit Point</Text>
+              <View style={styles.submitEvents}>
+                <EventsDropDown />
+              </View>
+              <View style={{ zIndex: -1, width: '90%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+              <View style={{ zIndex: -1, borderWidth: 1, width: '85%', borderRadius: 10, borderColor: '#DBDBDB', alignItems: 'center', justifyContent: 'center' }}>
+                <ImageUpload type="points/" />
+              </View>
+              <View style={{ width: '90%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+              <ProofDescription />
+            </View>
+            <View style={{
+              width: "100%",
+              alignItems: "center",
+              position: 'absolute',
+              bottom: 60
+            }}>
+              <SubmitPoints />
+            </View>
+          </SubmissionProvider>
+        </View>
+      </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 }
@@ -357,15 +365,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "85%",
     alignItems: "center",
-    justifyContent: "space-between",
-  },
-  submitElement: {
-    width: "100%",
-    alignItems: "center",
-  },
-  submitEvents: {
-    width: "80%",
-    flexDirection: "row",
     justifyContent: "space-between",
   },
   submitDropDown: {
@@ -389,17 +388,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  descriptionLabel: {
-    width: "80%",
-  },
   proofDescription: {
     marginTop: 20,
-  },
-  imageOptions: {
-    paddingTop: 30,
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    paddingBottom: 100,
   },
 });

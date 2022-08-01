@@ -78,13 +78,22 @@ function PledgeClass(props) {
 }
 
 function Activities(props) {
-  const list = props.activities.map((activity, index) => {
-    return (
-      <View key={index} style={{ backgroundColor: '#FAFAFA', borderWidth: 1, marginTop: 10, borderColor: '#D9D9D9', marginLeft: 10, marginRight: 10, paddingLeft: 20, paddingRight: 20, paddingTop: 8, paddingBottom: 8, borderRadius: 8 }}>
-        <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#808080' }}>{activity}</Text>
-      </View>
-    )
-  })
+  var list = [];
+  //TODO BIG ERROR
+  try {
+    if (props.activities) {
+      list = props.activities.map((activity, index) => {
+        return (
+          <View key={index} style={{ backgroundColor: '#FAFAFA', borderWidth: 1, marginTop: 10, borderColor: '#D9D9D9', marginLeft: 10, marginRight: 10, paddingLeft: 20, paddingRight: 20, paddingTop: 8, paddingBottom: 8, borderRadius: 8 }}>
+            <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#808080' }}>{activity}</Text>
+          </View>
+        )
+      })
+    }
+  }
+  catch {
+    console.log('issue')
+  }
   return (
     <View style={{ marginTop: 20, width: '90%', flexDirection: 'row', flexWrap: 'wrap' }}>
       {list}
