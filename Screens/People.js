@@ -43,7 +43,7 @@ function People(props) {
       onPress={() => navigation.navigate("Person", { memberData: props.data })}
     >
       <View
-        style={{ padding: 15, marginBottom: 10, borderWidth: 1, borderColor: '#DBDBDB', borderRadius: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}
+        style={{ padding: 15, marginBottom: 10, borderWidth: 1, borderColor: '#DBDBDB', borderRadius: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center", backgroundColor: '#FFFFFF' }}
       >
         <PeopleImage uri={props.profMap[props.data.id]} />
         <View style={{ width: "80%" }}>
@@ -213,7 +213,7 @@ export function PeoplePage() {
             value={search}
           />
           <Checkbox
-            style={{ alignSelf: "center", borderWidth: 1, width: 40, height: 40, borderRadius: 10, borderColor: '#DBDBDB' }}
+            style={{ alignSelf: "center", borderWidth: 1, width: 40, height: 40, borderRadius: 10, borderColor: '#DBDBDB', backgroundColor: '#FFFFFF' }}
             value={isChecked}
             onValueChange={setChecked}
           />
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor:'#FAFAFA'
+    backgroundColor: '#FAFAFA'
   },
   search: {},
   peopleSection: {

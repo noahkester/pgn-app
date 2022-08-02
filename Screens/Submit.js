@@ -13,6 +13,7 @@ import SubmissionContext, { SubmissionProvider } from "../utils/SubmissionContex
 import * as ImageManipulator from 'expo-image-manipulator';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import Octicons from 'react-native-vector-icons/Octicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 function EventsDropDown() {
   const [open, setOpen] = useState(false);
@@ -121,7 +122,7 @@ function EventsDropDown() {
 }
 function ImageUpload() {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
-  const [image, setImage] = useState(require("../images/imageUpload.png"));
+  const [image, setImage] = useState('');
   const submissionContext = useContext(SubmissionContext);
   const imageSrc = submissionContext.imageSrc;
   useEffect(() => {
@@ -149,12 +150,20 @@ function ImageUpload() {
   };
   return (
     <TouchableOpacity
-      style={[styles.imageUpload, { zIndex: -1 }]}
+      style={{ zIndex: -1, width: 140, height: 160, justifyContent: "center", alignItems: "center" }}
       onPress={() => {
         pickImage();
       }}
     >
-      <Image source={image} style={styles.cloudImage} resizeMode="contain" />
+      {(image === '') ?
+        <MaterialIcons
+          name="add"
+          color={'#262626'}
+          size={60}
+        />
+        :
+        <Image source={image} style={styles.cloudImage} resizeMode="contain" />
+      }
     </TouchableOpacity>
   );
 }
@@ -163,7 +172,7 @@ function ProofDescription() {
   const proofDesc = submissionContext.proofDesc;
 
   return (
-    <View style={{ borderWidth: 1, width: '85%', borderRadius: 10, height: 50, justifyContent: 'center', paddingLeft: 10, borderColor: '#D8D8D8' }}>
+    <View style={{ borderWidth: 1, width: '85%', borderRadius: 10, height: 50, justifyContent: 'center', paddingLeft: 10, borderColor: '#D8D8D8', backgroundColor: '#FFFFFF' }}>
       <TextInput
         style={globalStyles.smallSemiBoldText}
         //USE THIS if we want to implement textbox getting bigger, using multiline disables the return key
@@ -260,7 +269,7 @@ export function SubmitPage(props) {
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} enabled={true} behavior={"padding"}>
       <TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
-        <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+        <View style={{ flex: 1, backgroundColor: '#FAFAFA' }}>
           <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
             <TouchableOpacity
               style={{ width: 68, alignItems: 'center' }}
@@ -301,15 +310,16 @@ export function SubmitPage(props) {
           >
             <View style={{ width: "100%", alignItems: "center" }}>
               <Text style={{ marginTop: 60, fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626', marginBottom: 20 }}>Submit Point</Text>
-              <View style={styles.submitEvents}>
+              <View style={{ marginBottom: 20 }}>
                 <EventsDropDown />
               </View>
-              <View style={{ zIndex: -1, width: '85%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
-              <View style={{ zIndex: -1, borderWidth: 1, width: '85%', borderRadius: 10, borderColor: '#DBDBDB', alignItems: 'center', justifyContent: 'center' }}>
+
+              <View style={{ zIndex: -1, borderWidth: 1, width: '85%', borderRadius: 10, borderColor: '#DBDBDB', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFFFFF' }}>
                 <ImageUpload type="points/" />
               </View>
-              <View style={{ width: '85%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
-              <ProofDescription />
+              <View style={{ width: '100%', alignItems: 'center', marginTop: 20 }}>
+                <ProofDescription />
+              </View>
             </View>
             <View style={{
               width: "100%",
