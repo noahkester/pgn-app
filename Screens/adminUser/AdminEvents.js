@@ -3,7 +3,7 @@ import { TouchableOpacity, Image, Text, View, ScrollView, RefreshControl } from 
 import globalStyles from "../../styles/Styles";
 
 import LoginContext from "../../utils/LoginContext";
-import Octicons from 'react-native-vector-icons/Octicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from "@react-navigation/native";
 import { EventSection } from "../Events";
 import { db } from '../../utils/firebase'
@@ -15,21 +15,18 @@ function AccountTop() {
   const navigation = useNavigation();
   return (
     <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-      <View style={{width: 68}}></View>
+      <View style={{ width: 68 }}></View>
       <Text style={{ textAlign: 'center', fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626' }}>All Events</Text>
       <TouchableOpacity
-        style={{ width: 68, height: 68, alignItems: 'center', justifyContent: 'center', borderRadius: 34, marginRight: 16 }}
+        style={{ width: 50, height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 30, marginRight: 16, backgroundColor: '#DEF1DF' }}
         onPress={() => {
           navigation.navigate('AddEvent');
         }}
       >
-        <Image
-          source={require("../../images/add.png")}
-          style={{
-            width: 60,
-            height: 60,
-          }}
-          resizeMode="contain"
+        <MaterialIcons
+          name="add"
+          color={'#7BC06F'}
+          size={40}
         />
       </TouchableOpacity>
     </View>

@@ -94,7 +94,7 @@ export function AddCodePage() {
                 </TouchableOpacity>
             </View>
             <TouchableOpacity
-                style={{ marginTop: 10, width: '90%', borderWidth: 1, borderColor: '#DBDBDB', borderRadius: 30, height: 54, justifyContent: 'center', paddingLeft: 20 }}
+                style={{ marginTop: 10, width: '90%', borderWidth: 1, borderColor: '#DBDBDB', borderRadius: 10, height: 50, justifyContent: 'center', paddingLeft: 20 }}
                 onPress={showDatePicker}
             >
                 <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#8E8E8E' }} >
@@ -114,14 +114,12 @@ export function AddCodePage() {
                     createMeeting()
                 }}
                 style={[globalStyles.universityColorFill, {
-                    borderRadius: 36,
+                    borderRadius: 10,
                     width: "90%",
                     alignItems: "center",
                     justifyContent: "center",
-                    paddingTop: 15,
-                    paddingBottom: 15,
+                    height: 50,
                     position: 'absolute',
-                    borderWidth: 6,
                     borderColor: '#E9C9B2',
                     bottom: 60
                 }]}

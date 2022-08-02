@@ -14,17 +14,17 @@ function SettingsButton() {
     return (
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
             <TouchableOpacity
-                onPress={() => navigation.navigate("AddCode")}
-                style={{ marginLeft: 8 }}
+                style={[{ width: 60, height: 60, alignItems: 'center', justifyContent: 'center', borderRadius: 36, marginRight: 10, backgroundColor: colors.universityColor + '40' }]}
+                onPress={() => {
+                    navigation.navigate("AddCode");
+                }}
             >
-                <View style={[{ width: 68, height: 68, alignItems: 'center', justifyContent: 'center', borderRadius: 36, borderWidth: 8, borderColor: '#F2DDCE' }, globalStyles.universityColorFill]}>
-                    <IonIcons
-                        name="md-barcode"
-                        color={'#FFFFFF'}
-                        size={38}
-                        style={{ marginLeft: 3 }}
-                    />
-                </View>
+                <IonIcons
+                    name="md-barcode"
+                    color={colors.universityColor}
+                    size={40}
+                    style={{ marginLeft: 3 }}
+                />
             </TouchableOpacity>
             <Image
                 source={require("../../images/pgn.png")}
@@ -47,7 +47,9 @@ function AdminTop(props) {
             paddingTop: 25,
             position: "absolute",
             top: 0,
-            width: "100%"
+            width: "100%",
+            borderBottomWidth: 1,
+            borderColor: '#D8D8D8'
         }}>
             <SettingsButton />
         </View>
@@ -214,12 +216,7 @@ export function AdminPage(props) {
     }, [urlMap, queueIndex, dummyRender])
 
     return (
-        <View style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "white"
-        }}>
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#FAFAFA" }}>
             <AdminTop />
             {/*<Text style={[globalStyles.largeSemiBoldText]}>Remaining Points: {queue.length - queueIndex}</Text>*/}
             <View style={{
@@ -228,7 +225,7 @@ export function AdminPage(props) {
                 borderWidth: 1,
                 borderColor: '#DBDBDB',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
             }}>
                 {(queueIndex == queue.length) ?
                     <Image

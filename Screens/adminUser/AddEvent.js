@@ -130,10 +130,10 @@ export function AddEventPage() {
         hideDatePicker();
     };
     return (
-        <View style={{ backgroundColor: '#FFFFFF', flex: 1, alignItems: 'center' }}>
+        <View style={{ backgroundColor: '#FAFAFA', flex: 1, alignItems: 'center' }}>
             <AccountTop />
             <Text style={{ marginTop: 60, fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626', marginBottom: 20 }}>Create Event</Text>
-            <View style={{ borderWidth: 1, borderRadius: 25, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
+            <View style={{ borderWidth: 1, borderRadius: 10, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center', backgroundColor: '#FFFFFF' }}>
                 <TextInput
                     autoCapitalize="none"
                     autoCorrect={false}
@@ -144,7 +144,7 @@ export function AddEventPage() {
                     {''}
                 </TextInput>
             </View>
-            <View style={{ marginTop: 10, borderWidth: 1, borderRadius: 25, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
+            <View style={{ marginTop: 10, borderWidth: 1, borderRadius: 10, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center', backgroundColor: '#FFFFFF' }}>
                 <TextInput
                     autoCapitalize="none"
                     autoCorrect={false}
@@ -156,7 +156,7 @@ export function AddEventPage() {
                 </TextInput>
             </View>
             <TouchableOpacity
-                style={{ marginTop: 10, borderWidth: 1, borderRadius: 25, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}
+                style={{ marginTop: 10, borderWidth: 1, borderRadius: 10, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center', backgroundColor: '#FFFFFF' }}
                 onPress={showDatePicker}
             >
                 <Text
@@ -174,7 +174,6 @@ export function AddEventPage() {
             >
                 <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 12, color: '#8E8E8E' }}>Reset time</Text>
             </TouchableOpacity>
-            <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
             <Type newEvent={newEvent} />
 
             <DateTimePickerModal
@@ -184,8 +183,7 @@ export function AddEventPage() {
                 onCancel={hideDatePicker}
                 date={meetingTime}
             />
-            <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
-            <View style={{ borderWidth: 1, borderRadius: 25, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
+            <View style={{ marginTop: 10, borderWidth: 1, borderRadius: 10, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center', backgroundColor: '#FFFFFF' }}>
                 <TextInput
                     autoCapitalize="none"
                     autoCorrect={false}
@@ -210,14 +208,13 @@ export function AddEventPage() {
                         });
                 }}
                 style={[globalStyles.universityColorFill, {
-                    borderRadius: 36,
+                    borderRadius: 10,
                     width: "90%",
                     alignItems: "center",
                     justifyContent: "center",
                     paddingTop: 15,
                     paddingBottom: 15,
                     position: 'absolute',
-                    borderWidth: 6,
                     borderColor: '#E9C9B2',
                     bottom: 60
                 }]}

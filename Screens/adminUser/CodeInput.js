@@ -55,7 +55,8 @@ const styles = StyleSheet.create({
         borderColor: '#DBDBDB',
         textAlign: 'center',
         fontFamily: 'Poppins_400Regular',
-        color: '#262626'
+        color: '#262626',
+        backgroundColor: '#FFFFFF'
     },
     focusCell: {
         borderColor: '#E5C0A6',

@@ -32,7 +32,7 @@ export function SubmitAttendancePage() {
         })
     }
     return (
-        <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+        <View style={{ flex: 1, backgroundColor: '#FAFAFA' }}>
             <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <TouchableOpacity
                     style={{ width: 68, alignItems: 'center' }}
