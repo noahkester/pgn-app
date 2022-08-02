@@ -15,20 +15,21 @@ import { unixEpochTimeToClock, unixEpochTimeToMonthDay, dateObjectToUnixEpoch, a
 
 function AttendanceCard(props) {
     return (
-        <View style={{ width: '90%', height: 60, borderRadius: 10, marginBottom: 10, borderWidth: 1, borderColor: '#DBDBDB', flexDirection: 'row', alignItems: 'center' }}>
-            <View style={{ width: 60, height: 60, backgroundColor: props.found ? '#85C67E' : '#E35B56', borderTopLeftRadius: 10, borderBottomLeftRadius: 10 }}></View>
+        <View style={{ width: '90%', height: (props.found) ? 60 : 110, borderRadius: 10, marginBottom: 10, borderWidth: 1, borderColor: '#DBDBDB', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
             <View style={{ marginLeft: 16 }}>
-                <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16 }}>{unixEpochTimeToMonthDay(props.time)}</Text>
-                <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 12 }}>{unixEpochTimeToClock(props.time)}</Text>
+                <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}>{'Wednesday ' + unixEpochTimeToMonthDay(props.time) + ', ' + unixEpochTimeToClock(props.time) + ' PM'}</Text>
+                <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 12, color: '#8E8E8E' }}>{'213 University Dr. LittleField Fountain'}</Text>
+                {
+                    (props.found) ? null :
+                        <TouchableOpacity
+                            style={{ marginTop: 10, width: 200, borderWidth: 1, borderColor: '#DBDBDB', height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: '#FAFAFA' }}
+                        >
+                            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 12, color: '#808080' }}>Submit Excuse</Text>
+                        </TouchableOpacity>
+                }
             </View>
-            {
-                (props.found) ? null :
-                    <TouchableOpacity
-                        style={{ marginLeft: 40, width: 160, borderWidth: 1, borderColor: '#DBDBDB', height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 30, backgroundColor: '#FAFAFA' }}
-                    >
-                        <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 12 }}>Submit Excuse</Text>
-                    </TouchableOpacity>
-            }
+
+            <View style={{ width: 60, height: '100%', backgroundColor: props.found ? '#85C67E' : '#E35B56', borderTopRightRadius: 10, borderBottomRightRadius: 10 }}></View>
         </View>
     )
 }
