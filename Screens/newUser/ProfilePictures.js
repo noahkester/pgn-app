@@ -50,7 +50,7 @@ function ImageUpload(props) {
   };
   return (
     <TouchableOpacity
-      style={{ width: '100%', height: 140, justifyContent: "center", alignItems: "center", zIndex: -1 }}
+      style={{ width: '100%', height: 140, justifyContent: "center", alignItems: "center", zIndex: -1, backgroundColor: '#FFFFFF' }}
       onPress={() => {
         pickImage();
       }}
@@ -84,7 +84,7 @@ export function ProfilePicturesPage() {
       });
   }
   return (
-    <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+    <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
       <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center' }}>
         <TouchableOpacity
           style={{ marginLeft: 16 }}
@@ -107,13 +107,13 @@ export function ProfilePicturesPage() {
           type="professional"
           imageSrc={require("../../images/imageUpload1.png")}
         />
-        <View style={{ width: '70%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+        <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
         <ImageUploadCard
           title="Party"
           type="social"
           imageSrc={require("../../images/imageUpload2.png")}
         />
-        <View style={{ width: '70%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+        <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
         <ImageUploadCard
           title="Random"
           type="funny"
@@ -122,7 +122,7 @@ export function ProfilePicturesPage() {
       </View>
       <View style={{ width: '100%', alignItems: 'center', position: 'absolute', bottom: 60 }}>
         <TouchableOpacity
-          style={{ width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 30, borderWidth: 1, borderColor: '#DBDBDB', backgroundColor: '#FAFAFA' }}
+          style={{ width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 10, borderWidth: 1, borderColor: '#DBDBDB', backgroundColor: '#FFFFFF' }}
           onPress={uploadData}
         >
           <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}>{'Complete'}</Text>

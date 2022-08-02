@@ -332,11 +332,11 @@ export function SubmitPage(props) {
               <View style={styles.submitEvents}>
                 <EventsDropDown />
               </View>
-              <View style={{ zIndex: -1, width: '90%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+              <View style={{ zIndex: -1, width: '85%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
               <View style={{ zIndex: -1, borderWidth: 1, width: '85%', borderRadius: 10, borderColor: '#DBDBDB', alignItems: 'center', justifyContent: 'center' }}>
                 <ImageUpload type="points/" />
               </View>
-              <View style={{ width: '90%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+              <View style={{ width: '85%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
               <ProofDescription />
             </View>
             <View style={{

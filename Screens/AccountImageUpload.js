@@ -1,15 +1,16 @@
-import { StyleSheet, Button, TouchableOpacity, Text, Image, View, Alert, } from "react-native";
-import globalStyles from "../styles/Styles";
-import { NextButton } from "./newUser/NewUser";
+import { StyleSheet, TouchableOpacity, Text, Image, View, Alert, } from "react-native";
 import React, { useState, useEffect } from "react";
 import { AccountTop } from "./Account";
 import * as ImagePicker from "expo-image-picker";
 import { store, auth } from "../utils/firebase";
+import Octicons from 'react-native-vector-icons/Octicons';
+import { useNavigation } from "@react-navigation/native";
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import * as ImageManipulator from 'expo-image-manipulator';
 
 function ImageUpload(props) {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
-  const [image, setImage] = useState(require("../images/imageUpload.png"));
+  const [image, setImage] = useState('');
   useEffect(() => {
     async () => {
       const galleryStatus =
@@ -49,31 +50,62 @@ function ImageUpload(props) {
   };
   return (
     <TouchableOpacity
-      style={[styles.imageUpload, { zIndex: -1 }]}
+      style={{
+        zIndex: -1,
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: '#DBDBDB',
+        borderRadius: 10,
+        height: 150,
+        width: 150,
+        backgroundColor: '#FFFFFF'
+      }}
       onPress={() => {
         pickImage();
       }}
     >
-      <Image source={image} style={styles.cloudImage} resizeMode="contain" />
+      {(image === '') ?
+        <MaterialIcons
+          name="add"
+          color={'#262626'}
+          size={60}
+        /> :
+        <Image source={image} style={styles.cloudImage} resizeMode="contain" />
+      }
     </TouchableOpacity>
   );
 }
 function ImageUploadCard(props) {
   return (
-    <View style={styles.imageUploadCard}>
-      <Text style={globalStyles.mediumBoldText}>{props.title}</Text>
-      <View style={[globalStyles.cardContainer, styles.uploadContainer]}>
-        <ImageUpload type={props.type} />
-      </View>
+    <View style={{ marginTop: 20, width: '90%', height: 160, alignItems: 'center' }}>
+      <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 18, marginBottom: 10 }}>{props.title}</Text>
+      <ImageUpload type={props.type} />
     </View>
   );
 }
 export function AccountImageUploadPage() {
+  const navigation = useNavigation();
   return (
-    <View style={styles.screen}>
-      <View style={{ marginTop: 55, width: "100%" }}>
-        <AccountTop address="Account" name="Profile Pictures" />
+    <View style={{ flex: 1, backgroundColor: '#FAFAFA' }}>
+      <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <TouchableOpacity
+          style={{ width: 68, alignItems: 'center' }}
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <Octicons
+            name="chevron-left"
+            color={'#262626'}
+            size={42}
+          />
+        </TouchableOpacity>
+        <Text style={{ textAlign: 'center', fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626' }}>{'Picture Upload'}</Text>
+        <View style={{ width: 68 }}></View>
       </View>
+
       <View style={{ width: "100%", alignItems: "center" }}>
         <ImageUploadCard
           title="Professional"
@@ -91,8 +123,6 @@ export function AccountImageUploadPage() {
           imageSrc={require("../images/imageUpload3.png")}
         />
       </View>
-      <View></View>
-      <View></View>
     </View>
   );
 }
@@ -125,9 +155,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  imageUploadCard: {
-    alignItems: "center",
-  },
+
   uploadImage: {
     width: 80,
     height: 80,

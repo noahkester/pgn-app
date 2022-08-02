@@ -29,7 +29,7 @@ function Profile(props) {
 
 function Description(props) {
   return (
-    <View style={{ marginTop: 20, width: "85%", backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: '#DBDBDB', padding: 15, borderRadius: 10 }}>
+    <View style={{ marginTop: 20, width: "90%", backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: '#DBDBDB', padding: 15, borderRadius: 10 }}>
       <TextInput
         style={globalStyles.smallSemiBoldText}
         multiline={true}
@@ -47,7 +47,7 @@ function AccountInput(props) {
   return (
     <TextInput
       style={{
-        width: "85%",
+        width: "90%",
         borderWidth: 1,
         borderColor: '#D9D9D9',
         backgroundColor: '#FAFAFA',
@@ -66,9 +66,32 @@ function AccountInput(props) {
     />
   );
 }
+function Role(props) {
+  return (
+    <View style={{ flexDirection: 'row' }}>
+      {(props.role === '') ? null :
+        <View style={{ backgroundColor: findRoleColor(props.role), borderWidth: 3, borderColor: findRoleBorder(props.role), paddingTop: 6, paddingBottom: 6, paddingLeft: 20, paddingRight: 20, borderRadius: 100 }}>
+          <Text style={{ color: '#FFFFFF', fontFamily: 'Poppins_600SemiBold' }}>{props.role}</Text>
+        </View>
+      }
+      <TouchableOpacity
+        style={{ marginLeft: 10, width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}
+        onPress={() => {
+          navigation.navigate('AddEvent');
+        }}
+      >
+        <FontAwesome5
+          name="palette"
+          color={colors.universityColor}
+          size={30}
+        />
+      </TouchableOpacity>
+    </View>
+  )
+}
 function PledgeClass(props) {
   return (
-    <View style={{ width: '85%' }}>
+    <View style={{ width: '90%' }}>
       <View style={{ flexDirection: "row", justifyContent: "space-between", width: "100%", paddingTop: 20 }}>
         <Text style={globalStyles.smallSemiBoldText}>
           {"PC " + props.pledgeClass}
@@ -98,13 +121,12 @@ function SaveButton(props) {
         {
           marginTop: 10,
           marginBottom: 60,
-          borderRadius: 30,
+          borderRadius: 10,
           width: "90%",
           alignItems: "center",
           justifyContent: "center",
           paddingTop: 15,
           paddingBottom: 15,
-          borderWidth: 6,
           borderColor: colors.universityFadedColor,
         }
       ]}
@@ -140,13 +162,12 @@ export function SignOutButton(props) {
         {
           marginTop: 10,
           marginBottom: 60,
-          borderRadius: 30,
+          borderRadius: 10,
           width: "90%",
           alignItems: "center",
           justifyContent: "center",
           paddingTop: 15,
           paddingBottom: 15,
-          borderWidth: 6,
           borderColor: colors.universityFadedColor,
         }
       ]}
@@ -157,6 +178,12 @@ export function SignOutButton(props) {
     </TouchableOpacity>
   );
 }
+function AccountLabel(props) {
+  return (
+    <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, marginLeft: 10, width: '90%' }}>{props.label}</Text>
+  )
+}
+
 
 export function AccountPage() {
 
@@ -258,66 +285,47 @@ export function AccountPage() {
             size={42}
           />
         </TouchableOpacity>
+
         <Text style={{ textAlign: 'center', fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626' }}>{curUser.firstname + ' ' + curUser.lastname}</Text>
-        <TouchableOpacity
-          style={{ width: 68, height: 68, alignItems: 'center', justifyContent: 'center', borderRadius: 34, marginRight: 16 }}
-          onPress={() => {
-            navigation.navigate('AddEvent');
-          }}
-        >
-          <TouchableOpacity onPress={() => navigation.navigate("AccountImageUpload")}>
-            <View style={{ borderWidth: 1, width: 68, height: 68, borderRadius: 36, borderWidth: 8, borderColor: colors.universityFadedColor, backgroundColor: colors.universityColor, alignItems: 'center', justifyContent: 'center' }}>
-              <MaterialCommunityIcons
-                name="image-plus"
-                color={'#FFFFFF'}
-                size={34}
-              />
-            </View>
-          </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => navigation.navigate("AccountImageUpload")}>
+          <View style={{ borderWidth: 1, marginRight: 16, width: 68, height: 68, borderRadius: 36, borderWidth: 8, borderColor: colors.universityFadedColor, backgroundColor: colors.universityColor, alignItems: 'center', justifyContent: 'center' }}>
+            <MaterialCommunityIcons
+              name="image-plus"
+              color={'#FFFFFF'}
+              size={34}
+            />
+          </View>
         </TouchableOpacity>
+
       </View>
       <ScrollView style={{ width: "100%" }}>
         <View style={{ alignItems: "center" }}>
           <Profile />
-          <View style={{ flexDirection: 'row' }}>
-            {(curUser.role === '') ? null :
-              <View style={{ backgroundColor: findRoleColor(curUser.role), borderWidth: 3, borderColor: findRoleBorder(curUser.role), paddingTop: 6, paddingBottom: 6, paddingLeft: 20, paddingRight: 20, borderRadius: 100 }}>
-                <Text style={{ color: '#FFFFFF', fontFamily: 'Poppins_600SemiBold' }}>{curUser.role}</Text>
-              </View>
-            }
-            <TouchableOpacity
-              style={{ marginLeft: 10, width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}
-              onPress={() => {
-                navigation.navigate('AddEvent');
-              }}
-            >
-              <FontAwesome5
-                name="palette"
-                color={'#262626'}
-                size={34}
-              />
-            </TouchableOpacity>
-          </View>
+          <Role role={curUser.role} />
           <Description description={bio} setValue={setBio} />
-          <PledgeClass
-            pledgeClass={curUser.pledgeClass}
-            status={curUser.status}
-            pledgeTask={curUser.pledgeTask}
-          />
-          <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
-          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, marginLeft: 10, width: '85%' }}>Education</Text>
+
+          <PledgeClass pledgeClass={curUser.pledgeClass} status={curUser.status} pledgeTask={curUser.pledgeTask} />
+
+          <View style={{ width: '90%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+
+          <AccountLabel label={'Education'} />
           <AccountInput placeholder="Major" value={major} setValue={setMajor} />
           <AccountInput placeholder="Minor" value={minor} setValue={setMinor} />
-          <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
-          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, marginLeft: 10, width: '85%' }}>About</Text>
+          <View style={{ width: '90%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+
+          <AccountLabel label={'About'} />
           <AccountInput placeholder="Hometown" value={hometown} setValue={setHometown} />
           <AccountInput placeholder="Activities" value={activities} setValue={setActivities} />
-          <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
-          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, marginLeft: 10, width: '85%' }}>Contact</Text>
+          <View style={{ width: '90%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+
+          <AccountLabel label={'Contact'} />
           <AccountInput placeholder="Email" value={email} setValue={setEmail} />
           <AccountInput placeholder="Phone" value={phone} setValue={setPhone} />
           <AccountInput placeholder="Linkedin URL" value={linkedin} setValue={setLinkedin} />
-          {changed ? <SaveButton onPress={updateProfile} /> : <SignOutButton />}
+          {changed ?
+            <SaveButton onPress={updateProfile} /> :
+            <SignOutButton />}
         </View>
       </ScrollView>
     </View>

@@ -1,9 +1,8 @@
 import { TouchableOpacity, TextInput, Text, View } from "react-native";
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Octicons from 'react-native-vector-icons/Octicons';
 
-import LoginContext from "../../utils/LoginContext";
 import { auth } from "../../utils/firebase";
 
 export function CreateAccountPage() {
@@ -52,7 +51,7 @@ export function CreateAccountPage() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+    <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
       <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center' }}>
         <TouchableOpacity
           style={{ marginLeft: 16 }}
@@ -72,7 +71,7 @@ export function CreateAccountPage() {
       >
         <View style={{ width: '100%', flexDirection: 'column', alignItems: 'center' }}>
           <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626', marginBottom: 20 }}>Create account</Text>
-          <View style={{ borderWidth: 1, borderRadius: 25, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
+          <View style={{ backgroundColor: '#FFFFFF', borderWidth: 1, borderRadius: 10, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
             <TextInput
               autoCapitalize="none"
               autoCorrect={false}
@@ -86,8 +85,8 @@ export function CreateAccountPage() {
           {(emailError == '') ? null :
             <Text style={{ width: '90%', paddingTop: 4, paddingLeft: 10, fontFamily: 'Poppins_500Medium', color: '#E35B56' }}>{emailError}</Text>
           }
-          <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
-          <View style={{ borderWidth: 1, borderRadius: 25, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
+          <View style={{ width: '90%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+          <View style={{ backgroundColor: '#FFFFFF', borderWidth: 1, borderRadius: 10, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
             <TextInput
               autoCapitalize="none"
               autoCorrect={false}
@@ -99,7 +98,7 @@ export function CreateAccountPage() {
               {password}
             </TextInput>
           </View>
-          <View style={{ marginTop: 10, borderWidth: 1, borderRadius: 25, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
+          <View style={{ backgroundColor: '#FFFFFF', marginTop: 10, borderWidth: 1, borderRadius: 10, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
             <TextInput
               autoCapitalize="none"
               autoCorrect={false}
@@ -117,7 +116,7 @@ export function CreateAccountPage() {
         </View>
         <View style={{ width: '100%', alignItems: 'center', position: 'absolute', bottom: 60 }}>
           <TouchableOpacity
-            style={{ width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 30, borderWidth: 1, borderColor: '#DBDBDB', backgroundColor: '#FAFAFA' }}
+            style={{ width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 10, borderWidth: 1, borderColor: '#DBDBDB', backgroundColor: '#FFFFFF' }}
             onPress={handleCreateAccount}
           >
             <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}>{'Create account'}</Text>

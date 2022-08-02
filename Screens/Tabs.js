@@ -1,15 +1,16 @@
-import { StyleSheet, Text, Image, View, TouchableOpacity } from "react-native";
+import { Text, Image, View, TouchableOpacity } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import FoundationIcon from 'react-native-vector-icons/Foundation';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from "@react-navigation/native";
 import { useContext } from "react";
 
 import { HomePage } from "./Home";
 import { EventsPage } from "./Events";
 import { PeoplePage } from "./People";
-import { WaitlistPage } from "./Waitlist";
+import { ChatPage } from './Chat';
 
 import LoginContext from "../utils/LoginContext";
 import UrlContext from "../utils/UrlContext";
@@ -22,17 +23,20 @@ export function TopBar(props) {
   const currentUser = loginContext.currentUser;
   const profileUrl = urlContext.professionalUrl;
   return (
-    <View style={{ marginTop: 32, width: "100%", height: 160, flexDirection: "row", justifyContent: "space-between", alignItems: 'center', backgroundColor: "#FFFFFF", paddingHorizontal: 20 }}>
-      <Profile
-        name={currentUser.firstname}
-        class={currentUser.pledgeClass}
-        profileUrl={profileUrl}
-      />
-      <Image
-        source={require("../images/pgn.png")}
-        resizeMode="cover"
-        style={{ width: 100, height: 100 }}
-      />
+    <View>
+      <View style={{ marginTop: 32, width: "100%", height: 160, flexDirection: "row", justifyContent: "space-between", alignItems: 'center', backgroundColor: "#FFFFFF", paddingHorizontal: 20, borderBottomWidth: 1, borderColor: '#DBDBDB' }}>
+        <Profile
+          name={currentUser.firstname}
+          class={currentUser.pledgeClass}
+          profileUrl={profileUrl}
+        />
+        <Image
+          source={require("../images/pgn.png")}
+          resizeMode="cover"
+          style={{ width: 100, height: 100 }}
+        />
+
+      </View>
     </View>
   );
 }
@@ -49,8 +53,7 @@ export function Profile(props) {
           style={{ width: 80, height: 80, borderRadius: 40 }}
         />
       </TouchableOpacity>
-      <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 14, marginTop: 6, color: '#262626' }}>Hello {props.name}!</Text>
-      <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 10, color: '#262626' }}>PC {props.class}</Text>
+      <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, marginTop: 6, color: '#262626' }}>Hello {props.name}!</Text>
     </View>
   );
 }
@@ -66,6 +69,11 @@ export function NavigationPage() {
       }}
     >
       <TopBar />
+      {(true) ? null :
+        <View style={{ height: 30, backgroundColor: '#E35B56', alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>Membership dues deadline 8/6</Text>
+        </View>
+      }
       <Tab.Navigator
         sceneContainerStyle={{
           backgroundColor: '#FFFFFF',
@@ -130,16 +138,16 @@ export function NavigationPage() {
           }}
         />
         <Tab.Screen
-          name="Points"
-          component={WaitlistPage}
+          name="Chat"
+          component={ChatPage}
           options={{
-            tabBarLabel: "Points",
+            tabBarLabel: "Chat",
             tabBarIcon: ({ color }) => {
               return (
-                <FontAwesome5Icon
-                  name='clipboard-list'
+                <MaterialIcons
+                  name='leaderboard'
                   color={color}
-                  size={34}
+                  size={36}
                 />
               );
             }

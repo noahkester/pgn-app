@@ -29,6 +29,7 @@ import { AttendancePage } from './Screens/Attendance';
 import { AdminSettingsPage } from './Screens/adminUser/AdminSettings';
 import { ViewPeoplePage } from "./Screens/adminUser/ViewPeople";
 import { AdminTabsPage } from './Screens/adminUser/AdminTabs';
+import { WaitlistPage } from "./Screens/Waitlist";
 
 // Util imports
 import { auth, getCurrentUser, db, store } from "./utils/firebase";
@@ -231,6 +232,7 @@ function App() {
           }}
         >
           <Stack.Screen name="Navigation" component={NavigationPage} />
+          <Stack.Screen name="Waitlist" component={WaitlistPage} />
           <Stack.Screen name="Account" component={AccountPage} />
           <Stack.Screen name="AccountImageUpload" component={AccountImageUploadPage} />
           <Stack.Screen name="Submit" component={SubmitPage} />

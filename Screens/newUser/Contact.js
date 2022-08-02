@@ -18,7 +18,7 @@ export function ContactPage() {
         navigation.navigate("ProfilePictures");
     }
     return (
-        <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+        <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
             <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center' }}>
                 <TouchableOpacity
                     style={{ marginLeft: 16 }}
@@ -38,7 +38,7 @@ export function ContactPage() {
             >
                 <View style={{ width: '100%', flexDirection: 'column', alignItems: 'center' }}>
                     <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626', marginBottom: 20 }}>Contact</Text>
-                    <View style={{ borderWidth: 1, borderRadius: 25, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
+                    <View style={{ backgroundColor: '#FFFFFF', borderWidth: 1, borderRadius: 10, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
                         <TextInput
                             autoCapitalize="none"
                             autoCorrect={false}
@@ -49,8 +49,8 @@ export function ContactPage() {
                             {linkedin}
                         </TextInput>
                     </View>
-                    <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
-                    <View style={{ borderWidth: 1, borderRadius: 25, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
+                    <View style={{ width: '90%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+                    <View style={{ backgroundColor: '#FFFFFF', borderWidth: 1, borderRadius: 10, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
                         <TextInput
                             autoCapitalize="none"
                             autoCorrect={false}
@@ -64,7 +64,7 @@ export function ContactPage() {
                 </View>
                 <View style={{ width: '100%', alignItems: 'center', position: 'absolute', bottom: 60 }}>
                     <TouchableOpacity
-                        style={{ width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 30, borderWidth: 1, borderColor: '#DBDBDB', backgroundColor: '#FAFAFA' }}
+                        style={{ backgroundColor: '#FFFFFF', width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 10, borderWidth: 1, borderColor: '#DBDBDB' }}
                         onPress={updateContact}
                     >
                         <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}>{'Next'}</Text>

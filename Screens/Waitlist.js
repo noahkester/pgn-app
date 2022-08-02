@@ -15,6 +15,9 @@ import { useEffect, useRef, useContext, useState, useCallback } from "react";
 import { db, auth, store } from "../utils/firebase";
 import LoginContext from "../utils/LoginContext";
 import colors from '../styles/Colors'
+import Octicons from 'react-native-vector-icons/Octicons';
+import { useNavigation } from "@react-navigation/native";
+
 const Tab = createMaterialTopTabNavigator();
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -171,15 +174,32 @@ function DeclinedScreen() {
 }
 
 function TopTab() {
-
+  const navigation = useNavigation();
 
   return (
-    <View style={styles.eventScreen}>
+    <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+      <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#D8D8D8' }}>
+        <TouchableOpacity
+          style={{ width: 68, alignItems: 'center' }}
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <Octicons
+            name="chevron-left"
+            color={'#262626'}
+            size={42}
+          />
+        </TouchableOpacity>
+        <Text style={{ textAlign: 'center', fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626' }}>Submitted</Text>
+        <View style={{ width: 68 }}></View>
+      </View>
       <View style={{ width: "100%", height: "100%" }}>
         <Tab.Navigator
           sceneContainerStyle={{
-            backgroundColor: colors.white,
+            backgroundColor: '#FAFAFA',
           }}
+
           screenOptions={styles.screenOps}
         >
           <Tab.Screen
@@ -206,20 +226,14 @@ export function WaitlistPage() {
   return <TopTab />;
 }
 const styles = StyleSheet.create({
-  eventScreen: {
-    width: "100%",
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
   screenOps: {
     tabBarStyle: {
       shadowOffset: { width: 0, height: 0 },
+      backgroundColor: '#FAFAFA',
     },
     tabBarActiveTintColor: "white",
     tabBarInactiveTintColor: "black",
     tabBarLabelStyle: { fontFamily: 'Poppins_600SemiBold', fontSize: 12 },
-
     tabBarIndicatorStyle: {
       backgroundColor: colors.universityColor,
       left: 20,
