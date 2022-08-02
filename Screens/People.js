@@ -244,6 +244,7 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     justifyContent: "space-between",
+    backgroundColor:'#FAFAFA'
   },
   search: {},
   peopleSection: {

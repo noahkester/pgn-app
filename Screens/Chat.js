@@ -1,6 +1,8 @@
 import { TouchableOpacity, Text, Image, View, ScrollView } from "react-native";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 
 function ChatImage(props) {
@@ -12,10 +14,10 @@ function ChatImage(props) {
                 <Image
                     source={require("../images/pgn.png")}
                     resizeMode="contain"
-                    style={{width: 200, height: 200}}
+                    style={{ width: 200, height: 200 }}
                 />
             </View>
-            <View style={{ width: '16%', alignItems: 'center' }}>
+            <View style={{ width: '16%', alignItems: 'flex-end' }}>
                 <TouchableOpacity
                     onPress={() => {
                         setLiked(!liked);
@@ -50,7 +52,7 @@ function ChatText(props) {
             <View style={{ width: '84%' }}>
                 <Text style={{ fontFamily: 'Poppins_500Medium', fontSize: 16 }}>{props.text}</Text>
             </View>
-            <View style={{ width: '16%', alignItems: 'center' }}>
+            <View style={{ width: '16%', alignItems: 'flex-end' }}>
                 <TouchableOpacity
                     onPress={() => {
                         setLiked(!liked);
@@ -76,6 +78,8 @@ function ChatText(props) {
 
 
 export function ChatPage() {
+    const navigation = useNavigation();
+
     return (
         <View style={{ flex: 1, backgroundColor: '#FAFAFA', alignItems: 'center' }}>
             <ScrollView style={{ width: '100%' }}>
@@ -102,6 +106,21 @@ export function ChatPage() {
                     </View>
                 </View>
             </ScrollView>
+            <View style={{ position: 'absolute', bottom: 12, right: 24, borderRadius: 30, backgroundColor: '#FFFFFF' }}>
+                <TouchableOpacity
+                    style={[{ width: 50, height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 34, backgroundColor: colors.universityColor + '40' }]}
+                    onPress={() => {
+                        navigation.navigate("Post");
+                    }}
+                >
+                    <FontAwesome5
+                        name="pen"
+                        color={colors.universityColor}
+                        size={26}
+                        style={{}}
+                    />
+                </TouchableOpacity>
+            </View>
         </View >
     )
 }

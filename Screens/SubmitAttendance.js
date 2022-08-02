@@ -21,15 +21,12 @@ export function SubmitAttendancePage() {
                     docRef.update({
                         attendees: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.uid)
                     })
-                    console.log("Got credit");
                 }
                 else {
-                    console.log("Meeting code expired");
                 }
                 setValue('')
             }
             else {
-                console.log("Not a valid meeting id");
                 setValue('')
             }
         })
@@ -59,7 +56,7 @@ export function SubmitAttendancePage() {
                     onPress={() => {
                         submitAttendanceCode()
                     }}
-                    style={[globalStyles.universityColorFill, globalStyles.button, { position: 'absolute', bottom: 60, borderWidth: 6, borderRadius: 60, borderColor: '#E9C9B2' }]}
+                    style={[globalStyles.universityColorFill, { width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 60, borderRadius: 10, borderColor: '#E9C9B2' }]}
                 >
                     <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>Submit!</Text>
                 </TouchableOpacity>

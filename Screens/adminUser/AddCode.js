@@ -51,7 +51,6 @@ export function AddCodePage() {
                 }
             )
             .then(() => {
-                console.log("(addcode.js) chapter meeting successfully written!");
                 navigation.goBack();
             })
             .catch((error) => {

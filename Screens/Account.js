@@ -67,17 +67,19 @@ function AccountInput(props) {
   );
 }
 function Role(props) {
+  const navigation = useNavigation();
+
   return (
-    <View style={{ flexDirection: 'row' }}>
+    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       {(props.role === '') ? null :
-        <View style={{ backgroundColor: findRoleColor(props.role), borderWidth: 3, borderColor: findRoleBorder(props.role), paddingTop: 6, paddingBottom: 6, paddingLeft: 20, paddingRight: 20, borderRadius: 100 }}>
+        <View style={{ backgroundColor: findRoleColor(props.role), borderWidth: 3, borderColor: findRoleBorder(props.role), height: 30, paddingLeft: 20, paddingRight: 20, borderRadius: 100, justifyContent: 'center' }}>
           <Text style={{ color: '#FFFFFF', fontFamily: 'Poppins_600SemiBold' }}>{props.role}</Text>
         </View>
       }
       <TouchableOpacity
-        style={{ marginLeft: 10, width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}
+        style={{ marginLeft: 10, width: 50, height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 25, backgroundColor: colors.universityColor + '40' }}
         onPress={() => {
-          navigation.navigate('AddEvent');
+          navigation.navigate('Theme');
         }}
       >
         <FontAwesome5
@@ -256,7 +258,6 @@ export function AccountPage() {
       .doc(auth.currentUser.uid)
       .set(newInfo)
       .then(() => {
-        console.log("(Account) New user Information successfully written!");
         // Update useContext for LoginContext
         loginContext.currentUser = test
         db.collection("users")
@@ -289,11 +290,11 @@ export function AccountPage() {
         <Text style={{ textAlign: 'center', fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626' }}>{curUser.firstname + ' ' + curUser.lastname}</Text>
 
         <TouchableOpacity onPress={() => navigation.navigate("AccountImageUpload")}>
-          <View style={{ borderWidth: 1, marginRight: 16, width: 68, height: 68, borderRadius: 36, borderWidth: 8, borderColor: colors.universityFadedColor, backgroundColor: colors.universityColor, alignItems: 'center', justifyContent: 'center' }}>
+          <View style={{ marginRight: 16, width: 60, height: 60, borderRadius: 36, backgroundColor: colors.universityColor + '40', alignItems: 'center', justifyContent: 'center' }}>
             <MaterialCommunityIcons
               name="image-plus"
-              color={'#FFFFFF'}
-              size={34}
+              color={colors.universityColor}
+              size={38}
             />
           </View>
         </TouchableOpacity>

@@ -119,30 +119,6 @@ function EventsDropDown() {
     />
   );
 }
-
-/*function CameraShot() {
-  const [image, setImage] = useState(require("../images/camera.png"));
-  return (
-    <TouchableOpacity
-      style={[styles.imageUpload, { zIndex: -1 }]}
-      onPress={async () => {
-        var result = await ImagePicker.launchCameraAsync();
-        //TODO Camera stuff
-        if (!result.cancelled) {
-          setImage(result);
-          imageSrc.current = result.uri;
-        }
-      }}
-    >
-      <Image
-        source={image}
-        style={styles.cameraImage}
-        resizeMode="contain"
-      />
-      <Text style={globalStyles.smallSemiBoldText}>Take a photo</Text>
-    </TouchableOpacity>
-  );
-}*/
 function ImageUpload() {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [image, setImage] = useState(require("../images/imageUpload.png"));
@@ -230,25 +206,21 @@ export function SubmitPoints(props) {
       style={[
         globalStyles.universityColorFill,
         {
-          borderWidth: 6,
-          borderRadius: 36,
+          borderRadius: 10,
           borderColor: '#E9C9B2',
           width: "90%",
           alignItems: "center",
           justifyContent: "center",
-          paddingTop: 15,
-          paddingBottom: 15,
+          height: 50
         }
       ]}
       onPress={() => {
-        //console.log(user);
         db.collection("users")
           .doc(auth.currentUser.uid)
           .update({
             submittedPoints: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.uid + "_" + eventLabel.current)
           })
           .then(() => {
-            console.log("(Submit) Points Submission added to user array");
             uploadSubmissionImage(imageSrc.current, auth.currentUser.uid + "_" + eventLabel.current);
 
             db.collection("points")
@@ -303,15 +275,15 @@ export function SubmitPage(props) {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              style={[{ width: 68, height: 68, alignItems: 'center', justifyContent: 'center', borderRadius: 36, marginRight: 10, borderWidth: 8, borderColor: '#E9C9B2' }, globalStyles.universityColorFill]}
+              style={[{ width: 60, height: 60, alignItems: 'center', justifyContent: 'center', borderRadius: 36, marginRight: 10, backgroundColor: colors.universityColor + '40' }]}
               onPress={() => {
                 navigation.navigate("SubmitAttendance");
               }}
             >
               <IonIcons
                 name="md-barcode"
-                color={'#FFFFFF'}
-                size={38}
+                color={colors.universityColor}
+                size={40}
                 style={{ marginLeft: 3 }}
               />
             </TouchableOpacity>

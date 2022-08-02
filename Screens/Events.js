@@ -56,7 +56,7 @@ function Event(props) {
           }
         </View>
       </View>
-      <Text style={{ position: 'absolute', bottom: 6, right: 10, fontFamily: 'Poppins_600SemiBold', fontSize: 18, color: '#85C67E' }}>{props.weight + points}</Text>
+      <Text style={{ position: 'absolute', bottom: 6, right: 10, fontFamily: 'Poppins_600SemiBold', fontSize: 14, color: '#85C67E' }}>{props.weight + points}</Text>
     </View >
   );
 }
@@ -152,7 +152,7 @@ export function EventsPage() {
             options={{ tabBarLabel: "Extra" }}
           />
         </Tab.Navigator>
-        <View style={{ position: 'absolute', bottom: 12, right: 12, borderRadius: 30, backgroundColor: '#FFFFFF' }}>
+        <View style={{ position: 'absolute', bottom: 12, right: 24, borderRadius: 30, backgroundColor: '#FFFFFF' }}>
           <TouchableOpacity
             style={[{ width: 50, height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 34, backgroundColor: colors.universityColor + '40' }]}
             onPress={() => {

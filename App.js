@@ -30,6 +30,9 @@ import { AdminSettingsPage } from './Screens/adminUser/AdminSettings';
 import { ViewPeoplePage } from "./Screens/adminUser/ViewPeople";
 import { AdminTabsPage } from './Screens/adminUser/AdminTabs';
 import { WaitlistPage } from "./Screens/Waitlist";
+import { ColorThemePage } from './Screens/ColorTheme';
+import { SocialPostScreen } from './Screens/SocialPost';
+
 
 // Util imports
 import { auth, getCurrentUser, db, store } from "./utils/firebase";
@@ -78,17 +81,13 @@ function App() {
           if (user.emailVerified) {
             if (user.email == "pgn.utexas.sudo@gmail.com") {
               isAdmin.current = true;
-              console.log("(app.js) isAdmin set to true");
             }
             setSignIn(true);
-            console.log("(app.js) SignIn set to true");
           } else {
-            console.log("(APP.js): user email not verified!! ")
             setAppIsReady(true);
           }
         })
         .catch(() => {
-          console.log("(app.js) No user: Render Login/Signup");
           setAppIsReady(true);
         });
     }
@@ -149,7 +148,6 @@ function App() {
             .then((url) => {
               professionalUrl.current = url;
               // Only the professional url is required
-              console.log("(app.js) Successfully got professional picture");
             })
             .catch((e) => {
               console.log("(app.js) Errors while getting professional picture ")
@@ -159,7 +157,6 @@ function App() {
             .getDownloadURL()
             .then((url) => {
               socialUrl.current = url;
-              console.log("(app.js) Successfully got social picture");
             })
             .catch((e) =>
               console.log("(app.js) Errors while getting social picture ")
@@ -169,7 +166,6 @@ function App() {
             .getDownloadURL()
             .then((url) => {
               funnyUrl.current = url;
-              console.log("(app.js) Successfully got funny picture");
             })
             .catch((e) =>
               console.log("(app.js) Errors while getting funny picture ")
@@ -235,10 +231,12 @@ function App() {
           <Stack.Screen name="Waitlist" component={WaitlistPage} />
           <Stack.Screen name="Account" component={AccountPage} />
           <Stack.Screen name="AccountImageUpload" component={AccountImageUploadPage} />
+          <Stack.Screen name="Theme" component={ColorThemePage} />
           <Stack.Screen name="Submit" component={SubmitPage} />
           <Stack.Screen name="SubmitAttendance" component={SubmitAttendancePage} />
           <Stack.Screen name="Attendance" component={AttendancePage} />
           <Stack.Screen name="Person" component={PersonPage} />
+          <Stack.Screen name="Post" component={SocialPostScreen} />
         </Stack.Navigator>
       )
     }

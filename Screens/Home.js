@@ -37,7 +37,7 @@ function PointCard(props) {
         />
       </View>
       <View style={{ width: '80%', paddingLeft: 5, justifyContent: 'center' }}>
-        <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
+        <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 }}>
           <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626' }}>{props.name}</Text>
           <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626' }}>{props.points + '/' + props.totalPoints}</Text>
         </View>
@@ -58,7 +58,7 @@ function PointDisplay(props) {
       <View style={{ height: 60, width: '100%', borderBottomWidth: 1, borderColor: '#DBDBDB', alignItems: 'center', paddingLeft: 20, flexDirection: 'row', justifyContent: 'space-between', paddingRight: 20 }}>
         <Text style={{ fontSize: 22, fontFamily: 'Poppins_600SemiBold', color: '#262626' }}>Points</Text>
         <TouchableOpacity
-          style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.universityColor + '50', borderRadius: 20 }}
+          style={{ width: 46, height: 46, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.universityColor + '50', borderRadius: 23 }}
           onPress={() => {
             navigation.navigate('Waitlist');
           }}
@@ -66,7 +66,7 @@ function PointDisplay(props) {
           <FontAwesome5Icon
             name='clipboard-list'
             color={colors.universityColor}
-            size={26}
+            size={28}
           />
         </TouchableOpacity>
       </View>
@@ -116,8 +116,6 @@ export function HomePage() {
       totalSocialPoints = 6;
       totalProfessionalPoints = 6;
       break;
-    case 'inactive':
-      console.log("(Home) Error, inactive user, log out or send alert");
   }
 
   return (
