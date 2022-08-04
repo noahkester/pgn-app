@@ -5,7 +5,11 @@ import {
   Text,
   Image,
   View,
-  TextInput
+  TextInput,
+  KeyboardAvoidingView,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Alert
 } from "react-native";
 import { SubmitPoints } from "../Home";
 import { NewUserTextInput } from "./NewUser";
@@ -14,12 +18,12 @@ import { setField } from "./About";
 import ucolors from "../../styles/UniversityColors";
 import DropDownPicker from "react-native-dropdown-picker";
 import colors from "../../styles/Colors";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { NextButton } from "./NewUser";
 import { auth, db } from "../../utils/firebase";
 import NewUserContext from "../../utils/NewUserContext";
 import { useNavigation } from "@react-navigation/native";
-import Octicons from 'react-native-vector-icons/Octicons';
+import Octicons from "react-native-vector-icons/Octicons";
 
 function UniversityDropdown(props) {
   const [open, setOpen] = useState(false);
@@ -388,88 +392,224 @@ function UniversityDropdown(props) {
 }
 
 export function NamePage() {
+  const [isFNameBlank, setFNameBlank] = useState(false);
+  const [isLNameBlank, setLNameBlank] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const newUserContext = useContext(NewUserContext);
   const navigation = useNavigation();
 
-  const checkAdminMembers = () => {
-    const name = (firstName + lastName).toLowerCase();
-    db.collection("admin-members")
-      .doc(name)
-      .get()
-      .then((doc) => {
-        const data = doc.data();
-        newUserContext.status = data.status;
-        newUserContext.pledgeClass = data.pledgeClass;
-        newUserContext.role = data.role;
-        newUserContext.firstname = firstName;
-        newUserContext.lastname = lastName;
-        newUserContext.id = auth.currentUser.uid;
-        newUserContext.email = auth.currentUser.email;
-
-        navigation.navigate('Education');
-      })
-      .catch(() => {
-        navigation.navigate('UnknownUser');
-      });
+  function checkFieldBlank(text, category) {
+    switch (category) {
+      case "firstname":
+        if (text == "") {
+          console.log("field is left blank");
+          setFNameBlank(true);
+        } else {
+          setFNameBlank(false);
+        }
+        break;
+      case "lastname":
+        if (text == "") {
+          console.log("field is left blank");
+          setLNameBlank(true);
+        } else {
+          setLNameBlank(false);
+        }
+        break;
+    }
   }
 
+  // useEffect(() => {
+  //   console.log("inside useEffecT: " + isFNameBlank);
+  //   if (isFNameBlank) {
+  //     console.log("Required Field Not Blank");
+  //   } else {
+  //     console.log("Field  empty");
+  //   }
+  // }, [isFNameBlank]);
+
+  const checkAdminMembers = () => {
+    if (!isFNameBlank && !isLNameBlank) {
+      const name = (firstName + lastName).toLowerCase();
+      db.collection("admin-members")
+        .doc(name)
+        .get()
+        .then((doc) => {
+          const data = doc.data();
+          newUserContext.status = data.status;
+          newUserContext.pledgeClass = data.pledgeClass;
+          newUserContext.role = data.role;
+          newUserContext.firstname = firstName;
+          newUserContext.lastname = lastName;
+          newUserContext.id = auth.currentUser.uid;
+          newUserContext.email = auth.currentUser.email;
+
+          navigation.navigate("Education");
+        })
+        .catch(() => {
+          navigation.navigate("UnknownUser");
+        });
+    }else{
+      Alert.alert((isFNameBlank ? "First Name is required!" : "Last Name is Required"));
+    }
+  };
+
   return (
-    <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
-      <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center' }}>
-        <TouchableOpacity
-          style={{ marginLeft: 16 }}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <Octicons
-            name="chevron-left"
-            color={'#262626'}
-            size={42}
-          />
-        </TouchableOpacity>
-      </View>
-      <View
-        style={{ flex: 1, alignItems: "center", marginTop: 180 }}
-      >
-        <View style={{ width: '100%', flexDirection: 'column', alignItems: 'center' }}>
-          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626', marginBottom: 20 }}>Name</Text>
-          <View style={{ backgroundColor: '#FFFFFF', borderWidth: 1, borderRadius: 10, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
-            <TextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}
-              placeholder={'First Name'}
-              onChangeText={(text) => setFirstName(text)}
-            >
-              {firstName}
-            </TextInput>
-          </View>
-          <View style={{ width: '90%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
-          <View style={{ backgroundColor: '#FFFFFF', borderWidth: 1, borderRadius: 10, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
-            <TextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}
-              placeholder={'Last Name'}
-              onChangeText={(text) => setLastName(text)}
-            >
-              {lastName}
-            </TextInput>
-          </View>
-        </View>
-        <View style={{ width: '100%', alignItems: 'center', position: 'absolute', bottom: 60 }}>
-          <TouchableOpacity
-            style={{ width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 10, borderWidth: 1, borderColor: '#DBDBDB', backgroundColor: '#FAFAFA' }}
-            onPress={checkAdminMembers}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      enabled={true}
+      behavior={"padding"}
+    >
+      <TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
+        <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
+          <View
+            style={{
+              marginTop: 32,
+              height: 100,
+              width: "100%",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
           >
-            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}>{'Next'}</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={{ marginLeft: 16 }}
+              onPress={() => {
+                navigation.goBack();
+              }}
+            >
+              <Octicons name="chevron-left" color={"#262626"} size={42} />
+            </TouchableOpacity>
+          </View>
+          <View style={{ flex: 1, alignItems: "center", marginTop: 180 }}>
+            <View
+              style={{
+                width: "100%",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "Poppins_600SemiBold",
+                  fontSize: 20,
+                  color: "#262626",
+                  marginBottom: 20,
+                }}
+              >
+                Name
+              </Text>
+              <View
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  borderWidth: 1,
+                  borderRadius: 10,
+                  borderColor: "#DBDBDB",
+                  width: "90%",
+                  height: 50,
+                  paddingLeft: 20,
+                  justifyContent: "center",
+                }}
+              >
+                <TextInput
+                  autoCapitalize="words"
+                  autoCorrect={false}
+                  style={{
+                    fontFamily: "Poppins_600SemiBold",
+                    fontSize: 16,
+                    color: "#262626",
+                  }}
+                  placeholder={"First Name"}
+                  onChangeText={(text) => setFirstName(text)}
+                  onEndEditing={(e) => {
+                    checkFieldBlank(e.nativeEvent.text, "firstname");
+                  }}
+                >
+                  {firstName}
+                </TextInput>
+
+              </View>
+              {(isFNameBlank) ? <Text style={{ width: '90%', paddingTop: 4, paddingLeft: 10, fontFamily: 'Poppins_500Medium', color: '#E35B56' }}>First Name is required</Text>  : null
+            
+          }
+              <View
+                style={{
+                  width: "90%",
+                  height: 1,
+                  marginTop: 10,
+                  marginBottom: 10,
+                  backgroundColor: "#DBDBDB",
+                }}
+              />
+              <View
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  borderWidth: 1,
+                  borderRadius: 10,
+                  borderColor: "#DBDBDB",
+                  width: "90%",
+                  height: 50,
+                  paddingLeft: 20,
+                  justifyContent: "center",
+                }}
+              >
+                <TextInput
+                  autoCapitalize="words"
+                  autoCorrect={false}
+                  style={{
+                    fontFamily: "Poppins_600SemiBold",
+                    fontSize: 16,
+                    color: "#262626",
+                  }}
+                  placeholder={"Last Name"}
+                  onChangeText={(text) => setLastName(text)}
+                  onEndEditing={(e) => {
+                    checkFieldBlank(e.nativeEvent.text, "lastname");
+                  }}
+                >
+                  {lastName}
+                </TextInput>
+              </View>
+              {(isLNameBlank) ? <Text style={{ width: '90%', paddingTop: 4, paddingLeft: 10, fontFamily: 'Poppins_500Medium', color: '#E35B56' }}>Last Name is Required</Text> : null
+            
+          }
+            </View>
+            <View
+              style={{
+                width: "100%",
+                alignItems: "center",
+                position: "absolute",
+                bottom: 60,
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  width: "90%",
+                  height: 50,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor: "#DBDBDB",
+                  backgroundColor: "#FAFAFA",
+                }}
+                onPress={checkAdminMembers}
+              >
+                <Text
+                  style={{
+                    fontFamily: "Poppins_600SemiBold",
+                    fontSize: 16,
+                    color: "#262626",
+                  }}
+                >
+                  {"Next"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-      </View>
-    </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 const styles = StyleSheet.create({

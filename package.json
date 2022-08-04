@@ -38,6 +38,7 @@
     "react-native": "0.68.2",
     "react-native-anchor-carousel": "^4.0.1",
     "react-native-confirmation-code-field": "^7.3.0",
+    "react-native-countdown-circle-timer": "^3.0.9",
     "react-native-date-picker": "^4.2.5",
     "react-native-dropdown-picker": "^5.4.2",
     "react-native-fs": "^2.20.0",
