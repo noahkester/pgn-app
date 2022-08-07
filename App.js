@@ -108,8 +108,7 @@ function App() {
 
       db.collection("users")
         .doc(auth.currentUser.uid)
-        .get()
-        .then((doc) => {
+        .onSnapshot((doc) => {
           var data = doc.data();
           currentUser.current = data;
 
