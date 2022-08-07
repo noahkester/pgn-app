@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import {
   StyleSheet,
   TouchableOpacity,
@@ -14,6 +14,7 @@ import globalStyles from "../styles/Styles";
 import { db, auth } from "../utils/firebase";
 import Octicons from "react-native-vector-icons/Octicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import LoginContext from "../utils/LoginContext";
 import {
   unixEpochTimeToClock,
   unixEpochTimeToMonthDay,
@@ -24,11 +25,46 @@ import { TextInput } from "react-native-gesture-handler";
 
 function AttendanceCard(props) {
   const [isPressed, setPressed] = useState(false);
-  const [isEmailSent, setEmailSent] = useState(false);
+  const [isExcuseSent, setExcuseSent] = useState(false);
   const excuseMessage = useRef("");
-  //   Keyboard.addListener("keyboardWillHide", () => {
-  //     setPressed(false);
-  //   });
+
+  const loginContext = useContext(LoginContext);
+  const currentUser = loginContext.currentUser;
+
+  function submitExcuse(){
+    if (excuseMessage.current !== "") {
+
+      db.collection('points')
+      .add({
+        id: auth.currentUser.uid,
+        label: unixEpochTimeToMonthDay(props.data.meetingTime) + ' Attendance',
+        name: currentUser.firstname + ' ' + currentUser.lastname,
+        proof: excuseMessage.current,
+        status: 'waiting',
+        type: 'Excuse',
+        weight: 0,
+
+      }).then(() => {
+        setExcuseSent(true);
+        console.log("Excuse uploaded");
+      })
+      
+    } else {
+        <Text
+          style={{
+            flexDirection: "column",
+            width: "90%",
+              paddingTop: 4,
+              maxHeight: '100%',
+            paddingLeft: 10,
+            fontFamily: "Poppins_500Medium",
+            color: "black",
+          }}
+        >
+          This field cannot be left blank!
+        </Text>
+    }
+  }
 
   return (
     <View
@@ -53,9 +89,9 @@ function AttendanceCard(props) {
           }}
         >
           {"Wednesday " +
-            unixEpochTimeToMonthDay(props.time) +
+            unixEpochTimeToMonthDay(props.data.meetingTime) +
             ", " +
-            unixEpochTimeToClock(props.time) +
+            unixEpochTimeToClock(props.data.meetingTime) +
             " PM"}
         </Text>
         <Text
@@ -70,7 +106,7 @@ function AttendanceCard(props) {
         {props.found ? null : (
           <View style={{ flex: 1 }}>
             {isPressed ? (
-              !isEmailSent ? (
+              !isExcuseSent ? (
                 <View
                   style={{
                     flexDirection: "row",
@@ -81,28 +117,7 @@ function AttendanceCard(props) {
                   <TextInput
                     returnKeyType="send"
                     blurOnSubmit={true}
-                    onSubmitEditing={() => {
-                      if (excuseMessage.current !== "") {
-                        console.log(
-                          "Message is: " + excuseMessage.current + "d"
-                        );
-                        setEmailSent(true);
-                      } else {
-                          <Text
-                            style={{
-                              flexDirection: "column",
-                              width: "90%",
-                                paddingTop: 4,
-                                maxHeight: '100%',
-                              paddingLeft: 10,
-                              fontFamily: "Poppins_500Medium",
-                              color: "black",
-                            }}
-                          >
-                            This field cannot be left blank!
-                          </Text>
-                      }
-                    }}
+                    onSubmitEditing= {submitExcuse}
                     multiline={true}
                     autoFocus={true}
                     style={{
@@ -122,28 +137,7 @@ function AttendanceCard(props) {
                     }}
                   ></TextInput>
                   <TouchableOpacity
-                    onPress={() => {
-                      if (excuseMessage.current !== "") {
-                        console.log(
-                          "Message is: " + excuseMessage.current + "d"
-                        );
-                        setEmailSent(true);
-                      } else {
-                        console.log("here");
-                        <Text
-                          style={{
-                            flexDirection: "column",
-                            width: "90%",
-                            paddingTop: 4,
-                            paddingLeft: 10,
-                            fontFamily: "Poppins_500Medium",
-                            color: "#85C67E",
-                          }}
-                        >
-                          This field cannot be left blank!
-                        </Text>;
-                      }
-                    }}
+                    onPress= {submitExcuse}
                   >
                     <FontAwesome
                       name={"paper-plane"}
@@ -231,7 +225,7 @@ export function AttendancePage() {
           }
 
           tempMeetings.push(
-            <AttendanceCard found={found} time={data.meetingTime} />
+            <AttendanceCard found={found} data={data} />
           );
         });
         setMeetings(tempMeetings);
