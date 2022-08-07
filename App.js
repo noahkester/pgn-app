@@ -62,9 +62,9 @@ function App() {
 
   const currentUser = useRef({});
 
-  const professionalUrl = useRef('');
-  const socialUrl = useRef('');
-  const funnyUrl = useRef('');
+  const [professionalUrl, setProf] = useState('');
+  const [socialUrl, setSocial] = useState('');
+  const [funnyUrl, setFunny] = useState('');
 
   useEffect(() => {
     async function prepare() {
@@ -145,7 +145,7 @@ function App() {
             .ref(`/profile-pictures/${auth.currentUser.uid}_professional`)
             .getDownloadURL()
             .then((url) => {
-              professionalUrl.current = url;
+              setProf(url);
               // Only the professional url is required
             })
             .catch((e) => {
@@ -155,7 +155,7 @@ function App() {
             .ref(`/profile-pictures/${auth.currentUser.uid}_social`)
             .getDownloadURL()
             .then((url) => {
-              socialUrl.current = url;
+              setSocial(url);
             })
             .catch((e) =>
               console.log("(app.js) Errors while getting social picture ")
@@ -164,7 +164,7 @@ function App() {
             .ref(`/profile-pictures/${auth.currentUser.uid}_funny`)
             .getDownloadURL()
             .then((url) => {
-              funnyUrl.current = url;
+              setFunny(url);
             })
             .catch((e) =>
               console.log("(app.js) Errors while getting funny picture ")
@@ -292,9 +292,12 @@ function App() {
         <NavigationContainer>
           <UrlProvider
             value={{
-              'professionalUrl': professionalUrl.current,
-              'socialUrl': socialUrl.current,
-              'funnyUrl': funnyUrl.current,
+              'professionalUrl': professionalUrl,
+              'setProf': setProf,
+              'socialUrl': socialUrl,
+              'setSocial': setSocial,
+              'funnyUrl': funnyUrl,
+              'setFunny': setFunny,
             }}
           >
             <LoginProvider

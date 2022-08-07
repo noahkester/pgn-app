@@ -1,16 +1,18 @@
 import { StyleSheet, TouchableOpacity, Text, Image, View, Alert, } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { AccountTop } from "./Account";
 import * as ImagePicker from "expo-image-picker";
 import { store, auth } from "../utils/firebase";
 import Octicons from 'react-native-vector-icons/Octicons';
 import { useNavigation } from "@react-navigation/native";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import UrlContext from "../utils/UrlContext";
 import * as ImageManipulator from 'expo-image-manipulator';
 
 function ImageUpload(props) {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [image, setImage] = useState('');
+  const urlContext = useContext(UrlContext);
   useEffect(() => {
     async () => {
       const galleryStatus =
@@ -42,6 +44,13 @@ function ImageUpload(props) {
       uploadImage(resizedResult.uri, auth.currentUser.uid + "_" + props.type)
         .then(() => {
           Alert.alert("(AccountImageUpload) Success!");
+          if(props.type == "professional"){
+            urlContext.setProf(resizedResult.uri);
+          }else if(props.type == "social"){
+            urlContext.setSocial(resizedResult.uri);
+          }else if(props.type == "funny"){
+            urlContext.setFunny(resizedResult.uri);
+          }
         })
         .catch(() => {
           console.log("(AccountImageUpload) Error uploading image");
@@ -86,6 +95,7 @@ function ImageUploadCard(props) {
   );
 }
 export function AccountImageUploadPage() {
+
   const navigation = useNavigation();
   return (
     <View style={{ flex: 1, backgroundColor: '#FAFAFA' }}>
