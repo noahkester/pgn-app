@@ -7,7 +7,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import globalStyles from "../styles/Styles";
 import colors from '../styles/Colors'
-import { findRoleBorder, findRoleColor } from "../styles/Colors"
+import { findRoleColor } from "../styles/Colors"
 import ImageCarousel from "./components/ImageCarousel";
 
 import { auth, db } from "../utils/firebase";
@@ -72,7 +72,7 @@ function Role(props) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       {(props.role === '') ? null :
-        <View style={{ backgroundColor: findRoleColor(props.role), borderWidth: 3, borderColor: findRoleBorder(props.role), height: 30, paddingLeft: 20, paddingRight: 20, borderRadius: 100, justifyContent: 'center' }}>
+        <View style={{ backgroundColor: findRoleColor(props.role), height: 30, paddingLeft: 20, paddingRight: 20, borderRadius: 100, justifyContent: 'center' }}>
           <Text style={{ color: '#FFFFFF', fontFamily: 'Poppins_600SemiBold' }}>{props.role}</Text>
         </View>
       }

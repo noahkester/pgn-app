@@ -5,7 +5,7 @@ import * as Linking from 'expo-linking';
 import Octicons from 'react-native-vector-icons/Octicons';
 
 import globalStyles from "../styles/Styles";
-import { findRoleColor, findRoleBorder } from '../styles/Colors'
+import { findRoleColor } from '../styles/Colors'
 import ImageCarousel from "./components/ImageCarousel";
 import { store } from "../utils/firebase";
 
@@ -178,7 +178,7 @@ export function PersonPage({ route }) {
             />
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {(memberData.role !== '') ?
-                <View style={{ backgroundColor: findRoleColor(memberData.role), borderWidth: 3, borderColor: findRoleBorder(memberData.role), paddingTop: 6, paddingBottom: 6, paddingLeft: 20, paddingRight: 20, borderRadius: 100 }}>
+                <View style={{ backgroundColor: findRoleColor(memberData.role), paddingTop: 6, paddingBottom: 6, paddingLeft: 20, paddingRight: 20, borderRadius: 100 }}>
                   <Text style={{ color: '#FFFFFF', fontFamily: 'Poppins_600SemiBold' }}>{memberData.role}</Text>
                 </View>
                 :

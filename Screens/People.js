@@ -5,7 +5,7 @@ import { SearchBar } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { db, auth, store } from "../utils/firebase";
 import Checkbox from "expo-checkbox";
-import { findRoleColor, findRoleBorder } from '../styles/Colors';
+import { findRoleColor } from '../styles/Colors';
 
 var allSettled = require('promise.allsettled');
 
@@ -53,7 +53,7 @@ function People(props) {
                 {props.data.firstname + " " + props.data.lastname}
               </Text>
             </View>
-            <View style={{ alignItems: 'baseline', backgroundColor: findRoleColor(props.data.role), borderRadius: 100, borderWidth: 2, borderColor: findRoleBorder(props.data.role), paddingLeft: 12, paddingRight: 12, height: 20, justifyContent: 'center' }}>
+            <View style={{ alignItems: 'baseline', backgroundColor: findRoleColor(props.data.role), borderRadius: 100, paddingLeft: 12, paddingRight: 12, height: 20, justifyContent: 'center' }}>
               <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 10, color: '#FFFFFF' }}>
                 {props.data.role}
               </Text>

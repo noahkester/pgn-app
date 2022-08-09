@@ -1,38 +1,38 @@
 import ucolors from "./UniversityColors"
 
-export const findRoleColor = (role) => {
-    switch (role) {
-        case 'Chapter President':
-            return '#F3AB44';
-        case 'VP of Communications':
-            return '#3C86F7';
-        case 'VP of Finance':
-            return '#6FC975';
-        case 'VP of External Relations':
-            return '#5FCAC5';
-        case 'VP of Internal Relations':
-            return '#A89173';
-        case 'VP of Membership':
-            return '#ED695E';
-    }
-    return '#FFFFFF'
+// should be stored in firebase like this....
+roles = {
+    // Exec first
+    ChapterPresident: '#F3AB44',
+    VPofCommunications: '#3C86F7',
+    VPofFinance: '#6FC975',
+    VPofExternalRelations: '#5FCAC5',
+    VPofInternalRelations: '#A89173',
+    VPofMembership: '#ED695E',
+
+    //Other roles
+    AcademicChair: 'red',
+    AlumniChair: 'red',
+    AssistantVPofCommunications: 'red',
+    AssistantVPofMembership: 'red',
+    DEIChair: 'red',
+    EntrepreneurshipChair: 'red',
+    MentorshipChair: 'red',
+    RecruitmentChair: 'red',
+    PhilanthropyChair: 'red',
+    PRChair: 'red',
+    ProfessionalismChair: 'red',
+    SocialChair: 'red',
+    IntramuralChair: 'red',
+
 }
-export const findRoleBorder = (role) => {
-    switch (role) {
-        case 'Chapter President':
-            return '#DDA048';
-        case 'VP of Communications':
-            return '#3778DC';
-        case 'VP of Finance':
-            return '#65B66A';
-        case 'VP of External Relations':
-            return '#59BAB5';
-        case 'VP of Internal Relations':
-            return '#978266';
-        case 'VP of Membership':
-            return '#D45E54';
+
+export const findRoleColor = (role) => {
+    var roleKey = role.split(' ').join('');
+    if (!(roleKey in roles)) {
+        return '#FFFFFF';
     }
-    return '#FFFFFF'
+    return roles[roleKey];
 }
 export default colors = {
     white: "#FFFFFF",
