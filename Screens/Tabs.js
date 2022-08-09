@@ -2,7 +2,7 @@ import { Text, Image, View, TouchableOpacity } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import FoundationIcon from 'react-native-vector-icons/Foundation';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from "@react-navigation/native";
 import { useContext } from "react";
@@ -11,6 +11,7 @@ import { HomePage } from "./Home";
 import { EventsPage } from "./Events";
 import { PeoplePage } from "./People";
 import { ChatPage } from './Chat';
+import { AttendancePage } from './Attendance';
 
 import LoginContext from "../utils/LoginContext";
 import UrlContext from "../utils/UrlContext";
@@ -128,7 +129,7 @@ export function NavigationPage() {
             tabBarLabel: "People",
             tabBarIcon: ({ color }) => {
               return (
-                <MaterialCommunityIcons
+                <MaterialIcons
                   name="people-alt"
                   color={color}
                   size={40}
@@ -139,15 +140,21 @@ export function NavigationPage() {
         />
         <Tab.Screen
           name="Chat"
-          component={ChatPage}
+          component={AttendancePage}
           options={{
             tabBarLabel: "Chat",
             tabBarIcon: ({ color }) => {
               return (
-                <MaterialIcons
+                /*<MaterialIcons
                   name='leaderboard'
                   color={color}
                   size={36}
+                />*/
+                <MaterialCommunityIcons
+                  name="clock-check"
+                  color={color}
+                  size={36}
+                  style={{}}
                 />
               );
             }

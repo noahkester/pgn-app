@@ -15,6 +15,7 @@ import { db, auth } from "../utils/firebase";
 import Octicons from "react-native-vector-icons/Octicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import LoginContext from "../utils/LoginContext";
+import IonIcons from "react-native-vector-icons/Ionicons";
 import {
   unixEpochTimeToClock,
   unixEpochTimeToMonthDay,
@@ -22,6 +23,7 @@ import {
   addHours,
 } from "../utils/time";
 import { TextInput } from "react-native-gesture-handler";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 function AttendanceCard(props) {
   const [isPressed, setPressed] = useState(false);
@@ -31,38 +33,38 @@ function AttendanceCard(props) {
   const loginContext = useContext(LoginContext);
   const currentUser = loginContext.currentUser;
 
-  function submitExcuse(){
+  function submitExcuse() {
     if (excuseMessage.current !== "") {
 
       db.collection('points')
-      .add({
-        id: auth.currentUser.uid,
-        label: unixEpochTimeToMonthDay(props.data.meetingTime) + ' Attendance',
-        name: currentUser.firstname + ' ' + currentUser.lastname,
-        proof: excuseMessage.current,
-        status: 'waiting',
-        type: 'Excuse',
-        weight: 0,
+        .add({
+          id: auth.currentUser.uid,
+          label: unixEpochTimeToMonthDay(props.data.meetingTime) + ' Attendance',
+          name: currentUser.firstname + ' ' + currentUser.lastname,
+          proof: excuseMessage.current,
+          status: 'waiting',
+          type: 'Excuse',
+          weight: 0,
 
-      }).then(() => {
-        setExcuseSent(true);
-        console.log("Excuse uploaded");
-      })
-      
+        }).then(() => {
+          setExcuseSent(true);
+          console.log("Excuse uploaded");
+        })
+
     } else {
-        <Text
-          style={{
-            flexDirection: "column",
-            width: "90%",
-              paddingTop: 4,
-              maxHeight: '100%',
-            paddingLeft: 10,
-            fontFamily: "Poppins_500Medium",
-            color: "black",
-          }}
-        >
-          This field cannot be left blank!
-        </Text>
+      <Text
+        style={{
+          flexDirection: "column",
+          width: "90%",
+          paddingTop: 4,
+          maxHeight: '100%',
+          paddingLeft: 10,
+          fontFamily: "Poppins_500Medium",
+          color: "black",
+        }}
+      >
+        This field cannot be left blank!
+      </Text>
     }
   }
 
@@ -70,7 +72,6 @@ function AttendanceCard(props) {
     <View
       style={{
         width: "90%",
-        height: props.found ? 60 : isPressed ? 140 : 110,
         borderRadius: 10,
         marginBottom: 10,
         borderWidth: 1,
@@ -80,7 +81,12 @@ function AttendanceCard(props) {
         justifyContent: "space-between",
       }}
     >
-      <View style={{ marginLeft: 16 }}>
+      <View style={{
+        width: '74%',
+        paddingLeft: 16,
+        paddingTop: 20,
+        paddingBottom: 30,
+      }}>
         <Text
           style={{
             fontFamily: "Poppins_600SemiBold",
@@ -104,20 +110,22 @@ function AttendanceCard(props) {
           {"213 University Dr. LittleField Fountain"}
         </Text>
         {props.found ? null : (
-          <View style={{ flex: 1 }}>
+          <View style={{ width: '100%' }}>
             {isPressed ? (
               !isExcuseSent ? (
                 <View
                   style={{
                     flexDirection: "row",
-                    top: "10%",
-                    justifyContent: "space-evenly",
+                    top: 20,
+                    justifyContent: "space-between",
+                    alignItems: 'center',
+                    width: '100%',
                   }}
                 >
                   <TextInput
                     returnKeyType="send"
                     blurOnSubmit={true}
-                    onSubmitEditing= {submitExcuse}
+                    onSubmitEditing={submitExcuse}
                     multiline={true}
                     autoFocus={true}
                     style={{
@@ -125,9 +133,9 @@ function AttendanceCard(props) {
                       borderWidth: 1,
                       borderColor: "#DBDBDB",
                       borderRadius: 10,
-                      width: "70%",
-                      maxHeight: 50,
-                      maxWidth: "70%",
+                      width: "80%",
+                      maxHeight: 100,
+                      padding: 10,
                       fontFamily: "Poppins_600SemiBold",
                       fontSize: 16,
                       color: "black",
@@ -137,11 +145,11 @@ function AttendanceCard(props) {
                     }}
                   ></TextInput>
                   <TouchableOpacity
-                    onPress= {submitExcuse}
+                    onPress={submitExcuse}
                   >
                     <FontAwesome
                       name={"paper-plane"}
-                      size={40}
+                      size={24}
                       color={"#9C9C9C"}
                       resizeMode="contain"
                     />
@@ -194,7 +202,7 @@ function AttendanceCard(props) {
 
       <View
         style={{
-          width: 60,
+          width: '16%',
           height: "100%",
           backgroundColor: props.found ? "#85C67E" : "#E35B56",
           borderTopRightRadius: 10,
@@ -235,7 +243,7 @@ export function AttendancePage() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
-        <View
+        {/*<View
           style={{
             marginTop: 32,
             height: 100,
@@ -276,8 +284,25 @@ export function AttendancePage() {
               navigation.navigate("AddEvent");
             }}
           ></TouchableOpacity>
+          </View>*/}
+        <ScrollView style={{ borderWidth: 0 }}>
+          <View style={{ marginTop: 16, alignItems: "center" }}>{meetings}</View>
+        </ScrollView>
+        <View style={{ position: 'absolute', bottom: 12, right: 24, borderRadius: 30, backgroundColor: '#FFFFFF' }}>
+          <TouchableOpacity
+            style={[{ width: 50, height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 34, backgroundColor: colors.universityColor + '40' }]}
+            onPress={() => {
+              navigation.navigate("SubmitAttendance");
+            }}
+          >
+            <IonIcons
+              name="md-barcode"
+              color={colors.universityColor}
+              size={40}
+              style={{ marginLeft: 3 }}
+            />
+          </TouchableOpacity>
         </View>
-        <View style={{ alignItems: "center" }}>{meetings}</View>
       </View>
     </TouchableWithoutFeedback>
   );
