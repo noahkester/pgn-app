@@ -14,7 +14,7 @@ const wait = (timeout) => {
 function AccountTop() {
   const navigation = useNavigation();
   return (
-    <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+    <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#FFFFFF', borderBottomWidth: 1, borderColor: '#D8D8D8' }}>
       <View style={{ width: 68 }}></View>
       <Text style={{ textAlign: 'center', fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626' }}>All Events</Text>
       <TouchableOpacity
@@ -53,7 +53,7 @@ export function AdminEventsPage() {
     });
   }, []);
   return (
-    <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+    <View style={{ flex: 1, backgroundColor: '#FAFAFA' }}>
       <AccountTop />
       <ScrollView
         style={[globalStyles.scroll, {}]}

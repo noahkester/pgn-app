@@ -4,7 +4,7 @@ export const findRoleColor = (role) => {
     switch (role) {
         case 'Chapter President':
             return '#F3AB44';
-        case 'VP of Communication':
+        case 'VP of Communications':
             return '#3C86F7';
         case 'VP of Finance':
             return '#6FC975';
@@ -21,7 +21,7 @@ export const findRoleBorder = (role) => {
     switch (role) {
         case 'Chapter President':
             return '#DDA048';
-        case 'VP of Communication':
+        case 'VP of Communications':
             return '#3778DC';
         case 'VP of Finance':
             return '#65B66A';

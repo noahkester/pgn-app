@@ -11,6 +11,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import globalStyles from "../../styles/Styles";
 import LoginContext from '../../utils/LoginContext';
 import { auth, db, store } from '../../utils/firebase';
+import colors from "../../styles/Colors";
 
 function SignOutButton(props) {
     const navigation = useNavigation();
@@ -33,19 +34,15 @@ function SignOutButton(props) {
             }}
             title={"Signout"}
             style={[
-                globalStyles.universityColorFill,
                 {
                     position: 'absolute',
                     bottom: 10,
-
-                    borderRadius: 30,
+                    backgroundColor: colors.universityColor,
+                    borderRadius: 10,
                     width: "90%",
                     alignItems: "center",
                     justifyContent: "center",
-                    paddingTop: 15,
-                    paddingBottom: 15,
-                    borderWidth: 6,
-                    borderColor: '#E9C9B2',
+                    height: 50,
                 },
             ]}
         >
@@ -203,23 +200,23 @@ export function AdminSettingsPage() {
                 <View style={{ width: 68 }}></View>
                 <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626' }}>Settings</Text>
                 <TouchableOpacity
-                    style={[{ width: 68, height: 68, borderWidth: 8, borderColor: '#F2DDCE', alignItems: 'center', justifyContent: 'center', borderRadius: 34, marginRight: 16 }, globalStyles.universityColorFill]}
+                    style={{ width: 50, height: 50, backgroundColor: colors.universityColor + '40', alignItems: 'center', justifyContent: 'center', borderRadius: 34, marginRight: 16 }}
                     onPress={() => {
                         setIsLocked(!isLocked);
                     }}
                 >
                     <FontAwesome
                         name={isLocked ? 'lock' : 'unlock'}
-                        color={'#FFFFFF'}
+                        color={colors.universityColor}
                         size={32}
                         style={{}}
                     />
                 </TouchableOpacity>
             </View>
-            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 18, marginLeft: 10, width: '85%' }}>Semester reset commands</Text>
-            <View style={{ flexDirection: 'column', width: '85%' }}>
+            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 18, marginLeft: 10, width: '90%' }}>Semester reset commands</Text>
+            <View style={{ flexDirection: 'column', width: '100%' }}>
                 <TouchableOpacity
-                    style={{ flexDirection: 'row', alignItems: 'center', borderWidth: 1, padding: 12, borderColor: '#DBDBDB', borderRadius: 10, justifyContent: 'space-between' }}
+                    style={{ paddingLeft: '5%', paddingRight: '5%', flexDirection: 'row', alignItems: 'center', borderWidth: 1, padding: 12, borderColor: '#DBDBDB', justifyContent: 'space-between' }}
                     onPress={() => {
                         if (!isLocked) {
                             setAllToActive();
@@ -243,7 +240,7 @@ export function AdminSettingsPage() {
                     />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center', borderWidth: 1, padding: 12, borderColor: '#DBDBDB', borderRadius: 10, justifyContent: 'space-between' }}
+                    style={{ paddingLeft: '5%', paddingRight: '5%', flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, padding: 12, borderColor: '#DBDBDB', justifyContent: 'space-between' }}
                     onPress={() => {
                         if (!isLocked) {
                             deleteAllPoints();
@@ -267,7 +264,7 @@ export function AdminSettingsPage() {
                     />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center', borderWidth: 1, padding: 12, borderColor: '#DBDBDB', borderRadius: 10, justifyContent: 'space-between' }}
+                    style={{ paddingLeft: '5%', paddingRight: '5%', flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, padding: 12, borderColor: '#DBDBDB', justifyContent: 'space-between' }}
                     onPress={() => {
                         if (!isLocked) {
                             deleteAllEvents();
@@ -291,10 +288,10 @@ export function AdminSettingsPage() {
                     />
                 </TouchableOpacity>
             </View>
-            <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
-            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 18, marginLeft: 10, width: '85%' }}>Edit users</Text>
+
+            <Text style={{ marginTop: 20, fontFamily: 'Poppins_600SemiBold', fontSize: 18, marginLeft: 10, width: '90%' }}>Edit users</Text>
             <TextInput
-                style={{ backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#DBDBDB', padding: 10, borderRadius: 10, width: '85%', fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#8E8E8E' }}
+                style={{ backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#DBDBDB', padding: 10, borderRadius: 10, width: '90%', fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#8E8E8E' }}
                 placeholder="Name"
                 onChangeText={(text) => {
                     setUserName(text);
@@ -309,7 +306,7 @@ export function AdminSettingsPage() {
             }
             {
                 (editMode) ? null :
-                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end', width: '85%' }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end', width: '90%' }}>
                         <TouchableOpacity
                             onPress={() => {
                                 setEditMode(!editMode);
@@ -351,7 +348,7 @@ export function AdminSettingsPage() {
             }
             {
                 (editMode) ?
-                    <View style={{ width: '85%', marginTop: 10 }}>
+                    <View style={{ width: '90%', marginTop: 10 }}>
                         <TextInput
                             style={{ backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#DBDBDB', padding: 10, borderRadius: 10, width: '100%', fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#8E8E8E' }}
                             placeholder="Pledge Class"

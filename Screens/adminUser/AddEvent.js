@@ -110,7 +110,7 @@ export function AddEventPage() {
             label: '',
             location: '',
             time: 0,
-            type: '',
+            type: 'Social',
             weight: 1,
             value: Math.floor(Math.random() * 1000000000)
         }
@@ -189,7 +189,7 @@ export function AddEventPage() {
                     autoCorrect={false}
                     style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}
                     placeholder={'Points'}
-                    onChangeText={(text) => { newEvent.current.weight = parseInt(text); }}
+                    onChangeText={(text) => { newEvent.current.weight = parseFloat(text); }}
                 >
                     {''}
                 </TextInput>

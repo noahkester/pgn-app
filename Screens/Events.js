@@ -97,12 +97,13 @@ export function EventsPage() {
 
   function UpcomingEvents() {
     const loginContext = useContext(LoginContext);
-    const allEvents = loginContext.allEvents;
 
     return (
       <ScrollView style={{ width: "100%" }}>
         <View style={{ alignItems: "center" }}>
-          <EventSection events={allEvents.current} />
+          <EventSection events={loginContext.todayEvents.current} />
+          <EventSection events={loginContext.tomorrowEvents.current} />
+          <EventSection events={loginContext.futureEvents.current} />
         </View>
       </ScrollView>
     );

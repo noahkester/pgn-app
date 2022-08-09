@@ -11,9 +11,15 @@ import IonIcons from 'react-native-vector-icons/Ionicons';
 
 export function SubmitAttendancePage() {
     const [value, setValue] = useState('');
+    const [error, setError] = useState('');
     const navigation = useNavigation();
 
     const submitAttendanceCode = () => {
+        setError('');
+        if (value === '') {
+            setError('Invalid code');
+            return;
+        }
         const docRef = db.collection("chapter-meetings").doc(value);
         docRef.get().then((doc) => {
             if (doc.exists) {
@@ -24,10 +30,10 @@ export function SubmitAttendancePage() {
                 }
                 else {
                 }
-                setValue('')
+                setError('Code has expired');
             }
             else {
-                setValue('')
+                setError('Code does not exist');
             }
         })
     }
@@ -51,6 +57,10 @@ export function SubmitAttendancePage() {
                 <Text style={{ marginTop: '50%', fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626' }}>Attendance Code</Text>
                 <View style={{ width: '80%' }}>
                     <BasicExample value={value} setValue={setValue} />
+                    {
+                        (error) ?
+                            <Text style={{ width: '90%', paddingTop: 4, paddingLeft: 10, fontFamily: 'Poppins_500Medium', color: '#E35B56' }}>{error}</Text> : null
+                    }
                 </View>
                 <TouchableOpacity
                     onPress={() => {

@@ -79,7 +79,7 @@ function PledgeClass(props) {
 
 function Activities(props) {
   var list = [];
-  //TODO BIG ERROR
+  //TODO BIG ERROR AKIN
   try {
     if (props.activities) {
       list = props.activities.map((activity, index) => {
