@@ -142,50 +142,46 @@ export function LoadingPage() {
           >
             Email Verification
           </Text>
-          <FontAwesome
-            name={"paper-plane"}
-            size={140}
-            color={"#9C9C9C"}
-            resizeMode="contain"
-          />
-          {message == "" ? null : (
-            <Text
-              style={{
-                paddingTop: 30,
-                fontFamily: "Poppins_500Medium",
-                color: "#5FB05F",
-              }}
-            >
-              {message}
-            </Text>
-          )}
+
         </View>
         <View
           style={{
             flex: 1,
             opacity: 1.0,
+            justifyContent: 'center',
             alignSelf: "center",
-            bottom: 150,
+            bottom: 190,
           }}
         >
           <CountdownCircleTimer
             isPlaying
-            duration={15}
-            colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
-            colorsTime={[13, 9, 5, 2]}
+            duration={30}
+            colors={["#E35B56", "#EFA039", "#A9E0A3", "#85C67E", "#85C67E"]}
+            colorsTime={[24, 17, 10, 3, 0]}
             onComplete={() => {
               setEmailSent(false);
             }}
           >
             {({ remainingTime }) => (
-              <View style={{ }}>
+              <View style={{flex: 1, top: '35%'}}>
                 <Text
-                  style={{ fontFamily: "Poppins_600SemiBold", fontSize: 30, flexDirection: 'column', alignSelf: 'center', }}
+                  style={{
+                    width: '100%',
+                    fontFamily: "Poppins_600SemiBold",
+                    fontSize: 30,
+                    flexDirection: "column",
+                    alignSelf: "center",
+                  }}
                 >
                   {remainingTime}
                 </Text>
                 <Text
-                  style={{ fontFamily: "Poppins_600SemiBold", fontSize: 20, top: 120, }}
+                  style={{
+                    width: '100%',
+                    fontFamily: "Poppins_600SemiBold",
+                    fontSize: 20,
+                    top: 120,
+                  }}
                 >
                   Resend email in {remainingTime}
                 </Text>
