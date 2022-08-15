@@ -30,11 +30,6 @@ export function EducationPage() {
     }
   };
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      enabled={true}
-      behavior={"padding"}
-    >
       <TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
         <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
           <View
@@ -200,6 +195,5 @@ export function EducationPage() {
           </View>
         </View>
       </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
   );
 }

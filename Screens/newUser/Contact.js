@@ -19,11 +19,6 @@ export function ContactPage() {
     navigation.navigate("ProfilePictures");
   };
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      enabled={false}
-      behavior={"padding"}
-    >
       <TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
         <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
           <View
@@ -180,6 +175,5 @@ export function ContactPage() {
           </View>
         </View>
       </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
   );
 }

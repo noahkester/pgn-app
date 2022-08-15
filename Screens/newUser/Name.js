@@ -456,11 +456,6 @@ export function NamePage() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      enabled={true}
-      behavior={"padding"}
-    >
       <TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
         <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
           <View
@@ -609,7 +604,6 @@ export function NamePage() {
           </View>
         </View>
       </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
   );
 }
 const styles = StyleSheet.create({
