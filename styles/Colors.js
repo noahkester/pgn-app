@@ -1,6 +1,5 @@
 import ucolors from "./UniversityColors"
-
-// should be stored in firebase like this....
+// stored in firebase but not being pulled on app load yet...
 roles = {
     // Exec first
     ChapterPresident: '#F3AB44',
