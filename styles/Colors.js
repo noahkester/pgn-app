@@ -1,7 +1,7 @@
 import ucolors from "./UniversityColors"
 // stored in firebase but not being pulled on app load yet...
 roles = {
-    // Exec first
+    // Exec first change
     ChapterPresident: '#F3AB44',
     VPofCommunications: '#3C86F7',
     VPofFinance: '#6FC975',
