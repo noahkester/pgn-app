@@ -41,6 +41,7 @@
     "react-native-countdown-circle-timer": "^3.0.9",
     "react-native-date-picker": "^4.2.5",
     "react-native-dropdown-picker": "^5.4.2",
+    "react-native-elements": "^3.0.0",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.4.2",
     "react-native-modal-datetime-picker": "^13.1.2",
