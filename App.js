@@ -332,7 +332,6 @@ function App() {
                   hometown: "",
                   activities: [],
                   bio: "",
-                  pledgeTask: "",
 
                   email: "",
                   linkedin: "",

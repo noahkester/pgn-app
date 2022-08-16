@@ -69,10 +69,6 @@ function PledgeClass(props) {
           {"Status: " + props.status}
         </Text>
       </View>
-      {(props.pledgeTask == '') ?
-        null :
-        <Text style={[globalStyles.smallSemiBoldText, { marginTop: 10, marginBottom: 10 }]}>{"Pledge task: " + props.pledgeTask}</Text>
-      }
     </View >
   );
 }
@@ -202,7 +198,7 @@ export function PersonPage({ route }) {
             </View>
             <Description description={memberData.bio} />
             <Activities activities={memberData.activities} />
-            <PledgeClass pledgeClass={memberData.pledgeClass} status={memberData.status} pledgeTask={memberData.pledgeTask} />
+            <PledgeClass pledgeClass={memberData.pledgeClass} status={memberData.status} />
             <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
             <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, marginLeft: 10, width: '85%' }}>Education</Text>
             <AccountInput value={memberData.major} />

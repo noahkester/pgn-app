@@ -102,10 +102,6 @@ function PledgeClass(props) {
           {"Status: " + props.status}
         </Text>
       </View>
-      {(props.pledgeTask == "") ?
-        null :
-        <Text style={[globalStyles.smallSemiBoldText, { marginTop: 10, marginBottom: 10 }]}>{"Pledge task: " + props.pledgeTask}</Text>
-      }
     </View >
   );
 }
@@ -237,7 +233,6 @@ export function AccountPage() {
       minor: minor,
 
       status: curUser.status,
-      pledgeTask: curUser.pledgeTask,
 
       hometown: hometown,
       activities: activities.split(','),
@@ -306,7 +301,7 @@ export function AccountPage() {
           <Role role={curUser.role} />
           <Description description={bio} setValue={setBio} />
 
-          <PledgeClass pledgeClass={curUser.pledgeClass} status={curUser.status} pledgeTask={curUser.pledgeTask} />
+          <PledgeClass pledgeClass={curUser.pledgeClass} status={curUser.status} />
 
           <View style={{ width: '90%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
 
