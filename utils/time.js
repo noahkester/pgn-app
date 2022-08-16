@@ -44,9 +44,13 @@ export function findTimeCategory(timestamp) {
     // convert from seconds to miliseconds (js Date library uses ms)
     timestamp *= 1000;
     var currentTime = Date.now();
-
+    // Ongoing event
     if (timestamp === 0) {
         return -1;
+    }
+    // Past Event
+    if (timestamp < currentTime) {
+        return -2;
     }
     var a = new Date(timestamp);
     var b = new Date(currentTime);
@@ -58,19 +62,6 @@ export function findTimeCategory(timestamp) {
     ) {
         return 0;
     }
-    // It is tomorrow
-    b = new Date();
-    b.setDate(b.getDate() + 1);
-    if (
-        a.getDate() == b.getDate() &&
-        a.getMonth() == b.getMonth() &&
-        a.getFullYear == b.getFullYear
-    ) {
-        return 1;
-    }
-    if (timestamp < currentTime) {
-        return -2;
-    }
     // Day off in the future
-    return 2;
+    return 1;
 }

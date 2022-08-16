@@ -101,22 +101,20 @@ export function EventsPage() {
     return (
       <ScrollView style={{ width: "100%" }}>
         <View style={{ alignItems: "center" }}>
-          <EventSection events={loginContext.todayEvents.current} />
-          <EventSection events={loginContext.tomorrowEvents.current} />
-          <EventSection events={loginContext.futureEvents.current} />
+          <EventSection events={loginContext.todayEvents} />
+          <EventSection events={loginContext.futureEvents} />
         </View>
       </ScrollView>
     );
   }
 
-  function ExtraEvents() {
+  function OngoingEvents() {
     const loginContext = useContext(LoginContext);
-    const extraEvents = loginContext.extraEvents;
 
     return (
       <ScrollView style={globalStyles.scroll}>
         <View style={globalStyles.scrollView}>
-          <EventSection today={false} time="Extra" events={extraEvents.current} />
+          <EventSection today={false} events={loginContext.ongoingEvents} />
         </View>
       </ScrollView>
     );
@@ -145,8 +143,8 @@ export function EventsPage() {
 
             tabBarIndicatorStyle: {
               backgroundColor: colors.universityColor,
-              left: 40,
-              width: "30.5%",
+              left: 20,
+              width: "23.5%",
               height: "60%",
               borderRadius: 30,
               marginBottom: 10,
@@ -160,12 +158,17 @@ export function EventsPage() {
             options={{ tabBarLabel: "Upcoming" }}
           />
           <Tab.Screen
-            name="Extra"
-            children={ExtraEvents}
-            options={{ tabBarLabel: "Extra" }}
+            name="Ongoing"
+            children={OngoingEvents}
+            options={{ tabBarLabel: "Ongoing" }}
+          />
+          <Tab.Screen
+            name="View All"
+            children={OngoingEvents}
+            options={{ tabBarLabel: "View All" }}
           />
         </Tab.Navigator>
-        
+
       </View>
     </View>
   );

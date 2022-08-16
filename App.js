@@ -49,11 +49,10 @@ var allSettled = require('promise.allsettled');
 
 function App() {
   // Persistant references used throughout the app
+  const pastEvents = useRef([]);
   const todayEvents = useRef([]);
-  const tomorrowEvents = useRef([]);
   const futureEvents = useRef([]);
-  const extraEvents = useRef([]);
-  const allEvents = useRef([]);
+  const ongoingEvents = useRef([]);
 
   // States used for rendering app and checking for user sign-in status
   const [appIsReady, setAppIsReady] = useState(false);
@@ -100,11 +99,10 @@ function App() {
       return;
     }
     if (!isAdmin.current) {
-      var temptodayEvents = [];
-      var temptomorrowEvents = [];
-      var tempfutureEvents = [];
-      var tempextraEvents = [];
-      var tempAllEvents = [];
+      var tempPastEvents = [];
+      var tempTodayEvents = [];
+      var tempFutureEvents = [];
+      var tempOngoingEvents = [];
 
       db.collection("users")
         .doc(auth.currentUser.uid)
@@ -117,28 +115,27 @@ function App() {
             .then((querySnapshot) => {
               querySnapshot.forEach((doc) => {
                 var data1 = doc.data();
-                tempAllEvents.push(data1);
                 var timeCategory = findTimeCategory(data1.time);
                 switch (timeCategory) {
+                  case -2:
+                    tempPastEvents.push(data1);
+                    break;
                   case -1:
-                    tempextraEvents.push(data1);
+                    tempOngoingEvents.push(data1);
                     break;
                   case 0:
-                    temptodayEvents.push(data1);
+                    tempTodayEvents.push(data1);
                     break;
                   case 1:
-                    temptomorrowEvents.push(data1);
-                    break;
-                  case 2:
-                    tempfutureEvents.push(data1);
+                    tempFutureEvents.push(data1);
                     break;
                 }
               });
-              todayEvents.current = temptodayEvents;
-              tomorrowEvents.current = temptomorrowEvents;
-              futureEvents.current = tempfutureEvents;
-              extraEvents.current = tempextraEvents;
-              allEvents.current = tempAllEvents;
+
+              pastEvents.current = tempPastEvents;
+              todayEvents.current = tempTodayEvents;
+              futureEvents.current = tempFutureEvents;
+              ongoingEvents.current = tempOngoingEvents;
             });
           var promises = [];
           const p1 = store
@@ -182,7 +179,7 @@ function App() {
       db.collection("events")
         .get()
         .then((querySnapshot) => {
-          var tempAllEvents = [];
+          var tempAllEvents = []; //TODO FIX
           querySnapshot.forEach((doc) => {
             var data = doc.data();
             tempAllEvents.push(data);
@@ -307,11 +304,10 @@ function App() {
                 'appIsReady': appIsReady,
                 'setAppIsReady': setAppIsReady,
                 'currentUser': currentUser.current,
-                'todayEvents': todayEvents,
-                'tomorrowEvents': tomorrowEvents,
-                'futureEvents': futureEvents,
-                'extraEvents': extraEvents,
-                'allEvents': allEvents,
+                'pastEvents': pastEvents.current,
+                'todayEvents': todayEvents.current,
+                'futureEvents': futureEvents.current,
+                'ongoingEvents': ongoingEvents.current,
                 'isAdmin': isAdmin
               }}
             >
