@@ -65,7 +65,7 @@ export function AdminEventsPage() {
           />
         }
       >
-        <EventSection time="All Events" events={loginContext.allEvents.current} />
+        <EventSection label = {'All Events and Points'} time="All Events" events={loginContext.allEvents} />
       </ScrollView>
     </View>
   );

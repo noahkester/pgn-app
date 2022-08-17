@@ -339,31 +339,7 @@ export function SubmitPage(props) {
             >
               <Octicons name="chevron-left" color={"#262626"} size={42} />
             </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                {
-                  width: 60,
-                  height: 60,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 36,
-                  marginRight: 10,
-                  backgroundColor: colors.universityColor + "40",
-                },
-              ]}
-              onPress={() => {
-                navigation.navigate("SubmitAttendance");
-              }}
-            >
-              <IonIcons
-                name="md-barcode"
-                color={colors.universityColor}
-                size={40}
-                style={{ marginLeft: 3 }}
-              />
-            </TouchableOpacity>
           </View>
-
           <SubmissionProvider
             value={{
               name: name,

@@ -54,7 +54,6 @@ export function Profile(props) {
           style={{ width: 80, height: 80, borderRadius: 40 }}
         />
       </TouchableOpacity>
-      <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, marginTop: 6, color: '#262626' }}>Hello {props.name}!</Text>
     </View>
   );
 }

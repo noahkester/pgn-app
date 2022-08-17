@@ -29,6 +29,7 @@ import { AttendancePage } from './Screens/Attendance';
 import { AdminSettingsPage } from './Screens/adminUser/AdminSettings';
 import { ViewPeoplePage } from "./Screens/adminUser/ViewPeople";
 import { AdminTabsPage } from './Screens/adminUser/AdminTabs';
+import { UnknownUserPage } from "./Screens/newUser/UnknownUser";
 import { WaitlistPage } from "./Screens/Waitlist";
 import { ColorThemePage } from './Screens/ColorTheme';
 import { SocialPostScreen } from './Screens/SocialPost';
@@ -42,17 +43,18 @@ import { findTimeCategory } from "./utils/time";
 import { LoginProvider } from './utils/LoginContext';
 import { UrlProvider } from './utils/UrlContext';
 import { NewUserProvider } from './utils/NewUserContext';
-import { UnknownUserPage } from "./Screens/newUser/UnknownUser";
+import { AdminProvider } from './utils/AdminContext';
 
 const Stack = createNativeStackNavigator();
 var allSettled = require('promise.allsettled');
 
 function App() {
   // Persistant references used throughout the app
+  const pastEvents = useRef([]);
   const todayEvents = useRef([]);
-  const tomorrowEvents = useRef([]);
   const futureEvents = useRef([]);
-  const extraEvents = useRef([]);
+  const ongoingEvents = useRef([]);
+
   const allEvents = useRef([]);
 
   // States used for rendering app and checking for user sign-in status
@@ -100,10 +102,11 @@ function App() {
       return;
     }
     if (!isAdmin.current) {
-      var temptodayEvents = [];
-      var temptomorrowEvents = [];
-      var tempfutureEvents = [];
-      var tempextraEvents = [];
+      var tempPastEvents = [];
+      var tempTodayEvents = [];
+      var tempFutureEvents = [];
+      var tempOngoingEvents = [];
+      //
       var tempAllEvents = [];
 
       db.collection("users")
@@ -120,25 +123,25 @@ function App() {
                 tempAllEvents.push(data1);
                 var timeCategory = findTimeCategory(data1.time);
                 switch (timeCategory) {
+                  case -2:
+                    tempPastEvents.push(data1);
+                    break;
                   case -1:
-                    tempextraEvents.push(data1);
+                    tempOngoingEvents.push(data1);
                     break;
                   case 0:
-                    temptodayEvents.push(data1);
+                    tempTodayEvents.push(data1);
                     break;
                   case 1:
-                    temptomorrowEvents.push(data1);
-                    break;
-                  case 2:
-                    tempfutureEvents.push(data1);
+                    tempFutureEvents.push(data1);
                     break;
                 }
               });
-              todayEvents.current = temptodayEvents;
-              tomorrowEvents.current = temptomorrowEvents;
-              futureEvents.current = tempfutureEvents;
-              extraEvents.current = tempextraEvents;
               allEvents.current = tempAllEvents;
+              pastEvents.current = tempPastEvents;
+              todayEvents.current = tempTodayEvents;
+              futureEvents.current = tempFutureEvents;
+              ongoingEvents.current = tempOngoingEvents;
             });
           var promises = [];
           const p1 = store
@@ -182,7 +185,7 @@ function App() {
       db.collection("events")
         .get()
         .then((querySnapshot) => {
-          var tempAllEvents = [];
+          var tempAllEvents = []; //TODO FIX
           querySnapshot.forEach((doc) => {
             var data = doc.data();
             tempAllEvents.push(data);
@@ -290,73 +293,80 @@ function App() {
         onLayout={onLayoutRootView}
       >
         <NavigationContainer>
-          <UrlProvider
+          <AdminProvider
             value={{
-              'professionalUrl': professionalUrl,
-              'setProf': setProf,
-              'socialUrl': socialUrl,
-              'setSocial': setSocial,
-              'funnyUrl': funnyUrl,
-              'setFunny': setFunny,
+
             }}
           >
-            <LoginProvider
+            <UrlProvider
               value={{
-                'isSignedIn': isSignedIn,
-                'setSignIn': setSignIn,
-                'appIsReady': appIsReady,
-                'setAppIsReady': setAppIsReady,
-                'currentUser': currentUser.current,
-                'todayEvents': todayEvents,
-                'tomorrowEvents': tomorrowEvents,
-                'futureEvents': futureEvents,
-                'extraEvents': extraEvents,
-                'allEvents': allEvents,
-                'isAdmin': isAdmin
+                'professionalUrl': professionalUrl,
+                'setProf': setProf,
+                'socialUrl': socialUrl,
+                'setSocial': setSocial,
+                'funnyUrl': funnyUrl,
+                'setFunny': setFunny,
               }}
             >
-              <NewUserProvider
+              <LoginProvider
                 value={{
-                  id: "",
-                  firstname: "",
-                  lastname: "",
-                  chapter: "University of Texas",
-                  pledgeClass: "",
-
-                  major: "",
-                  minor: "",
-
-                  status: "",
-                  role: "",
-
-                  hometown: "",
-                  activities: [],
-                  bio: "",
-                  pledgeTask: "",
-
-                  email: "",
-                  linkedin: "",
-                  phone: "",
-
-                  philanthropyPoints: 0,
-                  professionalPoints: 0,
-                  socialPoints: 0,
-                  activeInterviews: 0,
-                  submittedPoints: [],
+                  'isSignedIn': isSignedIn,
+                  'setSignIn': setSignIn,
+                  'appIsReady': appIsReady,
+                  'setAppIsReady': setAppIsReady,
+                  'currentUser': currentUser.current,
+                  'pastEvents': pastEvents.current,
+                  'todayEvents': todayEvents.current,
+                  'futureEvents': futureEvents.current,
+                  'ongoingEvents': ongoingEvents.current,
+                  'allEvents': allEvents.current,
+                  'isAdmin': isAdmin
                 }}
               >
-                <Stack.Navigator
-                  screenOptions={{
-                    headerShown: false,
+                <NewUserProvider
+                  value={{
+                    id: "",
+                    firstname: "",
+                    lastname: "",
+                    chapter: "University of Texas",
+                    pledgeClass: "",
+                    dues: false,
+                    attendance: 0,
 
-                    gestureEnabled: true,
+                    major: "",
+                    minor: "",
+
+                    status: "",
+                    role: "",
+
+                    hometown: "",
+                    activities: [],
+                    bio: "",
+
+                    email: "",
+                    linkedin: "",
+                    phone: "",
+
+                    philanthropyPoints: 0,
+                    professionalPoints: 0,
+                    socialPoints: 0,
+                    activeInterviews: 0,
+                    submittedPoints: [],
                   }}
                 >
-                  <Stack.Screen name="Router" component={LoadPage} />
-                </Stack.Navigator>
-              </NewUserProvider>
-            </LoginProvider>
-          </UrlProvider>
+                  <Stack.Navigator
+                    screenOptions={{
+                      headerShown: false,
+
+                      gestureEnabled: true,
+                    }}
+                  >
+                    <Stack.Screen name="Router" component={LoadPage} />
+                  </Stack.Navigator>
+                </NewUserProvider>
+              </LoginProvider>
+            </UrlProvider>
+          </AdminProvider>
         </NavigationContainer>
       </View>
     );

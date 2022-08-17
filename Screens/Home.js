@@ -51,29 +51,75 @@ function PointCard(props) {
   );
 }
 function SubRequirement(props) {
-  const color = props.complete ? '#D5D5D5' : '#5F6368';
+  const requirementMet = props.completed >= props.required;
+  const color = requirementMet ? '#D5D5D5' : '#5F6368';
+  var icon;
+  var completion;
+  switch (props.label) {
+    case 'Dues':
+      icon =
+        <FontAwesome5Icon
+          name={'money-bill-wave'}
+          size={20}
+          color={color}
+        />
+      break;
+    case 'Interviews':
+      icon = <IonIcons
+        name={'chatbubble-ellipses'}
+        size={20}
+        color={color}
+      />
+      break;
+    case 'Attendance':
+      icon =
+        <MaterialCommunityIcons
+          name={'clock-check'}
+          size={20}
+          color={color}
+        />
+      break;
+  }
+  switch (props.type) {
+    case 'Checkbox':
+      completion =
+        <View style={{ borderColor: color, width: 16, height: 16, borderWidth: 1, borderRadius: 4, justifyContent: 'center', alignItems: 'center' }}>
+          {
+            (requirementMet) ?
+              <FontAwesome5Icon
+                name={'check'}
+                size={10}
+                color={'#85C67E'}
+              /> : null
+          }
+        </View>
+      break;
+    case 'Fraction':
+      completion =
+        <View>
+          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 12, color: color }}>{props.completed + '/' + props.required}</Text>
+        </View>
+      break;
+    case 'Percentage':
+      completion =
+        <View>
+          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 12, color: color }}>{Math.round(props.completed / props.required * 100) + '%'}</Text>
+        </View>
+      break;
+  }
   return (
     <View style={{ width: '33%', padding: 6, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
-      {props.icon}
+      {icon}
       <View style={{ width: '100%', paddingLeft: 2, paddingRight: 2 }}>
         <Text style={{ textAlign: 'center', color: color, fontFamily: 'Poppins_600SemiBold', fontSize: 12 }}>{props.label}</Text>
       </View>
-      <View style={{ borderColor: color, width: 16, height: 16, borderWidth: 1, borderRadius: 4, justifyContent: 'center', alignItems: 'center' }}>
-        {
-          props.complete ?
-            <FontAwesome5Icon
-              name={'check'}
-              size={10}
-              color={'#85C67E'}
-            /> : null
-        }
-      </View>
+      {completion}
     </View>
   )
 }
 
 function PointDisplay(props) {
-
+  const loginContext = useContext(LoginContext);
   return (
 
     <View style={{ backgroundColor: '#FFFFFF', width: '90%', paddingBottom: 10, borderWidth: 1, borderColor: '#D8D8D8', borderRadius: 10, alignItems: 'center' }}>
@@ -103,36 +149,26 @@ function PointDisplay(props) {
       <View style={{ width: '90%', flexWrap: 'wrap', flexDirection: 'row' }}>
         <SubRequirement
           label={'Dues'}
-          complete={true}
-          icon={
-            <FontAwesome5Icon
-              name={'money-bill-wave'}
-              size={20}
-              color={true ? '#D5D5D5' : '#5F6368'}
-            />
-          }
+          type={'Checkbox'}
+          completed={loginContext.currentUser.dues ? 1 : 0} //TODO backend take out hardcoded values
+          required={1}
         />
-        <SubRequirement
-          label={'Interviews'}
-          complete={true}
-          icon={
-            <IonIcons
-              name={'chatbubble-ellipses'}
-              size={20}
-              color={true ? '#D5D5D5' : '#5F6368'}
+        {/*TODO Create a more dynamic way to render this besides active vs not (pull from firebase)*/}
+        {
+          /*props.isPledge*/true ?
+            <SubRequirement
+              label={'Interviews'}
+              type={'Fraction'}
+              completed={loginContext.currentUser.activeInterviews}
+              required={3}
             />
-          }
-        />
+            : null
+        }
         <SubRequirement
           label={'Attendance'}
-          complete={false}
-          icon={
-            <MaterialCommunityIcons
-              name={'clock-check'}
-              size={20}
-              color={false ? '#D5D5D5' : '#5F6368'}
-            />
-          }
+          type={'Percentage'}
+          completed={loginContext.currentUser.attendance}
+          required={30}
         />
 
       </View>
@@ -142,9 +178,11 @@ function PointDisplay(props) {
 }
 function HomePageHeader() {
   const navigation = useNavigation();
+  const loginContext = useContext(LoginContext);
+
   return (
     <View style={{ marginBottom: 10, width: '90%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-      <Text style={{ fontSize: 22, fontFamily: 'Poppins_600SemiBold', color: '#262626' }}>Hello, Name</Text>
+      <Text style={{ fontSize: 22, fontFamily: 'Poppins_600SemiBold', color: '#262626' }}>{"Hello, " + loginContext.currentUser.firstname}</Text>
       <TouchableOpacity
         style={{ width: 46, height: 46, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.universityColor + '50', borderRadius: 23 }}
         onPress={() => {

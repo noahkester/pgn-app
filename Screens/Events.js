@@ -32,7 +32,7 @@ function Event(props) {
 
   return (
     <View
-      style={{ backgroundColor: '#FFFFFF', borderWidth: 1, marginTop: 10, marginBottom: 10, width: '90%', borderColor: '#DBDBDB', borderRadius: 10 }}
+      style={{ backgroundColor: '#FFFFFF', borderWidth: 1, width: '90%', borderColor: '#DBDBDB', borderTopWidth: 0 }}
     >
       {(isToday) ?
         <View style={{ borderBottomWidth: 1, borderColor: '#DBDBDB', height: 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingLeft: 16, paddingRight: 16 }}>
@@ -81,15 +81,20 @@ export function EventSection(props) {
       type={event.type}
       weight={event.weight}
       location={event.location}
-      time={('time' in event) ? event.time : 0}
+      time={('time' in event) ? event.time : 0} //TODO Jank code
     />
   ));
   return (
-    <View style={{ width: '100%', alignItems: 'center', backgroundColor: '#FAFAFA' }}>
-      <View>
-        {eventsList}
+    (events.length > 0) ?
+      <View style={{ width: '100%', alignItems: 'center', backgroundColor: '#FAFAFA' }}>
+        <View style={{ width: '90%', borderWidth: 1, padding: 10, borderTopLeftRadius: 10, borderTopRightRadius: 10, borderColor: '#DBDBDB', backgroundColor: '#FFFFFF' }}>
+          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 18, color: '#262626' }}>{props.label}</Text>
+        </View>
+        <View>
+          {eventsList}
+        </View>
       </View>
-    </View>
+      : null
   );
 }
 
@@ -97,26 +102,25 @@ export function EventsPage() {
 
   function UpcomingEvents() {
     const loginContext = useContext(LoginContext);
-
+    // TODO conditionally render line
     return (
       <ScrollView style={{ width: "100%" }}>
         <View style={{ alignItems: "center" }}>
-          <EventSection events={loginContext.todayEvents.current} />
-          <EventSection events={loginContext.tomorrowEvents.current} />
-          <EventSection events={loginContext.futureEvents.current} />
+          <EventSection label={'Today'} events={loginContext.todayEvents} />
+          <View style={{ width: '90%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
+          <EventSection label={'Upcoming'} events={loginContext.futureEvents} />
         </View>
       </ScrollView>
     );
   }
 
-  function ExtraEvents() {
+  function OngoingEvents() {
     const loginContext = useContext(LoginContext);
-    const extraEvents = loginContext.extraEvents;
 
     return (
       <ScrollView style={globalStyles.scroll}>
         <View style={globalStyles.scrollView}>
-          <EventSection today={false} time="Extra" events={extraEvents.current} />
+          <EventSection label={'Ongoing'} today={false} events={loginContext.ongoingEvents} />
         </View>
       </ScrollView>
     );
@@ -145,8 +149,8 @@ export function EventsPage() {
 
             tabBarIndicatorStyle: {
               backgroundColor: colors.universityColor,
-              left: 40,
-              width: "30.5%",
+              left: 20,
+              width: "23.5%",
               height: "60%",
               borderRadius: 30,
               marginBottom: 10,
@@ -160,12 +164,17 @@ export function EventsPage() {
             options={{ tabBarLabel: "Upcoming" }}
           />
           <Tab.Screen
-            name="Extra"
-            children={ExtraEvents}
-            options={{ tabBarLabel: "Extra" }}
+            name="Ongoing"
+            children={OngoingEvents}
+            options={{ tabBarLabel: "Ongoing" }}
+          />
+          <Tab.Screen
+            name="View All"
+            children={OngoingEvents}
+            options={{ tabBarLabel: "View All" }}
           />
         </Tab.Navigator>
-        
+
       </View>
     </View>
   );
