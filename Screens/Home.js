@@ -51,7 +51,8 @@ function PointCard(props) {
   );
 }
 function SubRequirement(props) {
-  const color = props.complete ? '#D5D5D5' : '#5F6368';
+  const requirementMet = props.completed >= props.required;
+  const color = requirementMet ? '#D5D5D5' : '#5F6368';
   var icon;
   var completion;
   switch (props.label) {
@@ -84,7 +85,7 @@ function SubRequirement(props) {
       completion =
         <View style={{ borderColor: color, width: 16, height: 16, borderWidth: 1, borderRadius: 4, justifyContent: 'center', alignItems: 'center' }}>
           {
-            (props.completed >= props.required) ?
+            (requirementMet) ?
               <FontAwesome5Icon
                 name={'check'}
                 size={10}
@@ -118,7 +119,7 @@ function SubRequirement(props) {
 }
 
 function PointDisplay(props) {
-
+  const loginContext = useContext(LoginContext);
   return (
 
     <View style={{ backgroundColor: '#FFFFFF', width: '90%', paddingBottom: 10, borderWidth: 1, borderColor: '#D8D8D8', borderRadius: 10, alignItems: 'center' }}>
@@ -149,16 +150,16 @@ function PointDisplay(props) {
         <SubRequirement
           label={'Dues'}
           type={'Checkbox'}
-          completed={1} //TODO backend take out hardcoded values
+          completed={loginContext.currentUser.dues ? 1 : 0} //TODO backend take out hardcoded values
           required={1}
         />
         {/*TODO Create a more dynamic way to render this besides active vs not (pull from firebase)*/}
         {
-          props.isPledge ?
+          /*props.isPledge*/true ?
             <SubRequirement
               label={'Interviews'}
               type={'Fraction'}
-              completed={1}
+              completed={loginContext.currentUser.activeInterviews}
               required={3}
             />
             : null
@@ -166,7 +167,7 @@ function PointDisplay(props) {
         <SubRequirement
           label={'Attendance'}
           type={'Percentage'}
-          completed={7}
+          completed={loginContext.currentUser.attendance}
           required={30}
         />
 
@@ -177,9 +178,11 @@ function PointDisplay(props) {
 }
 function HomePageHeader() {
   const navigation = useNavigation();
+  const loginContext = useContext(LoginContext);
+
   return (
     <View style={{ marginBottom: 10, width: '90%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-      <Text style={{ fontSize: 22, fontFamily: 'Poppins_600SemiBold', color: '#262626' }}>Hello, Name</Text>
+      <Text style={{ fontSize: 22, fontFamily: 'Poppins_600SemiBold', color: '#262626' }}>{"Hello, " + loginContext.currentUser.firstname}</Text>
       <TouchableOpacity
         style={{ width: 46, height: 46, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.universityColor + '50', borderRadius: 23 }}
         onPress={() => {

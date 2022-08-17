@@ -29,6 +29,7 @@ import { AttendancePage } from './Screens/Attendance';
 import { AdminSettingsPage } from './Screens/adminUser/AdminSettings';
 import { ViewPeoplePage } from "./Screens/adminUser/ViewPeople";
 import { AdminTabsPage } from './Screens/adminUser/AdminTabs';
+import { UnknownUserPage } from "./Screens/newUser/UnknownUser";
 import { WaitlistPage } from "./Screens/Waitlist";
 import { ColorThemePage } from './Screens/ColorTheme';
 import { SocialPostScreen } from './Screens/SocialPost';
@@ -42,7 +43,7 @@ import { findTimeCategory } from "./utils/time";
 import { LoginProvider } from './utils/LoginContext';
 import { UrlProvider } from './utils/UrlContext';
 import { NewUserProvider } from './utils/NewUserContext';
-import { UnknownUserPage } from "./Screens/newUser/UnknownUser";
+import { AdminProvider } from './utils/AdminContext';
 
 const Stack = createNativeStackNavigator();
 var allSettled = require('promise.allsettled');
@@ -292,72 +293,80 @@ function App() {
         onLayout={onLayoutRootView}
       >
         <NavigationContainer>
-          <UrlProvider
+          <AdminProvider
             value={{
-              'professionalUrl': professionalUrl,
-              'setProf': setProf,
-              'socialUrl': socialUrl,
-              'setSocial': setSocial,
-              'funnyUrl': funnyUrl,
-              'setFunny': setFunny,
+
             }}
           >
-            <LoginProvider
+            <UrlProvider
               value={{
-                'isSignedIn': isSignedIn,
-                'setSignIn': setSignIn,
-                'appIsReady': appIsReady,
-                'setAppIsReady': setAppIsReady,
-                'currentUser': currentUser.current,
-                'pastEvents': pastEvents.current,
-                'todayEvents': todayEvents.current,
-                'futureEvents': futureEvents.current,
-                'ongoingEvents': ongoingEvents.current,
-                'allEvents': allEvents.current,
-                'isAdmin': isAdmin
+                'professionalUrl': professionalUrl,
+                'setProf': setProf,
+                'socialUrl': socialUrl,
+                'setSocial': setSocial,
+                'funnyUrl': funnyUrl,
+                'setFunny': setFunny,
               }}
             >
-              <NewUserProvider
+              <LoginProvider
                 value={{
-                  id: "",
-                  firstname: "",
-                  lastname: "",
-                  chapter: "University of Texas",
-                  pledgeClass: "",
-
-                  major: "",
-                  minor: "",
-
-                  status: "",
-                  role: "",
-
-                  hometown: "",
-                  activities: [],
-                  bio: "",
-
-                  email: "",
-                  linkedin: "",
-                  phone: "",
-
-                  philanthropyPoints: 0,
-                  professionalPoints: 0,
-                  socialPoints: 0,
-                  activeInterviews: 0,
-                  submittedPoints: [],
+                  'isSignedIn': isSignedIn,
+                  'setSignIn': setSignIn,
+                  'appIsReady': appIsReady,
+                  'setAppIsReady': setAppIsReady,
+                  'currentUser': currentUser.current,
+                  'pastEvents': pastEvents.current,
+                  'todayEvents': todayEvents.current,
+                  'futureEvents': futureEvents.current,
+                  'ongoingEvents': ongoingEvents.current,
+                  'allEvents': allEvents.current,
+                  'isAdmin': isAdmin
                 }}
               >
-                <Stack.Navigator
-                  screenOptions={{
-                    headerShown: false,
+                <NewUserProvider
+                  value={{
+                    id: "",
+                    firstname: "",
+                    lastname: "",
+                    chapter: "University of Texas",
+                    pledgeClass: "",
+                    dues: false,
+                    attendance: 0,
 
-                    gestureEnabled: true,
+                    major: "",
+                    minor: "",
+
+                    status: "",
+                    role: "",
+
+                    hometown: "",
+                    activities: [],
+                    bio: "",
+
+                    email: "",
+                    linkedin: "",
+                    phone: "",
+
+                    philanthropyPoints: 0,
+                    professionalPoints: 0,
+                    socialPoints: 0,
+                    activeInterviews: 0,
+                    submittedPoints: [],
                   }}
                 >
-                  <Stack.Screen name="Router" component={LoadPage} />
-                </Stack.Navigator>
-              </NewUserProvider>
-            </LoginProvider>
-          </UrlProvider>
+                  <Stack.Navigator
+                    screenOptions={{
+                      headerShown: false,
+
+                      gestureEnabled: true,
+                    }}
+                  >
+                    <Stack.Screen name="Router" component={LoadPage} />
+                  </Stack.Navigator>
+                </NewUserProvider>
+              </LoginProvider>
+            </UrlProvider>
+          </AdminProvider>
         </NavigationContainer>
       </View>
     );
