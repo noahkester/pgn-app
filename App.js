@@ -54,6 +54,8 @@ function App() {
   const futureEvents = useRef([]);
   const ongoingEvents = useRef([]);
 
+  const allEvents = useRef([]);
+
   // States used for rendering app and checking for user sign-in status
   const [appIsReady, setAppIsReady] = useState(false);
   const [isSignedIn, setSignIn] = useState(false);
@@ -103,6 +105,8 @@ function App() {
       var tempTodayEvents = [];
       var tempFutureEvents = [];
       var tempOngoingEvents = [];
+      //
+      var tempAllEvents = [];
 
       db.collection("users")
         .doc(auth.currentUser.uid)
@@ -115,6 +119,7 @@ function App() {
             .then((querySnapshot) => {
               querySnapshot.forEach((doc) => {
                 var data1 = doc.data();
+                tempAllEvents.push(data1);
                 var timeCategory = findTimeCategory(data1.time);
                 switch (timeCategory) {
                   case -2:
@@ -131,7 +136,7 @@ function App() {
                     break;
                 }
               });
-
+              allEvents.current = tempAllEvents;
               pastEvents.current = tempPastEvents;
               todayEvents.current = tempTodayEvents;
               futureEvents.current = tempFutureEvents;
@@ -308,6 +313,7 @@ function App() {
                 'todayEvents': todayEvents.current,
                 'futureEvents': futureEvents.current,
                 'ongoingEvents': ongoingEvents.current,
+                'allEvents': allEvents.current,
                 'isAdmin': isAdmin
               }}
             >
