@@ -136,23 +136,11 @@ function SaveButton(props) {
   );
 }
 export function SignOutButton(props) {
-  const navigation = useNavigation();
-
-  const loginContext = useContext(LoginContext);
-  const isAdmin = loginContext.isAdmin;
 
   return (
     <TouchableOpacity
       onPress={() => {
-        auth
-          .signOut()
-          .then(() => {
-            isAdmin.current = false;
-            loginContext.setSignIn(false);
-
-            navigation.navigate("Router", { screen: "LoginSignup" });
-          })
-          .catch((error) => console.log(error.message));
+        auth.signOut()
       }}
       title={"Signout"}
       style={[

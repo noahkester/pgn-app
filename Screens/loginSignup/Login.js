@@ -33,14 +33,6 @@ export function LoginPage() {
         if (user.emailVerified) {
           // User has verified their email, continue to home screen
           loginContext.setAppIsReady(false);
-          if (user.email === adminEmail) {
-            isAdmin.current = true;
-            setSignIn(true);
-          }
-          else {
-            isAdmin.current = false;
-            setSignIn(true);
-          }
           return;
         }
         else {
@@ -131,7 +123,7 @@ export function LoginPage() {
         </View>
         <View style={{ width: '100%', alignItems: 'center', position: 'absolute', bottom: 60 }}>
           <TouchableOpacity
-            style={{  width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 10, borderWidth: 1, borderColor: '#DBDBDB', backgroundColor: '#FFFFFF' }}
+            style={{ width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 10, borderWidth: 1, borderColor: '#DBDBDB', backgroundColor: '#FFFFFF' }}
             onPress={handleLogin}
           >
             <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}>{'Log in'}</Text>

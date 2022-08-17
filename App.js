@@ -6,13 +6,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
 
-// Screens and Page imports
-
-
-
-
 // Util imports
-import { auth, getCurrentUser, db, store, getEvents } from "./utils/firebase";
+import { auth, getCurrentUser, db, getAllProfilePictures, getEvents } from "./utils/firebase";
 
 // Context import
 import { LoginProvider } from './utils/LoginContext';
@@ -25,13 +20,11 @@ import AdminNavigator from "./Navigation/AdminNavigation";
 import NewUserNavigator from "./Navigation/NewUserNavigation";
 import UserNavigator from "./Navigation/UserNavigation";
 
-
-
 const Stack = createNativeStackNavigator();
-var allSettled = require('promise.allsettled');
 
 function App() {
-  // Persistant references used throughout the app
+  const [user, setUser] = useState();
+
   const [events, setEvents] = useState({
     todayEvents: [],
     upcomingEvents: [],
@@ -41,14 +34,25 @@ function App() {
 
   // States used for rendering app and checking for user sign-in status
   const [appIsReady, setAppIsReady] = useState(false);
-  const [isSignedIn, setSignIn] = useState(false);
-  const isAdmin = useRef(false);
 
   const currentUser = useRef({});
 
-  const [professionalUrl, setProf] = useState('');
-  const [socialUrl, setSocial] = useState('');
-  const [funnyUrl, setFunny] = useState('');
+  const [professionalUrl, setProfessionalUrl] = useState('');
+  const [socialUrl, setSocialUrl] = useState('');
+  const [funnyUrl, setFunnyUrl] = useState('');
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      console.log('auth hook called');
+      if (!user) {
+        console.log('no user');
+        setUser(user);
+        return;
+      }
+      console.log('User has been changed to ' + user.uid);
+      setUser(user);
+    })
+  }, [])
+
 
   useEffect(() => {
     async function prepare() {
@@ -59,105 +63,60 @@ function App() {
         console.warn(e);
       }
     }
-    async function wait() {
-      await getCurrentUser(auth)
-        .then((user) => {
-          if (user.emailVerified) {
-            if (user.email == "pgn.utexas.sudo@gmail.com") {
-              isAdmin.current = true;
-            }
-            setSignIn(true);
-          } else {
-            setAppIsReady(true);
-          }
-        })
-        .catch(() => {
-          setAppIsReady(true);
-        });
-    }
-    wait();
     prepare();
   }, []);
+  async function loadUserInfo() {
+    getEvents()
+      .then(returnedEvents => {
+        setEvents(returnedEvents);
+      })
+    db.collection("users")
+      .doc(auth.currentUser.uid)
+      .onSnapshot((doc) => {
+        var data = doc.data();
+        currentUser.current = data;
 
-  async function loadInfo() {
-    if (!isSignedIn) {
-      return;
-    }
-    if (!isAdmin.current) {
-      getEvents()
-        .then(returnedEvents => {
-          setEvents(returnedEvents);
-        })
-      db.collection("users")
-        .doc(auth.currentUser.uid)
-        .onSnapshot((doc) => {
-          var data = doc.data();
-          currentUser.current = data;
-
-          var promises = [];
-          const p1 = store
-            .ref(`/profile-pictures/${auth.currentUser.uid}_professional`)
-            .getDownloadURL()
-            .then((url) => {
-              setProf(url);
-              // Only the professional url is required
-            })
-            .catch((e) => {
-              console.log("(app.js) Errors while getting professional picture ")
-            });
-          const p2 = store
-            .ref(`/profile-pictures/${auth.currentUser.uid}_social`)
-            .getDownloadURL()
-            .then((url) => {
-              setSocial(url);
-            })
-            .catch((e) =>
-              console.log("(app.js) Errors while getting social picture ")
-            );
-          const p3 = store
-            .ref(`/profile-pictures/${auth.currentUser.uid}_funny`)
-            .getDownloadURL()
-            .then((url) => {
-              setFunny(url);
-            })
-            .catch((e) =>
-              console.log("(app.js) Errors while getting funny picture ")
-            );
-          promises.push(p1);
-          promises.push(p2);
-          promises.push(p3);
-          allSettled(promises).then(() => {
+        getAllProfilePictures(data.id)
+          .then((urls) => {
+            setProfessionalUrl(urls.professionalUrl);
+            setSocialUrl(urls.socialUrl);
+            setFunnyUrl(urls.funnyUrl);
             setAppIsReady(true);
           })
-        });
-
-    } else {
-      // For Admin users
-      // TODO set events here
-      setAppIsReady(true);
-    }
+      });
+  }
+  async function loadAdminInfo() {
+    setAppIsReady(true);
   }
 
   useEffect(() => {
-    loadInfo();
-  }, [isSignedIn]);
+    if (!user) {
+      // dont need to load any info
+      setAppIsReady(true);
+      return;
+    }
+    if (user.email === 'pgn.utexas.sudo@gmail.com') {
+      loadAdminInfo();
+      return;
+    }
+    loadUserInfo();
+  }, [user]);
 
-  function LoadPage() {
-    if (isSignedIn) {
-      if (isAdmin.current) {
-        return (
-          <AdminNavigator />
-        )
-      }
-      // Not Admin
+  function RootRouter() {
+    console.log('Root router called');
+    if (!user) {
       return (
-        <UserNavigator />
+        <NewUserNavigator />
+      );
+    }
+    if (user.email === 'pgn.utexas.sudo@gmail.com') {
+      return (
+        <AdminNavigator />
       )
     }
-    // User is not signed in
     return (
-      <NewUserNavigator />
-    );
+      <UserNavigator />
+    )
   }
 
   const onLayoutRootView = useCallback(async () => {
@@ -196,24 +155,20 @@ function App() {
             <UrlProvider
               value={{
                 professionalUrl: professionalUrl,
-                setProf: setProf,
+                setProf: setProfessionalUrl,
                 socialUrl: socialUrl,
-                setSocial: setSocial,
+                setSocial: setSocialUrl,
                 funnyUrl: funnyUrl,
-                setFunny: setFunny,
+                setFunny: setFunnyUrl,
               }}
             >
               <LoginProvider
                 value={{
-                  isSignedIn: isSignedIn,
-                  setSignIn: setSignIn,
                   appIsReady: appIsReady,
                   setAppIsReady: setAppIsReady,
                   currentUser: currentUser.current,
 
                   events: events,
-
-                  isAdmin: isAdmin
                 }}
               >
                 <NewUserProvider
@@ -254,7 +209,7 @@ function App() {
                       gestureEnabled: true,
                     }}
                   >
-                    <Stack.Screen name="Router" component={LoadPage} />
+                    <Stack.Screen name="Router" component={RootRouter} />
                   </Stack.Navigator>
                 </NewUserProvider>
               </LoginProvider>

@@ -17,6 +17,8 @@ const firebaseConfig = {
   measurementId: "G-QF2Y5SE4DN",
 };
 
+var allSettled = require('promise.allsettled');
+
 // Initialize firebase
 let app = (firebase.apps.length === 0) ? firebase.initializeApp(firebaseConfig) : firebase.app();
 
@@ -58,13 +60,62 @@ export function sendPasswordReset(email) {
 
 
 export async function getProfilePicture(name) {
+  console.log('name' + name)
   var ref = firebase.storage().ref("/profile-pictures/" + name);
   return new Promise((resolve, reject) => {
     ref.getDownloadURL((url) => {
+      console.log('here');
       resolve(url);
     }, reject);
   });
 }
+
+export async function getAllProfilePictures(uid) {
+  var promises = [];
+  var urls = {
+    professionalUrl: '',
+    socialUrl: '',
+    funnyUrl: ''
+  }
+  promises.push(
+    store
+      .ref(`/profile-pictures/${uid}_professional`)
+      .getDownloadURL()
+      .then((url) => {
+        urls.professionalUrl = url
+      })
+      .catch((e) => {
+        console.log("(firebase) Errors while getting professional picture ")
+      }))
+  promises.push(
+    store
+      .ref(`/profile-pictures/${uid}_funny`)
+      .getDownloadURL()
+      .then((url) => {
+        urls.socialUrl = url
+      })
+      .catch((e) => {
+        console.log("(firebase) Errors while getting social picture ")
+      }))
+  promises.push(
+    store
+      .ref(`/profile-pictures/${uid}_social`)
+      .getDownloadURL()
+      .then((url) => {
+        urls.funnyUrl = url
+      })
+      .catch((e) => {
+        console.log("(firebase) Errors while getting funny picture ")
+      }))
+  return new Promise((resolve, reject) => {
+    allSettled(promises)
+      .then(() => {
+        resolve(urls);
+      })
+  });
+}
+
+
 
 export async function getEvents() {
   var events = {
@@ -74,37 +125,34 @@ export async function getEvents() {
     allEvents: []
   }
   return new Promise((resolve, reject) => {
-  db.collection("events")
-    .get()
-    .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        var data = doc.data();
-        events.allEvents.push(data);
+    db.collection("events")
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          var data = doc.data();
+          events.allEvents.push(data);
 
-        var timeCategory = findTimeCategory(data.time);
-        switch (timeCategory) {
-          case -1:
-            events.ongoingEvents.push(data);
-            break;
-          case 0:
-            events.todayEvents.push(data);
-            break;
-          case 1:
-            events.upcomingEvents.push(data);
-            break;
-        }
-      });
-      resolve(events);
-    })
-    .catch(e => {
-      console.log('(firebase, getEvents) Error ' + e)
-      reject(events);
-    })
+          var timeCategory = findTimeCategory(data.time);
+          switch (timeCategory) {
+            case -1:
+              events.ongoingEvents.push(data);
+              break;
+            case 0:
+              events.todayEvents.push(data);
+              break;
+            case 1:
+              events.upcomingEvents.push(data);
+              break;
+          }
+        });
+        resolve(events);
+      })
+      .catch(e => {
+        console.log('(firebase, getEvents) Error ' + e)
+        reject(events);
+      })
   });
 }
-
-
-
 
 
 export { auth, db, store };
