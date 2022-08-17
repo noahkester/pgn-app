@@ -48,10 +48,6 @@ export function findTimeCategory(timestamp) {
     if (timestamp === 0) {
         return -1;
     }
-    // Past Event
-    if (timestamp < currentTime) {
-        return -2;
-    }
     var a = new Date(timestamp);
     var b = new Date(currentTime);
     // It is the current day

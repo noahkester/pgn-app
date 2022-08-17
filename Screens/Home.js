@@ -150,7 +150,7 @@ function PointDisplay(props) {
         <SubRequirement
           label={'Dues'}
           type={'Checkbox'}
-          completed={loginContext.currentUser.dues ? 1 : 0} //TODO backend take out hardcoded values
+          completed={loginContext.currentUser.dues ? 1 : 0}
           required={1}
         />
         {/*TODO Create a more dynamic way to render this besides active vs not (pull from firebase)*/}

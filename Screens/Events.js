@@ -102,13 +102,14 @@ export function EventsPage() {
 
   function UpcomingEvents() {
     const loginContext = useContext(LoginContext);
+    console.log(loginContext.events);
     // TODO conditionally render line
     return (
       <ScrollView style={{ width: "100%" }}>
         <View style={{ alignItems: "center" }}>
-          <EventSection label={'Today'} events={loginContext.todayEvents} />
+          <EventSection label={'Today'} events={loginContext.events.todayEvents} />
           <View style={{ width: '90%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
-          <EventSection label={'Upcoming'} events={loginContext.futureEvents} />
+          <EventSection label={'Upcoming'} events={loginContext.events.upcomingEvents} />
         </View>
       </ScrollView>
     );
@@ -120,7 +121,7 @@ export function EventsPage() {
     return (
       <ScrollView style={globalStyles.scroll}>
         <View style={globalStyles.scrollView}>
-          <EventSection label={'Ongoing'} today={false} events={loginContext.ongoingEvents} />
+          <EventSection label={'Ongoing'} today={false} events={loginContext.events.ongoingEvents} />
         </View>
       </ScrollView>
     );

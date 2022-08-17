@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import * as firebase from "firebase";
 import { Alert } from "react-native";
+import { findTimeCategory } from "./time";
 // TODO: Add SDKs for firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 import "firebase/firestore";
@@ -35,11 +36,11 @@ export function sendEmail(user) {
   user.sendEmailVerification().then(() => {
     console.log("(firebase) Email send to: " + user.email);
   })
-  .catch(() => {
-    Alert.alert('Could not send email', '', [
-      { text: 'OK' },
-    ]);
-  });
+    .catch(() => {
+      Alert.alert('Could not send email', '', [
+        { text: 'OK' },
+      ]);
+    });
 }
 export function sendPasswordReset(email) {
   auth.sendPasswordResetEmail(email)
@@ -64,5 +65,46 @@ export async function getProfilePicture(name) {
     }, reject);
   });
 }
+
+export async function getEvents() {
+  var events = {
+    todayEvents: [],
+    upcomingEvents: [],
+    ongoingEvents: [],
+    allEvents: []
+  }
+  return new Promise((resolve, reject) => {
+  db.collection("events")
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        var data = doc.data();
+        events.allEvents.push(data);
+
+        var timeCategory = findTimeCategory(data.time);
+        switch (timeCategory) {
+          case -1:
+            events.ongoingEvents.push(data);
+            break;
+          case 0:
+            events.todayEvents.push(data);
+            break;
+          case 1:
+            events.upcomingEvents.push(data);
+            break;
+        }
+      });
+      resolve(events);
+    })
+    .catch(e => {
+      console.log('(firebase, getEvents) Error ' + e)
+      reject(events);
+    })
+  });
+}
+
+
+
+
 
 export { auth, db, store };

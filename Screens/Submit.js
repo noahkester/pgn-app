@@ -42,33 +42,27 @@ function EventsDropDown() {
 
   useEffect(() => {
     console.log("(submit) rendered");
-    var tempItems = [];
+    var tempItems = loginContext.events.allEvents;
     var approvedOrWaiting = [];
-    db.collection("events")
+
+    db.collection("points")
+      .where("id", "==", loginContext.currentUser.id)
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          tempItems.push(doc.data());
+          const data = doc.data();
+          if (data.status == "waiting" || data.status == "accepted")
+            approvedOrWaiting.push(data.label);
         });
-        db.collection("points")
-          .where("id", "==", loginContext.currentUser.id)
-          .get()
-          .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-              const data = doc.data();
-              if (data.status == "waiting" || data.status == "accepted")
-                approvedOrWaiting.push(data.label);
-            });
-            tempItems = tempItems.filter((event) => {
-              for (let i = 0; i < approvedOrWaiting.length; i++) {
-                if (event.label === approvedOrWaiting[i]) {
-                  return false;
-                }
-              }
-              return true;
-            });
-            setItems(tempItems);
-          });
+        tempItems = tempItems.filter((event) => {
+          for (let i = 0; i < approvedOrWaiting.length; i++) {
+            if (event.label === approvedOrWaiting[i]) {
+              return false;
+            }
+          }
+          return true;
+        });
+        setItems(tempItems);
       });
   }, []);
 
@@ -286,7 +280,7 @@ export function SubmitPoints(props) {
                 );
             });
           navigation.navigate("Navigation");
-        }else{
+        } else {
           Alert.alert("Event + Photo or Proof is required!");
         }
       }}
