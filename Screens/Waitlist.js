@@ -33,9 +33,9 @@ const wait = (timeout) => {
 function WaitScreen() {
   const loginContext = useContext(LoginContext);
   const submissionContext = useContext(Submissions);
-  const curUser = loginContext.currentUser;
   const allEvents = submissionContext.allEvents;
   const [refreshing, setRefreshing] = useState(false);
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     wait(1000).then(() => {
@@ -45,7 +45,7 @@ function WaitScreen() {
         .then((doc) => {
           loginContext.currentUser = doc.data();
           db.collection("points")
-            .where("__name__", "in", curUser.submittedPoints)
+            .where("__name__", "in", loginContext.currentUser.submittedPoints)
             .get()
             .then((querySnapshot) => {
               var tempAllEvents = [];
@@ -68,26 +68,6 @@ function WaitScreen() {
   }, []);
 
 
-  // useEffect(() => {
-  //   db.collection("users")
-  //     .doc(auth.currentUser.uid)
-  //     .get()
-  //     .then((doc) => {
-  //       loginContext.currentUser = doc.data();
-  //       db.collection("points")
-  //         .where("__name__", "in", curUser.submittedPoints)
-  //         .get()
-  //         .then((querySnapshot) => {
-  //           var tempWaiting = [];
-  //           querySnapshot.forEach((doc) => {
-  //             const data = doc.data();
-  //             if (data.status == "waiting") tempWaiting.push(data);
-  //           });
-  //           setWaiting(tempWaiting);
-  //         });
-  //     });
-  // }, [refreshing]);
-
   return (
     <View style={{ width: "100%", height: "100%" }}>
       <ScrollView
@@ -106,7 +86,6 @@ function WaitScreen() {
 
 function AcceptedScreen() {
   const loginContext = useContext(LoginContext);
-  const curUser = loginContext.currentUser;
   // const [accepted, setAccepted] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const submissionContext = useContext(Submissions);
@@ -121,7 +100,7 @@ function AcceptedScreen() {
         .then((doc) => {
           loginContext.currentUser = doc.data();
           db.collection("points")
-            .where("__name__", "in", curUser.submittedPoints)
+            .where("__name__", "in", loginContext.currentUser.submittedPoints)
             .get()
             .then((querySnapshot) => {
               var tempAllEvents = [];
@@ -196,7 +175,7 @@ function DeclinedScreen() {
         .then((doc) => {
           loginContext.currentUser = doc.data();
           db.collection("points")
-            .where("__name__", "in", curUser.submittedPoints)
+            .where("__name__", "in", loginContext.currentUser.submittedPoints)
             .get()
             .then((querySnapshot) => {
               var tempAllEvents = [];
