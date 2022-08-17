@@ -97,7 +97,7 @@ function WaitScreen() {
         }
       >
         <View style={globalStyles.scrollView}>
-          <EventSection events={waiting} />
+          <EventSection label={'Waiting'} events={waiting} />
         </View>
       </ScrollView>
     </View>
@@ -163,7 +163,7 @@ function AcceptedScreen() {
   //     });
   // }, [refreshing]);
 
-  
+
   return (
     <View style={{ width: "100%", height: "100%" }}>
       <ScrollView
@@ -173,7 +173,7 @@ function AcceptedScreen() {
         }
       >
         <View style={globalStyles.scrollView}>
-          <EventSection events={accepted} />
+          <EventSection label={'Accepted'} events={accepted} />
         </View>
       </ScrollView>
     </View>
@@ -254,7 +254,7 @@ function DeclinedScreen() {
             height: "100%",
           }}
         >
-          <EventSection events={rejected} />
+          <EventSection label={'Rejected'} events={rejected} />
         </View>
       </ScrollView>
     </View>
