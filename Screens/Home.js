@@ -6,6 +6,7 @@ import IonIcons from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import colors from "../styles/Colors";
 import LoginContext from "../utils/LoginContext";
+import AdminContext from "../utils/AdminContext";
 
 export function SubmitPoints(props) {
   const navigation = useNavigation();
@@ -120,29 +121,60 @@ function SubRequirement(props) {
 
 function PointDisplay(props) {
   const loginContext = useContext(LoginContext);
-  return (
+  const adminContext = useContext(AdminContext);
 
+  const dues = loginContext.currentUser.dues;
+  const activeInterviews = loginContext.currentUser.activeInterviews;
+  const attendance = loginContext.currentUser.attendance;
+
+  const totalChapterMeetings = adminContext.points.totalChapterMeetings;
+  const adminActiveMeetings = adminContext.points.activeInterviews;
+
+  const philanthropyPoints = loginContext.currentUser.philanthropyPoints;
+  const professionalPoints = loginContext.currentUser.professionalPoints;
+  const socialPoints = loginContext.currentUser.socialPoints;
+
+  var totalPhilanthropyPoints = 0;
+  var totalSocialPoints = 0;
+  var totalProfessionalPoints = 0;
+
+  const status = loginContext.currentUser.status;
+
+  switch (status) {
+    case 'active':
+      totalPhilanthropyPoints = adminContext.points.activePhilanthropyPoints;
+      totalProfessionalPoints = adminContext.points.activeProfessionalPoints;
+      totalSocialPoints = adminContext.points.activeSocialPoints;
+      break;
+    case 'pledge':
+      totalPhilanthropyPoints = adminContext.points.pledgePhilanthropyPoints;
+      totalProfessionalPoints = adminContext.points.pledgeProfessionalPoints;
+      totalSocialPoints = adminContext.points.pledgeSocialPoints;
+      break;
+  }
+
+  return (
     <View style={{ backgroundColor: '#FFFFFF', width: '90%', paddingBottom: 10, borderWidth: 1, borderColor: '#D8D8D8', borderRadius: 10, alignItems: 'center' }}>
       <View style={{ alignItems: 'center', justifyContent: 'space-evenly', height: 300 }}>
         <PointCard
           name={'Philanthropy'}
           image={require('../images/philanthropy.png')}
-          points={props.philanthropyPoints}
-          totalPoints={props.totalPhilanthropyPoints}
+          points={philanthropyPoints}
+          totalPoints={totalPhilanthropyPoints}
           color={'#75070A'}
         />
         <PointCard
           name={'Professional'}
           image={require('../images/professional.png')}
-          points={props.professionalPoints}
-          totalPoints={props.totalProfessionalPoints}
+          points={professionalPoints}
+          totalPoints={totalProfessionalPoints}
           color={'#E35B56'}
         />
         <PointCard
           name={'Social'}
           image={require('../images/social.png')}
-          points={props.socialPoints}
-          totalPoints={props.totalSocialPoints}
+          points={socialPoints}
+          totalPoints={totalSocialPoints}
           color={'#EFA039'}
         />
       </View>
@@ -150,29 +182,27 @@ function PointDisplay(props) {
         <SubRequirement
           label={'Dues'}
           type={'Checkbox'}
-          completed={loginContext.currentUser.dues ? 1 : 0}
+          completed={dues ? 1 : 0}
           required={1}
         />
         {/*TODO Create a more dynamic way to render this besides active vs not (pull from firebase)*/}
         {
-          /*props.isPledge*/true ?
+          (status === 'pledge') ?
             <SubRequirement
               label={'Interviews'}
               type={'Fraction'}
-              completed={loginContext.currentUser.activeInterviews}
-              required={3}
+              completed={activeInterviews}
+              required={adminActiveMeetings}
             />
             : null
         }
         <SubRequirement
           label={'Attendance'}
           type={'Percentage'}
-          completed={loginContext.currentUser.attendance}
-          required={30}
+          completed={attendance}
+          required={totalChapterMeetings}
         />
-
       </View>
-
     </View>
   );
 }
@@ -201,39 +231,10 @@ function HomePageHeader() {
 export function HomePage() {
   const loginContext = useContext(LoginContext);
 
-  var totalPhilanthropyPoints = 0;
-  var totalSocialPoints = 0;
-  var totalProfessionalPoints = 0;
-
-  //TODO make dynamic from firebase pull
-  switch (loginContext.currentUser.status) {
-    case 'active':
-      totalPhilanthropyPoints = 3;
-      totalSocialPoints = 3;
-      totalProfessionalPoints = 3;
-      break;
-    case 'pledge':
-      totalPhilanthropyPoints = 6;
-      totalSocialPoints = 6;
-      totalProfessionalPoints = 6;
-      break;
-  }
-
   return (
     <View style={{ flex: 1, backgroundColor: '#FAFAFA', alignItems: "center", paddingTop: 30 }}>
       <HomePageHeader />
-      <PointDisplay
-        philanthropyPoints={loginContext.currentUser.philanthropyPoints}
-        socialPoints={loginContext.currentUser.socialPoints}
-        professionalPoints={loginContext.currentUser.professionalPoints}
-
-        totalPhilanthropyPoints={totalPhilanthropyPoints}
-        totalSocialPoints={totalSocialPoints}
-        totalProfessionalPoints={totalProfessionalPoints}
-
-        activeInterviews={loginContext.currentUser.activeInterviews}
-        isPledge={loginContext.currentUser.status === "pledge"}
-      />
+      <PointDisplay />
       <View style={{ position: 'absolute', width: '90%', flexDirection: 'row', alignItems: 'center', bottom: 10 }}>
         <SubmitPoints address="Submit" title="Submit" />
       </View>

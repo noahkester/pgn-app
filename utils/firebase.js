@@ -115,8 +115,6 @@ export async function getAllProfilePictures(uid) {
   });
 }
 
-
-
 export async function getEvents() {
   var events = {
     todayEvents: [],
@@ -154,5 +152,15 @@ export async function getEvents() {
   });
 }
 
+export function getAdminSettingsPoints() {
+  return new Promise((resolve, reject) => {
+    db.collection("admin-settings")
+      .doc("points")
+      .get()
+      .then((doc) => {
+        resolve(doc.data());
+      })
+  });
+}
 
 export { auth, db, store };

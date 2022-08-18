@@ -7,7 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
 
 // Util imports
-import { auth, getCurrentUser, db, getAllProfilePictures, getEvents } from "./utils/firebase";
+import { auth, getAdminSettingsPoints, db, getAllProfilePictures, getEvents } from "./utils/firebase";
 
 // Context import
 import { LoginProvider } from './utils/LoginContext';
@@ -32,23 +32,24 @@ function App() {
     allEvents: []
   });
 
+
   // States used for rendering app and checking for user sign-in status
   const [appIsReady, setAppIsReady] = useState(false);
 
   const currentUser = useRef({});
+
+  const adminPoints = useRef({});
+  const adminRoles = useRef({});
 
   const [professionalUrl, setProfessionalUrl] = useState('');
   const [socialUrl, setSocialUrl] = useState('');
   const [funnyUrl, setFunnyUrl] = useState('');
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
-      console.log('auth hook called');
       if (!user) {
-        console.log('no user');
         setUser(user);
         return;
       }
-      console.log('User has been changed to ' + user.uid);
       setUser(user);
     })
   }, [])
@@ -65,10 +66,15 @@ function App() {
     }
     prepare();
   }, []);
+
   async function loadUserInfo() {
     getEvents()
       .then(returnedEvents => {
         setEvents(returnedEvents);
+      })
+    getAdminSettingsPoints()
+      .then((points) => {
+        adminPoints.current = points;
       })
     db.collection("users")
       .doc(auth.currentUser.uid)
@@ -85,7 +91,16 @@ function App() {
           })
       });
   }
+
   async function loadAdminInfo() {
+    getEvents()
+      .then(returnedEvents => {
+        setEvents(returnedEvents);
+      })
+    getAdminSettingsPoints()
+      .then((points) => {
+        adminPoints.current = points;
+      })
     setAppIsReady(true);
   }
 
@@ -103,7 +118,6 @@ function App() {
   }, [user]);
 
   function RootRouter() {
-    console.log('Root router called');
     if (!user) {
       return (
         <NewUserNavigator />
@@ -149,7 +163,8 @@ function App() {
         <NavigationContainer>
           <AdminProvider
             value={{
-
+              points: adminPoints.current,
+              roles: adminRoles.current,
             }}
           >
             <UrlProvider

@@ -6,8 +6,6 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import LoginContext from "../../utils/LoginContext";
 import { auth, db, sendPasswordReset } from "../../utils/firebase";
 
-const adminEmail = 'pgn.utexas.sudo@gmail.com';
-
 export function LoginPage() {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -16,11 +14,7 @@ export function LoginPage() {
   const [passwordError, setPasswordError] = useState('');
 
   const navigation = useNavigation();
-
   const loginContext = useContext(LoginContext);
-  const setAppIsReady = loginContext.setAppIsReady;
-  const setSignIn = loginContext.setSignIn;
-  const isAdmin = loginContext.isAdmin;
 
   const handleLogin = () => {
     setEmailError('');
