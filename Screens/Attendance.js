@@ -41,6 +41,7 @@ function AttendanceCard(props) {
           id: auth.currentUser.uid,
           label: unixEpochTimeToMonthDay(props.data.meetingTime) + ' Attendance',
           name: currentUser.firstname + ' ' + currentUser.lastname,
+          location: props.data.location,
           proof: excuseMessage.current,
           status: 'waiting',
           type: 'Excuse',
@@ -107,7 +108,7 @@ function AttendanceCard(props) {
             color: "#8E8E8E",
           }}
         >
-          {"213 University Dr. LittleField Fountain"}
+          {props.data.location}
         </Text>
         {props.found ? null : (
           <View style={{ width: '100%' }}>
@@ -231,63 +232,29 @@ export function AttendancePage() {
               break;
             }
           }
-
-          tempMeetings.push(
-            <AttendanceCard found={found} data={data} />
-          );
+            tempMeetings.push({
+              found: found,
+              data: data,
+            })
+          // tempMeetings.push(
+          //   <AttendanceCard found={found} data={data} />
+          // );
         });
-        setMeetings(tempMeetings);
+        tempMeetings.sort((a, b) => b.data.meetingTime - a.data.meetingTime);
+        const meetingElems = tempMeetings.map((d)=>
+          {return <AttendanceCard found={d.found} data={d.data} />}
+        )
+        setMeetings(meetingElems);
       });
   }, []);
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
-        {/*<View
-          style={{
-            marginTop: 32,
-            height: 100,
-            width: "100%",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <TouchableOpacity
-            style={{ width: 68, alignItems: "center" }}
-            onPress={() => {
-              navigation.goBack();
-            }}
-          >
-            <Octicons name="chevron-left" color={"#262626"} size={42} />
-          </TouchableOpacity>
-          <Text
-            style={{
-              textAlign: "center",
-              fontFamily: "Poppins_600SemiBold",
-              fontSize: 20,
-              color: "#262626",
-            }}
-          >
-            {"Attendance"}
-          </Text>
-          <TouchableOpacity
-            style={{
-              width: 68,
-              height: 68,
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 34,
-              marginRight: 16,
-            }}
-            onPress={() => {
-              navigation.navigate("AddEvent");
-            }}
-          ></TouchableOpacity>
-          </View>*/}
-        <ScrollView style={{ borderWidth: 0 }}>
+        <ScrollView >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{ marginTop: 16, alignItems: "center" }}>{meetings}</View>
-        </ScrollView>
+          </TouchableWithoutFeedback>
+          </ScrollView>
         <View style={{ position: 'absolute', bottom: 12, right: 24, borderRadius: 30, backgroundColor: '#FFFFFF' }}>
           <TouchableOpacity
             style={[{ width: 50, height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 34, backgroundColor: colors.universityColor + '40' }]}
@@ -303,7 +270,8 @@ export function AttendancePage() {
             />
           </TouchableOpacity>
         </View>
+        
       </View>
-    </TouchableWithoutFeedback>
+      
   );
 }
