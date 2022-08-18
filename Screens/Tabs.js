@@ -15,8 +15,11 @@ import { AttendancePage } from './Attendance';
 
 import LoginContext from "../utils/LoginContext";
 import UrlContext from "../utils/UrlContext";
+import AdminContext from "../utils/AdminContext";
+
 import globalStyles from "../styles/Styles";
 import colors from "../styles/Colors";
+import { unixEpochTimeToMonthDay } from '../utils/time'
 
 export function TopBar(props) {
   const loginContext = useContext(LoginContext);
@@ -60,7 +63,7 @@ export function Profile(props) {
 
 export function NavigationPage() {
   const Tab = createBottomTabNavigator();
-
+  const adminContext = useContext(AdminContext);
   return (
     <View
       style={{
@@ -69,10 +72,10 @@ export function NavigationPage() {
       }}
     >
       <TopBar />
-      {(true) ? null :
-        <View style={{ height: 30, backgroundColor: '#E35B56', alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>Membership dues deadline 8/6</Text>
-        </View>
+      {(adminContext.points.activateDuesBanner) ?
+        <View style={{ position: 'absolute', top: 192, zIndex: 999, width: '100%', height: 30, backgroundColor: '#E35B56', alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{`Membership dues deadline: ${unixEpochTimeToMonthDay(adminContext.points.duesDeadline)}`}</Text>
+        </View> : null
       }
       <Tab.Navigator
         sceneContainerStyle={{

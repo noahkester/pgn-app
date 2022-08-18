@@ -41,13 +41,18 @@ export function unixEpochTimeToClock(timestamp) {
     return hours + ":" + mins;
 }
 export function findTimeCategory(timestamp) {
-    // convert from seconds to miliseconds (js Date library uses ms)
-    timestamp *= 1000;
-    var currentTime = Date.now();
-    // Ongoing event
     if (timestamp === 0) {
         return -1;
     }
+    // convert from seconds to miliseconds (js Date library uses ms)
+    timestamp *= 1000;
+    var currentTime = Date.now();
+
+    // past event
+    if (timestamp < currentTime) {
+        return -2;
+    }
+
     var a = new Date(timestamp);
     var b = new Date(currentTime);
     // It is the current day

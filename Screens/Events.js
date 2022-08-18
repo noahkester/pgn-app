@@ -73,7 +73,7 @@ function Event(props) {
 }
 export function EventSection(props) {
   const events = props.events;
-  events.sort((a, b) => a.time > b.time ? -1 : 1);
+  events.sort((a, b) => b.time - a.time);
   const eventsList = events.map((event) => (
     <Event
       key={event.label}
@@ -102,7 +102,6 @@ export function EventsPage() {
 
   function UpcomingEvents() {
     const loginContext = useContext(LoginContext);
-    console.log(loginContext.events);
     // TODO conditionally render line
     return (
       <ScrollView style={{ width: "100%" }}>
@@ -127,8 +126,18 @@ export function EventsPage() {
     );
   }
 
+  function AllEvents() {
+    const loginContext = useContext(LoginContext);
+    return (
+      <ScrollView style={globalStyles.scroll}>
+        <View style={globalStyles.scrollView}>
+          <EventSection label={'All Events'} today={false} events={loginContext.events.allEvents} />
+        </View>
+      </ScrollView>
+    );
+  }
+
   const Tab = createMaterialTopTabNavigator();
-  const navigation = useNavigation();
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "space-between", backgroundColor: '#FAFAFA' }}>
@@ -171,7 +180,7 @@ export function EventsPage() {
           />
           <Tab.Screen
             name="View All"
-            children={OngoingEvents}
+            children={AllEvents}
             options={{ tabBarLabel: "View All" }}
           />
         </Tab.Navigator>

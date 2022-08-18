@@ -3,14 +3,24 @@ import { StyleSheet, ScrollView, Button, TouchableOpacity, Text, Image, View, Te
 import { useNavigation } from "@react-navigation/native";
 import Octicons from 'react-native-vector-icons/Octicons';
 import { db } from "../../utils/firebase";
+import AdminContext from "../../utils/AdminContext";
 
 function PersonCard(props) {
+    const isPledge = props.isPledge;
     //TODO pull this
-    const totalPrp = 6;
-    const totalPp = 6;
-    const totalSp = 6;
-    const totalAi = 3;
-    const totalAttd = 8;
+    const adminContext = useContext(AdminContext);
+
+    console.log(adminContext.points)
+    const totalPrp = isPledge ? adminContext.points.pledgeProfessionalPoints : adminContext.points.activeProfessionalPoints;
+    const totalPp = isPledge ? adminContext.points.pledgePhilanthropyPoints : adminContext.points.activePhilanthropyPoints;
+    const totalSp = isPledge ? adminContext.points.pledgeSocialPoints : adminContext.points.activeSocialPoints;
+    const totalAi = isPledge ? adminContext.points.activeInterviews : 0;
+    const totalAttd = adminContext.points.totalChapterMeetings;
+
+    var duesColor = '#E35B56';
+    if (props.dues) {
+        duesColor = '#85C67E';
+    }
     var prpColor = '#E35B56'
     if (props.prp < totalPrp && props.prp > 0) {
         prpColor = '#EFA039';
@@ -55,19 +65,22 @@ function PersonCard(props) {
                     <Text style={{ marginLeft: 10, fontFamily: 'Poppins_600SemiBold', fontSize: 14 }}>{props.lastname}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', width: '60%' }}>
-                    <View style={{ width: '19%', height: '100%', borderWidth: 1, backgroundColor: prpColor, alignItems: 'center', justifyContent: 'center', borderColor: '#DBDBDB' }}>
+                    <View style={{ width: '15%', height: '100%', borderWidth: 1, backgroundColor: duesColor, alignItems: 'center', justifyContent: 'center', borderColor: '#DBDBDB' }}>
+                        <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{props.dues ? 'Y' : 'N'}</Text>
+                    </View>
+                    <View style={{ width: '15%', height: '100%', borderWidth: 1, backgroundColor: prpColor, alignItems: 'center', justifyContent: 'center', borderColor: '#DBDBDB' }}>
                         <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{props.prp}</Text>
                     </View>
-                    <View style={{ width: '19%', height: '100%', borderWidth: 1, backgroundColor: ppColor, alignItems: 'center', justifyContent: 'center', borderColor: '#DBDBDB' }}>
+                    <View style={{ width: '15%', height: '100%', borderWidth: 1, backgroundColor: ppColor, alignItems: 'center', justifyContent: 'center', borderColor: '#DBDBDB' }}>
                         <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{props.pp}</Text>
                     </View>
-                    <View style={{ width: '19%', height: '100%', borderWidth: 1, backgroundColor: spColor, alignItems: 'center', justifyContent: 'center', borderColor: '#DBDBDB' }}>
+                    <View style={{ width: '15%', height: '100%', borderWidth: 1, backgroundColor: spColor, alignItems: 'center', justifyContent: 'center', borderColor: '#DBDBDB' }}>
                         <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{props.sp}</Text>
                     </View>
-                    <View style={{ width: '19%', height: '100%', borderWidth: 1, backgroundColor: aiColor, alignItems: 'center', justifyContent: 'center', borderColor: '#DBDBDB' }}>
+                    <View style={{ width: '15%', height: '100%', borderWidth: 1, backgroundColor: aiColor, alignItems: 'center', justifyContent: 'center', borderColor: '#DBDBDB' }}>
                         <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{props.ai}</Text>
                     </View>
-                    <View style={{ width: '24%', height: '100%', borderWidth: 1, borderTopRightRadius: 10, borderBottomRightRadius: 10, backgroundColor: attdColor, alignItems: 'center', justifyContent: 'center', borderColor: '#DBDBDB' }}>
+                    <View style={{ width: '25%', height: '100%', borderWidth: 1, borderTopRightRadius: 10, borderBottomRightRadius: 10, backgroundColor: attdColor, alignItems: 'center', justifyContent: 'center', borderColor: '#DBDBDB' }}>
                         <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{(props.attd / totalAttd * 100) + '%'}</Text>
                     </View>
                 </View>
@@ -101,7 +114,9 @@ export function ViewPeoplePage() {
                 pp={d.philanthropyPoints}
                 sp={d.socialPoints}
                 ai={d.activeInterviews}
-                attd={3} //TODO add attendance number in database
+                attd={d.attendance} //TODO add attendance number in database
+                isPledge={d.status === 'pledge'}
+                dues={d.dues}
             />
         )
     })
@@ -114,11 +129,12 @@ export function ViewPeoplePage() {
                 <View style={{ width: '85%', height: 30, flexDirection: 'row' }}>
                     <View style={{ width: '40%' }}></View>
                     <View style={{ width: '60%', flexDirection: 'row' }}>
-                        <Text style={{ width: '19%', fontFamily: 'Poppins_600SemiBold', textAlign: 'center' }}>PRP</Text>
-                        <Text style={{ width: '19%', fontFamily: 'Poppins_600SemiBold', textAlign: 'center' }}>PP</Text>
-                        <Text style={{ width: '19%', fontFamily: 'Poppins_600SemiBold', textAlign: 'center' }}>SP</Text>
-                        <Text style={{ width: '19%', fontFamily: 'Poppins_600SemiBold', textAlign: 'center' }}>AI</Text>
-                        <Text style={{ width: '24%', fontFamily: 'Poppins_600SemiBold', textAlign: 'center' }}>Attd</Text>
+                        <Text style={{ width: '15%', fontFamily: 'Poppins_600SemiBold', textAlign: 'center' }}>$</Text>
+                        <Text style={{ width: '15%', fontFamily: 'Poppins_600SemiBold', textAlign: 'center' }}>PRP</Text>
+                        <Text style={{ width: '15%', fontFamily: 'Poppins_600SemiBold', textAlign: 'center' }}>PP</Text>
+                        <Text style={{ width: '15%', fontFamily: 'Poppins_600SemiBold', textAlign: 'center' }}>SP</Text>
+                        <Text style={{ width: '15%', fontFamily: 'Poppins_600SemiBold', textAlign: 'center' }}>AI</Text>
+                        <Text style={{ width: '25%', fontFamily: 'Poppins_600SemiBold', textAlign: 'center' }}>Attd</Text>
                     </View>
                 </View>
                 <ScrollView style={{ width: '100%' }}>

@@ -43,10 +43,10 @@ export function AdminEventsPage() {
       .then((querySnapshot) => {
         tempAllEvents = [];
         querySnapshot.forEach((doc) => {
-          var data1 = doc.data();
-          tempAllEvents.push(data1);
+          var data = doc.data();
+          tempAllEvents.push(data);
         })
-        loginContext.allEvents.current = tempAllEvents;
+        loginContext.events.allEvents = tempAllEvents;
       })
     wait(1000).then(() => {
       setRefreshing(false)
@@ -65,7 +65,7 @@ export function AdminEventsPage() {
           />
         }
       >
-        <EventSection label = {'All Events and Points'} time="All Events" events={loginContext.allEvents} />
+        <EventSection label={'All Events and Points'} time="All Events" events={loginContext.events.allEvents} />
       </ScrollView>
     </View>
   );

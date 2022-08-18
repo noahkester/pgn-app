@@ -93,15 +93,16 @@ function App() {
   }
 
   async function loadAdminInfo() {
-    getEvents()
-      .then(returnedEvents => {
-        setEvents(returnedEvents);
-      })
     getAdminSettingsPoints()
       .then((points) => {
+        getEvents()
+          .then(returnedEvents => {
+            setEvents(returnedEvents);
+          })
+        console.log(points);
         adminPoints.current = points;
+        setAppIsReady(true);
       })
-    setAppIsReady(true);
   }
 
   useEffect(() => {
