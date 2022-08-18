@@ -1,19 +1,31 @@
 // From React
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { View } from "react-native";
-import { useFonts, Poppins_600SemiBold, Poppins_700Bold, Poppins_400Regular, Poppins_500Medium } from "@expo-google-fonts/poppins";
+import {
+  useFonts,
+  Poppins_600SemiBold,
+  Poppins_700Bold,
+  Poppins_400Regular,
+  Poppins_500Medium,
+} from "@expo-google-fonts/poppins";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
 
 // Util imports
-import { auth, getAdminSettingsPoints, db, getAllProfilePictures, getEvents } from "./utils/firebase";
+import {
+  auth,
+  getAdminSettingsPoints,
+  db,
+  getAllProfilePictures,
+  getEvents,
+} from "./utils/firebase";
 
 // Context import
-import { LoginProvider } from './utils/LoginContext';
-import { UrlProvider } from './utils/UrlContext';
-import { NewUserProvider } from './utils/NewUserContext';
-import { AdminProvider } from './utils/AdminContext';
+import { LoginProvider } from "./utils/LoginContext";
+import { UrlProvider } from "./utils/UrlContext";
+import { NewUserProvider } from "./utils/NewUserContext";
+import { AdminProvider } from "./utils/AdminContext";
 
 // Nav imports
 import AdminNavigator from "./Navigation/AdminNavigation";
@@ -29,9 +41,8 @@ function App() {
     todayEvents: [],
     upcomingEvents: [],
     ongoingEvents: [],
-    allEvents: []
+    allEvents: [],
   });
-
 
   // States used for rendering app and checking for user sign-in status
   const [appIsReady, setAppIsReady] = useState(false);
@@ -41,19 +52,9 @@ function App() {
   const adminPoints = useRef({});
   const adminRoles = useRef({});
 
-  const [professionalUrl, setProfessionalUrl] = useState('');
-  const [socialUrl, setSocialUrl] = useState('');
-  const [funnyUrl, setFunnyUrl] = useState('');
-  useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (!user) {
-        setUser(user);
-        return;
-      }
-      setUser(user);
-    })
-  }, [])
-
+  const [professionalUrl, setProfessionalUrl] = useState("");
+  const [socialUrl, setSocialUrl] = useState("");
+  const [funnyUrl, setFunnyUrl] = useState("");
 
   useEffect(() => {
     async function prepare() {
@@ -65,77 +66,72 @@ function App() {
       }
     }
     prepare();
+    auth.onAuthStateChanged((user) => {
+      if (!user) {
+        setUser(user);
+        setAppIsReady(true);
+        return;
+      }
+      setUser(user);
+    });
   }, []);
 
   async function loadUserInfo() {
-    getEvents()
-      .then(returnedEvents => {
-        setEvents(returnedEvents);
-      })
-    getAdminSettingsPoints()
-      .then((points) => {
-        adminPoints.current = points;
-      })
+    getEvents().then((returnedEvents) => {
+      setEvents(returnedEvents);
+    });
+    getAdminSettingsPoints().then((points) => {
+      adminPoints.current = points;
+    });
     db.collection("users")
       .doc(auth.currentUser.uid)
       .onSnapshot((doc) => {
         if (!doc.exists) {
-          console.log('New user account not created')
+          console.log("New user account not created");
           return;
         }
         var data = doc.data();
         setCurrentUser(data);
-        console.log('here');
-        getAllProfilePictures(data.id)
-          .then((urls) => {
-            setProfessionalUrl(urls.professionalUrl);
-            setSocialUrl(urls.socialUrl);
-            setFunnyUrl(urls.funnyUrl);
-            setAppIsReady(true);
-          })
+        console.log("here");
+        getAllProfilePictures(data.id).then((urls) => {
+          setProfessionalUrl(urls.professionalUrl);
+          setSocialUrl(urls.socialUrl);
+          setFunnyUrl(urls.funnyUrl);
+          setAppIsReady(true);
+        });
       });
   }
 
   async function loadAdminInfo() {
-    getAdminSettingsPoints()
-      .then((points) => {
-        getEvents()
-          .then(returnedEvents => {
-            setEvents(returnedEvents);
-          })
-        console.log(points);
-        adminPoints.current = points;
-        setAppIsReady(true);
-      })
+    getAdminSettingsPoints().then((points) => {
+      getEvents().then((returnedEvents) => {
+        setEvents(returnedEvents);
+      });
+      console.log(points);
+      adminPoints.current = points;
+      setAppIsReady(true);
+    });
   }
 
   useEffect(() => {
-    if (!user) {
-      // dont need to load any info
-      setAppIsReady(true);
-      return;
+    if (user) {
+      if (user.email === "pgn.utexas.sudo@gmail.com") {
+        loadAdminInfo();
+        return;
+      }
+      loadUserInfo();
     }
-    if (user.email === 'pgn.utexas.sudo@gmail.com') {
-      loadAdminInfo();
-      return;
-    }
-    loadUserInfo();
   }, [user]);
 
   function RootRouter() {
-    if (!user || !user.emailVerified) { /*add code to check if user exists in users/ */
-      return (
-        <NewUserNavigator />
-      );
+    if (!user || !user.emailVerified) {
+      /*add code to check if user exists in users/ */
+      return <NewUserNavigator />;
     }
-    if (user.email === 'pgn.utexas.sudo@gmail.com') {
-      return (
-        <AdminNavigator />
-      )
+    if (user.email === "pgn.utexas.sudo@gmail.com") {
+      return <AdminNavigator />;
     }
-    return (
-      <UserNavigator />
-    )
+    return <UserNavigator />;
   }
 
   const onLayoutRootView = useCallback(async () => {
@@ -153,18 +149,14 @@ function App() {
     Poppins_700Bold,
     Poppins_600SemiBold,
     Poppins_500Medium,
-    Poppins_400Regular
+    Poppins_400Regular,
   });
 
   if (!appIsReady || !fontsLoaded) {
     return null;
-  }
-  else {
+  } else {
     return (
-      <View
-        style={{ flex: 1 }}
-        onLayout={onLayoutRootView}
-      >
+      <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
         <NavigationContainer>
           <AdminProvider
             value={{
