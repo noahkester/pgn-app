@@ -181,7 +181,8 @@ export function AccountPage() {
   const [minor, setMinor] = useState(curUser.minor);
 
   const [hometown, setHometown] = useState(curUser.hometown);
-  const [activities, setActivities] = useState(curUser.activities.toString());
+  const [activities, setActivities] = useState(curUser.activities.join(', '));
+
 
 
   const [phone, setPhone] = useState(curUser.phone);
@@ -197,7 +198,7 @@ export function AccountPage() {
       curUser.bio !== bio ||
       curUser.major !== major ||
       curUser.minor !== minor ||
-      curUser.activities.toString() !== activities ||
+      curUser.activities.join(', ') !== activities ||
       curUser.phone !== phone ||
       curUser.linkedin !== linkedin ||
       curUser.hometown !== hometown
@@ -207,53 +208,29 @@ export function AccountPage() {
     else {
       setChanged(false);
     }
-  }, [hometown, bio, major, minor, phone, linkedin]);
+  }, [hometown, bio, activities, major, minor, phone, linkedin]);
 
     
   const updateProfile = () => {
     const newInfo = {
-      // id: curUser.id,
-      // firstname: curUser.firstname,
-      // lastname: curUser.lastname,
-      // chapter: curUser.chapter,
-      // pledgeClass: curUser.pledgeClass,
 
       major: major,
       minor: minor,
 
-      // status: curUser.status,
-
       hometown: hometown,
-      activities: activities.split(','),
+      activities: activities.split(/\,\s|\,/ ),
       bio: bio,
       role: curUser.role,
 
-      // email: curUser.email,
       linkedin: linkedin,
       phone: phone,
 
-      // philanthropyPoints: curUser.philanthropyPoints,
-      // professionalPoints: curUser.professionalPoints,
-      // socialPoints: curUser.socialPoints,
-      // submittedPoints: curUser.submittedPoints,
     }
 
     db.collection("users")
       .doc(auth.currentUser.uid)
       .set(newInfo, {merge : true})
-      .then(() => {
-        // Update useContext for LoginContext
-        // loginContext.currentUser = 
-        // db.collection("users")
-        //   .doc(auth.currentUser.uid)
-        //   .get()
-        //   .then((doc) => {
-        //     loginContext.currentUser = doc.data();
-        //   });
-      })
-      .catch((error) => {
-        console.error("(Account) Error writing document: ", error);
-      });
+
   }
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "#FFFFFF", }}>
