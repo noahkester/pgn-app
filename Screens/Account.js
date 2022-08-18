@@ -175,6 +175,7 @@ export function AccountPage() {
 
   const loginContext = useContext(LoginContext);
   const curUser = loginContext.currentUser;
+  // const setCurrentUser = loginContext.setCurrentUser;
   const [bio, setBio] = useState(curUser.bio);
   const [major, setMajor] = useState(curUser.major);
   const [minor, setMinor] = useState(curUser.minor);
@@ -182,7 +183,7 @@ export function AccountPage() {
   const [hometown, setHometown] = useState(curUser.hometown);
   const [activities, setActivities] = useState(curUser.activities.toString());
 
-  const [email, setEmail] = useState(curUser.email);
+
   const [phone, setPhone] = useState(curUser.phone);
   const [linkedin, setLinkedin] = useState(curUser.linkedin);
 
@@ -197,7 +198,6 @@ export function AccountPage() {
       curUser.major !== major ||
       curUser.minor !== minor ||
       curUser.activities.toString() !== activities ||
-      curUser.email !== email ||
       curUser.phone !== phone ||
       curUser.linkedin !== linkedin ||
       curUser.hometown !== hometown
@@ -207,48 +207,49 @@ export function AccountPage() {
     else {
       setChanged(false);
     }
-  }, [hometown, bio, major, minor, email, phone, linkedin]);
+  }, [hometown, bio, major, minor, phone, linkedin]);
 
+    
   const updateProfile = () => {
     const newInfo = {
-      id: curUser.id,
-      firstname: curUser.firstname,
-      lastname: curUser.lastname,
-      chapter: curUser.chapter,
-      pledgeClass: curUser.pledgeClass,
+      // id: curUser.id,
+      // firstname: curUser.firstname,
+      // lastname: curUser.lastname,
+      // chapter: curUser.chapter,
+      // pledgeClass: curUser.pledgeClass,
 
       major: major,
       minor: minor,
 
-      status: curUser.status,
+      // status: curUser.status,
 
       hometown: hometown,
       activities: activities.split(','),
       bio: bio,
       role: curUser.role,
 
-      email: email,
+      // email: curUser.email,
       linkedin: linkedin,
       phone: phone,
 
-      philanthropyPoints: curUser.philanthropyPoints,
-      professionalPoints: curUser.professionalPoints,
-      socialPoints: curUser.socialPoints,
-      submittedPoints: curUser.submittedPoints,
+      // philanthropyPoints: curUser.philanthropyPoints,
+      // professionalPoints: curUser.professionalPoints,
+      // socialPoints: curUser.socialPoints,
+      // submittedPoints: curUser.submittedPoints,
     }
 
     db.collection("users")
       .doc(auth.currentUser.uid)
-      .set(newInfo)
+      .set(newInfo, {merge : true})
       .then(() => {
         // Update useContext for LoginContext
-        loginContext.currentUser = test
-        db.collection("users")
-          .doc(auth.currentUser.uid)
-          .get()
-          .then((doc) => {
-            loginContext.currentUser = doc.data();
-          });
+        // loginContext.currentUser = 
+        // db.collection("users")
+        //   .doc(auth.currentUser.uid)
+        //   .get()
+        //   .then((doc) => {
+        //     loginContext.currentUser = doc.data();
+        //   });
       })
       .catch((error) => {
         console.error("(Account) Error writing document: ", error);
@@ -304,7 +305,6 @@ export function AccountPage() {
           <View style={{ width: '90%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
 
           <AccountLabel label={'Contact'} />
-          <AccountInput placeholder="Email" value={email} setValue={setEmail} />
           <AccountInput placeholder="Phone" value={phone} setValue={setPhone} />
           <AccountInput placeholder="Linkedin URL" value={linkedin} setValue={setLinkedin} />
           {changed ?

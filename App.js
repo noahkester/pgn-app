@@ -36,7 +36,7 @@ function App() {
   // States used for rendering app and checking for user sign-in status
   const [appIsReady, setAppIsReady] = useState(false);
 
-  const currentUser = useRef({});
+  const [currentUser, setCurrentUser] = useState({});
 
   const adminPoints = useRef({});
   const adminRoles = useRef({});
@@ -84,7 +84,7 @@ function App() {
           return;
         }
         var data = doc.data();
-        currentUser.current = data;
+        setCurrentUser(data);
         console.log('here');
         getAllProfilePictures(data.id)
           .then((urls) => {
@@ -186,8 +186,8 @@ function App() {
                 value={{
                   appIsReady: appIsReady,
                   setAppIsReady: setAppIsReady,
-                  currentUser: currentUser.current,
-
+                  currentUser: currentUser,
+                  setCurrentUser: setCurrentUser,
                   events: events,
                 }}
               >
