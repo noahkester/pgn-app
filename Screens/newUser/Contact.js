@@ -8,7 +8,6 @@ import NewUserContext from "../../utils/NewUserContext";
 
 export function ContactPage() {
   const [linkedin, setLinkedin] = useState("");
-  const [isPhoneBlank, setPhoneBlank] = useState(false);
   const [phone, setPhone] = useState("");
   const navigation = useNavigation();
   const newUserContext = useContext(NewUserContext);
@@ -114,31 +113,11 @@ export function ContactPage() {
                   }}
                   placeholder={"Phone"}
                   onChangeText={(text) => setPhone(text)}
-                  onEndEditing={() => {
-                    if (phone == "") {
-                      setPhoneBlank(true);
-                    } else {
-                      setPhoneBlank(false);
-                    }
-                  }}
                 >
                   {phone}
                 </TextInput>
               </View>
 
-              {isPhoneBlank ? (
-                <Text
-                  style={{
-                    width: "90%",
-                    paddingTop: 4,
-                    paddingLeft: 10,
-                    fontFamily: "Poppins_500Medium",
-                    color: "#E35B56",
-                  }}
-                >
-                  Funny Quote is required
-                </Text>
-              ) : null}
             </View>
             <View
               style={{

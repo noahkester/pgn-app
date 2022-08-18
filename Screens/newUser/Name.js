@@ -588,7 +588,7 @@ export function NamePage() {
                   borderColor: "#DBDBDB",
                   backgroundColor: "#FAFAFA",
                 }}
-                onPress={checkAdminMembers}
+                onPress={ (!isLNameBlank && !isFNameBlank) ? checkAdminMembers : null}
               >
                 <Text
                   style={{
