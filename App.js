@@ -79,9 +79,13 @@ function App() {
     db.collection("users")
       .doc(auth.currentUser.uid)
       .onSnapshot((doc) => {
+        if (!doc.exists) {
+          console.log('New user account not created')
+          return;
+        }
         var data = doc.data();
         currentUser.current = data;
-
+        console.log('here');
         getAllProfilePictures(data.id)
           .then((urls) => {
             setProfessionalUrl(urls.professionalUrl);
@@ -119,7 +123,7 @@ function App() {
   }, [user]);
 
   function RootRouter() {
-    if (!user) {
+    if (!user || !user.emailVerified) { /*add code to check if user exists in users/ */
       return (
         <NewUserNavigator />
       );

@@ -64,6 +64,7 @@ export function Profile(props) {
 export function NavigationPage() {
   const Tab = createBottomTabNavigator();
   const adminContext = useContext(AdminContext);
+  const loginContext = useContext(LoginContext);
   return (
     <View
       style={{
@@ -72,7 +73,7 @@ export function NavigationPage() {
       }}
     >
       <TopBar />
-      {(adminContext.points.activateDuesBanner) ?
+      {(adminContext.points.activateDuesBanner && !loginContext.currentUser.dues) ?
         <View style={{ position: 'absolute', top: 192, zIndex: 999, width: '100%', height: 30, backgroundColor: '#E35B56', alignItems: 'center', justifyContent: 'center' }}>
           <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{`Membership dues deadline: ${unixEpochTimeToMonthDay(adminContext.points.duesDeadline)}`}</Text>
         </View> : null
