@@ -306,6 +306,7 @@ export function AdminSettingsPage() {
                 }}
                 defaultValue={""}
                 autoComplete={false}
+                autoCorrect = {false}
             >
                 {userName}
             </TextInput>
