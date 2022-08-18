@@ -7,6 +7,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 
 import globalStyles from "../../styles/Styles";
 import LoginContext from '../../utils/LoginContext';
@@ -122,6 +123,12 @@ export function AdminSettingsPage() {
                 })
             })
     }
+    const updateDues = () => {
+        setUserError('');
+        // TODO update dues
+    }
+
+
     const deleteUser = () => {
         setUserError('');
         console.log('deleted user');
@@ -144,6 +151,7 @@ export function AdminSettingsPage() {
             })
     }
     const updateUser = () => {
+        //completely change this code
         setUserError('');
         console.log('updating user');
         const docname = userName.replace(/\s/g, '').toLowerCase();
@@ -306,7 +314,19 @@ export function AdminSettingsPage() {
             }
             {
                 (editMode) ? null :
-                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end', width: '90%' }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', width: '90%' }}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                updateDues();
+                            }}
+                        >
+                            <FontAwesome5Icon
+                                name={'money-bill-wave'}
+                                color={'#262626'}
+                                size={24}
+                                style={{marginRight: 10}}
+                            />
+                        </TouchableOpacity>
                         <TouchableOpacity
                             onPress={() => {
                                 setEditMode(!editMode);
