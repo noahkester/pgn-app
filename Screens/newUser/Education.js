@@ -16,19 +16,20 @@ import Octicons from "react-native-vector-icons/Octicons";
 
 export function EducationPage() {
   const [major, setMajor] = useState("");
-  const [isMajorBlank, setisMajorBlank] = useState(false);
+  //const [isMajorBlank, setisMajorBlank] = useState(false);
   const [minor, setMinor] = useState("");
   const newUserContext = useContext(NewUserContext);
+  const [nextPressed, setNextPressed] = useState(false);
   const navigation = useNavigation();
   const updateEducation = () => {
-    if (major != "") {
+    setNextPressed(true);
+    if(major === ""){
+      return;
+    }
       newUserContext.major = major;
       newUserContext.minor = minor;
       navigation.navigate("About");
-    } else {
-      Alert.alert("Major is required");
-    }
-  };
+  }
   return (
       <TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
         <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
@@ -90,18 +91,18 @@ export function EducationPage() {
                   }}
                   placeholder={"Major"}
                   onChangeText={(text) => setMajor(text)}
-                  onEndEditing={() => {
-                    if (major == "") {
-                      setisMajorBlank(true);
-                    } else {
-                      setisMajorBlank(false);
-                    }
-                  }}
+                  // onEndEditing={() => {
+                  //   if (major == "") {
+                  //     setisMajorBlank(true);
+                  //   } else {
+                  //     setisMajorBlank(false);
+                  //   }
+                  // }}
                 >
                   {major}
                 </TextInput>
               </View>
-              {isMajorBlank ? (
+              {nextPressed && major === "" ? (
                 <Text
                   style={{
                     width: "90%",
@@ -179,7 +180,7 @@ export function EducationPage() {
                   borderColor: "#DBDBDB",
                   backgroundColor: "#FFFFFF",
                 }}
-                onPress={updateEducation}
+                onPress={() => {updateEducation();}}
               >
                 <Text
                   style={{
@@ -196,4 +197,4 @@ export function EducationPage() {
         </View>
       </TouchableWithoutFeedback>
   );
-}
+                }

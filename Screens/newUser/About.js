@@ -6,22 +6,24 @@ import Octicons from "react-native-vector-icons/Octicons";
 import NewUserContext from "../../utils/NewUserContext";
 
 export function AboutPage() {
-  const [isQuoteBlank, setQuoteBlank] = useState(false);
+ 
   const [hometown, setHometown] = useState("");
   const [activities, setActivities] = useState("");
+  const [nextPressed, setNextPressed] = useState(false);
   const [quote, setQuote] = useState("");
   const navigation = useNavigation();
   const newUserContext = useContext(NewUserContext);
 
   const updateAbout = () => {
-    if (!isQuoteBlank) {
+    setNextPressed(true);
+      if(quote === ""){
+        return;
+      }
       newUserContext.hometown = hometown;
       newUserContext.activities = activities.split(/\,\s|\,/);
       newUserContext.bio = quote;
       navigation.navigate("Contact");
-    } else {
-      Alert.alert("Quote is required!");
-    }
+
   };
   return (
 
@@ -83,20 +85,13 @@ export function AboutPage() {
                   fontSize: 16,
                   color: "#262626",
                 }}
-                onEndEditing={() => {
-                  if (quote == "") {
-                    setQuoteBlank(true);
-                  } else {
-                    setQuoteBlank(false);
-                  }
-                }}
                 placeholder={"Funny quote"}
                 onChangeText={(text) => setQuote(text)}
               >
                 {quote}
               </TextInput>
             </View>
-            {isQuoteBlank ? (
+            {nextPressed && quote === "" ? (
               <Text
                 style={{
                   width: "90%",
@@ -144,6 +139,19 @@ export function AboutPage() {
                 {hometown}
               </TextInput>
             </View>
+            {nextPressed && hometown === "" ? (
+              <Text
+                style={{
+                  width: "90%",
+                  paddingTop: 4,
+                  paddingLeft: 10,
+                  fontFamily: "Poppins_500Medium",
+                  color: "#E35B56",
+                }}
+              >
+                Hometown is required
+              </Text>
+            ) : null}
             <View
               style={{
                 width: "90%",
@@ -173,7 +181,7 @@ export function AboutPage() {
                   fontSize: 16,
                   color: "#262626",
                 }}
-                placeholder={"Activities"}
+                placeholder={"Activities/Clubs"}
                 onChangeText={(text) => setActivities(text)}
               >
                 {activities}

@@ -90,6 +90,7 @@ function ImageUploadCard(props) {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
+        backgroundColor: "#FFFFFF",
       }}
     >
       <ImageUpload type={props.type} setImageLoaded = {props.setImageLoaded}/>

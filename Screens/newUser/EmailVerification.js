@@ -74,7 +74,7 @@ export function LoadingPage() {
               height: 50,
               alignItems: "center",
               justifyContent: "center",
-              borderRadius: 30,
+              borderRadius: 10,
               borderWidth: 1,
               borderColor: "#DBDBDB",
               backgroundColor: "#FFFFFF",
@@ -95,6 +95,7 @@ export function LoadingPage() {
                 fontFamily: "Poppins_600SemiBold",
                 fontSize: 16,
                 color: "#262626",
+
               }}
             >
               {"Send Email"}
@@ -103,6 +104,7 @@ export function LoadingPage() {
           <TouchableOpacity
             style={{ marginTop: 6 }}
             onPress={() => {
+              auth.signOut();
               navigation.navigate("Router", { screen: "Login" });
             }}
           >

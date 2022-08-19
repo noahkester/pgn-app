@@ -392,33 +392,25 @@ function UniversityDropdown(props) {
 }
 
 export function NamePage() {
-  const [isFNameBlank, setFNameBlank] = useState(false);
-  const [isLNameBlank, setLNameBlank] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const newUserContext = useContext(NewUserContext);
   const navigation = useNavigation();
+  const [nextPressed, setNextPressed] = useState(false);
+  // function checkFieldBlank(text, category) {
+  //   switch (category) {
+  //     case "firstname":
 
-  function checkFieldBlank(text, category) {
-    switch (category) {
-      case "firstname":
-        if (text == "") {
-          console.log("field is left blank");
-          setFNameBlank(true);
-        } else {
-          setFNameBlank(false);
-        }
-        break;
-      case "lastname":
-        if (text == "") {
-          console.log("field is left blank");
-          setLNameBlank(true);
-        } else {
-          setLNameBlank(false);
-        }
-        break;
-    }
-  }
+  //     case "lastname":
+  //       if (text == "") {
+  //         console.log("field is left blank");
+  //         setLNameBlank(true);
+  //       } else {
+  //         setLNameBlank(false);
+  //       }
+  //       break;
+  //   }
+  // }
 
   // useEffect(() => {
   //   console.log("inside useEffecT: " + isFNameBlank);
@@ -430,7 +422,11 @@ export function NamePage() {
   // }, [isFNameBlank]);
 
   const checkAdminMembers = () => {
-    if (!isFNameBlank && !isLNameBlank) {
+    setNextPressed(true);
+    if (firstName === "" || lastName === ""){
+      return;
+    }
+
       const name = (firstName + lastName).toLowerCase();
       db.collection("admin-members")
         .doc(name)
@@ -450,9 +446,7 @@ export function NamePage() {
         .catch(() => {
           navigation.navigate("UnknownUser");
         });
-    }else{
-      Alert.alert((isFNameBlank ? "First Name is required!" : "Last Name is Required"));
-    }
+
   };
 
   return (
@@ -516,15 +510,15 @@ export function NamePage() {
                   }}
                   placeholder={"First Name"}
                   onChangeText={(text) => setFirstName(text)}
-                  onEndEditing={(e) => {
-                    checkFieldBlank(e.nativeEvent.text, "firstname");
-                  }}
+                  // onEndEditing={(e) => {
+                  //   checkFieldBlank(e.nativeEvent.text, "firstname");
+                  // }}
                 >
                   {firstName}
                 </TextInput>
 
               </View>
-              {(isFNameBlank) ? <Text style={{ width: '90%', paddingTop: 4, paddingLeft: 10, fontFamily: 'Poppins_500Medium', color: '#E35B56' }}>First Name is required</Text>  : null
+              {(nextPressed && firstName === "") ? <Text style={{ width: '90%', paddingTop: 4, paddingLeft: 10, fontFamily: 'Poppins_500Medium', color: '#E35B56' }}>First Name is required</Text>  : null
             
           }
               <View
@@ -558,14 +552,14 @@ export function NamePage() {
                   }}
                   placeholder={"Last Name"}
                   onChangeText={(text) => setLastName(text)}
-                  onEndEditing={(e) => {
-                    checkFieldBlank(e.nativeEvent.text, "lastname");
-                  }}
+                  // onEndEditing={(e) => {
+                  //   checkFieldBlank(e.nativeEvent.text, "lastname");
+                  // }}
                 >
                   {lastName}
                 </TextInput>
               </View>
-              {(isLNameBlank) ? <Text style={{ width: '90%', paddingTop: 4, paddingLeft: 10, fontFamily: 'Poppins_500Medium', color: '#E35B56' }}>Last Name is Required</Text> : null
+              {(nextPressed && lastName === "") ? <Text style={{ width: '90%', paddingTop: 4, paddingLeft: 10, fontFamily: 'Poppins_500Medium', color: '#E35B56' }}>Last Name is Required</Text> : null
             
           }
             </View>
@@ -588,7 +582,7 @@ export function NamePage() {
                   borderColor: "#DBDBDB",
                   backgroundColor: "#FAFAFA",
                 }}
-                onPress={ (!isLNameBlank && !isFNameBlank) ? checkAdminMembers : null}
+                onPress={  checkAdminMembers}
               >
                 <Text
                   style={{

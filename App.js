@@ -72,6 +72,9 @@ function App() {
         setAppIsReady(true);
         return;
       }
+      // if(user.emailVerified){
+      //   setAppIsReady(true);
+      // }
       setUser(user);
     });
   }, []);
