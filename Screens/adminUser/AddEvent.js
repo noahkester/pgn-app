@@ -1,6 +1,6 @@
 
 import React, { useState, useContext, useRef } from "react";
-import { StyleSheet, Button, TouchableOpacity, Text, Image, View, TextInput } from "react-native";
+import { StyleSheet, Button, TouchableOpacity, Text, Image, View, TextInput, Appearance } from "react-native";
 import { useNavigation, NavigationContainer } from "@react-navigation/native";
 import globalStyles from "../../styles/Styles";
 import { db } from "../../utils/firebase";
@@ -105,6 +105,7 @@ export function AddEventPage() {
     const navigation = useNavigation();
     const [meetingTime, setMeetingTime] = useState(new Date());
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    const colorScheme = Appearance.getColorScheme();
     const newEvent = useRef(
         {
             label: '',
@@ -182,6 +183,7 @@ export function AddEventPage() {
                 onConfirm={handleConfirm}
                 onCancel={hideDatePicker}
                 date={meetingTime}
+                isDarkModeEnabled={(colorScheme === 'dark')}
             />
             <View style={{ marginTop: 10, borderWidth: 1, borderRadius: 10, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center', backgroundColor: '#FFFFFF' }}>
                 <TextInput

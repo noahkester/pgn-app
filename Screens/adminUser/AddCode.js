@@ -9,6 +9,7 @@ import {
   Keyboard,
   TextInput,
   TouchableWithoutFeedback,
+  Appearance
 } from "react-native";
 import { useNavigation, NavigationContainer } from "@react-navigation/native";
 import globalStyles from "../../styles/Styles";
@@ -27,6 +28,7 @@ import {
 import * as firebase from "firebase";
 
 export function AddCodePage() {
+  const colorScheme = Appearance.getColorScheme();
   const [value, setValue] = useState("");
   const [meetingTime, setMeetingTime] = useState(new Date());
   const [expirationTime, setExpirationTime] = useState(new Date());
@@ -198,6 +200,7 @@ export function AddCodePage() {
           onConfirm={handleConfirm}
           onCancel={hideDatePicker}
           date={meetingTime}
+          isDarkModeEnabled={(colorScheme === 'dark')}
         />
 
         <TouchableOpacity
