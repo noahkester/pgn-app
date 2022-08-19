@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
+import * as firebase from "firebase";
 import { useNavigation } from "@react-navigation/native";
 import globalStyles from "../styles/Styles";
 import { db, auth } from "../utils/firebase";
@@ -35,21 +36,29 @@ function AttendanceCard(props) {
 
   function submitExcuse() {
     if (excuseMessage.current !== "") {
-
+      const label = unixEpochTimeToMonthDay(props.data.meetingTime) + ' Attendance';
       db.collection('points')
-        .add({
+        .doc(auth.currentUser.uid + '_' + label)
+        .set({
           id: auth.currentUser.uid,
-          label: unixEpochTimeToMonthDay(props.data.meetingTime) + ' Attendance',
+          label: label,
           name: currentUser.firstname + ' ' + currentUser.lastname,
           location: props.data.location,
           proof: excuseMessage.current,
           status: 'waiting',
           type: 'Excuse',
           weight: 0,
-
+          code: props.data.code
         }).then(() => {
           setExcuseSent(true);
           console.log("Excuse uploaded");
+        })
+      db.collection('users')
+        .doc(auth.currentUser.uid)
+        .update({
+          submittedPoints: firebase.firestore.FieldValue.arrayUnion(
+            auth.currentUser.uid + '_' + label
+          ),
         })
 
     } else {
@@ -232,46 +241,46 @@ export function AttendancePage() {
               break;
             }
           }
-            tempMeetings.push({
-              found: found,
-              data: data,
-            })
+          tempMeetings.push({
+            found: found,
+            data: data,
+          })
           // tempMeetings.push(
           //   <AttendanceCard found={found} data={data} />
           // );
         });
         tempMeetings.sort((a, b) => b.data.meetingTime - a.data.meetingTime);
-        const meetingElems = tempMeetings.map((d)=>
-          {return <AttendanceCard found={d.found} data={d.data} />}
+        var i;
+        const meetingElems = tempMeetings.map((d) => { return <AttendanceCard key={i++} found={d.found} data={d.data} /> }
         )
         setMeetings(meetingElems);
       });
   }, []);
 
   return (
-      <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
-        <ScrollView >
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
+      <ScrollView >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{ marginTop: 16, alignItems: "center" }}>{meetings}</View>
-          </TouchableWithoutFeedback>
-          </ScrollView>
-        <View style={{ position: 'absolute', bottom: 12, right: 24, borderRadius: 30, backgroundColor: '#FFFFFF' }}>
-          <TouchableOpacity
-            style={[{ width: 50, height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 34, backgroundColor: colors.universityColor + '40' }]}
-            onPress={() => {
-              navigation.navigate("SubmitAttendance");
-            }}
-          >
-            <IonIcons
-              name="md-barcode"
-              color={colors.universityColor}
-              size={40}
-              style={{ marginLeft: 3 }}
-            />
-          </TouchableOpacity>
-        </View>
-        
+        </TouchableWithoutFeedback>
+      </ScrollView>
+      <View style={{ position: 'absolute', bottom: 12, right: 24, borderRadius: 30, backgroundColor: '#FFFFFF' }}>
+        <TouchableOpacity
+          style={[{ width: 50, height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 34, backgroundColor: colors.universityColor + '40' }]}
+          onPress={() => {
+            navigation.navigate("SubmitAttendance");
+          }}
+        >
+          <IonIcons
+            name="md-barcode"
+            color={colors.universityColor}
+            size={40}
+            style={{ marginLeft: 3 }}
+          />
+        </TouchableOpacity>
       </View>
-      
+
+    </View>
+
   );
 }

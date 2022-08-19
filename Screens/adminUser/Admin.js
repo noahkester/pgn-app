@@ -4,6 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import IonIcons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import * as firebase from "firebase";
 
 import globalStyles from "../../styles/Styles";
 import { db, store } from "../../utils/firebase";
@@ -114,68 +115,74 @@ function RejectButton(props) {
 function AdminBottom(props) {
   const acceptPoint = () => {
     // First, update the record from the points queue
-    if (props.pointData.type !== "Excuse") {
-      db.collection("points")
-        .doc(props.pointData.id + "_" + props.pointData.label)
-        .update({ status: "accepted" })
-        .then(() => {
-          console.log("(points) Updated points status to accepted");
-        })
-        .catch((error) => {
-          console.log("(points) Error updating points status");
-        });
-      db.collection("users")
-        .doc(props.pointData.id)
-        .get()
-        .then((doc) => {
-          // Next update the status value in the submitted points and increment the point value
-          const data = doc.data();
-          switch (props.pointData.type) {
-            case "Philanthropy":
-              db.collection("users")
-                .doc(props.pointData.id)
-                .update({
-                  philanthropyPoints:
-                    data.philanthropyPoints + props.pointData.weight,
-                });
-              break;
-            case "Social":
-              db.collection("users")
-                .doc(props.pointData.id)
-                .update({
-                  socialPoints: data.socialPoints + props.pointData.weight,
-                });
-              break;
-            case "Professional":
-              db.collection("users")
-                .doc(props.pointData.id)
-                .update({
-                  professionalPoints:
-                    data.professionalPoints + props.pointData.weight,
-                });
-              break;
-            case "Interview":
-              db.collection("users")
-                .doc(props.pointData.id)
-                .update({
-                  activeInterviews:
-                    data.activeInterviews + props.pointData.weight,
-                });
-              break;
-            default:
-              console.log(
-                "(accept-point switch statement) no match for " +
-                  props.pointData.type
-              );
-              break;
-          }
-        });
-    }else{
-        db.collection("chapter-meetings")
-        .doc(props.pointData.id)
-        .get()
-
-    }
+    db.collection("points")
+      .doc(props.pointData.id + "_" + props.pointData.label)
+      .update({ status: "accepted" })
+      .then(() => {
+        console.log("(points) Updated points status to accepted");
+      })
+      .catch((error) => {
+        console.log("(points) Error updating points status");
+      });
+    db.collection("users")
+      .doc(props.pointData.id)
+      .get()
+      .then((doc) => {
+        // Next update the status value in the submitted points and increment the point value
+        const data = doc.data();
+        switch (props.pointData.type) {
+          case "Philanthropy":
+            db.collection("users")
+              .doc(props.pointData.id)
+              .update({
+                philanthropyPoints:
+                  data.philanthropyPoints + props.pointData.weight,
+              });
+            break;
+          case "Social":
+            db.collection("users")
+              .doc(props.pointData.id)
+              .update({
+                socialPoints: data.socialPoints + props.pointData.weight,
+              });
+            break;
+          case "Professional":
+            db.collection("users")
+              .doc(props.pointData.id)
+              .update({
+                professionalPoints:
+                  data.professionalPoints + props.pointData.weight,
+              });
+            break;
+          case "Interview":
+            db.collection("users")
+              .doc(props.pointData.id)
+              .update({
+                activeInterviews:
+                  data.activeInterviews + props.pointData.weight,
+              });
+            break;
+          case 'Excuse':
+            db.collection("users")
+              .doc(props.pointData.id)
+              .update({
+                attendance:
+                  data.activeInterviews + 1,
+              });
+            db.collection("chapter-meetings")
+              .doc(props.pointData.code)
+              .update({
+                attendees: firebase.firestore.FieldValue.arrayUnion(props.pointData.id)
+              });
+            break;
+          default:
+            console.log(
+              "(accept-point switch statement) no match for " +
+              props.pointData.type
+            );
+            break;
+        }
+      });
   };
   const rejectPoint = () => {
     db.collection("points")

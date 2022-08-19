@@ -24,6 +24,7 @@ import {
   dateObjectToUnixEpoch,
   addHours,
 } from "../../utils/time";
+import * as firebase from "firebase";
 
 export function AddCodePage() {
   const [value, setValue] = useState("");
@@ -64,8 +65,15 @@ export function AddCodePage() {
         meetingTime: dateObjectToUnixEpoch(meetingTime),
         expirationTime: dateObjectToUnixEpoch(expirationTime),
         location: location,
+        code: value
       })
       .then(() => {
+        db.collection("admin-settings")
+          .doc('points')
+          .update({ totalChapterMeetings: firebase.firestore.FieldValue.increment(1) })
+          .then(() => {
+            console.log('incremented by one');
+          })
         navigation.goBack();
       })
       .catch((error) => {
