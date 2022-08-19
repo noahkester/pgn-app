@@ -46,7 +46,7 @@ export function CreateAccountPage() {
             break;
           case "auth/email-already-exists":
           case "auth/email-already-in-use":
-            setEmailError("Email already registered");
+            setEmailError("User registered, try logging in");
             break;
           case "auth/weak-password":
           case "auth/invalid-password":
@@ -81,8 +81,8 @@ export function CreateAccountPage() {
         </View>
         <KeyboardAvoidingView
           behavior="height"
-          enabled = {false}
-          style = {{flex: 1}}
+          enabled={false}
+          style={{ flex: 1 }}
         >
           <View style={{ flex: 1, alignItems: "center", marginTop: 180 }}>
             <View
