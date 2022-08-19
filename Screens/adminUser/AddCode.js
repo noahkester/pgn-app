@@ -64,6 +64,7 @@ export function AddCodePage() {
       .doc(value)
       .set({
         attendees: [],
+        submittedExcuse: [],
         meetingTime: dateObjectToUnixEpoch(meetingTime),
         expirationTime: dateObjectToUnixEpoch(expirationTime),
         location: location,

@@ -5,7 +5,6 @@ import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import IonIcons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import * as firebase from "firebase";
-
 import globalStyles from "../../styles/Styles";
 import { db, store } from "../../utils/firebase";
 var allSettled = require("promise.allsettled");
@@ -167,12 +166,13 @@ function AdminBottom(props) {
               .doc(props.pointData.id)
               .update({
                 attendance:
-                  data.activeInterviews + 1,
+                  firebase.firestore.FieldValue.increment(1),
               });
             db.collection("chapter-meetings")
               .doc(props.pointData.code)
               .update({
-                attendees: firebase.firestore.FieldValue.arrayUnion(props.pointData.id)
+                attendees: firebase.firestore.FieldValue.arrayUnion(props.pointData.id),
+                submittedExcuse: firebase.firestore.FieldValue.arrayRemove(props.pointData.id)
               });
             break;
           default:
@@ -194,6 +194,13 @@ function AdminBottom(props) {
       .catch((error) => {
         console.log("(points) Error updating points status");
       });
+    if (props.pointData.type === 'Excuse') {
+      db.collection("chapter-meetings")
+        .doc(props.pointData.code)
+        .update({
+          submittedExcuse: firebase.firestore.FieldValue.arrayRemove(props.pointData.id)
+        });
+    }
   };
   return (
     <View

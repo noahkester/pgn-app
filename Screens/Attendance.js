@@ -27,8 +27,8 @@ import { TextInput } from "react-native-gesture-handler";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 function AttendanceCard(props) {
-  const [isPressed, setPressed] = useState(false);
-  const [isExcuseSent, setExcuseSent] = useState(false);
+  const [isPressed, setPressed] = useState(props.pending);
+  const [isExcuseSent, setExcuseSent] = useState(props.pending);
   const excuseMessage = useRef("");
 
   const loginContext = useContext(LoginContext);
@@ -51,15 +51,19 @@ function AttendanceCard(props) {
           code: props.data.code
         }).then(() => {
           setExcuseSent(true);
-          console.log("Excuse uploaded");
         })
-      db.collection('users')
+      db.collection('chapter-meetings')
+        .doc(props.data.code)
+        .update({
+          submittedExcuse: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.uid)
+        });
+      /*db.collection('users')
         .doc(auth.currentUser.uid)
         .update({
           submittedPoints: firebase.firestore.FieldValue.arrayUnion(
             auth.currentUser.uid + '_' + label
           ),
-        })
+        })*/
 
     } else {
       <Text
@@ -119,7 +123,7 @@ function AttendanceCard(props) {
         >
           {props.data.location}
         </Text>
-        {props.found ? null : (
+        {props.found || props.future ? null : (
           <View style={{ width: '100%' }}>
             {isPressed ? (
               !isExcuseSent ? (
@@ -213,8 +217,8 @@ function AttendanceCard(props) {
       <View
         style={{
           width: '16%',
-          height: "100%",
-          backgroundColor: props.found ? "#85C67E" : "#E35B56",
+          height: '100%',
+          backgroundColor: props.found ? "#85C67E" : props.future ? '#EEEEEF' : '#E35B56',
           borderTopRightRadius: 10,
           borderBottomRightRadius: 10,
         }}
@@ -235,23 +239,35 @@ export function AttendancePage() {
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           var found = false;
+          var pending = false;
+
           for (let i = 0; i < data.attendees.length; i++) {
             if (data.attendees[i] == auth.currentUser.uid) {
               found = true;
               break;
             }
           }
+          for (let i = 0; i < data.submittedExcuse.length; i++) {
+            if (data.submittedExcuse[i] == auth.currentUser.uid) {
+              pending = true;
+              break;
+            }
+          }
           tempMeetings.push({
             found: found,
             data: data,
+            pending: pending,
+            meetingTime: data.meetingTime
           })
           // tempMeetings.push(
           //   <AttendanceCard found={found} data={data} />
           // );
         });
         tempMeetings.sort((a, b) => b.data.meetingTime - a.data.meetingTime);
-        var i;
-        const meetingElems = tempMeetings.map((d) => { return <AttendanceCard key={i++} found={d.found} data={d.data} /> }
+        var i = 0;
+        const meetingElems = tempMeetings.map((d) => {
+          return <AttendanceCard key={i++} found={d.found} data={d.data} pending={d.pending} future={d.meetingTime > dateObjectToUnixEpoch(new Date())} />
+        }
         )
         setMeetings(meetingElems);
       });

@@ -23,14 +23,27 @@ export function SubmitAttendancePage() {
         const docRef = db.collection("chapter-meetings").doc(value);
         docRef.get().then((doc) => {
             if (doc.exists) {
+                if (doc.data().attendees.includes(auth.currentUser.uid)) {
+                    setError('Credit already recieved');
+                    return;
+                }
                 if (dateObjectToUnixEpoch(new Date()) < doc.data().expirationTime) {
+                    setError('');
                     docRef.update({
                         attendees: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.uid)
                     })
+                    db.collection("users")
+                        .doc(auth.currentUser.uid)
+                        .update({
+                            attendance:
+                                firebase.firestore.FieldValue.increment(1),
+                        });
+                    navigation.goBack();
                 }
                 else {
+                    setError('Code has expired');
                 }
-                setError('Code has expired');
+
             }
             else {
                 setError('Code does not exist');

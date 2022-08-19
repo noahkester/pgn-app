@@ -10,13 +10,13 @@ function PersonCard(props) {
     //TODO pull this
     const adminContext = useContext(AdminContext);
 
-    console.log(adminContext.points)
+    //console.log(adminContext.points)
     const totalPrp = isPledge ? adminContext.points.pledgeProfessionalPoints : adminContext.points.activeProfessionalPoints;
     const totalPp = isPledge ? adminContext.points.pledgePhilanthropyPoints : adminContext.points.activePhilanthropyPoints;
     const totalSp = isPledge ? adminContext.points.pledgeSocialPoints : adminContext.points.activeSocialPoints;
     const totalAi = isPledge ? adminContext.points.activeInterviews : 0;
     const totalAttd = adminContext.points.totalChapterMeetings;
-
+    //console.log(props.attd + '/' + totalAttd);
     var duesColor = '#E35B56';
     if (props.dues) {
         duesColor = '#85C67E';
@@ -56,7 +56,7 @@ function PersonCard(props) {
     if (props.attd >= totalAttd) {
         attdColor = '#85C67E';
     }
-
+    //console.log(props.attd)
     return (
         <View style={{ width: '85%' }}>
             <View style={{ flex: 1, borderWidth: 1, borderColor: '#DBDBDB', height: 60, marginBottom: 10, borderRadius: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -114,7 +114,7 @@ export function ViewPeoplePage() {
                 pp={d.philanthropyPoints}
                 sp={d.socialPoints}
                 ai={d.activeInterviews}
-                attd={d.attendance} //TODO add attendance number in database
+                attd={d.attendance}
                 isPledge={d.status === 'pledge'}
                 dues={d.dues}
             />

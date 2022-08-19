@@ -26,6 +26,7 @@ export function TopBar(props) {
   const urlContext = useContext(UrlContext);
   const currentUser = loginContext.currentUser;
   const profileUrl = urlContext.professionalUrl;
+  const adminContext = useContext(AdminContext);
   return (
     <View>
       <View style={{ marginTop: 32, width: "100%", height: 160, flexDirection: "row", justifyContent: "space-between", alignItems: 'center', backgroundColor: "#FFFFFF", paddingHorizontal: 20, borderBottomWidth: 1, borderColor: '#DBDBDB' }}>
@@ -41,6 +42,11 @@ export function TopBar(props) {
         />
 
       </View>
+      {(adminContext.points.activateDuesBanner && !loginContext.currentUser.dues) ?
+        <View style={{ position: 'absolute', bottom: 0, zIndex: 999, width: '100%', height: 30, backgroundColor: '#E35B56', alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{`Membership dues deadline: ${unixEpochTimeToMonthDay(adminContext.points.duesDeadline)}`}</Text>
+        </View> : null
+      }
     </View>
   );
 }
@@ -73,11 +79,6 @@ export function NavigationPage() {
       }}
     >
       <TopBar />
-      {(adminContext.points.activateDuesBanner && !loginContext.currentUser.dues) ?
-        <View style={{ position: 'absolute', top: 192, zIndex: 999, width: '100%', height: 30, backgroundColor: '#E35B56', alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{`Membership dues deadline: ${unixEpochTimeToMonthDay(adminContext.points.duesDeadline)}`}</Text>
-        </View> : null
-      }
       <Tab.Navigator
         sceneContainerStyle={{
           backgroundColor: '#FFFFFF',
