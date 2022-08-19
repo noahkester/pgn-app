@@ -1,17 +1,26 @@
-import { StyleSheet, TouchableOpacity, Text, Image, View, Alert, } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  Image,
+  View,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import { AccountTop } from "./Account";
 import * as ImagePicker from "expo-image-picker";
 import { store, auth } from "../utils/firebase";
-import Octicons from 'react-native-vector-icons/Octicons';
+import Octicons from "react-native-vector-icons/Octicons";
 import { useNavigation } from "@react-navigation/native";
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import UrlContext from "../utils/UrlContext";
-import * as ImageManipulator from 'expo-image-manipulator';
+
+import * as ImageManipulator from "expo-image-manipulator";
 
 function ImageUpload(props) {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState("");
   const urlContext = useContext(UrlContext);
   useEffect(() => {
     async () => {
@@ -36,83 +45,134 @@ function ImageUpload(props) {
     if (!result.cancelled) {
       const resizedResult = await ImageManipulator.manipulateAsync(
         result.uri,
-        [{ resize: { width: 200 } }], // resize to width of 300 and preserve aspect ratio 
-        { format: 'jpeg' },
+        [{ resize: { width: 200 } }], // resize to width of 300 and preserve aspect ratio
+        { format: "jpeg" }
       );
 
       setImage(resizedResult);
+
       uploadImage(resizedResult.uri, auth.currentUser.uid + "_" + props.type)
         .then(() => {
-          Alert.alert("(AccountImageUpload) Success!");
-          if(props.type == "professional"){
+          if (props.type == "professional") {
             urlContext.setProf(resizedResult.uri);
-          }else if(props.type == "social"){
+          } else if (props.type == "social") {
             urlContext.setSocial(resizedResult.uri);
-          }else if(props.type == "funny"){
+          } else if (props.type == "funny") {
             urlContext.setFunny(resizedResult.uri);
           }
         })
         .catch(() => {
           console.log("(AccountImageUpload) Error uploading image");
         });
+      props.setImageLoaded(true);
     }
   };
   return (
+    <View style = {{flex: 1,}}>
     <TouchableOpacity
       style={{
         zIndex: -1,
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: "center",
+        justifyContent: "center",
         borderWidth: 1,
-        borderColor: '#DBDBDB',
+        borderColor: "#DBDBDB",
         borderRadius: 10,
         height: 150,
         width: 150,
-        backgroundColor: '#FFFFFF'
+        backgroundColor: "#FFFFFF",
       }}
       onPress={() => {
+        props.setImageLoaded(false);
         pickImage();
       }}
     >
-      {(image === '') ?
-        <MaterialIcons
-          name="add"
-          color={'#262626'}
-          size={60}
-        /> :
+      {image === "" ? (
+        <MaterialIcons name="add" color={"#262626"} size={60} />
+      ) : (
         <Image source={image} style={styles.cloudImage} resizeMode="contain" />
-      }
+      )}
+
     </TouchableOpacity>
+          {image != "" ? (
+            <View>
+              <Text
+                style={{
+                  width: "100%",
+                  paddingTop: 4,
+                  // paddingLeft: 10,
+                  fontFamily: "Poppins_500Medium",
+                  color: "#85C67E",
+                }}
+              >
+                Image Loaded successfully
+              </Text>
+            </View>
+          ) : null}
+
+</View>
   );
 }
 function ImageUploadCard(props) {
   return (
-    <View style={{ marginTop: 20, width: '90%', height: 160, alignItems: 'center' }}>
-      <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 18, marginBottom: 10 }}>{props.title}</Text>
-      <ImageUpload type={props.type} />
+    <View
+      style={{ marginTop: 20, width: "90%", height: 160, alignItems: "center" }}
+    >
+      <Text
+        style={{
+          fontFamily: "Poppins_600SemiBold",
+          fontSize: 18,
+          marginBottom: 10,
+        }}
+      >
+        {props.title}
+      </Text>
+      <ImageUpload type={props.type} setImageLoaded={props.setImageLoaded} />
     </View>
   );
 }
 export function AccountImageUploadPage() {
-
+  const [imageLoaded, setImageLoaded] = useState(true);
   const navigation = useNavigation();
   return (
-    <View style={{ flex: 1, backgroundColor: '#FAFAFA' }}>
-      <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-        <TouchableOpacity
-          style={{ width: 68, alignItems: 'center' }}
-          onPress={() => {
-            navigation.goBack();
+    <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
+      <View
+        style={{
+          marginTop: 32,
+          height: 100,
+          width: "100%",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        {imageLoaded ? (
+          <TouchableOpacity
+            style={{ width: 68, alignItems: "center" }}
+            onPress={() => {
+              if (imageLoaded) {
+                navigation.goBack();
+              }
+            }}
+          >
+            <Octicons name="chevron-left" color={"#262626"} size={42} />
+          </TouchableOpacity>
+        ) : (
+          <View style={{ marginLeft: "8%" }}>
+            <ActivityIndicator size="large" color="Black" />
+          </View>
+        )}
+
+        <Text
+          style={{
+            textAlign: "center",
+            fontFamily: "Poppins_600SemiBold",
+            fontSize: 20,
+            color: "#262626",
           }}
         >
-          <Octicons
-            name="chevron-left"
-            color={'#262626'}
-            size={42}
-          />
-        </TouchableOpacity>
-        <Text style={{ textAlign: 'center', fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626' }}>{'Picture Upload'}</Text>
+          Picture Upload
+        </Text>
         <View style={{ width: 68 }}></View>
       </View>
 
@@ -121,16 +181,20 @@ export function AccountImageUploadPage() {
           title="Professional"
           type="professional"
           imageSrc={require("../images/imageUpload1.png")}
+          setImageLoaded={setImageLoaded}
         />
+
         <ImageUploadCard
           title="Party/Fun"
           type="social"
           imageSrc={require("../images/imageUpload2.png")}
+          setImageLoaded={setImageLoaded}
         />
         <ImageUploadCard
           title="Funny"
           type="funny"
           imageSrc={require("../images/imageUpload3.png")}
+          setImageLoaded={setImageLoaded}
         />
       </View>
     </View>
@@ -178,3 +242,4 @@ const styles = StyleSheet.create({
     height: 48,
   },
 });
+
