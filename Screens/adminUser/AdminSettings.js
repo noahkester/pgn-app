@@ -163,15 +163,16 @@ export function AdminSettingsPage() {
             })
     }
 
-
     const deleteUser = () => {
         setUserError('');
-        console.log('deleted user');
         // TODO delete from users
         // delete photos
+        const name = userName.split(' ');
         const docname = userName.replace(/\s/g, '').toLowerCase();
-        console.log(docname);
-        if (docname == '') return;
+        if (docname == '') {
+            setUserError('No user found');
+            return;
+        }
         db.collection("admin-members")
             .doc(docname)
             .get()
@@ -182,6 +183,15 @@ export function AdminSettingsPage() {
                 else {
                     setUserName('');
                     doc.ref.delete();
+                    db.collection("users")
+                        .where('firstname', '==', name[0])
+                        .where('lastname', '==', name[1])
+                        .get()
+                        .then((querySnapshot) => {
+                            querySnapshot.forEach((doc) => {
+                                doc.ref.delete()
+                            })
+                        })
                 }
             })
     }
@@ -190,33 +200,56 @@ export function AdminSettingsPage() {
         setUserError('');
         console.log('updating user');
         const docname = userName.replace(/\s/g, '').toLowerCase();
-        console.log(docname);
+        const name = userName.split(' ');
         if (docname == '') return;
         const docRef = db.collection("admin-members").doc(docname);
-        if (role !== '') {
-            docRef.update({ role: role }).then(() => {
-                setUserName('');
-                setRole('');
+        var userDocRef;
+        db.collection("users")
+            .where('firstname', '==', name[0])
+            .where('lastname', '==', name[1])
+            .get()
+            .then((querySnapshot) => {
+                var found = false;
+                console.log('this' + name);
+                querySnapshot.forEach((doc) => {
+                    found = true;
+                    console.log('here')
+                    userDocRef = doc.ref;
+                })
+                if (!found) {
+                    setUserError('Could not find user to update');
+                } else {
+                    if (role !== '') {
+                        userDocRef.update({ role: role })
+                        docRef.update({ role: role }).then(() => {
+                            setUserName('');
+                            setRole('');
+                        }).catch(() => {
+                            setUserError('Could not find user to update');
+                        });
+                    }
+                    if (status !== '') {
+                        userDocRef.update({ status: status.toLowerCase() })
+                        docRef.update({ status: status.toLowerCase() }).then(() => {
+                            setUserName('');
+                            setStatus('');
+                        }).catch(() => {
+                            setUserError('Could not find user to update');
+                        });
+                    }
+                    if (pledgeClass !== '') {
+                        userDocRef.update({ pledgeClass: pledgeClass })
+                        docRef.update({ pledgeClass: pledgeClass }).then(() => {
+                            setUserName('');
+                            setPledgeClass('');
+                        }).catch(() => {
+                            setUserError('Could not find user to update');
+                        });
+                    }
+                }
             }).catch(() => {
-                setUserError('Could not find user to update');
-            });
-        }
-        if (status !== '') {
-            docRef.update({ status: status.toLowerCase() }).then(() => {
-                setUserName('');
-                setStatus('');
-            }).catch(() => {
-                setUserError('Could not find user to update');
-            });
-        }
-        if (pledgeClass !== '') {
-            docRef.update({ pledgeClass: pledgeClass }).then(() => {
-                setUserName('');
-                setPledgeClass('');
-            }).catch(() => {
-                setUserError('Could not find user to update');
-            });
-        }
+                setDuesError('Could not find user');
+            })
         //TODO Update user from users
     }
     const addUser = () => {
