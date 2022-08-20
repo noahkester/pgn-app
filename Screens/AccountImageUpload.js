@@ -68,49 +68,49 @@ function ImageUpload(props) {
     }
   };
   return (
-    <View style = {{flex: 1,}}>
-    <TouchableOpacity
-      style={{
-        zIndex: -1,
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-        borderWidth: 1,
-        borderColor: "#DBDBDB",
-        borderRadius: 10,
-        height: 150,
-        width: 150,
-        backgroundColor: "#FFFFFF",
-      }}
-      onPress={() => {
-        props.setImageLoaded(false);
-        pickImage();
-      }}
-    >
-      {image === "" ? (
-        <MaterialIcons name="add" color={"#262626"} size={60} />
-      ) : (
-        <Image source={image} style={styles.cloudImage} resizeMode="contain" />
-      )}
+    <View style={{ flex: 1, }}>
+      <TouchableOpacity
+        style={{
+          zIndex: -1,
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          borderWidth: 1,
+          borderColor: "#DBDBDB",
+          borderRadius: 10,
+          height: 150,
+          width: 150,
+          backgroundColor: "#FFFFFF",
+        }}
+        onPress={() => {
+          props.setImageLoaded(false);
+          pickImage();
+        }}
+      >
+        {image === "" ? (
+          <MaterialIcons name="add" color={"#262626"} size={60} />
+        ) : (
+          <Image source={image} style={{ width: 60 }} resizeMode="contain" />
+        )}
 
-    </TouchableOpacity>
-          {image != "" ? (
-            <View>
-              <Text
-                style={{
-                  width: "100%",
-                  paddingTop: 4,
-                  // paddingLeft: 10,
-                  fontFamily: "Poppins_500Medium",
-                  color: "#85C67E",
-                }}
-              >
-                Image Loaded successfully
-              </Text>
-            </View>
-          ) : null}
+      </TouchableOpacity>
+      {image != "" ? (
+        <View>
+          <Text
+            style={{
+              width: 150,
+              paddingTop: 4,
+              // paddingLeft: 10,
+              fontFamily: "Poppins_500Medium",
+              color: "#85C67E",
+            }}
+          >
+            Image Loaded successfully
+          </Text>
+        </View>
+      ) : null}
 
-</View>
+    </View>
   );
 }
 function ImageUploadCard(props) {
@@ -180,20 +180,17 @@ export function AccountImageUploadPage() {
         <ImageUploadCard
           title="Professional"
           type="professional"
-          imageSrc={require("../images/imageUpload1.png")}
           setImageLoaded={setImageLoaded}
         />
 
         <ImageUploadCard
           title="Party/Fun"
           type="social"
-          imageSrc={require("../images/imageUpload2.png")}
           setImageLoaded={setImageLoaded}
         />
         <ImageUploadCard
           title="Funny"
           type="funny"
-          imageSrc={require("../images/imageUpload3.png")}
           setImageLoaded={setImageLoaded}
         />
       </View>
@@ -206,9 +203,6 @@ const styles = StyleSheet.create({
     height: 160,
     justifyContent: "center",
     alignItems: "center",
-  },
-  cloudImage: {
-    width: 80,
   },
   screen: {
     height: "100%",

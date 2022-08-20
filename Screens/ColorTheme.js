@@ -2,20 +2,30 @@ import { StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Text, View 
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Octicons from 'react-native-vector-icons/Octicons';
+import colors from '../styles/Colors'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Color(props) {
+    const active = props.selectedColor === props.color;
     return (
-        <View style={{ padding: 10, borderWidth: 3, borderColor: props.active ? '#85C67E' : '#DBDBDB' }}>
+        <TouchableOpacity
+            style={{ margin: 1, padding: 10, borderWidth: 2, borderColor: active ? '#85C67E' : '#DBDBDB' }}
+            onPress={async () => {
+                props.setColor(props.color);
+                Object.assign(colors, { universityColor: props.color });
+                await AsyncStorage.setItem('@colorTheme', props.color);
+            }}
+        >
             <View style={{ height: 60, width: 60, borderRadius: 30, backgroundColor: props.color }}>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 
 
 export function ColorThemePage(props) {
     const navigation = useNavigation();
-    const [color, setColor] = useState();
+    const [color, setColor] = useState(colors.universityColor);
 
     return (
         <View style={{ flex: 1, alignItems: 'center' }}>
@@ -36,18 +46,22 @@ export function ColorThemePage(props) {
                 <View style={{ width: 60, marginRight: 16 }}></View>
             </View>
             <View style={{ width: '90%', height: 100, alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap' }}>
-                <Color active={true} color={'#C57035'} />
-                <Color color={'#182A4A'} />
-                <Color color={'#B9271A'} />
-                <Color color={'#030303'} />
-                <Color color={'#327262'} />
-                <Color color={'#0D2E5E'} />
-                <Color color={'#BE2E26'} />
-                <Color color={'#182A4A'} />
-                <Color color={'#9C2937'} />
-                <Color color={'#046240'} />
-                <Color color={'#152B50'} />
-                <Color color={'#372666'} />
+                <Color selectedColor={color} setColor={setColor} color={'#BD655A'} />
+                <Color selectedColor={color} setColor={setColor} color={'#E34322'} />
+                <Color selectedColor={color} setColor={setColor} color={'#ED7234'} />
+                <Color selectedColor={color} setColor={setColor} color={'#C57035'} />
+                <Color selectedColor={color} setColor={setColor} color={'#5DCE89'} />
+                <Color selectedColor={color} setColor={setColor} color={'#3C9B5C'} />
+                <Color selectedColor={color} setColor={setColor} color={'#AED766'} />
+                <Color selectedColor={color} setColor={setColor} color={'#F0CE5F'} />
+                <Color selectedColor={color} setColor={setColor} color={'#9EBDE2'} />
+                <Color selectedColor={color} setColor={setColor} color={'#958FFD'} />
+                <Color selectedColor={color} setColor={setColor} color={'#986DDC'} />
+                <Color selectedColor={color} setColor={setColor} color={'#E78AA8'} />
+                <Color selectedColor={color} setColor={setColor} color={'#55585D'} />
+                <Color selectedColor={color} setColor={setColor} color={'#C1B5B7'} />
+                <Color selectedColor={color} setColor={setColor} color={'#BBBBBB'} />
+                <Color selectedColor={color} setColor={setColor} color={'#CCCCCC'} />
             </View>
         </View>
     )

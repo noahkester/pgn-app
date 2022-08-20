@@ -1,4 +1,6 @@
 import ucolors from "./UniversityColors"
+import * as React from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // stored in firebase but not being pulled on app load yet...
 roles = {
     // Exec first change
@@ -38,7 +40,7 @@ export default colors = {
     lightGray: "#F3F3F3",
     gray: "#C8C8C8",
     darkGray: "#777777",
-    universityColor: '#C57035', /*'#372666',/*ucolors.uTexas,*/
+    universityColor: '#C57035', /*'#372666',/*ucolors.uTexas, C57035*/
     universityFadedColor: 'rgba(255, 255, 255, 0.5)',
     errorRed: "red",
     messageGreen: "#4EA24E",

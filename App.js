@@ -11,7 +11,8 @@ import {
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
-
+import colors from './styles/Colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // Util imports
 import {
   auth,
@@ -80,6 +81,12 @@ function App() {
   }, []);
 
   async function loadUserInfo() {
+    // colors here
+    const color = await AsyncStorage.getItem('@colorTheme');
+    if (color != null) {
+      Object.assign(colors, { universityColor: color })
+    }
+
     getEvents().then((returnedEvents) => {
       setEvents(returnedEvents);
     });
@@ -95,7 +102,6 @@ function App() {
         }
         var data = doc.data();
         setCurrentUser(data);
-        console.log("here");
         getAllProfilePictures(data.id).then((urls) => {
           setProfessionalUrl(urls.professionalUrl);
           setSocialUrl(urls.socialUrl);

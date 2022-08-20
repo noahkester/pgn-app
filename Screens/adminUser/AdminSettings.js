@@ -96,6 +96,9 @@ export function AdminSettingsPage() {
                     doc.ref.update({
                         activeInterviews: 0
                     });
+                    doc.ref.update({
+                        dues: false
+                    });
                 })
             })
         db.collection("points")

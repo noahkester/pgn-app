@@ -114,20 +114,18 @@ function SaveButton(props) {
         props.onPress();
       }}
       title={"Save and Exit"}
-      style={[
-        globalStyles.universityColorFill,
-        {
-          marginTop: 10,
-          marginBottom: 60,
-          borderRadius: 10,
-          width: "90%",
-          alignItems: "center",
-          justifyContent: "center",
-          paddingTop: 15,
-          paddingBottom: 15,
-          borderColor: colors.universityFadedColor,
-        }
-      ]}
+      style={{
+        marginTop: 10,
+        marginBottom: 60,
+        borderRadius: 10,
+        width: "90%",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingTop: 15,
+        paddingBottom: 15,
+        borderColor: colors.universityFadedColor,
+        backgroundColor: colors.universityColor,
+      }}
     >
       <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>
         {"Save and Exit"}
@@ -143,20 +141,18 @@ export function SignOutButton(props) {
         auth.signOut()
       }}
       title={"Signout"}
-      style={[
-        globalStyles.universityColorFill,
-        {
-          marginTop: 10,
-          marginBottom: 60,
-          borderRadius: 10,
-          width: "90%",
-          alignItems: "center",
-          justifyContent: "center",
-          paddingTop: 15,
-          paddingBottom: 15,
-          borderColor: colors.universityFadedColor,
-        }
-      ]}
+      style={{
+        backgroundColor: colors.universityColor,
+        marginTop: 10,
+        marginBottom: 60,
+        borderRadius: 10,
+        width: "90%",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingTop: 15,
+        paddingBottom: 15,
+        borderColor: colors.universityFadedColor,
+      }}
     >
       <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>
         {"Sign out"}
@@ -210,7 +206,7 @@ export function AccountPage() {
     }
   }, [hometown, bio, activities, major, minor, phone, linkedin]);
 
-    
+
   const updateProfile = () => {
     const newInfo = {
 
@@ -218,7 +214,7 @@ export function AccountPage() {
       minor: minor,
 
       hometown: hometown,
-      activities: activities.split(/\,\s|\,/ ),
+      activities: activities.split(/\,\s|\,/),
       bio: bio,
       role: curUser.role,
 
@@ -229,7 +225,7 @@ export function AccountPage() {
 
     db.collection("users")
       .doc(auth.currentUser.uid)
-      .set(newInfo, {merge : true})
+      .set(newInfo, { merge: true })
 
   }
   return (
