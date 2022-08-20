@@ -39,6 +39,7 @@ function EventsDropDown() {
   const typeOfEvent = submissionContext.typeOfEvent;
   const eventLabel = submissionContext.eventLabel;
   const eventWeight = submissionContext.eventWeight;
+  const repeatable = submissionContext.repeatable;
 
   useEffect(() => {
     console.log("(submit) rendered");
@@ -56,7 +57,7 @@ function EventsDropDown() {
         });
         tempItems = tempItems.filter((event) => {
           for (let i = 0; i < approvedOrWaiting.length; i++) {
-            if (event.label === approvedOrWaiting[i]) {
+            if (event.label === approvedOrWaiting[i] && !event.repeatable) {
               return false;
             }
           }
@@ -73,6 +74,8 @@ function EventsDropDown() {
         eventLabel.current = item.label;
         eventWeight.current = item.weight;
         typeOfEvent.current = item.type;
+        repeatable.current = item.repeatable;
+        console.log(item.label + " is " + repeatable.current);
       }}
       placeholder="Select Event"
       placeholderStyle={{
@@ -201,7 +204,6 @@ function ProofDescription() {
         onChangeText={(text) => {
           proofDesc.current = text;
           if (text !== "") {
-            console.log("inHere");
             proofOrPhoto.current = true;
           }
         }}
@@ -220,6 +222,7 @@ export function SubmitPoints(props) {
   const proofDesc = submissionContext.proofDesc;
   const imageSrc = submissionContext.imageSrc;
   const eventWeight = submissionContext.eventWeight;
+  const repeatable = submissionContext.repeatable;
 
   const navigation = useNavigation();
 
@@ -249,21 +252,23 @@ export function SubmitPoints(props) {
       ]}
       onPress={() => {
         if (proofOrPhoto.current && eventLabel.current !== "") {
+          const suffix = repeatable.current ? Math.floor(Math.random() * 1000000000) : "";
           db.collection("users")
             .doc(auth.currentUser.uid)
             .update({
               submittedPoints: firebase.firestore.FieldValue.arrayUnion(
-                auth.currentUser.uid + "_" + eventLabel.current
+                auth.currentUser.uid + "_" + eventLabel.current + suffix
               ),
             })
             .then(() => {
+              console.log('repeatable is ' + repeatable.current);
               uploadSubmissionImage(
                 imageSrc.current,
-                auth.currentUser.uid + "_" + eventLabel.current
+                auth.currentUser.uid + "_" + eventLabel.current + suffix
               );
 
               db.collection("points")
-                .doc(auth.currentUser.uid + "_" + eventLabel.current)
+                .doc(auth.currentUser.uid + "_" + eventLabel.current + suffix)
                 .set({
                   label: eventLabel.current,
                   id: auth.currentUser.uid,
@@ -272,6 +277,7 @@ export function SubmitPoints(props) {
                   proof: proofDesc.current,
                   status: "waiting",
                   weight: eventWeight.current,
+                  title: auth.currentUser.uid + "_" + eventLabel.current + suffix
                 })
                 .then(
                   console.log(
@@ -305,6 +311,7 @@ export function SubmitPage(props) {
   const imageSrc = useRef("");
   const eventWeight = useRef(0);
   var proofOrPhoto = useRef(false);
+  const repeatable = useRef(false);
   const navigation = useNavigation();
 
   return (
@@ -342,6 +349,7 @@ export function SubmitPage(props) {
               proofDesc: proofDesc,
               imageSrc: imageSrc,
               eventWeight: eventWeight,
+              repeatable: repeatable,
               proofOrPhoto: proofOrPhoto,
             }}
           >

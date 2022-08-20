@@ -80,7 +80,7 @@ export function EventSection(props) {
       name={event.label}
       type={event.type}
       weight={event.weight}
-      location={event.location}
+      location={('location' in event) ? event.location : ''}
       time={('time' in event) ? event.time : 0} //TODO Jank code
     />
   ));

@@ -6,7 +6,7 @@ import globalStyles from "../../styles/Styles";
 import { db } from "../../utils/firebase";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Octicons from 'react-native-vector-icons/Octicons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { dateObjectToUnixEpoch, unixEpochTimeToMonthDay, unixEpochTimeToClock } from '../../utils/time'
 
 function AccountTop() {
@@ -105,6 +105,7 @@ export function AddEventPage() {
     const navigation = useNavigation();
     const [meetingTime, setMeetingTime] = useState(new Date());
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    const [repeatable, setRepeatable] = useState(false);
     const colorScheme = Appearance.getColorScheme();
     const newEvent = useRef(
         {
@@ -113,7 +114,8 @@ export function AddEventPage() {
             time: 0,
             type: 'Social',
             weight: 1,
-            value: Math.floor(Math.random() * 1000000000)
+            value: Math.floor(Math.random() * 1000000000),
+            repeatable: repeatable
         }
     );
     const eventDocName = (event) => {
@@ -195,6 +197,23 @@ export function AddEventPage() {
                 >
                     {''}
                 </TextInput>
+            </View>
+            <View style={{ width: '90%', flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+                <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}>Repeatable?</Text>
+                <TouchableOpacity
+                    style={{ borderWidth: 1, borderRadius: 10, borderColor: '#DBDBDB', width: 32, height: 32, backgroundColor: '#FFFFFF', marginLeft: 10, alignItems: 'center', justifyContent: 'center' }}
+                    onPress={() => {
+                        setRepeatable(!repeatable);
+                    }}
+                >
+                    {repeatable ?
+                        <FontAwesome5
+                            name='check'
+                            size={20}
+                            color='#85C67E'
+                        />
+                        : null}
+                </TouchableOpacity>
             </View>
             <TouchableOpacity
                 onPress={() => {

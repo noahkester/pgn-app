@@ -115,7 +115,7 @@ function AdminBottom(props) {
   const acceptPoint = () => {
     // First, update the record from the points queue
     db.collection("points")
-      .doc(props.pointData.id + "_" + props.pointData.label)
+      .doc(props.pointData.title)
       .update({ status: "accepted" })
       .then(() => {
         console.log("(points) Updated points status to accepted");
@@ -186,7 +186,7 @@ function AdminBottom(props) {
   };
   const rejectPoint = () => {
     db.collection("points")
-      .doc(props.pointData.id + "_" + props.pointData.label)
+      .doc(props.pointData.title)
       .update({ status: "rejected" })
       .then(() => {
         console.log("(points) Updated points status to rejected");
