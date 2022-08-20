@@ -6,7 +6,7 @@ import Octicons from "react-native-vector-icons/Octicons";
 import NewUserContext from "../../utils/NewUserContext";
 
 export function AboutPage() {
- 
+
   const [hometown, setHometown] = useState("");
   const [activities, setActivities] = useState("");
   const [nextPressed, setNextPressed] = useState(false);
@@ -16,13 +16,13 @@ export function AboutPage() {
 
   const updateAbout = () => {
     setNextPressed(true);
-      if(quote  === "" || hometown  === ""){
-        return;
-      }
-      newUserContext.hometown = hometown;
-      newUserContext.activities = activities.split(/\,\s|\,/);
-      newUserContext.bio = quote;
-      navigation.navigate("Contact");
+    if (quote === "" || hometown === "") {
+      return;
+    }
+    newUserContext.hometown = hometown;
+    newUserContext.activities = activities.split(/\,\s|\,/);
+    newUserContext.bio = quote;
+    navigation.navigate("Contact");
 
   };
   return (
@@ -47,12 +47,13 @@ export function AboutPage() {
             <Octicons name="chevron-left" color={"#262626"} size={42} />
           </TouchableOpacity>
         </View>
-        <View style={{ flex: 1, alignItems: "center", marginTop: 180 }}>
+        <View style={{ flex: 1, alignItems: "center", justifyContent: 'center' }}>
           <View
             style={{
               width: "100%",
               flexDirection: "column",
               alignItems: "center",
+              marginBottom: 180
             }}
           >
             <Text

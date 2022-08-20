@@ -22,16 +22,7 @@ export function LoadingPage() {
   if (!emailSent) {
     return (
       <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
-        <View
-          style={{
-            marginTop: 32,
-            height: 100,
-            width: "100%",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        ></View>
-        <View style={{ alignItems: "center", marginTop: 120 }}>
+        <View style={{ alignItems: "center", justifyContent: 'center', height: '100%', borderWidth: 1 }}>
           <Text
             style={{
               fontFamily: "Poppins_600SemiBold",
@@ -47,6 +38,7 @@ export function LoadingPage() {
             size={140}
             color={"#9C9C9C"}
             resizeMode="contain"
+            style={{ marginBottom: 180 }}
           />
           {message == "" ? null : (
             <Text
@@ -59,66 +51,67 @@ export function LoadingPage() {
               {message}
             </Text>
           )}
-        </View>
-        <View
-          style={{
-            width: "100%",
-            alignItems: "center",
-            position: "absolute",
-            bottom: 60,
-          }}
-        >
-          <TouchableOpacity
+          <View
             style={{
-              width: "90%",
-              height: 50,
+              width: "100%",
               alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 10,
-              borderWidth: 1,
-              borderColor: "#DBDBDB",
-              backgroundColor: "#FFFFFF",
-            }}
-            onPress={() => {
-              const user = auth.currentUser;
-              if (user) {
-                sendEmail(user);
-                setMessage("Sent! Check your spam folder");
-                setEmailSent(true);
-              } else {
-                setMessage("Issue sending email. Refresh app");
-              }
+              position: "absolute",
+              bottom: 60,
             }}
           >
-            <Text
+            <TouchableOpacity
               style={{
-                fontFamily: "Poppins_600SemiBold",
-                fontSize: 16,
-                color: "#262626",
+                width: "90%",
+                height: 50,
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 10,
+                borderWidth: 1,
+                borderColor: "#DBDBDB",
+                backgroundColor: "#FFFFFF",
+              }}
+              onPress={() => {
+                const user = auth.currentUser;
+                if (user) {
+                  sendEmail(user);
+                  setMessage("Sent! Check your spam folder");
+                  setEmailSent(true);
+                } else {
+                  setMessage("Issue sending email. Refresh app");
+                }
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "Poppins_600SemiBold",
+                  fontSize: 16,
+                  color: "#262626",
 
+                }}
+              >
+                {"Send Email"}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ marginTop: 6 }}
+              onPress={() => {
+                auth.signOut();
+                navigation.navigate("Router", { screen: "Login" });
               }}
             >
-              {"Send Email"}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{ marginTop: 6 }}
-            onPress={() => {
-              auth.signOut();
-              navigation.navigate("Router", { screen: "Login" });
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: "Poppins_600SemiBold",
-                fontSize: 12,
-                color: "#8E8E8E",
-              }}
-            >
-              Verified? Log in
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={{
+                  fontFamily: "Poppins_600SemiBold",
+                  fontSize: 12,
+                  color: "#8E8E8E",
+                }}
+              >
+                Verified? Log in
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
+
       </View>
     );
   } else {
@@ -165,7 +158,7 @@ export function LoadingPage() {
             }}
           >
             {({ remainingTime }) => (
-              <View style={{flex: 1, top: '35%'}}>
+              <View style={{ flex: 1, top: '35%' }}>
                 <Text
                   style={{
                     width: '100%',

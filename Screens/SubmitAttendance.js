@@ -51,8 +51,8 @@ export function SubmitAttendancePage() {
         })
     }
     return (
-        <View style={{ flex: 1, backgroundColor: '#FAFAFA' }}>
-            <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <View style={{ flex: 1, backgroundColor: '#FAFAFA', alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{ position: 'absolute', top: 0, marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <TouchableOpacity
                     style={{ width: 68, alignItems: 'center' }}
                     onPress={() => {
@@ -66,24 +66,24 @@ export function SubmitAttendancePage() {
                     />
                 </TouchableOpacity>
             </View>
-            <View style={{ flex: 1, alignItems: 'center' }}>
-                <Text style={{ marginTop: '50%', fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626' }}>Attendance Code</Text>
-                <View style={{ width: '80%' }}>
-                    <BasicExample value={value} setValue={setValue} />
-                    {
-                        (error) ?
-                            <Text style={{ width: '90%', paddingTop: 4, paddingLeft: 10, fontFamily: 'Poppins_500Medium', color: '#E35B56' }}>{error}</Text> : null
-                    }
-                </View>
-                <TouchableOpacity
-                    onPress={() => {
-                        submitAttendanceCode()
-                    }}
-                    style={{ width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 60, borderRadius: 10, borderColor: '#E9C9B2', backgroundColor: loginContext.color }}
-                >
-                    <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>Submit!</Text>
-                </TouchableOpacity>
+
+            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626' }}>Attendance Code</Text>
+            <View style={{ width: '80%', marginBottom: 100 }}>
+                <BasicExample value={value} setValue={setValue} />
+                {
+                    (error) ?
+                        <Text style={{ width: '90%', paddingTop: 4, paddingLeft: 10, fontFamily: 'Poppins_500Medium', color: '#E35B56' }}>{error}</Text> : null
+                }
             </View>
+            <TouchableOpacity
+                onPress={() => {
+                    submitAttendanceCode()
+                }}
+                style={{ width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 60, borderRadius: 10, borderColor: '#E9C9B2', backgroundColor: loginContext.color }}
+            >
+                <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>Submit!</Text>
+            </TouchableOpacity>
+
         </View >
     )
 }

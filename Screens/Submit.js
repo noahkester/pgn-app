@@ -315,43 +315,43 @@ export function SubmitPage(props) {
 
   return (
 
-      <TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
-        <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
-          <View
-            style={{
-              marginTop: 32,
-              height: 100,
-              width: "100%",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
+    <TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
+      <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
+        <View
+          style={{
+            marginTop: 32,
+            height: 100,
+            width: "100%",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <TouchableOpacity
+            style={{ width: 68, alignItems: "center" }}
+            onPress={() => {
+              navigation.goBack();
             }}
           >
-            <TouchableOpacity
-              style={{ width: 68, alignItems: "center" }}
-              onPress={() => {
-                navigation.goBack();
-              }}
-            >
-              <Octicons name="chevron-left" color={"#262626"} size={42} />
-            </TouchableOpacity>
-          </View>
-          <SubmissionProvider
-            value={{
-              name: name,
-              typeOfEvent: typeOfEvent,
-              eventLabel: eventLabel,
-              proofDesc: proofDesc,
-              imageSrc: imageSrc,
-              eventWeight: eventWeight,
-              repeatable: repeatable,
-              proofOrPhoto: proofOrPhoto,
-            }}
-          >
-            <View style={{ width: "100%", alignItems: "center" }}>
+            <Octicons name="chevron-left" color={"#262626"} size={42} />
+          </TouchableOpacity>
+        </View>
+        <SubmissionProvider
+          value={{
+            name: name,
+            typeOfEvent: typeOfEvent,
+            eventLabel: eventLabel,
+            proofDesc: proofDesc,
+            imageSrc: imageSrc,
+            eventWeight: eventWeight,
+            repeatable: repeatable,
+            proofOrPhoto: proofOrPhoto,
+          }}
+        >
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{ width: "100%", alignItems: "center", marginBottom: 180 }}>
               <Text
                 style={{
-                  marginTop: 60,
                   fontFamily: "Poppins_600SemiBold",
                   fontSize: 20,
                   color: "#262626",
@@ -394,9 +394,10 @@ export function SubmitPage(props) {
             >
               <SubmitPoints />
             </View>
-          </SubmissionProvider>
-        </View>
-      </TouchableWithoutFeedback>
+          </View>
+        </SubmissionProvider>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 const styles = StyleSheet.create({

@@ -83,10 +83,11 @@ function AcceptButton(props) {
           props.acceptPoint();
         }
       }}
+      style={{ width: 100 }}
     >
       <Image
         source={require("../../images/accept.png")}
-        style={styles.bottomButton}
+        style={{ height: '100%', width: '100%' }}
         resizeMode="contain"
       />
     </TouchableOpacity>
@@ -101,10 +102,11 @@ function RejectButton(props) {
           props.rejectPoint();
         }
       }}
+      style={{ width: 100 }}
     >
       <Image
         source={require("../../images/reject.png")}
-        style={styles.bottomButton}
+        style={{ height: '100%', width: '100%' }}
         resizeMode="contain"
       />
     </TouchableOpacity>
@@ -207,18 +209,20 @@ function AdminBottom(props) {
   return (
     <View
       style={{
-        height: 120,
+        height: '14%',
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
         paddingLeft: 15,
         paddingRight: 15,
-        backgroundColor: "white",
+        backgroundColor: "#FAFAFA",
         position: "absolute",
         width: "100%",
         bottom: 0,
+        paddingBottom: 10
       }}
     >
+
       <RejectButton
         rejectPoint={rejectPoint}
         setQueueIndex={props.setQueueIndex}
@@ -258,16 +262,14 @@ function PointSheet(props) {
       </Text>
       <Image
         source={
-          !props.image 
+          !props.image
             ? require("../../images/unknown-image.png")
             : { uri: props.image }
         }
         resizeMode="contain"
         style={{
-          marginTop: "2%",
-          height: 240,
+          height: '60%',
           width: 240,
-          marginBottom: '2%',
         }}
       />
       <Text
@@ -345,13 +347,14 @@ export function AdminPage(props) {
       <View
         style={{
           width: "90%",
-          height: 380,
+          height: '50%',
           borderRadius: 15,
           backgroundColor: "#FFFFFF",
           borderWidth: 1,
           borderColor: "#DBDBDB",
           alignItems: "center",
           justifyContent: "center",
+          marginTop: 100,
         }}
       >
         {queueIndex == queue.length ? (
@@ -378,47 +381,3 @@ export function AdminPage(props) {
     </View>
   );
 }
-const styles = StyleSheet.create({
-  adminBottom: {
-    height: 160,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingLeft: 15,
-    paddingRight: 15,
-    backgroundColor: "white",
-    position: "absolute",
-    width: "100%",
-    bottom: 0,
-  },
-  settingsIcon: {
-    width: 60,
-    height: 60,
-  },
-  settingsButton: {
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  bottomButton: {
-    width: 100,
-    height: 100,
-  },
-  pointSheet: {
-    width: "100%",
-    //borderWidth: 5
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  pointImage: {
-    height: 200,
-    width: 200,
-  },
-  pointTextLine: {
-    flexDirection: "row",
-  },
-  space: {
-    height: 20,
-  },
-});

@@ -470,12 +470,13 @@ export function NamePage() {
               <Octicons name="chevron-left" color={"#262626"} size={42} />
             </TouchableOpacity>
           </View>
-          <View style={{ flex: 1, alignItems: "center", marginTop: 180 }}>
+          <View style={{ flex: 1, alignItems: "center", justifyContent: 'center' }}>
             <View
               style={{
                 width: "100%",
                 flexDirection: "column",
                 alignItems: "center",
+                marginBottom: 180
               }}
             >
               <Text

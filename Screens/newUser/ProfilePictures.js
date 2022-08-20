@@ -53,58 +53,65 @@ function ImageUpload(props) {
         })
         .catch((e) => {
           console.log("(AccountImageUpload) Error uploading image" + e);
+          props.setImageLoaded(true);
         });
+    }
+    else {
+      props.setImageLoaded(true);
     }
   };
   return (
     <TouchableOpacity
       style={{
-        width: "100%",
-        height: 140,
-        justifyContent: "center",
+        borderWidth: 1,
+        width: "80%",
+        height: '20%',
+        borderRadius: 10,
+        borderColor: "#DBDBDB",
+        flexDirection: "column",
         alignItems: "center",
-        zIndex: -1,
+        justifyContent: "space-between",
         backgroundColor: "#FFFFFF",
+        padding: 10
       }}
       onPress={() => {
         props.setImageLoaded(false);
         pickImage();
       }}
     >
-      <Image
-        source={image}
-        style={{ width: "60%", maxHeight: 110 }}
-        resizeMode="contain"
-      />
+      <View
+        style={{
+          width: "100%",
+          height: '70%',
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: -1,
+          backgroundColor: "#FFFFFF",
+
+        }}
+
+      >
+        <Image
+          source={image}
+          style={{ width: "100%", height: '100%' }}
+          resizeMode="contain"
+        />
+      </View>
+      <Text
+        style={{
+          fontFamily: "Poppins_600SemiBold",
+          fontSize: 16,
+          color: "#262626"
+        }}
+      >
+        {props.title}
+      </Text>
     </TouchableOpacity>
   );
 }
 function ImageUploadCard(props) {
   return (
-    <View
-      style={{
-        borderWidth: 1,
-        width: "80%",
-        borderRadius: 10,
-        borderColor: "#DBDBDB",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#FFFFFF",
-      }}
-    >
-      <ImageUpload type={props.type} setImageLoaded = {props.setImageLoaded}/>
-      <Text
-        style={{
-          fontFamily: "Poppins_600SemiBold",
-          fontSize: 16,
-          color: "#262626",
-          marginBottom: 10,
-        }}
-      >
-        {props.title}
-      </Text>
-    </View>
+    <ImageUpload type={props.type} title={props.title} setImageLoaded={props.setImageLoaded} />
   );
 }
 
@@ -182,7 +189,7 @@ export function ProfilePicturesPage() {
           imageSrc={require("../../images/imageUpload3.png")}
         />
       </View>
-      
+
       <View
         style={{
           width: "100%",
@@ -202,7 +209,7 @@ export function ProfilePicturesPage() {
             borderColor: "#DBDBDB",
             backgroundColor: "#FFFFFF",
           }}
-          onPress={ (imageLoaded) ? uploadData: null}
+          onPress={(imageLoaded) ? uploadData : null}
         >
           <Text
             style={{

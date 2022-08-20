@@ -28,8 +28,8 @@ export function TopBar(props) {
   const profileUrl = urlContext.professionalUrl;
   const adminContext = useContext(AdminContext);
   return (
-    <View>
-      <View style={{ marginTop: 32, width: "100%", height: 160, flexDirection: "row", justifyContent: "space-between", alignItems: 'center', backgroundColor: "#FFFFFF", paddingHorizontal: 20, borderBottomWidth: 1, borderColor: '#DBDBDB' }}>
+    <View style={{}}>
+      <View style={{ marginTop: 32, width: "100%", height: 120, flexDirection: "row", justifyContent: "space-between", alignItems: 'center', backgroundColor: "#FFFFFF", paddingHorizontal: 20, borderBottomWidth: 1, borderColor: '#DBDBDB' }}>
         <Profile
           name={currentUser.firstname}
           class={currentUser.pledgeClass}
@@ -90,7 +90,7 @@ export function NavigationPage() {
           tabBarShowLabel: false,
           tabBarStyle: {
             backgroundColor: globalStyles.colors,
-            height: 100,
+            height: '15%',
           },
 
           tabBarActiveTintColor: loginContext.color,

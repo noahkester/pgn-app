@@ -156,8 +156,8 @@ function PointDisplay(props) {
   }
 
   return (
-    <View style={{ backgroundColor: '#FFFFFF', width: '90%', paddingBottom: 10, borderWidth: 1, borderColor: '#D8D8D8', borderRadius: 10, alignItems: 'center' }}>
-      <View style={{ alignItems: 'center', justifyContent: 'space-evenly', height: 300 }}>
+    <View style={{ backgroundColor: '#FFFFFF', width: '90%', paddingBottom: 10, height: '70%', borderWidth: 1, borderColor: '#D8D8D8', borderRadius: 10, alignItems: 'center' }}>
+      <View style={{ alignItems: 'center', justifyContent: 'space-evenly', width: '100%', height: '100%' }}>
         <PointCard
           name={'Philanthropy'}
           image={require('../images/philanthropy.png')}
@@ -179,32 +179,35 @@ function PointDisplay(props) {
           totalPoints={totalSocialPoints}
           color={'#EFA039'}
         />
+
+        <View style={{ width: '100%', flexWrap: 'wrap', flexDirection: 'row' }}>
+          <SubRequirement
+            label={'Dues'}
+            type={'Checkbox'}
+            completed={dues ? 1 : 0}
+            required={1}
+          />
+          {/*TODO Create a more dynamic way to render this besides active vs not (pull from firebase)*/}
+          {
+            (status === 'pledge') ?
+              <SubRequirement
+                label={'Interviews'}
+                type={'Fraction'}
+                completed={activeInterviews}
+                required={adminActiveMeetings}
+              />
+              : null
+          }
+          <SubRequirement
+            label={'Attendance'}
+            type={'Percentage'}
+            completed={attendance}
+            required={totalChapterMeetings}
+          />
+        </View>
+
       </View>
-      <View style={{ width: '90%', flexWrap: 'wrap', flexDirection: 'row' }}>
-        <SubRequirement
-          label={'Dues'}
-          type={'Checkbox'}
-          completed={dues ? 1 : 0}
-          required={1}
-        />
-        {/*TODO Create a more dynamic way to render this besides active vs not (pull from firebase)*/}
-        {
-          (status === 'pledge') ?
-            <SubRequirement
-              label={'Interviews'}
-              type={'Fraction'}
-              completed={activeInterviews}
-              required={adminActiveMeetings}
-            />
-            : null
-        }
-        <SubRequirement
-          label={'Attendance'}
-          type={'Percentage'}
-          completed={attendance}
-          required={totalChapterMeetings}
-        />
-      </View>
+
     </View>
   );
 }

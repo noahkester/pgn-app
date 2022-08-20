@@ -80,9 +80,9 @@ export function LoginPage() {
         </TouchableOpacity>
       </View>
       <View
-        style={{ flex: 1, alignItems: "center", marginTop: 180 }}
+        style={{ flex: 1, alignItems: "center", justifyContent: 'center' }}
       >
-        <View style={{ width: '100%', flexDirection: 'column', alignItems: 'center' }}>
+        <View style={{ width: '100%', flexDirection: 'column', alignItems: 'center', marginBottom: 180 }}>
           <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626', marginBottom: 20 }}>Log in</Text>
           <View style={{ backgroundColor: '#FFFFFF', borderWidth: 1, borderRadius: 10, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center' }}>
             <TextInput
