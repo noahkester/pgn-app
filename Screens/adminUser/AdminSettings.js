@@ -60,6 +60,7 @@ export function AdminSettingsPage() {
     const [adding, setAdding] = useState(false);
     const [duesBanner, setDuesBanner] = useState(adminContext.points.activateDuesBanner);
     const [duesUsername, setDuesUsername] = useState('');
+    const [duesError, setDuesError] = useState('');
 
     const setAllToActive = () => {
         db.collection("users")
@@ -91,6 +92,9 @@ export function AdminSettingsPage() {
                     });
                     doc.ref.update({
                         attendance: 0
+                    });
+                    doc.ref.update({
+                        activeInterviews: 0
                     });
                 })
             })
@@ -130,8 +134,33 @@ export function AdminSettingsPage() {
             })
     }
     const updateDues = () => {
-        setUserError('');
-        // TODO update dues
+        setDuesError('');
+        const name = duesUsername.split(' ');
+        if (name.length != 2) {
+            setDuesError('Please type first and last name');
+            return;
+        }
+        db.collection("users")
+            .where('firstname', '==', name[0])
+            .where('lastname', '==', name[1])
+            .get()
+            .then((querySnapshot) => {
+                var found = false;
+                console.log('this' + name);
+                querySnapshot.forEach((doc) => {
+                    found = true;
+                    //console.log(doc.data());
+                    doc.ref.update({ dues: true })
+                    //setDuesError(name[0] + ' ' + name[1] + ' dues updated');
+                    setDuesUsername('');
+                })
+                if (!found) {
+                    console.log('hi')
+                    setDuesError('Could not find user');
+                }
+            }).catch(() => {
+                setDuesError('Could not find user');
+            })
     }
 
 
@@ -334,6 +363,7 @@ export function AdminSettingsPage() {
                         <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16 }}>{duesBanner ? 'ON' : 'OFF'}</Text>
                     </TouchableOpacity>
                     <Text style={{ marginTop: 20, fontFamily: 'Poppins_600SemiBold', fontSize: 18, marginLeft: 10, width: '90%' }}>User Payment</Text>
+
                     <View style={{ width: '90%', flexDirection: 'row', alignItems: 'center' }}>
                         <TextInput
                             style={{ marginTop: 10, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#DBDBDB', padding: 10, borderRadius: 10, width: '90%', fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#8E8E8E' }}
@@ -360,6 +390,9 @@ export function AdminSettingsPage() {
                             />
                         </TouchableOpacity>
                     </View>
+                    {(duesError == '') ? null :
+                        <Text style={{ width: '90%', paddingTop: 4, paddingLeft: 10, fontFamily: 'Poppins_500Medium', color: '#E35B56' }}>{duesError}</Text>
+                    }
                     <Text style={{ marginTop: 60, fontFamily: 'Poppins_600SemiBold', fontSize: 18, marginLeft: 10, width: '90%' }}>Manage users</Text>
                     <TextInput
                         style={{ backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#DBDBDB', padding: 10, borderRadius: 10, width: '90%', fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#8E8E8E' }}
