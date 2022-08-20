@@ -1,12 +1,12 @@
 import { StyleSheet, Button, TouchableOpacity, TouchableHighlight, Text, TouchableWithoutFeedback, TextInput, Image, View, ScrollView, Keyboard, } from "react-native";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import globalStyles from "../styles/Styles";
 import { SearchBar } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { db, auth, store } from "../utils/firebase";
 import Checkbox from "expo-checkbox";
 import { findRoleColor } from '../styles/Colors';
-
+import LoginContext from "../utils/LoginContext";
 var allSettled = require('promise.allsettled');
 
 
@@ -74,7 +74,7 @@ function People(props) {
 export function PeoplePage() {
   // TODO pull to get users 'Spring 2022'
   // TODO pull all users and filer on pledge class
-
+  const loginContext = useContext(LoginContext);
   //search bar
   const [search, setSearch] = useState("");
   const [filteredDataSource, setFilteredDataSource] = useState([]);
@@ -85,7 +85,7 @@ export function PeoplePage() {
 
   //checkbox
   const [isChecked, setChecked] = useState(false);
-  const [curUser, setCurUser] = useState(null);
+
 
   useEffect(() => {
     //will be a fetch once the backend is complete
@@ -123,9 +123,7 @@ export function PeoplePage() {
         allSettled(promises).then((results) => {
           setProfileMap(profPicMap);
         })
-        var currentUser = allUsers.find((t) => t.id === auth.currentUser.uid);
-        //setProfileMap(profPicMap);
-        setCurUser(currentUser);
+  
         allUsers = allUsers.filter(
           (item) => item.id != auth.currentUser.uid
         );
@@ -158,7 +156,7 @@ export function PeoplePage() {
   function displayPledgeClass() {
     if (isChecked) {
       var pledgePeople = masterDataSource.filter((item) => {
-        return item.pledgeClass == curUser.pledgeClass;
+        return item.pledgeClass == loginContext.currentUser.pledgeClass;
       });
       setFilteredDataSource(pledgePeople);
     } else {
