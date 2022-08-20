@@ -258,14 +258,16 @@ function PointSheet(props) {
       </Text>
       <Image
         source={
-          props.image === ""
+          !props.image 
             ? require("../../images/unknown-image.png")
             : { uri: props.image }
         }
         resizeMode="contain"
         style={{
+          marginTop: "2%",
           height: 240,
           width: 240,
+          marginBottom: '2%',
         }}
       />
       <Text

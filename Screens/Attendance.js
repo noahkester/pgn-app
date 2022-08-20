@@ -49,7 +49,6 @@ function AttendanceCard(props) {
           type: 'Excuse',
           weight: 0,
           code: props.data.code,
-          image: '',
           title: auth.currentUser.uid + "_" + label
         }).then(() => {
           setExcuseSent(true);
