@@ -12,19 +12,19 @@ roles = {
     VPofMembership: '#ED695E',
 
     //Other roles
-    AcademicChair: 'red',
-    AlumniChair: 'red',
-    AssistantVPofCommunications: 'red',
-    AssistantVPofMembership: 'red',
-    DEIChair: 'red',
-    EntrepreneurshipChair: 'red',
-    MentorshipChair: 'red',
-    RecruitmentChair: 'red',
-    PhilanthropyChair: 'red',
-    PRChair: 'red',
-    ProfessionalismChair: 'red',
-    SocialChair: 'red',
-    IntramuralChair: 'red',
+    AcademicChair: '#3C86F7',
+    AlumniChair: '#6FC975',
+    AssistantVPofCommunications: '#5FCAC5',
+    AssistantVPofMembership: '#A89173',
+    DEIChair: '#ED695E',
+    EntrepreneurshipChair: '#3C86F7',
+    MentorshipChair: '#6FC975',
+    RecruitmentChair: '#5FCAC5',
+    PhilanthropyChair: '#A89173',
+    PRChair: '#ED695E',
+    ProfessionalismChair: '#3C86F7',
+    SocialChair: '#6FC975',
+    IntramuralChair: '#5FCAC5',
 
 }
 

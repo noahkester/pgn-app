@@ -74,9 +74,9 @@ function Event(props) {
 export function EventSection(props) {
   const events = props.events;
   events.sort((a, b) => b.time - a.time);
-  const eventsList = events.map((event) => (
+  const eventsList = events.map((event, index) => (
     <Event
-      key={event.label}
+      key={index}
       name={event.label}
       type={event.type}
       weight={event.weight}
