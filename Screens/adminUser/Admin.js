@@ -121,6 +121,7 @@ function AdminBottom(props) {
         console.log("(points) Updated points status to accepted");
       })
       .catch((error) => {
+        console.log(props.pointData.title);
         console.log("(points) Error updating points status");
       });
     db.collection("users")

@@ -45,7 +45,7 @@ export function ColorThemePage(props) {
                 <Text style={{ textAlign: 'center', fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626' }}>{'Color Theme'}</Text>
                 <View style={{ width: 60, marginRight: 16 }}></View>
             </View>
-            <View style={{ width: '90%', height: 100, alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap' }}>
+            <View style={{ width: '90%', alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap' }}>
                 <Color selectedColor={color} setColor={setColor} color={'#BD655A'} />
                 <Color selectedColor={color} setColor={setColor} color={'#E34322'} />
                 <Color selectedColor={color} setColor={setColor} color={'#ED7234'} />
@@ -63,6 +63,7 @@ export function ColorThemePage(props) {
                 <Color selectedColor={color} setColor={setColor} color={'#BBBBBB'} />
                 <Color selectedColor={color} setColor={setColor} color={'#CCCCCC'} />
             </View>
+            <Text style={{ marginTop: 20, textAlign: 'center', fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#8E8E8E' }}>{'Reload app to see changes'}</Text>
         </View>
     )
 }

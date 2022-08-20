@@ -81,7 +81,7 @@ function PersonCard(props) {
                         <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{props.ai}</Text>
                     </View>
                     <View style={{ width: '25%', height: '100%', borderWidth: 1, borderTopRightRadius: 10, borderBottomRightRadius: 10, backgroundColor: attdColor, alignItems: 'center', justifyContent: 'center', borderColor: '#DBDBDB' }}>
-                        <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{(props.attd / totalAttd * 100) + '%'}</Text>
+                        <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#FFFFFF' }}>{Math.round(props.attd / totalAttd * 100) + '%'}</Text>
                     </View>
                 </View>
             </View>

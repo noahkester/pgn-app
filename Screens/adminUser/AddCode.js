@@ -26,6 +26,7 @@ import {
   addHours,
 } from "../../utils/time";
 import * as firebase from "firebase";
+import colors from "../../styles/Colors";
 
 export function AddCodePage() {
   const colorScheme = Appearance.getColorScheme();
@@ -208,19 +209,17 @@ export function AddCodePage() {
           onPress={() => {
             createMeeting();
           }}
-          style={[
-            globalStyles.universityColorFill,
-            {
-              borderRadius: 10,
-              width: "90%",
-              alignItems: "center",
-              justifyContent: "center",
-              height: 50,
-              position: "absolute",
-              borderColor: "#E9C9B2",
-              bottom: 60,
-            },
-          ]}
+          style={{
+            borderRadius: 10,
+            width: "90%",
+            alignItems: "center",
+            justifyContent: "center",
+            height: 50,
+            position: "absolute",
+            borderColor: "#E9C9B2",
+            bottom: 60,
+            backgroundColor: colors.universityColor
+          }}
         >
           <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>
             Create!

@@ -11,7 +11,8 @@ import {
 import Carousel from 'react-native-anchor-carousel';
 import SimplePaginationDot from './SimplePaginationDot';
 import globalStyles from "../../styles/Styles";
-
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import colors from '../../styles/Colors'
 const { width: windowWidth } = Dimensions.get('window');
 
 const INITIAL_INDEX = 0;
@@ -32,10 +33,10 @@ export default function ImageCarousel(props) {
                     carouselRef.current.scrollToIndex(index);
                 }}>
                 {(uri === "") ?
-                    <View style={[styles.imageBackground, globalStyles.universityColorFill, {borderRadius: 1000, alignItems: 'center', justifyContent: 'center'}]}>
-                        <Image 
-                            source = {require('../../images/account.png')}
-                            style={{height: '100%', width: '100%'}}
+                    <View style={[styles.imageBackground, { backgroundColor: colors.universityColor, borderRadius: 1000, alignItems: 'center', justifyContent: 'center' }]}>
+                        <Image
+                            source={require('../../images/account.png')}
+                            style={{ height: '100%', width: '100%' }}
                         />
                     </View> :
                     <ImageBackground

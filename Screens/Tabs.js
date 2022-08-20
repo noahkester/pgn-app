@@ -57,11 +57,13 @@ export function Profile(props) {
   return (
     <View style={{ width: 100, height: 120, flexDirection: "column", alignItems: "center", justifyContent: "center", textAlignVertical: 'top' }}>
       <TouchableOpacity onPress={() => navigation.navigate("Account")}>
-        <Image
-          source={props.profileUrl ? { uri: props.profileUrl } : require("../images/profile.png")}
-          resizeMode="cover"
-          style={{ width: 80, height: 80, borderRadius: 40 }}
-        />
+        <View style={{ width: 80, height: 80, backgroundColor: colors.universityColor, borderRadius: 40, alignItems: 'center', justifyContent: 'center' }}>
+          <Image
+            source={props.profileUrl ? { uri: props.profileUrl } : require("../images/account.png")}
+            resizeMode="cover"
+            style={{ width: 70, height: 70, borderRadius: 40 }}
+          />
+        </View>
       </TouchableOpacity>
     </View>
   );
