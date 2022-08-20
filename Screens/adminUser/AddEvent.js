@@ -12,7 +12,7 @@ import { dateObjectToUnixEpoch, unixEpochTimeToMonthDay, unixEpochTimeToClock } 
 function AccountTop() {
     const navigation = useNavigation();
     return (
-        <View style={{ marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <View style={{ position: 'absolute', top: 0, marginTop: 32, height: 100, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
             <TouchableOpacity
                 style={{ marginLeft: 16, width: 68 }}
                 onPress={() => {
@@ -134,9 +134,9 @@ export function AddEventPage() {
         hideDatePicker();
     };
     return (
-        <View style={{ backgroundColor: '#FAFAFA', flex: 1, alignItems: 'center' }}>
+        <View style={{ backgroundColor: '#FAFAFA', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <AccountTop />
-            <Text style={{ marginTop: 60, fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626', marginBottom: 20 }}>Create Event</Text>
+            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626', marginBottom: 20 }}>Create Event</Text>
             <View style={{ borderWidth: 1, borderRadius: 10, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center', backgroundColor: '#FFFFFF' }}>
                 <TextInput
                     autoCapitalize="none"
@@ -148,9 +148,9 @@ export function AddEventPage() {
                     {''}
                 </TextInput>
             </View>
-            {(createPressed && newEvent.current.label === "") ? <Text style={{ width: '90%', paddingTop: 4, paddingLeft: 10, fontFamily: 'Poppins_500Medium', color: '#E35B56' }}>Title is required</Text>  : null
-            
-        }
+            {(createPressed && newEvent.current.label === "") ? <Text style={{ width: '90%', paddingTop: 4, paddingLeft: 10, fontFamily: 'Poppins_500Medium', color: '#E35B56' }}>Title is required</Text> : null
+
+            }
             <View style={{ marginTop: 10, borderWidth: 1, borderRadius: 10, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center', backgroundColor: '#FFFFFF' }}>
                 <TextInput
                     autoCapitalize="none"
@@ -222,7 +222,7 @@ export function AddEventPage() {
             <TouchableOpacity
                 onPress={() => {
                     setCreatePressed(true);
-                    if( newEvent.current.label === ""){
+                    if (newEvent.current.label === "") {
                         return;
                     }
                     db.collection("events")
@@ -236,7 +236,7 @@ export function AddEventPage() {
                             console.error("(addevent.js) error writing document: ", error);
                         });
                 }}
-                style={ {
+                style={{
                     borderRadius: 10,
                     width: "90%",
                     alignItems: "center",

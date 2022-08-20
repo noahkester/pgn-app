@@ -91,10 +91,12 @@ export function AddCodePage() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View
-        style={{ flex: 1, backgroundColor: "#FFFFFF", alignItems: "center" }}
+        style={{ flex: 1, backgroundColor: "#FFFFFF", alignItems: "center", justifyContent: 'center' }}
       >
         <View
           style={{
+            position: 'absolute',
+            top: 0,
             marginTop: 32,
             height: 100,
             width: "100%",
@@ -114,7 +116,6 @@ export function AddCodePage() {
         </View>
         <Text
           style={{
-            marginTop: 120,
             fontFamily: "Poppins_600SemiBold",
             fontSize: 20,
             color: "#262626",

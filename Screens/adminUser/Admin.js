@@ -297,7 +297,8 @@ export function AdminPage(props) {
     var tempQueue = [];
     db.collection("points")
       .where("status", "==", "waiting")
-      .onSnapshot(async (querySnapshot) => {
+      .get()
+      .then(async (querySnapshot) => {
         var promises = [];
         var tempUrlMap = {};
         querySnapshot.forEach(async (doc) => {
