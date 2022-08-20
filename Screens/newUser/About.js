@@ -16,7 +16,7 @@ export function AboutPage() {
 
   const updateAbout = () => {
     setNextPressed(true);
-      if(quote === ""){
+      if(quote  === "" || hometown  === ""){
         return;
       }
       newUserContext.hometown = hometown;
