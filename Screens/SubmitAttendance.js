@@ -7,11 +7,11 @@ import BasicExample from "./adminUser/CodeInput";
 import Octicons from 'react-native-vector-icons/Octicons';
 import * as firebase from "firebase";
 import { dateObjectToUnixEpoch } from '../utils/time'
-import IonIcons from 'react-native-vector-icons/Ionicons';
-
+import LoginContext from "../utils/LoginContext";
 export function SubmitAttendancePage() {
     const [value, setValue] = useState('');
     const [error, setError] = useState('');
+    const loginContext = useContext(LoginContext);
     const navigation = useNavigation();
 
     const submitAttendanceCode = () => {
@@ -79,7 +79,7 @@ export function SubmitAttendancePage() {
                     onPress={() => {
                         submitAttendanceCode()
                     }}
-                    style={[globalStyles.universityColorFill, { width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 60, borderRadius: 10, borderColor: '#E9C9B2' }]}
+                    style={{ width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 60, borderRadius: 10, borderColor: '#E9C9B2', backgroundColor: loginContext.color }}
                 >
                     <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>Submit!</Text>
                 </TouchableOpacity>

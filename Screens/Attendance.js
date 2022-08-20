@@ -48,7 +48,9 @@ function AttendanceCard(props) {
           status: 'waiting',
           type: 'Excuse',
           weight: 0,
-          code: props.data.code
+          code: props.data.code,
+          image: '',
+          title: auth.currentUser.uid + "_" + label
         }).then(() => {
           setExcuseSent(true);
         })
@@ -230,7 +232,8 @@ export function AttendancePage() {
   const [meetings, setMeetings] = useState([]);
 
   const navigation = useNavigation();
-
+  const loginContext = useContext(LoginContext);
+  const color = loginContext.color;
   useEffect(() => {
     db.collection("chapter-meetings")
       .get()
@@ -282,14 +285,14 @@ export function AttendancePage() {
       </ScrollView>
       <View style={{ position: 'absolute', bottom: 12, right: 24, borderRadius: 30, backgroundColor: '#FFFFFF' }}>
         <TouchableOpacity
-          style={[{ width: 50, height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 34, backgroundColor: colors.universityColor + '40' }]}
+          style={[{ width: 50, height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 34, backgroundColor: color + '40' }]}
           onPress={() => {
             navigation.navigate("SubmitAttendance");
           }}
         >
           <IonIcons
             name="md-barcode"
-            color={colors.universityColor}
+            color={color}
             size={40}
             style={{ marginLeft: 3 }}
           />

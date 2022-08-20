@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import Octicons from 'react-native-vector-icons/Octicons';
 import colors from '../styles/Colors'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import LoginContext from "../utils/LoginContext";
 function Color(props) {
     const active = props.selectedColor === props.color;
     return (
@@ -25,7 +25,10 @@ function Color(props) {
 
 export function ColorThemePage(props) {
     const navigation = useNavigation();
-    const [color, setColor] = useState(colors.universityColor);
+    const loginContext = useContext(LoginContext);
+    const color = loginContext.color;
+    const setColor = loginContext.setColor;
+ 
 
     return (
         <View style={{ flex: 1, alignItems: 'center' }}>

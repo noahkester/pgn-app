@@ -32,7 +32,7 @@ function SignOutButton(props) {
                 {
                     position: 'absolute',
                     bottom: 10,
-                    backgroundColor: colors.universityColor,
+                    backgroundColor: '#C57035',
                     borderRadius: 10,
                     width: "90%",
                     alignItems: "center",
@@ -289,14 +289,14 @@ export function AdminSettingsPage() {
                 <View style={{ width: 68 }}></View>
                 <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626' }}>Settings</Text>
                 <TouchableOpacity
-                    style={{ width: 50, height: 50, backgroundColor: colors.universityColor + '40', alignItems: 'center', justifyContent: 'center', borderRadius: 34, marginRight: 16 }}
+                    style={{ width: 50, height: 50, backgroundColor: '#C57035' + '40', alignItems: 'center', justifyContent: 'center', borderRadius: 34, marginRight: 16 }}
                     onPress={() => {
                         setIsLocked(!isLocked);
                     }}
                 >
                     <FontAwesome
                         name={isLocked ? 'lock' : 'unlock'}
-                        color={colors.universityColor}
+                        color={'#C57035'}
                         size={32}
                         style={{}}
                     />

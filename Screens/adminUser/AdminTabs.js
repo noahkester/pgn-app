@@ -37,7 +37,7 @@ export function AdminTabsPage() {
                         height: 100,
                     },
 
-                    tabBarActiveTintColor: colors.universityColor,
+                    tabBarActiveTintColor: '#C57035',
                     headerShown: false,
                     tabBarInactiveTintColor: colors.darkGray,
                 }}

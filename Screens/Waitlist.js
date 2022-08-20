@@ -67,7 +67,6 @@ function WaitScreen() {
     return events;
   }, []);
 
-
   return (
     <View style={{ width: "100%", height: "100%" }}>
       <ScrollView
@@ -77,7 +76,7 @@ function WaitScreen() {
         }
       >
         <View style={globalStyles.scrollView}>
-          <EventSection label={'Waiting'} events={waiting} />
+          <EventSection label={"Waiting"} events={waiting} />
         </View>
       </ScrollView>
     </View>
@@ -142,7 +141,6 @@ function AcceptedScreen() {
   //     });
   // }, [refreshing]);
 
-
   return (
     <View style={{ width: "100%", height: "100%" }}>
       <ScrollView
@@ -152,7 +150,7 @@ function AcceptedScreen() {
         }
       >
         <View style={globalStyles.scrollView}>
-          <EventSection label={'Accepted'} events={accepted} />
+          <EventSection label={"Accepted"} events={accepted} />
         </View>
       </ScrollView>
     </View>
@@ -233,7 +231,7 @@ function DeclinedScreen() {
             height: "100%",
           }}
         >
-          <EventSection label={'Rejected'} events={rejected} />
+          <EventSection label={"Rejected"} events={rejected} />
         </View>
       </ScrollView>
     </View>
@@ -312,7 +310,26 @@ function TopTab() {
             sceneContainerStyle={{
               backgroundColor: "#FAFAFA",
             }}
-            screenOptions={styles.screenOps}
+            screenOptions={{
+              tabBarStyle: {
+                shadowOffset: { width: 0, height: 0 },
+                backgroundColor: "#FAFAFA",
+              },
+              tabBarActiveTintColor: "white",
+              tabBarInactiveTintColor: "black",
+              tabBarLabelStyle: {
+                fontFamily: "Poppins_600SemiBold",
+                fontSize: 12,
+              },
+              tabBarIndicatorStyle: {
+                backgroundColor: loginContext.color,
+                left: 20,
+                width: "23.5%",
+                height: "60%",
+                borderRadius: 30,
+                marginBottom: 10,
+              },
+            }}
           >
             <Tab.Screen
               name="Waitlist"
@@ -338,22 +355,5 @@ function TopTab() {
 export function WaitlistPage() {
   return <TopTab />;
 }
-const styles = StyleSheet.create({
-  screenOps: {
-    tabBarStyle: {
-      shadowOffset: { width: 0, height: 0 },
-      backgroundColor: "#FAFAFA",
-    },
-    tabBarActiveTintColor: "white",
-    tabBarInactiveTintColor: "black",
-    tabBarLabelStyle: { fontFamily: "Poppins_600SemiBold", fontSize: 12 },
-    tabBarIndicatorStyle: {
-      backgroundColor: colors.universityColor,
-      left: 20,
-      width: "23.5%",
-      height: "60%",
-      borderRadius: 30,
-      marginBottom: 10,
-    },
-  },
-});
+
+

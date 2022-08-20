@@ -99,9 +99,9 @@ export function EventSection(props) {
 }
 
 export function EventsPage() {
-
+  const loginContext = useContext(LoginContext);
   function UpcomingEvents() {
-    const loginContext = useContext(LoginContext);
+
     // TODO conditionally render line
     return (
       <ScrollView style={{ width: "100%" }}>
@@ -115,7 +115,6 @@ export function EventsPage() {
   }
 
   function OngoingEvents() {
-    const loginContext = useContext(LoginContext);
 
     return (
       <ScrollView style={globalStyles.scroll}>
@@ -127,7 +126,6 @@ export function EventsPage() {
   }
 
   function AllEvents() {
-    const loginContext = useContext(LoginContext);
     return (
       <ScrollView style={globalStyles.scroll}>
         <View style={globalStyles.scrollView}>
@@ -158,7 +156,7 @@ export function EventsPage() {
             tabBarLabelStyle: { fontFamily: 'Poppins_600SemiBold', fontSize: 12 },
 
             tabBarIndicatorStyle: {
-              backgroundColor: colors.universityColor,
+              backgroundColor: loginContext.color,
               left: 20,
               width: "23.5%",
               height: "60%",

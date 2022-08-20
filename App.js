@@ -38,6 +38,7 @@ const Stack = createNativeStackNavigator();
 function App() {
   const [user, setUser] = useState();
 
+  const [color, setColor] = useState("#C57035");
   const [events, setEvents] = useState({
     todayEvents: [],
     upcomingEvents: [],
@@ -79,9 +80,9 @@ function App() {
 
   async function loadUserInfo() {
     // colors here
-    const color = await AsyncStorage.getItem('@colorTheme');
-    if (color != null) {
-      Object.assign(colors, { universityColor: color })
+    const color1 = await AsyncStorage.getItem('@colorTheme');
+    if (color1 != null) {
+      setColor(color1);
     }
 
     getEvents().then((returnedEvents) => {
@@ -187,6 +188,8 @@ function App() {
                   currentUser: currentUser,
                   setCurrentUser: setCurrentUser,
                   events: events,
+                  color: color,
+                  setColor: setColor,
                 }}
               >
                 <NewUserProvider

@@ -10,11 +10,13 @@ import AdminContext from "../utils/AdminContext";
 
 export function SubmitPoints(props) {
   const navigation = useNavigation();
+  const loginContext = useContext(LoginContext);
+  const color = loginContext.color;
   return (
     <TouchableOpacity
       title={props.title}
       style={[
-        { backgroundColor: colors.universityColor, borderRadius: 10, width: "100%", alignItems: "center", justifyContent: "center", height: 50, borderColor: colors.universityFadedColor }
+        { backgroundColor: color, borderRadius: 10, width: "100%", alignItems: "center", justifyContent: "center", height: 50, borderColor: colors.universityFadedColor }
       ]}
       onPress={() => {
         navigation.navigate(props.address);
@@ -214,14 +216,14 @@ function HomePageHeader() {
     <View style={{ marginBottom: 10, width: '90%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
       <Text style={{ fontSize: 22, fontFamily: 'Poppins_600SemiBold', color: '#262626' }}>{"Hello, " + loginContext.currentUser.firstname}</Text>
       <TouchableOpacity
-        style={{ width: 46, height: 46, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.universityColor + '50', borderRadius: 23 }}
+        style={{ width: 46, height: 46, alignItems: 'center', justifyContent: 'center', backgroundColor: loginContext.color + '50', borderRadius: 23 }}
         onPress={() => {
           navigation.navigate('Waitlist');
         }}
       >
         <FontAwesome5Icon
           name='clipboard-list'
-          color={colors.universityColor}
+          color={loginContext.color}
           size={28}
         />
       </TouchableOpacity>

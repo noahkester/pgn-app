@@ -24,7 +24,6 @@ import SubmissionContext, {
   SubmissionProvider,
 } from "../utils/SubmissionContext";
 import * as ImageManipulator from "expo-image-manipulator";
-import IonIcons from "react-native-vector-icons/Ionicons";
 import Octicons from "react-native-vector-icons/Octicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
@@ -223,7 +222,7 @@ export function SubmitPoints(props) {
   const imageSrc = submissionContext.imageSrc;
   const eventWeight = submissionContext.eventWeight;
   const repeatable = submissionContext.repeatable;
-
+  const loginContext = useContext(LoginContext);
   const navigation = useNavigation();
 
   const uploadSubmissionImage = async (uri, imageName) => {
@@ -239,8 +238,7 @@ export function SubmitPoints(props) {
   return (
     <TouchableOpacity
       title={props.title}
-      style={[
-        globalStyles.universityColorFill,
+      style={
         {
           borderRadius: 10,
           borderColor: "#E9C9B2",
@@ -248,8 +246,9 @@ export function SubmitPoints(props) {
           alignItems: "center",
           justifyContent: "center",
           height: 50,
-        },
-      ]}
+          backgroundColor: loginContext.color,
+        }
+      }
       onPress={() => {
         if (proofOrPhoto.current && eventLabel.current !== "") {
           const suffix = repeatable.current ? Math.floor(Math.random() * 1000000000) : "";
@@ -315,11 +314,7 @@ export function SubmitPage(props) {
   const navigation = useNavigation();
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      enabled={true}
-      behavior={"padding"}
-    >
+
       <TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
         <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
           <View
@@ -402,7 +397,6 @@ export function SubmitPage(props) {
           </SubmissionProvider>
         </View>
       </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
   );
 }
 const styles = StyleSheet.create({

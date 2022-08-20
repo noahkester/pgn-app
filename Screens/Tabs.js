@@ -53,15 +53,16 @@ export function TopBar(props) {
 
 export function Profile(props) {
   const navigation = useNavigation();
-
+  const loginContext = useContext(LoginContext);
+  const color = loginContext.color;
   return (
     <View style={{ width: 100, height: 120, flexDirection: "column", alignItems: "center", justifyContent: "center", textAlignVertical: 'top' }}>
       <TouchableOpacity onPress={() => navigation.navigate("Account")}>
-        <View style={{ width: 80, height: 80, backgroundColor: colors.universityColor, borderRadius: 40, alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ width: 80, height: 80, backgroundColor: color, borderRadius: 40, alignItems: 'center', justifyContent: 'center' }}>
           <Image
             source={props.profileUrl ? { uri: props.profileUrl } : require("../images/account.png")}
             resizeMode="cover"
-            style={{ width: 70, height: 70, borderRadius: 40 }}
+            style={{ width: 80, height: 80, borderRadius: 40 }}
           />
         </View>
       </TouchableOpacity>
@@ -92,7 +93,7 @@ export function NavigationPage() {
             height: 100,
           },
 
-          tabBarActiveTintColor: colors.universityColor,
+          tabBarActiveTintColor: loginContext.color,
           headerShown: false,
           tabBarInactiveTintColor: colors.darkGray,
         }}

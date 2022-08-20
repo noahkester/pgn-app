@@ -228,7 +228,7 @@ export function AddEventPage() {
                             console.error("(addevent.js) error writing document: ", error);
                         });
                 }}
-                style={[globalStyles.universityColorFill, {
+                style={ {
                     borderRadius: 10,
                     width: "90%",
                     alignItems: "center",
@@ -237,8 +237,9 @@ export function AddEventPage() {
                     paddingBottom: 15,
                     position: 'absolute',
                     borderColor: '#E9C9B2',
+                    backgroundColor: "#C57035",
                     bottom: 60
-                }]}
+                }}
             >
                 <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>Create!</Text>
             </TouchableOpacity>

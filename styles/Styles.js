@@ -15,9 +15,7 @@ export default StyleSheet.create({
   darkGrayFill: {
     backgroundColor: colors.darkGray
   },
-  universityColorFill: {
-    backgroundColor: colors.universityColor
-  },
+
   errorRedText: {
     color: colors.errorRed
   },

@@ -218,7 +218,7 @@ export function AddCodePage() {
             position: "absolute",
             borderColor: "#E9C9B2",
             bottom: 60,
-            backgroundColor: colors.universityColor
+            backgroundColor: '#C57035'
           }}
         >
           <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>

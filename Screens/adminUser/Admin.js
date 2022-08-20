@@ -29,7 +29,7 @@ function SettingsButton() {
             justifyContent: "center",
             borderRadius: 36,
             marginRight: 10,
-            backgroundColor: colors.universityColor + "40",
+            backgroundColor: '#C57035' + "40",
           },
         ]}
         onPress={() => {
@@ -38,7 +38,7 @@ function SettingsButton() {
       >
         <IonIcons
           name="md-barcode"
-          color={colors.universityColor}
+          color={'#C57035'}
           size={40}
           style={{ marginLeft: 3 }}
         />
@@ -194,6 +194,7 @@ function AdminBottom(props) {
       })
       .catch((error) => {
         console.log("(points) Error updating points status");
+        console.log("here");
       });
     if (props.pointData.type === 'Excuse') {
       db.collection("chapter-meetings")
@@ -257,7 +258,7 @@ function PointSheet(props) {
       </Text>
       <Image
         source={
-          props.image == ""
+          props.image === ""
             ? require("../../images/unknown-image.png")
             : { uri: props.image }
         }
@@ -292,8 +293,7 @@ export function AdminPage(props) {
     var tempQueue = [];
     db.collection("points")
       .where("status", "==", "waiting")
-      .get()
-      .then(async (querySnapshot) => {
+      .onSnapshot(async (querySnapshot) => {
         var promises = [];
         var tempUrlMap = {};
         querySnapshot.forEach(async (doc) => {

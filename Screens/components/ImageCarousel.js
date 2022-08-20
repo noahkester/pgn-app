@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useContext } from 'react';
 import {
     StyleSheet,
     Text,
@@ -13,10 +13,13 @@ import SimplePaginationDot from './SimplePaginationDot';
 import globalStyles from "../../styles/Styles";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import colors from '../../styles/Colors'
+import LoginContext from '../../utils/LoginContext';
 const { width: windowWidth } = Dimensions.get('window');
+
 
 const INITIAL_INDEX = 0;
 export default function ImageCarousel(props) {
+    const loginContext = useContext(LoginContext);
     const carouselRef = useRef(null);
     const [currentIndex, setCurrentIndex] = useState(INITIAL_INDEX);
 
@@ -33,7 +36,7 @@ export default function ImageCarousel(props) {
                     carouselRef.current.scrollToIndex(index);
                 }}>
                 {(uri === "") ?
-                    <View style={[styles.imageBackground, { backgroundColor: colors.universityColor, borderRadius: 1000, alignItems: 'center', justifyContent: 'center' }]}>
+                    <View style={[styles.imageBackground, { backgroundColor: loginContext.color, borderRadius: 1000, alignItems: 'center', justifyContent: 'center' }]}>
                         <Image
                             source={require('../../images/account.png')}
                             style={{ height: '100%', width: '100%' }}

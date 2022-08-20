@@ -79,7 +79,8 @@ function ChatText(props) {
 
 export function ChatPage() {
     const navigation = useNavigation();
-
+    const loginContext = useContext(LoginContext);
+    const color = loginContext.color;
     return (
         <View style={{ flex: 1, backgroundColor: '#FAFAFA', alignItems: 'center' }}>
             <ScrollView style={{ width: '100%' }}>
@@ -108,14 +109,14 @@ export function ChatPage() {
             </ScrollView>
             <View style={{ position: 'absolute', bottom: 12, right: 24, borderRadius: 30, backgroundColor: '#FFFFFF' }}>
                 <TouchableOpacity
-                    style={[{ width: 50, height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 34, backgroundColor: colors.universityColor + '40' }]}
+                    style={[{ width: 50, height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 34, backgroundColor: color + '40' }]}
                     onPress={() => {
                         navigation.navigate("Post");
                     }}
                 >
                     <FontAwesome5
                         name="pen"
-                        color={colors.universityColor}
+                        color={color}
                         size={26}
                         style={{}}
                     />

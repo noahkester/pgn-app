@@ -68,7 +68,8 @@ function AccountInput(props) {
 }
 function Role(props) {
   const navigation = useNavigation();
-
+  const loginContext = useContext(LoginContext);
+  const color = loginContext.color;
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       {(props.role === '') ? null :
@@ -77,14 +78,14 @@ function Role(props) {
         </View>
       }
       <TouchableOpacity
-        style={{ marginLeft: 10, width: 50, height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 25, backgroundColor: colors.universityColor + '40' }}
+        style={{ marginLeft: 10, width: 50, height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 25, backgroundColor: color + '40' }}
         onPress={() => {
           navigation.navigate('Theme');
         }}
       >
         <FontAwesome5
           name="palette"
-          color={colors.universityColor}
+          color={color}
           size={30}
         />
       </TouchableOpacity>
@@ -107,6 +108,8 @@ function PledgeClass(props) {
 }
 function SaveButton(props) {
   const navigation = useNavigation();
+  const loginContext = useContext(LoginContext);
+  const color = loginContext.color;
   return (
     <TouchableOpacity
       onPress={() => {
@@ -124,7 +127,7 @@ function SaveButton(props) {
         paddingTop: 15,
         paddingBottom: 15,
         borderColor: colors.universityFadedColor,
-        backgroundColor: colors.universityColor,
+        backgroundColor: color,
       }}
     >
       <Text style={[globalStyles.mediumBoldText, globalStyles.whiteText]}>
@@ -134,7 +137,8 @@ function SaveButton(props) {
   );
 }
 export function SignOutButton(props) {
-
+  const loginContext = useContext(LoginContext);
+  const color = loginContext.color;
   return (
     <TouchableOpacity
       onPress={() => {
@@ -142,7 +146,7 @@ export function SignOutButton(props) {
       }}
       title={"Signout"}
       style={{
-        backgroundColor: colors.universityColor,
+        backgroundColor: color,
         marginTop: 10,
         marginBottom: 60,
         borderRadius: 10,
@@ -247,10 +251,10 @@ export function AccountPage() {
         <Text style={{ textAlign: 'center', fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#262626' }}>{curUser.firstname + ' ' + curUser.lastname}</Text>
 
         <TouchableOpacity onPress={() => navigation.navigate("AccountImageUpload")}>
-          <View style={{ marginRight: 16, width: 60, height: 60, borderRadius: 36, backgroundColor: colors.universityColor + '40', alignItems: 'center', justifyContent: 'center' }}>
+          <View style={{ marginRight: 16, width: 60, height: 60, borderRadius: 36, backgroundColor: loginContext.color + '40', alignItems: 'center', justifyContent: 'center' }}>
             <MaterialCommunityIcons
               name="image-plus"
-              color={colors.universityColor}
+              color={loginContext.color}
               size={38}
             />
           </View>
