@@ -106,6 +106,7 @@ export function AddEventPage() {
     const [meetingTime, setMeetingTime] = useState(new Date());
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [repeatable, setRepeatable] = useState(false);
+    const [createPressed, setCreatePressed] = useState(false);
     const colorScheme = Appearance.getColorScheme();
     const newEvent = useRef(
         {
@@ -147,6 +148,9 @@ export function AddEventPage() {
                     {''}
                 </TextInput>
             </View>
+            {(createPressed && newEvent.current.label === "") ? <Text style={{ width: '90%', paddingTop: 4, paddingLeft: 10, fontFamily: 'Poppins_500Medium', color: '#E35B56' }}>Title is required</Text>  : null
+            
+        }
             <View style={{ marginTop: 10, borderWidth: 1, borderRadius: 10, borderColor: '#DBDBDB', width: '90%', height: 50, paddingLeft: 20, justifyContent: 'center', backgroundColor: '#FFFFFF' }}>
                 <TextInput
                     autoCapitalize="none"
@@ -192,7 +196,7 @@ export function AddEventPage() {
                     autoCapitalize="none"
                     autoCorrect={false}
                     style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}
-                    placeholder={'Points'}
+                    placeholder={'Weight'}
                     onChangeText={(text) => { newEvent.current.weight = parseFloat(text); }}
                 >
                     {''}
@@ -217,6 +221,10 @@ export function AddEventPage() {
             </View>
             <TouchableOpacity
                 onPress={() => {
+                    setCreatePressed(true);
+                    if( newEvent.current.label === ""){
+                        return;
+                    }
                     db.collection("events")
                         .doc(eventDocName(newEvent.current))
                         .set(newEvent.current)
