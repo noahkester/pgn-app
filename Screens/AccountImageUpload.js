@@ -53,17 +53,19 @@ function ImageUpload(props) {
 
       uploadImage(resizedResult.uri, auth.currentUser.uid + "_" + props.type)
         .then(() => {
-          if (props.type == "professional") {
+          if (props.type === "professional") {
             urlContext.setProf(resizedResult.uri);
-          } else if (props.type == "social") {
+          } else if (props.type === "social") {
             urlContext.setSocial(resizedResult.uri);
-          } else if (props.type == "funny") {
+          } else if (props.type === "funny") {
             urlContext.setFunny(resizedResult.uri);
           }
         })
         .catch(() => {
           console.log("(AccountImageUpload) Error uploading image");
         });
+      props.setImageLoaded(true);
+    }else{
       props.setImageLoaded(true);
     }
   };
@@ -184,7 +186,7 @@ export function AccountImageUploadPage() {
         />
 
         <ImageUploadCard
-          title="Party/Fun"
+          title="Social"
           type="social"
           setImageLoaded={setImageLoaded}
         />

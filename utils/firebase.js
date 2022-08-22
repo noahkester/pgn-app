@@ -92,7 +92,7 @@ export async function getAllProfilePictures(uid) {
       .ref(`/profile-pictures/${uid}_funny`)
       .getDownloadURL()
       .then((url) => {
-        urls.socialUrl = url
+        urls.funnyUrl = url
       })
       .catch((e) => {
         console.log("(firebase) Errors while getting social picture ")
@@ -102,7 +102,7 @@ export async function getAllProfilePictures(uid) {
       .ref(`/profile-pictures/${uid}_social`)
       .getDownloadURL()
       .then((url) => {
-        urls.funnyUrl = url
+        urls.socialUrl = url
       })
       .catch((e) => {
         console.log("(firebase) Errors while getting funny picture ")
