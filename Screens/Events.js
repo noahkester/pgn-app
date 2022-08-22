@@ -34,13 +34,6 @@ function Event(props) {
     <View
       style={{ backgroundColor: '#FFFFFF', borderWidth: 1, width: '90%', borderColor: '#DBDBDB', borderTopWidth: 0 }}
     >
-      {(isToday) ?
-        <View style={{ borderBottomWidth: 1, borderColor: '#DBDBDB', height: 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingLeft: 16, paddingRight: 16 }}>
-
-          <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 18 }}>{/*unixEpochTimeToMonthDay(props.time)*/'Today'}</Text>
-          <Text style={{ marginLeft: 10, fontFamily: 'Poppins_600SemiBold', fontSize: 18 }}>{unixEpochTimeToClock(props.time)}</Text>
-
-        </View> : null}
       <View style={{ width: '100%', flexDirection: 'row', paddingLeft: 16, paddingTop: 16, paddingBottom: 16 }}>
         <View style={{ marginRight: 10 }}>
           <View style={{ height: 50, width: 50, alignItems: "center", justifyContent: "center" }}>
@@ -53,27 +46,31 @@ function Event(props) {
         </View>
         <View style={{ flexDirection: 'column', flex: 1, width: "60%", justifyContent: "center", alignSelf: 'center' }}>
           <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 18, color: '#262626', width: 180 }}>{props.name}</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 2 }}>
-            <MaterialCommunityIcons
-              name="clock-outline"
-              color={'#8E8E8E'}
-              size={20}
-              style={{ marginRight: 4 }}
-            />
-            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 12, color: '#8E8E8E' }}>{unixEpochTimeToMonthDay(props.time) + ', ' + unixEpochTimeToClock(props.time)}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 2, marginBottom: 10 }}>
+            {(props.time == 0) ? null :
+              <MaterialCommunityIcons
+                name="clock-outline"
+                color={'#8E8E8E'}
+                size={20}
+                style={{ marginRight: 4 }}
+              />
+            }
+            {(props.time == 0) ? null :
+              <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 12, color: '#8E8E8E' }}>{unixEpochTimeToMonthDay(props.time) + ', ' + unixEpochTimeToClock(props.time)}</Text>
+            }
             {(props.location === '') ? null :
               <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 12, color: '#8E8E8E' }}>{'• ' + props.location}</Text>
             }
           </View>
         </View>
       </View>
-      <Text style={{ position: 'absolute', bottom: 6, right: 10, fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#85C67E' }}>{props.weight + points}</Text>
+      <Text style={{ position: 'absolute', bottom: 3, right: 10, fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#85C67E' }}>{props.weight + points}</Text>
     </View >
   );
 }
 export function EventSection(props) {
   const events = props.events;
-  events.sort((a, b) => b.time - a.time);
+  events.sort((a, b) => a.time - b.time);
   const eventsList = events.map((event, index) => (
     <Event
       key={index}

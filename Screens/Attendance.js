@@ -265,7 +265,7 @@ export function AttendancePage() {
           //   <AttendanceCard found={found} data={data} />
           // );
         });
-        tempMeetings.sort((a, b) => b.data.meetingTime - a.data.meetingTime);
+        tempMeetings.sort((a, b) => a.data.meetingTime - b.data.meetingTime);
         var i = 0;
         const meetingElems = tempMeetings.map((d) => {
           return <AttendanceCard key={i++} found={d.found} data={d.data} pending={d.pending} future={d.meetingTime > dateObjectToUnixEpoch(new Date())} />

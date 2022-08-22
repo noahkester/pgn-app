@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "pgn-app",
-    "slug": "pgn-app",
+    "name": "Nexus",
+    "slug": "Nexus",
+    "privacy": "public",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

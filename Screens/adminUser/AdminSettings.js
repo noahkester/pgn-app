@@ -131,7 +131,6 @@ export function AdminSettingsPage() {
             })
         db.collection('admin-settings')
             .doc('points')
-            .get()
             .update({
                 totalChapterMeetings: 0
             })
