@@ -69,6 +69,7 @@ function App() {
     }
     prepare();
     auth.onAuthStateChanged((user) => {
+      setAppIsReady(false);
       if (!user || !user.emailVerified) {
         setUser(user);
         setAppIsReady(true);
