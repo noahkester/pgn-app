@@ -22,7 +22,7 @@ export function LoginPage() {
     auth
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        //console.log("\n(Login) Sign in Successful!\n");
+
         const user = auth.currentUser;
         if (user.emailVerified) {
           // User has verified their email, continue to home screen
