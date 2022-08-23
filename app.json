@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Nexus",
+    "name": "Phi Gamma Nu",
     "slug": "Nexus",
     "privacy": "public",
     "version": "1.0.0",
@@ -19,7 +19,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "io.expo.client"
+      "bundleIdentifier": "site.nexusapp"
     },
     "android": {
       "adaptiveIcon": {
