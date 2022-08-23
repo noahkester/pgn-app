@@ -108,9 +108,10 @@ export function AdminSettingsPage() {
                     store.ref().child('points/' + doc.id)
                         .delete().then(() => {
                             doc.ref.delete();
-                        }).catch((error) => {
-                            console.log("could not delete file " + doc.id);
-                        });
+                        })
+                        // .catch((error) => {
+                        //     console.log("could not delete file " + doc.id);
+                        // });
                 })
             })
     }
@@ -148,7 +149,7 @@ export function AdminSettingsPage() {
             .get()
             .then((querySnapshot) => {
                 var found = false;
-                console.log('this' + name);
+                //console.log('this' + name);
                 querySnapshot.forEach((doc) => {
                     found = true;
                     //console.log(doc.data());
@@ -157,7 +158,7 @@ export function AdminSettingsPage() {
                     setDuesUsername('');
                 })
                 if (!found) {
-                    console.log('hi')
+                    // console.log('hi')
                     setDuesError('Could not find user');
                 }
             }).catch(() => {
@@ -200,7 +201,7 @@ export function AdminSettingsPage() {
     const updateUser = () => {
         //completely change this code
         setUserError('');
-        console.log('updating user');
+        //console.log('updating user');
         const docname = userName.replace(/\s/g, '').toLowerCase();
         const name = userName.split(' ');
         if (docname == '') return;
@@ -212,10 +213,10 @@ export function AdminSettingsPage() {
             .get()
             .then((querySnapshot) => {
                 var found = false;
-                console.log('this' + name);
+                //console.log('this' + name);
                 querySnapshot.forEach((doc) => {
                     found = true;
-                    console.log('here')
+                    //console.log('here')
                     userDocRef = doc.ref;
                 })
                 if (!found) {

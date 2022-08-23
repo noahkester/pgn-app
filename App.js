@@ -95,7 +95,7 @@ function App() {
       .doc(auth.currentUser.uid)
       .onSnapshot((doc) => {
         if (!doc.exists) {
-          console.log("New user account not created");
+          // console.log("New user account not created");
           return;
         }
         var data = doc.data();
@@ -114,7 +114,7 @@ function App() {
       getEvents().then((returnedEvents) => {
         setEvents(returnedEvents);
       });
-      console.log(points);
+      //console.log(points);
       adminPoints.current = points;
       setAppIsReady(true);
     });

@@ -36,7 +36,7 @@ export function getCurrentUser(auth) {
 }
 export function sendEmail(user) {
   user.sendEmailVerification().then(() => {
-    console.log("(firebase) Email send to: " + user.email);
+    //console.log("(firebase) Email send to: " + user.email);
   })
     .catch(() => {
       Alert.alert('Could not send email', '', [
@@ -60,11 +60,11 @@ export function sendPasswordReset(email) {
 
 
 export async function getProfilePicture(name) {
-  console.log('name' + name)
+  //console.log('name' + name)
   var ref = firebase.storage().ref("/profile-pictures/" + name);
   return new Promise((resolve, reject) => {
     ref.getDownloadURL((url) => {
-      console.log('here');
+      //console.log('here');
       resolve(url);
     }, reject);
   });
@@ -84,9 +84,10 @@ export async function getAllProfilePictures(uid) {
       .then((url) => {
         urls.professionalUrl = url
       })
-      .catch((e) => {
-        console.log("(firebase) Errors while getting professional picture ")
-      }))
+      // .catch((e) => {
+      //   console.log("(firebase) Errors while getting professional picture ")
+      // })
+      )
   promises.push(
     store
       .ref(`/profile-pictures/${uid}_funny`)
@@ -94,9 +95,10 @@ export async function getAllProfilePictures(uid) {
       .then((url) => {
         urls.funnyUrl = url
       })
-      .catch((e) => {
-        console.log("(firebase) Errors while getting social picture ")
-      }))
+      // .catch((e) => {
+      //   console.log("(firebase) Errors while getting social picture ")
+      // })
+      )
   promises.push(
     store
       .ref(`/profile-pictures/${uid}_social`)
@@ -104,9 +106,10 @@ export async function getAllProfilePictures(uid) {
       .then((url) => {
         urls.socialUrl = url
       })
-      .catch((e) => {
-        console.log("(firebase) Errors while getting funny picture ")
-      }))
+      // .catch((e) => {
+      //   console.log("(firebase) Errors while getting funny picture ")
+      // })
+      )
   return new Promise((resolve, reject) => {
     allSettled(promises)
       .then(() => {
@@ -146,7 +149,7 @@ export async function getEvents() {
         resolve(events);
       })
       .catch(e => {
-        console.log('(firebase, getEvents) Error ' + e)
+        //console.log('(firebase, getEvents) Error ' + e)
         reject(events);
       })
   });

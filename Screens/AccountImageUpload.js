@@ -27,7 +27,7 @@ function ImageUpload(props) {
       const galleryStatus =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
       setHasGalleryPermission(galleryStatus === "granted");
-      console.log("(Account Image Upload) Gallery Requested");
+      //console.log("(Account Image Upload) Gallery Requested");
     };
   }, []);
   const uploadImage = async (uri, imageName) => {
@@ -62,7 +62,7 @@ function ImageUpload(props) {
           }
         })
         .catch(() => {
-          console.log("(AccountImageUpload) Error uploading image");
+          //console.log("(AccountImageUpload) Error uploading image");
         });
       props.setImageLoaded(true);
     }else{

@@ -29,7 +29,7 @@ export function TopBar(props) {
   const adminContext = useContext(AdminContext);
   return (
     <View style={{}}>
-      <View style={{ marginTop: 32, width: "100%", height: 120, flexDirection: "row", justifyContent: "space-between", alignItems: 'center', backgroundColor: "#FFFFFF", paddingHorizontal: 20, borderBottomWidth: 1, borderColor: '#DBDBDB' }}>
+      <View style={{ marginTop: 32, marginBottom: (adminContext.points.activateDuesBanner && !loginContext.currentUser.dues)  ? 32: 0,width: "100%", height: 120, flexDirection: "row", justifyContent: "space-between", alignItems: 'center', backgroundColor: "#FFFFFF", paddingHorizontal: 20, borderBottomWidth: 1, borderColor: '#DBDBDB' }}>
         <Profile
           name={currentUser.firstname}
           class={currentUser.pledgeClass}

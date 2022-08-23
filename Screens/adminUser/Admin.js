@@ -119,13 +119,13 @@ function AdminBottom(props) {
     db.collection("points")
       .doc(props.pointData.title)
       .update({ status: "accepted" })
-      .then(() => {
-        console.log("(points) Updated points status to accepted");
-      })
-      .catch((error) => {
-        console.log(props.pointData.title);
-        console.log("(points) Error updating points status");
-      });
+      // .then(() => {
+      //   console.log("(points) Updated points status to accepted");
+      // })
+      // .catch((error) => {
+      //   console.log(props.pointData.title);
+      //   console.log("(points) Error updating points status");
+      // });
     db.collection("users")
       .doc(props.pointData.id)
       .get()
@@ -178,12 +178,12 @@ function AdminBottom(props) {
                 submittedExcuse: firebase.firestore.FieldValue.arrayRemove(props.pointData.id)
               });
             break;
-          default:
-            console.log(
-              "(accept-point switch statement) no match for " +
-              props.pointData.type
-            );
-            break;
+          // default:
+          //   console.log(
+          //     "(accept-point switch statement) no match for " +
+          //     props.pointData.type
+          //   );
+          //   break;
         }
       });
   };
@@ -191,13 +191,13 @@ function AdminBottom(props) {
     db.collection("points")
       .doc(props.pointData.title)
       .update({ status: "rejected" })
-      .then(() => {
-        console.log("(points) Updated points status to rejected");
-      })
-      .catch((error) => {
-        console.log("(points) Error updating points status");
-        console.log("here");
-      });
+      // .then(() => {
+      //   console.log("(points) Updated points status to rejected");
+      // })
+      // .catch((error) => {
+      //   console.log("(points) Error updating points status");
+      //   console.log("here");
+      // });
     if (props.pointData.type === 'Excuse') {
       db.collection("chapter-meetings")
         .doc(props.pointData.code)
@@ -309,13 +309,13 @@ export function AdminPage(props) {
             .ref(`/points/${docId}`) //name in storage in firebase console
             .getDownloadURL()
             .then((url) => {
-              console.log("(points) Successfully got point image");
+              //console.log("(points) Successfully got point image");
               tempUrlMap[docId] = url;
               setDummyRender(true);
             })
             .catch((e) => {
               tempUrlQueue.push("");
-              console.log("(points) Errors while getting point image");
+              //console.log("(points) Errors while getting point image");
             });
           promises.push(promise);
         });

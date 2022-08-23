@@ -48,7 +48,7 @@ export function AddCodePage() {
     return result;
   };
   useEffect(() => {
-    console.log(meetingTime);
+    //console.log(meetingTime);
   }, [meetingTime]);
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -75,9 +75,9 @@ export function AddCodePage() {
         db.collection("admin-settings")
           .doc('points')
           .update({ totalChapterMeetings: firebase.firestore.FieldValue.increment(1) })
-          .then(() => {
-            console.log('incremented by one');
-          })
+          // .then(() => {
+          //   console.log('incremented by one');
+          // })
         navigation.goBack();
       })
       .catch((error) => {

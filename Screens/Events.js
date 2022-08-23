@@ -20,7 +20,7 @@ function Event(props) {
   } else if (props.type === "Interview") {
     icon = require("../images/interview.png");
   } else {
-    console.log('strange error');
+    //console.log('strange error');
   }
   var points = "";
   if (props.weight == 1) {

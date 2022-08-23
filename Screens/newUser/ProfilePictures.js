@@ -24,7 +24,7 @@ function ImageUpload(props) {
       const galleryStatus =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
       setHasGalleryPermission(galleryStatus === "granted");
-      console.log("(Account Image Upload) Gallery Requested");
+      //console.log("(Account Image Upload) Gallery Requested");
     };
   }, []);
   const uploadImage = async (uri, imageName) => {
@@ -52,7 +52,7 @@ function ImageUpload(props) {
           props.setImageLoaded(true);
         })
         .catch((e) => {
-          console.log("(AccountImageUpload) Error uploading image" + e);
+          //console.log("(AccountImageUpload) Error uploading image" + e);
           props.setImageLoaded(true);
         });
     }
@@ -124,12 +124,12 @@ export function ProfilePicturesPage() {
       .doc(auth.currentUser.uid)
       .set(newUserContext)
       .then(() => {
-        console.log("(NewUser) User Information successfully written!");
+        //console.log("(NewUser) User Information successfully written!");
         navigation.navigate("EmailVerification");
       })
-      .catch((error) => {
-        console.error("(NewUser) Error writing document: ", error);
-      });
+      // .catch((error) => {
+      //   console.error("(NewUser) Error writing document: ", error);
+      // });
   };
   return (
     <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>

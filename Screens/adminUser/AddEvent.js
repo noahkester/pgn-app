@@ -1,5 +1,5 @@
 
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import { StyleSheet, Button, TouchableOpacity, Text, Image, View, TextInput, Appearance } from "react-native";
 import { useNavigation, NavigationContainer } from "@react-navigation/native";
 import globalStyles from "../../styles/Styles";
@@ -116,7 +116,7 @@ export function AddEventPage() {
             type: 'Social',
             weight: 1,
             value: Math.floor(Math.random() * 1000000000),
-            repeatable: repeatable
+            repeatable: false,
         }
     );
     const eventDocName = (event) => {
@@ -133,6 +133,9 @@ export function AddEventPage() {
         setMeetingTime(date);
         hideDatePicker();
     };
+    useEffect(()=>{
+        newEvent.current.repeatable = repeatable;
+    },[repeatable])
     return (
         <View style={{ backgroundColor: '#FAFAFA', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <AccountTop />
@@ -229,12 +232,12 @@ export function AddEventPage() {
                         .doc(eventDocName(newEvent.current))
                         .set(newEvent.current)
                         .then(() => {
-                            console.log("(addevent.js) event successfully written!");
+                            //console.log("(addevent.js) event successfully written!");
                             navigation.goBack();
                         })
-                        .catch((error) => {
-                            console.error("(addevent.js) error writing document: ", error);
-                        });
+                        // .catch((error) => {
+                        //     console.error("(addevent.js) error writing document: ", error);
+                        // });
                 }}
                 style={{
                     borderRadius: 10,

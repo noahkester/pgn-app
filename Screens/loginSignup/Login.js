@@ -22,7 +22,7 @@ export function LoginPage() {
     auth
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        console.log("\n(Login) Sign in Successful!\n");
+        //console.log("\n(Login) Sign in Successful!\n");
         const user = auth.currentUser;
         if (user.emailVerified) {
           // User has verified their email, continue to home screen
@@ -35,17 +35,17 @@ export function LoginPage() {
             .get()
             .then((doc) => {
               if (doc.exists) {
-                console.log("(Login) User account has been created but missing email verification");
+                //console.log("(Login) User account has been created but missing email verification");
                 navigation.navigate("EmailVerification");
               }
               else {
-                console.log("(Login) User Account has not been created");
+                //console.log("(Login) User Account has not been created");
                 navigation.navigate("Name");
               }
             })
-            .catch(() => {
-              console.log("(Login) Firebase issues");
-            });
+            // .catch(() => {
+            //   console.log("(Login) Firebase issues");
+            // });
         }
       })
       .catch((error) => {

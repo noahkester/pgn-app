@@ -112,10 +112,10 @@ export function PeoplePage() {
               .getDownloadURL()
               .then((url) => {
                 profPicMap[data.id] = url;
-                console.log("(People) Success, got professional picture for " + data.id)
+                //console.log("(People) Success, got professional picture for " + data.id)
               })
               .catch((e) => {
-                console.log("(People) Error getting Professional Picture for " + data.id)
+                //console.log("(People) Error getting Professional Picture for " + data.id)
               });
             promises.push(promise);
           }

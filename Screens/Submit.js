@@ -41,7 +41,7 @@ function EventsDropDown() {
   const repeatable = submissionContext.repeatable;
 
   useEffect(() => {
-    console.log("(submit) rendered");
+    //console.log("(submit) rendered");
     var tempItems = loginContext.events.allEvents;
     var approvedOrWaiting = [];
 
@@ -74,7 +74,7 @@ function EventsDropDown() {
         eventWeight.current = item.weight;
         typeOfEvent.current = item.type;
         repeatable.current = item.repeatable;
-        console.log(item.label + " is " + repeatable.current);
+        //console.log(item.label + " is " + repeatable.current);
       }}
       placeholder="Select Event"
       placeholderStyle={{
@@ -137,7 +137,7 @@ function ImageUpload() {
       const galleryStatus =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
       setHasGalleryPermission(galleryStatus === "granted");
-      console.log("Requested");
+      //console.log("Requested");
     };
   }, []);
   const pickImage = async () => {
@@ -200,10 +200,12 @@ function ProofDescription() {
         // from exiting the keyboard
         //onContentSizeChange
         returnKeyType="done"
-        onChangeText={(text) => {
+          onChangeText={(text) => {
           proofDesc.current = text;
           if (text !== "") {
             proofOrPhoto.current = true;
+          }else{
+            proofOrPhoto.current = false;
           }
         }}
         placeholder="Proof (optional)"
@@ -260,7 +262,7 @@ export function SubmitPoints(props) {
               ),
             })
             .then(() => {
-              console.log('repeatable is ' + repeatable.current);
+              //console.log('repeatable is ' + repeatable.current);
               uploadSubmissionImage(
                 imageSrc.current,
                 auth.currentUser.uid + "_" + eventLabel.current + suffix
@@ -278,11 +280,11 @@ export function SubmitPoints(props) {
                   weight: eventWeight.current,
                   title: auth.currentUser.uid + "_" + eventLabel.current + suffix
                 })
-                .then(
-                  console.log(
-                    "(Submit) Points Submission added to waiting queue"
-                  )
-                );
+                // .then(
+                //   console.log(
+                //     "(Submit) Points Submission added to waiting queue"
+                //   )
+                // );
             });
           navigation.navigate("Navigation");
         } else {

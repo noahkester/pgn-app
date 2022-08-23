@@ -264,7 +264,7 @@ function TopTab() {
       });
   }, []);
 
-  console.log("allEvents : " + allEvents);
+  //console.log("allEvents : " + allEvents);
   return (
     <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
       <View

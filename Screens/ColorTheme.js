@@ -66,7 +66,7 @@ export function ColorThemePage(props) {
                 <Color selectedColor={color} setColor={setColor} color={'#BBBBBB'} />
                 <Color selectedColor={color} setColor={setColor} color={'#CCCCCC'} />
             </View>
-            <Text style={{ marginTop: 20, textAlign: 'center', fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#8E8E8E' }}>{'Reload app to see changes'}</Text>
+            
         </View>
     )
 }

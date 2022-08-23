@@ -88,7 +88,7 @@ function Activities(props) {
     }
   }
   catch {
-    console.log('issue')
+    //console.log('issue')
   }
   return (
     <View style={{ marginTop: 20, width: '90%', flexDirection: 'row', flexWrap: 'wrap' }}>
@@ -114,25 +114,23 @@ export function PersonPage({ route }) {
       .then((url) => {
         setProfileUrlProfessional(url);
       })
-      .catch((e) =>
-        console.log("(Person) Error getting Professional Picture")
-      );
+ 
     const p2 = store
       .ref(`/profile-pictures/${memberData.id}_social`) //name in storage in firebase console
       .getDownloadURL()
       .then((url) => {
         setProfileUrlSocial(url);
       })
-      .catch((e) => console.log("(Person) Error getting Social Picture"));
+
     const p3 = store
       .ref(`/profile-pictures/${memberData.id}_funny`) //name in storage in firebase console
       .getDownloadURL()
       .then((url) => {
         setProfileUrlFunny(url);
       })
-      .catch((e) =>
-        console.log("(Person) Error getting funny Picture")
-      );
+      // .catch((e) =>
+      //   console.log("(Person) Error getting funny Picture")
+      // );
     promises.push(p1);
     promises.push(p2);
     promises.push(p3);

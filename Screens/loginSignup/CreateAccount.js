@@ -36,7 +36,7 @@ export function CreateAccountPage() {
       .createUserWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        console.log("(Create Account) New user with email: ", user.email);
+        //console.log("(Create Account) New user with email: ", user.email);
         navigation.navigate("Name");
       })
       .catch((error) => {
@@ -52,8 +52,8 @@ export function CreateAccountPage() {
           case "auth/invalid-password":
             setPasswordError("Password must be > 6 characters");
             break;
-          default:
-            console.log(error.code);
+          // default:
+          //   console.log(error.code);
         }
       });
   };
