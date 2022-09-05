@@ -15,7 +15,7 @@ export function LoginPage() {
   const [loginPressed, setLoginPressed] = useState(false);
   const navigation = useNavigation();
   const loginContext = useContext(LoginContext);
-
+  const appIsReady = loginContext.appIsReady;
   const handleLogin = () => {
     setEmailError('');
     setPasswordError('');
@@ -24,12 +24,11 @@ export function LoginPage() {
       .then(() => {
 
         const user = auth.currentUser;
-        if (user.emailVerified) {
-          // User has verified their email, continue to home screen
-          //loginContext.setAppIsReady(true);
+
+        if(user.emailVerified){
+
           return;
-        }
-        else {
+        }else{
           db.collection("users")
             .doc(user.uid)
             .get()
@@ -121,11 +120,11 @@ export function LoginPage() {
             style={{ width: '90%', height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 10, borderWidth: 1, borderColor: '#DBDBDB', backgroundColor: '#FFFFFF' }}
             onPress={() => {
               handleLogin();
-              setLoginPressed(true);
+
             }
           }
           >
-            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}> {!loginPressed ? 'Log in' : 'Logging in..'}</Text>
+            <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#262626' }}> {appIsReady ? 'Log in' : 'Logging in..'}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{ marginTop: 6 }}

@@ -11,6 +11,8 @@ var allSettled = require('promise.allsettled');
 
 
 function PeopleImage(props) {
+  const loginContext = useContext(LoginContext);
+
   // TODO Add images
   if (props.uri) {
     return (
@@ -25,7 +27,7 @@ function PeopleImage(props) {
   }
   return (
     <View style={styles.people}>
-      <View style={[globalStyles.universityColorFill, { width: 50, height: 50, borderRadius: 25 }]}>
+      <View style={[ { backgroundColor: loginContext.color,width: 50, height: 50, borderRadius: 25 }]}>
         <Image
           source={require("../images/account.png")}
           resizeMode="contain"

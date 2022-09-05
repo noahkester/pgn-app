@@ -1,6 +1,8 @@
 // From React
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { View } from "react-native";
+
+
 import {
   useFonts,
   Poppins_600SemiBold,
@@ -11,8 +13,9 @@ import {
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
-import colors from './styles/Colors';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SplashScreenPage } from "./Screens/SplashScreen";
+import colors from "./styles/Colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // Util imports
 import {
   auth,
@@ -36,6 +39,7 @@ import UserNavigator from "./Navigation/UserNavigation";
 const Stack = createNativeStackNavigator();
 
 function App() {
+   //const[isLoaded, setIsLoaded] = useState(false);
   const [user, setUser] = useState();
 
   const [color, setColor] = useState("#C57035");
@@ -58,31 +62,31 @@ function App() {
   const [socialUrl, setSocialUrl] = useState("");
   const [funnyUrl, setFunnyUrl] = useState("");
 
-  useEffect(() => {
-    async function prepare() {
-      try {
-        // Keep the splash screen visible while we fetch resources
-        await SplashScreen.preventAutoHideAsync();
 
-      } catch (e) {
-        console.warn(e);
-      }
-    }
-    prepare();
+    // async function prepare() {
+    //   try {
+    //     // Keep the splash screen visible while we fetch resources
+    //     await SplashScreen.preventAutoHideAsync();
+
+    //   } catch (e) {
+    //     console.warn(e);
+    //   }
+    // }
+    // prepare();
     auth.onAuthStateChanged((user) => {
-      setAppIsReady(false);
-      if (!user || !user.emailVerified) {
-        setUser(user);
+
+        console.log("setting app ready");
+        if(!appIsReady){
         setAppIsReady(true);
-        return;
-      }
+        }
       setUser(user);
     });
-  }, []);
+
 
   async function loadUserInfo() {
+    setAppIsReady(false);
     // colors here
-    const color1 = await AsyncStorage.getItem('@colorTheme');
+    const color1 = await AsyncStorage.getItem("@colorTheme");
     if (color1 != null) {
       setColor(color1);
     }
@@ -106,12 +110,9 @@ function App() {
           setProfessionalUrl(urls.professionalUrl);
           setSocialUrl(urls.socialUrl);
           setFunnyUrl(urls.funnyUrl);
-
           setAppIsReady(true);
         });
-
       });
-      
   }
 
   async function loadAdminInfo() {
@@ -135,7 +136,22 @@ function App() {
     }
   }, [user]);
 
-  function RootRouter() {
+  const RootRouter = useCallback(() => {
+    console.log(appIsReady);
+    if(!appIsReady){
+      console.log("here");
+      return (
+        <Stack.Navigator
+        screenOptions={{
+            headerShown: false,
+            gestureEnabled: true,
+        }}
+       >
+      <Stack.Screen name="Splash" component={SplashScreenPage}/> 
+      </Stack.Navigator>
+      );
+    }
+
     if (!user || !user.emailVerified) {
       /*add code to check if user exists in users/ */
       return <NewUserNavigator />;
@@ -143,35 +159,37 @@ function App() {
     if (user.email === "pgn.utexas.sudo@gmail.com") {
       return <AdminNavigator />;
     }
+
     return <UserNavigator />;
-  }
+  }, [appIsReady,user]);
 
-  const onLayoutRootView = useCallback(async () => {
-    if (appIsReady) {
-      // This tells the splash screen to hide immediately! If we call this after
-      // `setAppIsReady`, then we may see a blank screen while the app is
-      // loading its initial state and rendering its first pixels. So instead,
-      // we hide the splash screen once we know the root view has already
-      // performed layout.
-      setTimeout(()=>{
+  // const onLayoutRootView = useCallback(async () => {
+  //   if (appIsReady) {
+  //     // This tells the splash screen to hide immediately! If we call this after
+  //     // `setAppIsReady`, then we may see a blank screen while the app is
+  //     // loading its initial state and rendering its first pixels. So instead,
+  //     // we hide the splash screen once we know the root view has already
+  //     // performed layout.
+  //     setTimeout(()=>{
 
-      }, 1000);
-      await SplashScreen.hideAsync();
-    }
-  }, [appIsReady]);
+  //     }, 1000);
+  //     await SplashScreen.hideAsync();
+  //   }
+  // }, [appIsReady]);
 
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
     Poppins_600SemiBold,
     Poppins_500Medium,
     Poppins_400Regular,
+ 
   });
 
-  if (!appIsReady || !fontsLoaded) {
+  if ( !fontsLoaded) {
     return null;
   } else {
     return (
-      <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      <View style={{ flex: 1 }}>
         <NavigationContainer>
           <AdminProvider
             value={{

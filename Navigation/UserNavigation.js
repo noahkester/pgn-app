@@ -14,6 +14,7 @@ import { AttendancePage } from '../Screens/Attendance';
 import { WaitlistPage } from "../Screens/Waitlist";
 import { ColorThemePage } from '../Screens/ColorTheme';
 import { SocialPostScreen } from '../Screens/SocialPost';
+import { SplashScreenPage} from "../Screens/SplashScreen";
 
 
 const Stack = createNativeStackNavigator();
