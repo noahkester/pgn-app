@@ -17,13 +17,13 @@ export function SplashScreenPage() {
   return (
     <SafeAreaView
     style = {{flex: 1, justifyContent: 'center', backgroundColor: 'white'}}>
-        {/* <Image
+        <Image
         style = {{ width: 300, height: 300, flexDirection: 'row', alignSelf: 'center' }}
         resizeMode = 'cover'
-        source= {require("../assets/icon.png")}></Image> */}
+        source= {require("../assets/icon.png")}></Image>
 
-        <Text style = {{fontFamily: 'Poppins_600SemiBold', alignSelf: 'center', color: 'black', fontSize: 50, paddingRight: '5%'}} 
-        >NEXUS</Text>
+        {/* <Text style = {{fontFamily: 'Poppins_600SemiBold', alignSelf: 'center', color: 'black', fontSize: 50, paddingRight: '5%'}} 
+        >NEXUS</Text> */}
       <View
       style = {{flexDirection: 'row' ,justifyContent: 'center', alignItems: 'center', marginTop: '10%'}}>
 
