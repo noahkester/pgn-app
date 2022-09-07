@@ -42,7 +42,7 @@ function ImageUpload(props) {
     if (!result.cancelled) {
       const resizedResult = await ImageManipulator.manipulateAsync(
         result.uri,
-        [{ resize: { width: 200 } }],
+        [{ resize: { width: 400 } }],
         { format: "jpeg" }
       );
 

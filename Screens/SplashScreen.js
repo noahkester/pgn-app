@@ -28,7 +28,7 @@ export function SplashScreenPage() {
       style = {{flexDirection: 'row' ,justifyContent: 'center', alignItems: 'center', marginTop: '10%'}}>
 
 
-        <ActivityIndicator color = {loginContext.color}/>
+        <ActivityIndicator color = "#777777"/>
         </View>
 
         <View style = {{top: '20%',lexDirection: 'row', justifyContent: 'space-around', alignSelf: 'center'}}>

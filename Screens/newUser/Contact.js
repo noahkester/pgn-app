@@ -13,7 +13,7 @@ export function ContactPage() {
   const newUserContext = useContext(NewUserContext);
 
   const updateContact = () => {
-    newUserContext.linkedin = linkedin;
+    newUserContext.linkedin = (linkedin.substring(0,8) === "https://") ? linkedin : "https://" + linkedin;
     newUserContext.phone = phone;
     navigation.navigate("ProfilePictures");
   };

@@ -267,7 +267,7 @@ export function AccountPage() {
       bio: bio,
       role: curUser.role,
 
-      linkedin: linkedin,
+      linkedin: (linkedin.substring(0,8) === "https://") ? linkedin : "https://" + linkedin,
       phone: phone,
     };
 

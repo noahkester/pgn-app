@@ -45,7 +45,7 @@ function ImageUpload(props) {
     if (!result.cancelled) {
       const resizedResult = await ImageManipulator.manipulateAsync(
         result.uri,
-        [{ resize: { width: 200 } }], // resize to width of 300 and preserve aspect ratio
+        [{ resize: { width: 400 } }], // resize to width of 300 and preserve aspect ratio
         { format: "jpeg" }
       );
 
