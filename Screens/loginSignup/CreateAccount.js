@@ -7,11 +7,12 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Octicons from "react-native-vector-icons/Octicons";
 
 import { auth } from "../../utils/firebase";
+import LoginContext from "../../utils/LoginContext";
 
 export function CreateAccountPage() {
   const [email, setEmail] = useState("");
@@ -20,7 +21,7 @@ export function CreateAccountPage() {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [passwordError, setPasswordError] = useState("");
-
+  const loginContext = useContext(LoginContext)
   const navigation = useNavigation();
 
   const handleCreateAccount = () => {

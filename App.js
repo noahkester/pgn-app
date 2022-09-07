@@ -84,7 +84,7 @@ function App() {
 
 
   async function loadUserInfo() {
-    setAppIsReady(false);
+    //setAppIsReady(false);
     // colors here
     const color1 = await AsyncStorage.getItem("@colorTheme");
     if (color1 != null) {
@@ -137,7 +137,7 @@ function App() {
   }, [user]);
 
   const RootRouter = useCallback(() => {
-    console.log(appIsReady);
+    console.log(appIsReady + "appisReady");
     if(!appIsReady){
       console.log("here");
       return (
@@ -151,15 +151,16 @@ function App() {
       </Stack.Navigator>
       );
     }
-
+    console.log("here");
     if (!user || !user.emailVerified) {
       /*add code to check if user exists in users/ */
       return <NewUserNavigator />;
     }
+    console.log("here1");
     if (user.email === "pgn.utexas.sudo@gmail.com") {
       return <AdminNavigator />;
     }
-
+    console.log("here2");
     return <UserNavigator />;
   }, [appIsReady,user]);
 
