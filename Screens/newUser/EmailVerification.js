@@ -148,7 +148,7 @@ export function LoadingPage() {
             bottom: 190,
           }}
         >
-          <CountdownCircleTimer
+          {/* <CountdownCircleTimer
             isPlaying
             duration={30}
             colors={["#E35B56", "#EFA039", "#A9E0A3", "#85C67E", "#85C67E"]}
@@ -182,7 +182,7 @@ export function LoadingPage() {
                 </Text>
               </View>
             )}
-          </CountdownCircleTimer>
+          </CountdownCircleTimer> */}
         </View>
         <View
           style={{
