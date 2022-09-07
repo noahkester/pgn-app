@@ -207,7 +207,7 @@ export function PersonPage({ route }) {
             <View style={{ width: '80%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
             <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, marginLeft: 10, width: '85%' }}>Contact</Text>
             <AccountInput value={memberData.email} />
-            <AccountInput value={memberData.number} />
+            <AccountInput value={memberData.phone} />
           </View>
         </ScrollView>
       </View>
