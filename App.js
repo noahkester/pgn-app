@@ -75,7 +75,7 @@ function App() {
     // prepare();
     auth.onAuthStateChanged((user) => {
 
-        console.log("setting app ready");
+        //console.log("setting app ready");
         if(!appIsReady){
         setAppIsReady(true);
         }
@@ -137,9 +137,9 @@ function App() {
   }, [user]);
 
   const RootRouter = useCallback(() => {
-    console.log(appIsReady + "appisReady");
+    //console.log(appIsReady + "appisReady");
     if(!appIsReady){
-      console.log("here");
+      //console.log("here");
       return (
         <Stack.Navigator
         screenOptions={{
@@ -151,16 +151,16 @@ function App() {
       </Stack.Navigator>
       );
     }
-    console.log("here");
+    //console.log("here");
     if (!user || !user.emailVerified) {
       /*add code to check if user exists in users/ */
       return <NewUserNavigator />;
     }
-    console.log("here1");
+    //console.log("here1");
     if (user.email === "pgn.utexas.sudo@gmail.com") {
       return <AdminNavigator />;
     }
-    console.log("here2");
+    //console.log("here2");
     return <UserNavigator />;
   }, [appIsReady,user]);
 

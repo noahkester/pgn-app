@@ -3,7 +3,7 @@
     "name": "Phi Gamma Nu",
     "slug": "Nexus",
     "privacy": "public",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -29,6 +29,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7eed4877-50d1-48c3-9371-3c9f02227ea2"
+      }
     }
   }
 }
