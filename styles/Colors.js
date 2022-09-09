@@ -25,7 +25,7 @@ roles = {
     ProfessionalismChair: '#3C86F7',
     SocialChair: '#6FC975',
     IntramuralChair: '#5FCAC5',
-
+    AssistantVPT : '#FFD700',
 }
 
 export const findRoleColor = (role) => {
