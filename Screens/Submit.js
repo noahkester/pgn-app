@@ -187,7 +187,7 @@ function ProofDescription() {
         borderWidth: 1,
         width: "85%",
         borderRadius: 10,
-        height: 50,
+        
         justifyContent: "center",
         paddingLeft: 10,
         borderColor: "#D8D8D8",
@@ -195,10 +195,12 @@ function ProofDescription() {
       }}
     >
       <TextInput
-        style={globalStyles.smallSemiBoldText}
+        style={[globalStyles.smallSemiBoldText]}
         //USE THIS if we want to implement textbox getting bigger, using multiline disables the return key
         // from exiting the keyboard
         //onContentSizeChange
+        onSubmitEditing = {Keyboard.dismiss}
+        multiline = {true}
         returnKeyType="done"
           onChangeText={(text) => {
           proofDesc.current = text;
@@ -242,6 +244,7 @@ export function SubmitPoints(props) {
       title={props.title}
       style={
         {
+          marginTop: '50%',
           borderRadius: 10,
           borderColor: "#E9C9B2",
           width: "90%",
@@ -316,8 +319,9 @@ export function SubmitPage(props) {
   const navigation = useNavigation();
 
   return (
-
+  <KeyboardAvoidingView behavior= "padding" style={{ flex: 1 }} >
     <TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
+      
       <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
         <View
           style={{
@@ -399,7 +403,9 @@ export function SubmitPage(props) {
           </View>
         </SubmissionProvider>
       </View>
+      
     </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 const styles = StyleSheet.create({
