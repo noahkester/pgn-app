@@ -25,15 +25,15 @@ function Profile(props) {
 function Description(props) {
   return (
     <View style={{ marginTop: 20, width: "85%", backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: '#DBDBDB', padding: 15, borderRadius: 10 }}>
-      <TextInput
+      <Text
         style={globalStyles.smallSemiBoldText}
         multiline={true}
         placeholder="Quote"
-        onChangeText={(text) => {
-          props.setValue(text.substring(1, text.length - 1));
-        }}
-        defaultValue={"\"" + props.description + "\""}
-      />
+
+       
+      >
+         {"\"" + props.description + "\""}
+      </Text>
     </View>
   );
 }
