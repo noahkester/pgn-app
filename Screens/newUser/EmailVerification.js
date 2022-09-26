@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Octicons from "react-native-vector-icons/Octicons";
-import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import { auth, sendEmail } from "../../utils/firebase";
 import { NavigationPage } from "../Tabs";
 

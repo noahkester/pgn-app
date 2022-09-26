@@ -3,7 +3,6 @@ import { useState, useContext } from "react";
 import { TouchableOpacity, Text, TextInput, View, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Octicons from "react-native-vector-icons/Octicons";
-import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import NewUserContext from "../../utils/NewUserContext";
 
 export function ContactPage() {
