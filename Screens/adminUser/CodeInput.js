@@ -29,6 +29,7 @@ export default function BasicExample(moreprops) {
                 rootStyle={styles.codeFiledRoot}
                 keyboardType="number-pad"
                 textContentType="oneTimeCode"
+    
                 renderCell={({ index, symbol, isFocused }) => (
                     <Text
                         key={index}
