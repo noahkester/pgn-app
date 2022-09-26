@@ -63,8 +63,11 @@ function People(props) {
           </View>
           {
             (props.data.bio === '') ? null :
-              <Text style={{ fontFamily: 'Poppins_500Medium', fontSize: 10, }}>
-                {'"' + props.data.bio + '"'}
+
+              <Text 
+              style={{ fontFamily: 'Poppins_500Medium', fontSize: 10, }}
+              >
+                {'"'  +  (props.data.bio.length > 100 ?  props.data.bio.substring(0,100) + "...": props.data.bio) + '"' }
               </Text>
           }
         </View>
