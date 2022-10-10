@@ -58,13 +58,8 @@ function AttendanceCard(props) {
         .update({
           submittedExcuse: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.uid)
         });
-      /*db.collection('users')
-        .doc(auth.currentUser.uid)
-        .update({
-          submittedPoints: firebase.firestore.FieldValue.arrayUnion(
-            auth.currentUser.uid + '_' + label
-          ),
-        })*/
+
+
 
     } else {
       <Text
@@ -235,8 +230,7 @@ export function AttendancePage() {
   const color = loginContext.color;
   useEffect(() => {
     db.collection("chapter-meetings")
-      .get()
-      .then((querySnapshot) => {
+      .onSnapshot((querySnapshot) => {
         var tempMeetings = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();

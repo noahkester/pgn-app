@@ -1,14 +1,31 @@
-import { StyleSheet, Button, TouchableOpacity, TouchableHighlight, Text, TouchableWithoutFeedback, TextInput, Image, View, ScrollView, Keyboard, } from "react-native";
+import {
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+  TouchableHighlight,
+  Text,
+  TouchableWithoutFeedback,
+  TextInput,
+  Image,
+  View,
+  ScrollView,
+  Keyboard,
+  Animated,
+} from "react-native";
 import React, { useState, useEffect, useRef, useContext } from "react";
 import globalStyles from "../styles/Styles";
 import { SearchBar } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { db, auth, store } from "../utils/firebase";
 import Checkbox from "expo-checkbox";
-import { findRoleColor } from '../styles/Colors';
+import { findRoleColor } from "../styles/Colors";
 import LoginContext from "../utils/LoginContext";
-var allSettled = require('promise.allsettled');
+import { createRef } from "react";
+import { Suspense } from "react";
+// import { enableFreeze } from "react-native-screens";
 
+// enableFreeze(true);
+var allSettled = require("promise.allsettled");
 
 function PeopleImage(props) {
   const loginContext = useContext(LoginContext);
@@ -27,13 +44,54 @@ function PeopleImage(props) {
   }
   return (
     <View style={styles.people}>
-      <View style={[ { backgroundColor: loginContext.color,width: 50, height: 50, borderRadius: 25 }]}>
+      <View
+        style={[
+          {
+            backgroundColor: loginContext.color,
+            width: 50,
+            height: 50,
+            borderRadius: 25,
+          },
+        ]}
+      >
         <Image
           source={require("../images/account.png")}
           resizeMode="contain"
-          style={{ width: '100%', height: '100%' }}
+          style={{ width: "100%", height: "100%" }}
         />
       </View>
+    </View>
+  );
+}
+
+function PeopleLoading() {
+  return (
+    <View
+      style={{
+        padding: 15,
+        marginBottom: 10,
+        borderWidth: 1,
+        borderColor: "#DBDBDB",
+        borderRadius: 10,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        backgroundColor: "#FFFFFF",
+      }}
+    >
+      <View
+        style={[
+          {
+            opacity: {fading},
+            backgroundColor: loginContext.color,
+            width: 50,
+            height: 50,
+            borderRadius: 25,
+          },
+        ]}
+      />
+
+      
     </View>
   );
 }
@@ -45,41 +103,74 @@ function People(props) {
       onPress={() => navigation.navigate("Person", { memberData: props.data })}
     >
       <View
-        style={{ padding: 15, marginBottom: 10, borderWidth: 1, borderColor: '#DBDBDB', borderRadius: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center", backgroundColor: '#FFFFFF' }}
+        style={{
+          padding: 15,
+          marginBottom: 10,
+          borderWidth: 1,
+          borderColor: "#DBDBDB",
+          borderRadius: 10,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          backgroundColor: "#FFFFFF",
+        }}
       >
         <PeopleImage uri={props.profMap[props.data.id]} />
         <View style={{ width: "80%" }}>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-            <View style={{ alignItems: 'baseline' }}>
-              <Text style={{ fontFamily: 'Poppins_600SemiBold', color: '#262626', fontSize: 16, marginRight: 10 }}>
+          <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+            <View style={{ alignItems: "baseline" }}>
+              <Text
+                style={{
+                  fontFamily: "Poppins_600SemiBold",
+                  color: "#262626",
+                  fontSize: 16,
+                  marginRight: 10,
+                }}
+              >
                 {props.data.firstname + " " + props.data.lastname}
               </Text>
             </View>
-            <View style={{ alignItems: 'baseline', backgroundColor: findRoleColor(props.data.role), borderRadius: 100, paddingLeft: 12, paddingRight: 12, height: 20, justifyContent: 'center' }}>
-              <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 10, color: '#FFFFFF' }}>
+            <View
+              style={{
+                alignItems: "baseline",
+                backgroundColor: findRoleColor(props.data.role),
+                borderRadius: 100,
+                paddingLeft: 12,
+                paddingRight: 12,
+                height: 20,
+                justifyContent: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "Poppins_600SemiBold",
+                  fontSize: 10,
+                  color: "#FFFFFF",
+                }}
+              >
                 {props.data.role}
               </Text>
             </View>
           </View>
-          {
-            (props.data.bio === '') ? null :
-
-              <Text 
-              style={{ fontFamily: 'Poppins_500Medium', fontSize: 10, }}
-              >
-                {'"'  +  (props.data.bio.length > 100 ?  props.data.bio.substring(0,100) + "...": props.data.bio) + '"' }
-              </Text>
-          }
+          {props.data.bio === "" ? null : (
+            <Text style={{ fontFamily: "Poppins_500Medium", fontSize: 10 }}>
+              {'"' +
+                (props.data.bio.length > 100
+                  ? props.data.bio.substring(0, 100) + "..."
+                  : props.data.bio) +
+                '"'}
+            </Text>
+          )}
         </View>
       </View>
     </TouchableOpacity>
-
   );
 }
 export function PeoplePage() {
   // TODO pull to get users 'Spring 2022'
   // TODO pull all users and filer on pledge class
   const loginContext = useContext(LoginContext);
+  const container = useRef(null);
   //search bar
   const [search, setSearch] = useState("");
   const [filteredDataSource, setFilteredDataSource] = useState([]);
@@ -87,12 +178,17 @@ export function PeoplePage() {
   const [section, setSection] = useState();
   //profile pictures
   const [profileMap, setProfileMap] = useState({});
-
+  const fading = useRef(new Animated.Value(0)).current;
   //checkbox
   const [isChecked, setChecked] = useState(false);
 
-
   useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.spring(fading, { toValue: 1, useNativeDriver: true }),
+        Animated.spring(fading, { toValue: 0, useNativeDriver: true }),
+      ])
+    );
     //will be a fetch once the backend is complete
     //https://snack.expo.dev/@aboutreact/react-native-search-bar-filter-on-listview
     var allUsers = [];
@@ -127,22 +223,21 @@ export function PeoplePage() {
         });
         allSettled(promises).then((results) => {
           setProfileMap(profPicMap);
-        })
-  
-        allUsers = allUsers.filter(
-          (item) => item.id != auth.currentUser.uid
-        );
+        });
+
+        allUsers = allUsers.filter((item) => item.id != auth.currentUser.uid);
         setFilteredDataSource(allUsers);
         setMasterDataSource(allUsers);
       });
   }, []);
+
   useEffect(() => {
     setSection(
       filteredDataSource.map((people, index) => {
         return <People key={index} data={people} profMap={profileMap} />;
       })
     );
-  }, [profileMap])
+  }, [profileMap]);
 
   //triggered when checkbox is pressed
   useEffect(() => {
@@ -197,39 +292,86 @@ export function PeoplePage() {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.eventScreen}>
         {/* //https://reactnativeelements.com/docs/components/searchbar#calling */}
-        <View style={{ width: '85%', flexDirection: 'row', justifyContent: 'space-between', marginTop: 16 }}>
+        <View
+          style={{
+            width: "85%",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: 16,
+          }}
+        >
           <SearchBar
             autoComplete={false}
-            cancelButtonTitle={''}
-            inputContainerStyle={{ backgroundColor: '#FFFFFF' }}
+            cancelButtonTitle={""}
+            inputContainerStyle={{ backgroundColor: "#FFFFFF" }}
             containerStyle={{
-              width: '85%',
+              width: "85%",
               borderRadius: 10,
               borderWidth: 1,
-              borderColor: '#DBDBDB',
+              borderColor: "#DBDBDB",
               height: 40,
             }}
-            style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 16, color: '#8E8E8E' }}
+            style={{
+              fontFamily: "Poppins_600SemiBold",
+              fontSize: 16,
+              color: "#8E8E8E",
+            }}
             platform="ios"
             placeholder="Type Here..."
             onChangeText={(text) => searchFilter(text)}
             value={search}
           />
           <Checkbox
-            style={{ alignSelf: "center", borderWidth: 1, width: 40, height: 40, borderRadius: 10, borderColor: '#DBDBDB', backgroundColor: '#FFFFFF' }}
+            style={{
+              alignSelf: "center",
+              borderWidth: 1,
+              width: 40,
+              height: 40,
+              borderRadius: 10,
+              borderColor: "#DBDBDB",
+              backgroundColor: "#FFFFFF",
+            }}
             value={isChecked}
             onValueChange={setChecked}
           />
-          <Text style={{ position: 'absolute', right: 0, top: -16, fontFamily: 'Poppins_600SemiBold', fontSize: 12, color: '#8E8E8E' }}>My PC</Text>
+          <Text
+            style={{
+              position: "absolute",
+              right: 0,
+              top: -16,
+              fontFamily: "Poppins_600SemiBold",
+              fontSize: 12,
+              color: "#8E8E8E",
+            }}
+          >
+            My PC
+          </Text>
         </View>
-        <View style={{ width: '90%', height: 1, marginTop: 10, marginBottom: 10, backgroundColor: '#DBDBDB' }} />
-        <ScrollView style={{ width: '100%' }}>
-          <View style={{ justifyContent: "center", alignItems: "center" }}>
-            <View style={{ width: '85%' }}>
-              {section}
+        <View
+          style={{
+            width: "90%",
+            height: 1,
+            marginTop: 10,
+            marginBottom: 10,
+            backgroundColor: "#DBDBDB",
+          }}
+        />
+
+        <Suspense
+          fallback={
+            <Text
+              style={{ flex: 1, justifyContent: "center", alignSelf: "center" }}
+            >
+              Loading profile...
+            </Text>
+          }
+        >
+          <ScrollView style={{ width: "100%" }} scrollEventThrottle={30}>
+            <View style={{ justifyContent: "center", alignItems: "center" }}>
+              <View style={{ width: "85%" }}>{section}</View>
             </View>
-          </View>
-        </ScrollView>
+          </ScrollView>
+        </Suspense>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -247,7 +389,7 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: '#FAFAFA'
+    backgroundColor: "#FAFAFA",
   },
   search: {},
   peopleSection: {
