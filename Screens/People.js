@@ -12,7 +12,7 @@ import {
   Keyboard,
   Animated,
 } from "react-native";
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect, useRef, useContext, useMemo } from "react";
 import globalStyles from "../styles/Styles";
 import { SearchBar } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
@@ -91,7 +91,7 @@ function PeopleLoading() {
         ]}
       />
 
-      
+
     </View>
   );
 }
@@ -231,7 +231,7 @@ export function PeoplePage() {
       });
   }, []);
 
-  useEffect(() => {
+  useMemo(() => {
     setSection(
       filteredDataSource.map((people, index) => {
         return <People key={index} data={people} profMap={profileMap} />;
@@ -240,11 +240,11 @@ export function PeoplePage() {
   }, [profileMap]);
 
   //triggered when checkbox is pressed
-  useEffect(() => {
+  useMemo(() => {
     displayPledgeClass(isChecked);
   }, [isChecked]);
 
-  useEffect(() => {
+  useMemo(() => {
     setSection(
       filteredDataSource.map((people, index) => {
         return <People key={index} data={people} profMap={profileMap} />;
@@ -330,7 +330,9 @@ export function PeoplePage() {
               borderRadius: 10,
               borderColor: "#DBDBDB",
               backgroundColor: "#FFFFFF",
+            
             }}
+            color = {loginContext.color}
             value={isChecked}
             onValueChange={setChecked}
           />
