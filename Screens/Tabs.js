@@ -89,7 +89,7 @@ export function NavigationPage() {
           backgroundColor: '#FFFFFF',
         }}
         screenOptions={{
-          tabBarShowLabel: false,
+          tabBarShowLabel: true,
           tabBarStyle: {
             backgroundColor: globalStyles.colors,
             height: '15%',
@@ -104,6 +104,10 @@ export function NavigationPage() {
           name="Home"
           component={HomePage}
           options={{
+            tabBarLabelStyle : {
+              bottom: "6%",
+        
+            },
             tabBarIcon: ({ color }) => {
               return (
                 <FoundationIcon
@@ -118,7 +122,12 @@ export function NavigationPage() {
         <Tab.Screen
           name="Events"
           component={EventsPage}
+          
           options={{
+            tabBarLabelStyle : {
+              bottom: "6%",
+        
+            },
             tabBarLabel: "Events",
             tabBarIcon: ({ color }) => {
               return (
@@ -135,6 +144,10 @@ export function NavigationPage() {
           name="People"
           component={PeoplePage}
           options={{
+            tabBarLabelStyle : {
+              bottom: "6%",
+        
+            },
             tabBarLabel: "People",
             tabBarIcon: ({ color }) => {
               return (
@@ -151,7 +164,11 @@ export function NavigationPage() {
           name="Chat"
           component={AttendancePage}
           options={{
-            tabBarLabel: "Chat",
+            tabBarLabelStyle : {
+              bottom: "6%",
+        
+            },
+            tabBarLabel: "Attendance",
             tabBarIcon: ({ color }) => {
               return (
                 /*<MaterialIcons

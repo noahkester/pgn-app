@@ -64,9 +64,10 @@ function PeopleImage(props) {
   );
 }
 
-function PeopleLoading() {
+function PeopleLoadingCard(props) {
+  const loginContext = useContext(LoginContext);
   return (
-    <View
+    <Animated.View
       style={{
         padding: 15,
         marginBottom: 10,
@@ -79,10 +80,10 @@ function PeopleLoading() {
         backgroundColor: "#FFFFFF",
       }}
     >
-      <View
+      <Animated.View
         style={[
           {
-            opacity: {fading},
+            opacity: props.fading,
             backgroundColor: loginContext.color,
             width: 50,
             height: 50,
@@ -91,7 +92,37 @@ function PeopleLoading() {
         ]}
       />
 
-
+      <Animated.View
+        style={{
+          width: "80%",
+          opacity: props.fading,
+        }}
+      >
+        <Animated.View
+          style={{
+            borderRadius: 25,
+            width: "80%",
+            height: 14,
+            backgroundColor: loginContext.color,
+            marginHorizontal: 8,
+          }}
+        ></Animated.View>
+      </Animated.View>
+    </Animated.View>
+  );
+}
+function PeopleLoadingPage(props) {
+  return (
+    <View style={{ flex: 1, flexDirection: "column" }}>
+      <ScrollView>
+        <PeopleLoadingCard fading={props.fading} />
+        <PeopleLoadingCard fading={props.fading} />
+        <PeopleLoadingCard fading={props.fading} />
+        <PeopleLoadingCard fading={props.fading} />
+        <PeopleLoadingCard fading={props.fading} />
+        <PeopleLoadingCard fading={props.fading} />
+        <PeopleLoadingCard fading={props.fading} />
+      </ScrollView>
     </View>
   );
 }
@@ -176,6 +207,7 @@ export function PeoplePage() {
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [masterDataSource, setMasterDataSource] = useState([]);
   const [section, setSection] = useState();
+  const [settled, setSettled] = useState(false);
   //profile pictures
   const [profileMap, setProfileMap] = useState({});
   const fading = useRef(new Animated.Value(0)).current;
@@ -188,7 +220,7 @@ export function PeoplePage() {
         Animated.spring(fading, { toValue: 1, useNativeDriver: true }),
         Animated.spring(fading, { toValue: 0, useNativeDriver: true }),
       ])
-    );
+    ).start();
     //will be a fetch once the backend is complete
     //https://snack.expo.dev/@aboutreact/react-native-search-bar-filter-on-listview
     var allUsers = [];
@@ -223,6 +255,7 @@ export function PeoplePage() {
         });
         allSettled(promises).then((results) => {
           setProfileMap(profPicMap);
+          setSettled(true);
         });
 
         allUsers = allUsers.filter((item) => item.id != auth.currentUser.uid);
@@ -330,9 +363,8 @@ export function PeoplePage() {
               borderRadius: 10,
               borderColor: "#DBDBDB",
               backgroundColor: "#FFFFFF",
-            
             }}
-            color = {loginContext.color}
+            color={loginContext.color}
             value={isChecked}
             onValueChange={setChecked}
           />
@@ -358,22 +390,15 @@ export function PeoplePage() {
             backgroundColor: "#DBDBDB",
           }}
         />
-
-        <Suspense
-          fallback={
-            <Text
-              style={{ flex: 1, justifyContent: "center", alignSelf: "center" }}
-            >
-              Loading profile...
-            </Text>
-          }
-        >
+        {settled ? (
           <ScrollView style={{ width: "100%" }} scrollEventThrottle={30}>
             <View style={{ justifyContent: "center", alignItems: "center" }}>
               <View style={{ width: "85%" }}>{section}</View>
             </View>
           </ScrollView>
-        </Suspense>
+        ) : (
+          <PeopleLoadingPage fading={fading} />
+        )}
       </View>
     </TouchableWithoutFeedback>
   );
