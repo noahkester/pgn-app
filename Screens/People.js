@@ -217,8 +217,8 @@ export function PeoplePage() {
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
-        Animated.spring(fading, { toValue: 1, useNativeDriver: true }),
-        Animated.spring(fading, { toValue: 0, useNativeDriver: true }),
+        Animated.timing(fading, { toValue: 1, useNativeDriver: true, duration: 500 }),
+        Animated.timing(fading, { toValue: 0, useNativeDriver: true, duration: 500  }),
       ])
     ).start();
     //will be a fetch once the backend is complete
