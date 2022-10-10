@@ -57,9 +57,9 @@ export default function ImageCarousel(props) {
                 style={styles.carousel}
                 data={props.data}
                 renderItem={renderItem}
-                itemWidth={0.8 * windowWidth}
+                itemWidth={windowWidth}
                 inActiveOpacity={0.7}
-                containerWidth={0.8 * windowWidth}
+                // containerWidth={0.8 * windowWidth}
                 onScrollEnd={handleCarouselScrollEnd}
                 ref={carouselRef}
             />
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         flexGrow: 0,
         marginBottom: 20,
-        borderRadius: 0.8 * windowWidth
+        borderRadius: 40,
     },
     item: {
         backgroundColor: 'white',
