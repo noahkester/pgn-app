@@ -25,7 +25,7 @@ export function SplashScreenPage() {
       <Image
         style={{ width: 300, height: 300, flexDirection: 'row', alignSelf: 'center' }}
         // resizeMode='cover'
-        source={require("../assets/splash.png")}></Image>
+        source={require("../assets/icon.png")}></Image>
 
       <View
         style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: '10%' }}>
